@@ -83,4 +83,4 @@ if __name__ == "__main__":
 
     text_pipeline.fit(text_data.X_train, text_data.y_train)
     print
-    print 'score:', text_pipeline.score(text_data.X_val, text_data.y_val)
+    print('score:', text_pipeline.score(text_data.X_val, text_data.y_val))

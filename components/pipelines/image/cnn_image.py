@@ -107,4 +107,4 @@ if __name__ == "__main__":
 
     image_pipeline.fit(image_data.X_train, image_data.y_train)
     print
-    print 'score:', image_pipeline.score(image_data.X_val, image_data.y_val)
+    print('score:', image_pipeline.score(image_data.X_val, image_data.y_val))

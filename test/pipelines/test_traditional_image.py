@@ -19,15 +19,15 @@ image_data_directory = 'data/MNIST_D3M'
 image_data = d3m_load_data(
     data_directory=image_data_directory, is_d3m=True, sample_size_pct=0.1)
 
-print "\nFitting pipeline..."
+print("\nFitting pipeline...")
 
 image_pipeline.fit(image_data.X_train, image_data.y_train)
 
-print "\nFit pipeline."
+print("\nFit pipeline.")
 
-print "\nScoring pipeline..."
+print("\nScoring pipeline...")
 
 predicted_y_val = image_pipeline.predict(image_data.X_val)
 score = f1_score(predicted_y_val, image_data.y_val, average='micro')
 
-print "\nf1 micro score: %f" % score
+print("\nf1 micro score: %f" % score)
