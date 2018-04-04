@@ -7,6 +7,7 @@ class DmJsonParser(object):
     Supports loading JSONS in the format shown in:
         components/primitive_jsons/random_forest_classifier.json
     """
+
     def __init__(self):
         self.step_metadata = None
 

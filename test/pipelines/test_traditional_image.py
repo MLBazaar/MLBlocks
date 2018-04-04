@@ -1,6 +1,8 @@
-from sklearn.metrics import f1_score
 from components.pipelines.image.traditional_image import TraditionalImagePipeline
-from load_data import d3m_load_data
+
+from sklearn.datasets import fetch_mldata
+from sklearn.metrics import f1_score
+from sklearn.model_selection import train_test_split
 
 # Manual validation that our pipeline object is as we expect.
 image_pipeline = TraditionalImagePipeline()
@@ -11,23 +13,22 @@ for hyperparam in tunable_hyperparams:
     print(hyperparam)
 
 # Check that the steps are correct.
-print
 print(image_pipeline.steps_dict)
 
 # Check that we can score properly.
-image_data_directory = 'data/MNIST_D3M'
-image_data = d3m_load_data(
-    data_directory=image_data_directory, is_d3m=True, sample_size_pct=0.1)
+mnist = fetch_mldata('MNIST original')
+X, X_test, y, y_test = train_test_split(
+    mnist.data, mnist.target, train_size=1000, test_size=300)
 
-print "\nFitting pipeline..."
+print("\nFitting pipeline...")
 
-image_pipeline.fit(image_data.X_train, image_data.y_train)
+image_pipeline.fit(X, y)
 
-print "\nFit pipeline."
+print("\nFit pipeline.")
 
-print "\nScoring pipeline..."
+print("\nScoring pipeline...")
 
-predicted_y_val = image_pipeline.predict(image_data.X_val)
-score = f1_score(predicted_y_val, image_data.y_val, average='micro')
+predicted_y_val = image_pipeline.predict(X_test)
+score = f1_score(predicted_y_val, y_test, average='micro')
 
-print "\nf1 micro score: %f" % score
+print("\nf1 micro score: %f" % score)

@@ -9,5 +9,4 @@ for hyperparam in tunable_hyperparams:
     print(hyperparam)
 
 # Check that the steps are correct.
-print
 print(rf_pipeline.steps_dict)

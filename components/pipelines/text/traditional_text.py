@@ -48,7 +48,7 @@ class TraditionalTextPipeline(MLPipeline):
 
         tfidf_step = MLBlock('TFIDF',
                              TfidfTransformer(
-                                smooth_idf=True, sublinear_tf=False))
+                                 smooth_idf=True, sublinear_tf=False))
         tfidf_step.set_tunable_hyperparam(
             MLHyperparam(
                 'norm', Type.STRING, ['l1', 'l2'], is_categorical=True))
@@ -83,4 +83,4 @@ if __name__ == "__main__":
 
     text_pipeline.fit(text_data.X_train, text_data.y_train)
     print
-    print 'score:', text_pipeline.score(text_data.X_val, text_data.y_val)
+    print('score:', text_pipeline.score(text_data.X_val, text_data.y_val))
