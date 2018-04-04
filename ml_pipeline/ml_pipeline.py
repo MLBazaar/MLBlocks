@@ -2,8 +2,8 @@ import json
 import numpy as np
 import os
 
-from ml_pipeline.ml_hyperparam import Type
-from ml_pipeline.ml_block import MLBlock
+from ml_hyperparam import Type
+from ml_block import MLBlock
 
 
 class MLPipeline(object):
