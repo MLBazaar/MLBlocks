@@ -1,4 +1,4 @@
-from ml_hyperparam import MLHyperparam
+from ml_pipeline.ml_hyperparam import MLHyperparam
 from json_parsers.dm_json_parser import DmJsonParser
 
 
