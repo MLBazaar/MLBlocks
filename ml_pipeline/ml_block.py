@@ -1,8 +1,8 @@
-from dm_hyperparam import DmHyperparam
+from ml_hyperparam import MLHyperparam
 from json_parsers.dm_json_parser import DmJsonParser
 
 
-class DmStep(object):
+class MLBlock(object):
     """A single primitive in a pipeline that the DeepMining system can
     act on.
 
@@ -84,7 +84,7 @@ class DmStep(object):
             hp_range = parser.get_hyperparam_range(hp_name)
             hp_val = parser.get_hyperparam_default_val(hp_name)
             hp_is_cond = hp_name not in root_hyperparam_lookup
-            hyperparam = DmHyperparam(hp_name, hp_type, hp_range, hp_is_cond,
+            hyperparam = MLHyperparam(hp_name, hp_type, hp_range, hp_is_cond,
                                       hp_val)
             hyperparam.step_name = dm_step_instance.name
             dm_step_instance.tunable_hyperparams[hp_name] = hyperparam

@@ -1,6 +1,6 @@
-from dm_pipeline.dm_pipeline import DmPipeline
-from dm_pipeline.dm_step import DmStep
-from dm_pipeline.dm_hyperparam import DmHyperparam, Type
+from ml_pipeline.ml_pipeline import MLPipeline
+from ml_pipeline.ml_block import MLBlock
+from ml_pipeline.ml_hyperparam import MLHyperparam, Type
 
 import keras
 from keras.models import Sequential
@@ -13,7 +13,7 @@ from load_data import d3m_load_data
 import copy
 
 
-class CnnImagePipeline(DmPipeline):
+class CnnImagePipeline(MLPipeline):
     """
     CNN image pipeline
     """
@@ -26,18 +26,18 @@ class CnnImagePipeline(DmPipeline):
         self.img_rows, self.img_cols = img_dims
         self.num_classes = num_classes
 
-        cnn_step = DmStep('CNN',
-                          KerasClassifier(
+        cnn_step = MLBlock('CNN',
+                           KerasClassifier(
                               build_fn=self.create_model,
                               epochs=epochs,
                               batch_size=batch_size,
                               verbose=0))
         cnn_step.set_tunable_hyperparam(
-            DmHyperparam('conv_kernel_dim', Type.INT, [3, 5]))
+            MLHyperparam('conv_kernel_dim', Type.INT, [3, 5]))
         cnn_step.set_tunable_hyperparam(
-            DmHyperparam('pool_size', Type.INT, [2, 5]))
+            MLHyperparam('pool_size', Type.INT, [2, 5]))
         cnn_step.set_tunable_hyperparam(
-            DmHyperparam('dropout_percent', Type.FLOAT, [0, 0.75]))
+            MLHyperparam('dropout_percent', Type.FLOAT, [0, 0.75]))
 
         super(CnnImagePipeline, self).__init__([cnn_step])
 

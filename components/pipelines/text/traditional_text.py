@@ -1,9 +1,9 @@
 """
 Traditional text pipeline
 """
-from dm_pipeline.dm_pipeline import DmPipeline
-from dm_pipeline.dm_step import DmStep
-from dm_pipeline.dm_hyperparam import DmHyperparam, Type
+from ml_pipeline.ml_pipeline import MLPipeline
+from ml_pipeline.ml_block import MLBlock
+from ml_pipeline.ml_hyperparam import MLHyperparam, Type
 
 # Import functions
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -20,7 +20,7 @@ import os
 sys.path.insert(1, os.path.join(sys.path[0], '....'))
 
 
-class TraditionalTextPipeline(DmPipeline):
+class TraditionalTextPipeline(MLPipeline):
     """
     Traditional image pipeline using HOG features.
     """
@@ -32,32 +32,32 @@ class TraditionalTextPipeline(DmPipeline):
             return hist.toarray()
 
         # Define pipeline variables
-        vectorizer_step = DmStep('CountVectorizer', CustomCountVectorizer())
+        vectorizer_step = MLBlock('CountVectorizer', CustomCountVectorizer())
         vectorizer_step.set_tunable_hyperparam(
-            DmHyperparam('max_features', Type.INT, [1000, 40000]))
+            MLHyperparam('max_features', Type.INT, [1000, 40000]))
         vectorizer_step.set_tunable_hyperparam(
-            DmHyperparam('max_ngram', Type.INT, [1, 4]))
+            MLHyperparam('max_ngram', Type.INT, [1, 4]))
         vectorizer_step.set_tunable_hyperparam(
-            DmHyperparam('max_df', Type.FLOAT, [0.99, 1.]))
+            MLHyperparam('max_df', Type.FLOAT, [0.99, 1.]))
         vectorizer_step.set_tunable_hyperparam(
-            DmHyperparam('min_df', Type.FLOAT, [0., 0.01]))
-        to_array_step = DmStep(
+            MLHyperparam('min_df', Type.FLOAT, [0., 0.01]))
+        to_array_step = MLBlock(
             'HistToArray',
             FunctionTransformer(func=hist_to_array,
                                 validate=False))  # custom pipeline component
 
-        tfidf_step = DmStep('TFIDF',
-                            TfidfTransformer(
+        tfidf_step = MLBlock('TFIDF',
+                             TfidfTransformer(
                                 smooth_idf=True, sublinear_tf=False))
         tfidf_step.set_tunable_hyperparam(
-            DmHyperparam(
+            MLHyperparam(
                 'norm', Type.STRING, ['l1', 'l2'], is_categorical=True))
         tfidf_step.set_tunable_hyperparam(
-            DmHyperparam(
+            MLHyperparam(
                 'use_idf', Type.BOOL, [True, False], is_categorical=True))
-        multinomial_nb_step = DmStep('MNB', MultinomialNB())
+        multinomial_nb_step = MLBlock('MNB', MultinomialNB())
         multinomial_nb_step.set_tunable_hyperparam(
-            DmHyperparam('alpha', Type.FLOAT, [0.01, 1.]))
+            MLHyperparam('alpha', Type.FLOAT, [0.01, 1.]))
 
         super(TraditionalTextPipeline, self).__init__(
             [vectorizer_step, to_array_step, tfidf_step, multinomial_nb_step])

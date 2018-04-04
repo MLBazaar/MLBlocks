@@ -1,10 +1,10 @@
-from dm_pipeline.dm_pipeline import DmPipeline
+from ml_pipeline.ml_pipeline import MLPipeline
 
 
-class RandomForestClassifier(DmPipeline):
+class RandomForestClassifier(MLPipeline):
     """
     Random forest pipeline
     """
 
     def __new__(cls, *args, **kwargs):
-        return DmPipeline.from_dm_json(['random_forest_classifier'])
+        return MLPipeline.from_dm_json(['random_forest_classifier'])

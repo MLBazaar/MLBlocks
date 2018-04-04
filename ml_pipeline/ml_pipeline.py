@@ -2,11 +2,11 @@ import json
 import numpy as np
 import os
 
-from dm_hyperparam import Type
-from dm_step import DmStep
+from ml_hyperparam import Type
+from ml_block import MLBlock
 
 
-class DmPipeline(object):
+class MLPipeline(object):
     """A pipeline that the DeepMining system can operate on.
 
     Attributes:
@@ -44,7 +44,7 @@ class DmPipeline(object):
         Returns:
             A DmPipeline defined by the JSON steps.
         """
-        return cls([DmStep.from_json(json_md) for json_md in json_metadata])
+        return cls([MLBlock.from_json(json_md) for json_md in json_metadata])
 
     @classmethod
     def from_json_filepaths(cls, json_filepath_list):

@@ -15,7 +15,7 @@ class Type(object):
     BOOL = "bool"
 
 
-class DmHyperparam(object):
+class MLHyperparam(object):
     """A Hyperparameter that the DeepMining system can act on.
 
     Should belong to a DmStep.

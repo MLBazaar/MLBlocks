@@ -1,10 +1,10 @@
-from dm_pipeline.dm_pipeline import DmPipeline
+from ml_pipeline.ml_pipeline import MLPipeline
 
 
-class TraditionalImagePipeline(DmPipeline):
+class TraditionalImagePipeline(MLPipeline):
     """
     Traditional image pipeline using HOG features.
     """
 
     def __new__(cls, *args, **kwargs):
-        return DmPipeline.from_dm_json(['HOG', 'random_forest_classifier'])
+        return MLPipeline.from_dm_json(['HOG', 'random_forest_classifier'])
