@@ -17,7 +17,8 @@ print(image_pipeline.steps_dict)
 
 # Check that we can score properly.
 mnist = fetch_mldata('MNIST original')
-X, X_test, y, y_test = train_test_split(mnist.data, mnist.target, train_size=1000, test_size=300)
+X, X_test, y, y_test = train_test_split(
+    mnist.data, mnist.target, train_size=1000, test_size=300)
 
 print("\nFitting pipeline...")
 

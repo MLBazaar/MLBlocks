@@ -28,10 +28,10 @@ class CnnImagePipeline(MLPipeline):
 
         cnn_step = MLBlock('CNN',
                            KerasClassifier(
-                              build_fn=self.create_model,
-                              epochs=epochs,
-                              batch_size=batch_size,
-                              verbose=0))
+                               build_fn=self.create_model,
+                               epochs=epochs,
+                               batch_size=batch_size,
+                               verbose=0))
         cnn_step.set_tunable_hyperparam(
             MLHyperparam('conv_kernel_dim', Type.INT, [3, 5]))
         cnn_step.set_tunable_hyperparam(

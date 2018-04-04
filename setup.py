@@ -18,7 +18,6 @@ setup(
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.0.1',
-
     description='A JSON abstraction for datascience pipelines',
 
     # The project's main homepage.

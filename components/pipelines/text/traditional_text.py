@@ -48,7 +48,7 @@ class TraditionalTextPipeline(MLPipeline):
 
         tfidf_step = MLBlock('TFIDF',
                              TfidfTransformer(
-                                smooth_idf=True, sublinear_tf=False))
+                                 smooth_idf=True, sublinear_tf=False))
         tfidf_step.set_tunable_hyperparam(
             MLHyperparam(
                 'norm', Type.STRING, ['l1', 'l2'], is_categorical=True))
