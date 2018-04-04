@@ -106,7 +106,6 @@ class MLPipeline(object):
 
             self.steps_dict[step_name].tunable_hyperparams[
                 hyperparam.param_name] = hyperparam
-            self.steps_dict[step_name].build_model()
 
     def get_tunable_hyperparams(self):
         """Gets all tunable hyperparameters belonging to this pipeline.
