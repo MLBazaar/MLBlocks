@@ -2,8 +2,8 @@ import json
 import numpy as np
 import os
 
-from ml_pipeline.ml_hyperparam import Type
-from ml_pipeline.ml_block import MLBlock
+from .ml_hyperparam import Type
+from json_parsers.ml_json_parser import MLJsonParser
 
 
 class MLPipeline(object):
@@ -44,7 +44,13 @@ class MLPipeline(object):
         Returns:
             A DmPipeline defined by the JSON steps.
         """
-        return cls([MLBlock.from_json(json_md) for json_md in json_metadata])
+        block_steps = []
+        for json_md in json_metadata:
+            parser = MLJsonParser(json_md)
+            parser.block_json = json_md
+            block_steps.append(parser.build_mlblock())
+
+        return cls(block_steps)
 
     @classmethod
     def from_json_filepaths(cls, json_filepath_list):
@@ -103,10 +109,10 @@ class MLPipeline(object):
         """
         for hyperparam in hyperparams:
             step_name = hyperparam.step_name
-
-            self.steps_dict[step_name].tunable_hyperparams[
-                hyperparam.param_name] = hyperparam
-            self.steps_dict[step_name].build_model()
+            step = self.steps_dict[step_name]
+            step.tunable_hyperparams[hyperparam.param_name] = hyperparam
+            # Update the hyperparams in the actual model as well.
+            step.model = step.model.__class__(step.tunable_hyperparams)
 
     def get_tunable_hyperparams(self):
         """Gets all tunable hyperparameters belonging to this pipeline.
@@ -173,16 +179,8 @@ class MLPipeline(object):
         transformed_data = x
         for step_name in self.dataflow:
             step = self.steps_dict[step_name]
-
-            hyperparam_kwargs = {
-                name: step.tunable_hyperparams[name].value
-                for name in step.tunable_hyperparams
-            }
-            step.step_instance = step.step_model(**hyperparam_kwargs)
-
-            getattr(step.step_instance, step.fit_func)(transformed_data, y)
-            transformed_data = getattr(step.step_instance,
-                                       step.produce_func)(transformed_data)
+            step.fit(transformed_data, y)
+            transformed_data = step.produce(transformed_data)
 
     def predict(self, x):
         """Makes predictions with this pipeline on the specified input
@@ -200,11 +198,7 @@ class MLPipeline(object):
         transformed_data = x
         for step_name in self.dataflow:
             step = self.steps_dict[step_name]
-            if step.step_instance is None:
-                raise AttributeError(
-                    "fit() must be called at least once before predict().")
-            transformed_data = getattr(step.step_instance,
-                                       step.produce_func)(transformed_data)
+            transformed_data = step.produce(transformed_data)
 
         # The last value stored in transformed_data is our final output value.
         return transformed_data
