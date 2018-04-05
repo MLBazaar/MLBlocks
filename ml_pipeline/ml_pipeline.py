@@ -1,8 +1,6 @@
 import json
-import numpy as np
 import os
 
-from .ml_hyperparam import Type
 from json_parsers.ml_json_parser import MLJsonParser
 
 
@@ -105,7 +103,7 @@ class MLPipeline(object):
         Unspecified hyperparameters are not affected.
 
         Args:
-            hyperparams: A list of Hyperparameters to update.
+            hyperparams: A list of MLHyperparams to update.
         """
         for hyperparam in hyperparams:
             step_name = hyperparam.step_name
@@ -127,18 +125,11 @@ class MLPipeline(object):
         return tunable_hyperparams
 
     def set_from_hyperparam_dict(self, hyperparam_dict):
-        """Sets the hyperparameters of this pipeline given a list of values.
-
-        The list of values contains a value for each hyperparameter. The
-        values must be ordered corresponding to the order of
-        hyperparameters in the list returned by the
-        get_tunable_hyperparams() method.
+        """Sets the hyperparameters of this pipeline from a name: value
+        mapping.
 
         Args:
-            hyperparam_vec: A numpy array containing values for each
-                hyperparameter. A value in index i of this array
-                corresponds to the hyperparameter in index i of the list
-                returned by get_tunable_hyperparams().
+            hyperparam_dict: A dict mapping hyperparam names to values.
         """
         all_tunable_hyperparams = self.get_tunable_hyperparams()
         for hp in all_tunable_hyperparams:
