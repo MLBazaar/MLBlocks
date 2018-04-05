@@ -109,8 +109,10 @@ class MLPipeline(object):
             step_name = hyperparam.step_name
             step = self.steps_dict[step_name]
             step.tunable_hyperparams[hyperparam.param_name] = hyperparam
-            # Update the hyperparams in the actual model as well.
-            step.model = step.model.__class__(step.tunable_hyperparams)
+        
+        # Update the hyperparams in the actual model as well.
+        for step in self.steps_dict.values():
+            step.model = step.model.__class__(**step.tunable_hyperparams)
 
     def get_tunable_hyperparams(self):
         """Gets all tunable hyperparameters belonging to this pipeline.
@@ -134,7 +136,10 @@ class MLPipeline(object):
         all_tunable_hyperparams = self.get_tunable_hyperparams()
         for hp in all_tunable_hyperparams:
             if hp.param_name in hyperparam_dict:
-                hp.value = hyperparam_dict[hp.param_name]
+                param_value = hyperparam_dict[hp.param_name]
+                if hp.param_type in ("int_cat", "float_cat", "string"):
+                    param_value = np.asscalar(param_value)
+                hp.value = param_value
         self.update_hyperparams(all_tunable_hyperparams)
 
     def fit(self, x, y):
