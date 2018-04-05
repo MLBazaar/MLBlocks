@@ -1,5 +1,6 @@
 import json
 import os
+import numpy as np
 
 from json_parsers.ml_json_parser import MLJsonParser
 
