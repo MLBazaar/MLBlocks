@@ -126,24 +126,7 @@ class MLPipeline(object):
             tunable_hyperparams += list(step.tunable_hyperparams.values())
         return tunable_hyperparams
 
-    def get_hyperparam_vec(self):
-        """Gets all tunable hyperparameter values of this pipeline.
-
-        The values are ordered corresponding to the order of
-        hyperparameters in the list returned by the
-        get_tunable_hyperparams() method.
-
-        Returns:
-            A numpy array of hyperparameter values of this pipeline.
-            A value in index i of this array corresponds to the
-            hyperparameter in index i of the list returned by
-            get_tunable_hyperparams().
-        """
-        all_tunable_hyperparams = self.get_tunable_hyperparams()
-        return np.array(
-            [hyperparam.value for hyperparam in all_tunable_hyperparams])
-
-    def set_from_hyperparam_vec(self, hyperparam_vec):
+    def set_from_hyperparam_dict(self, hyperparam_dict):
         """Sets the hyperparameters of this pipeline given a list of values.
 
         The list of values contains a value for each hyperparameter. The
@@ -158,12 +141,9 @@ class MLPipeline(object):
                 returned by get_tunable_hyperparams().
         """
         all_tunable_hyperparams = self.get_tunable_hyperparams()
-        for i in range(len(hyperparam_vec)):
-            new_val = hyperparam_vec[i]
-            if (all_tunable_hyperparams[i].param_type == Type.INT
-                    or all_tunable_hyperparams[i].param_type == Type.INT_EXP):
-                new_val = int(new_val)
-            all_tunable_hyperparams[i].value = new_val
+        for hp in all_tunable_hyperparams:
+            if hp.param_name in hyperparam_dict:
+                hp.value = hyperparam_dict[hp.param_name]
         self.update_hyperparams(all_tunable_hyperparams)
 
     def fit(self, x, y):
