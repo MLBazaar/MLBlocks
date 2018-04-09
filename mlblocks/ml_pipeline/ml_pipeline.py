@@ -1,8 +1,7 @@
 import json
 import os
-import numpy as np
 
-from json_parsers.ml_json_parser import MLJsonParser
+from mlblocks.json_parsers.ml_json_parser import MLJsonParser
 
 
 class MLPipeline(object):

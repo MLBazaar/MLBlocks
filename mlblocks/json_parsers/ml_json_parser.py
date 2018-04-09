@@ -1,7 +1,7 @@
 import importlib
 
-from ml_pipeline.ml_block import MLBlock
-from ml_pipeline.ml_hyperparam import MLHyperparam
+from mlblocks.ml_pipeline.ml_block import MLBlock
+from mlblocks.ml_pipeline.ml_hyperparam import MLHyperparam
 
 
 class MLJsonParser(object):

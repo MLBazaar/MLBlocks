@@ -1,4 +1,4 @@
-from ml_pipeline.ml_pipeline import MLPipeline
+from mlblocks.ml_pipeline.ml_pipeline import MLPipeline
 
 
 class TraditionalImagePipeline(MLPipeline):

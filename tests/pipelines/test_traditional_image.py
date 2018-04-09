@@ -1,4 +1,4 @@
-from components.pipelines.image.traditional_image import TraditionalImagePipeline
+from mlblocks.components.pipelines.image.traditional_image import TraditionalImagePipeline
 
 from sklearn.datasets import fetch_mldata
 from sklearn.metrics import f1_score

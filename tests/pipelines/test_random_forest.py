@@ -1,5 +1,5 @@
-from components.pipelines.tabular.random_forest_classifier import RandomForestClassifier
-from components.pipelines.tabular.random_forest_regressor import RandomForestRegressor
+from mlblocks.components.pipelines.tabular.random_forest_classifier import RandomForestClassifier
+from mlblocks.components.pipelines.tabular.random_forest_regressor import RandomForestRegressor
 
 from sklearn.datasets import load_digits, load_boston
 from sklearn.metrics import f1_score, r2_score
