@@ -1,63 +1,56 @@
-"""
-Stripped down from the example at:
-https://github.com/pypa/sampleproject
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-# Always prefer setuptools over distutils
+"""The setup script."""
+
 from setuptools import setup, find_packages
-# To use a consistent encoding
-from codecs import open
-from os import path
 
-here = path.abspath(path.dirname(__file__))
+with open('README.md') as readme_file:
+    readme = readme_file.read()
+
+with open('HISTORY.md') as history_file:
+    history = history_file.read()
+
+requirements = [
+    'Click>=6.0',
+    
+]
+
+setup_requirements = ['pytest-runner', ]
+
+test_requirements = ['pytest', ]
 
 setup(
-    name='MLBlocks',
-
-    # Versions should comply with PEP440.  For a discussion on single-sourcing
-    # the version across setup.py and the project code, see
-    # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.1',
-    description='A JSON abstraction for datascience pipelines',
-
-    # The project's main homepage.
-    url='https://github.com/HDI-Project/MLBlocks',
-
-    # Choose your license
-    license='MIT',
-
-    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    author="William Xue",
+    author_email='wgxue@mit.edu',
     classifiers=[
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
-
-        # Indicate who your project is intended for
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'Topic :: Scientific/Engineering :: Artificial Intelligence',
-
-        # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
+        'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        # TODO: python 3 support
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
-
-    # What does your project relate to?
-    keywords='machine learning hyperparameters datascience pipelines',
-
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
-    packages=find_packages()
-
-    # List run-time dependencies here.  These will be installed by pip when
-    # your project is installed. For an analysis of "install_requires" vs pip's
-    # requirements files see:
-    # https://packaging.python.org/en/latest/requirements.html
-    # TODO
-    #install_requires=[],
+    description="Pipelines and primitives for machine learning and data science.",
+    entry_points={
+        'console_scripts': [
+            'mlblocks=mlblocks.cli:main',
+        ],
+    },
+    install_requires=requirements,
+    license="MIT license",
+    long_description=readme + '\n\n' + history,
+    long_description_content_type='text/markdown',
+    include_package_data=True,
+    keywords='mlblocks',
+    name='mlblocks',
+    packages=find_packages(include=['mlblocks']),
+    setup_requires=setup_requirements,
+    test_suite='tests',
+    tests_require=test_requirements,
+    url='https://github.com/HDI-Project/mlblocks',
+    version='0.1.0',
+    zip_safe=False,
 )
