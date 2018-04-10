@@ -6,7 +6,6 @@
 import unittest
 from click.testing import CliRunner
 
-from mlblocks import mlblocks
 from mlblocks import cli
 
 

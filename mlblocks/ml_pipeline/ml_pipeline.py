@@ -62,10 +62,12 @@ class MLPipeline(object):
         Returns:
             A DmPipeline defined by the JSON files.
         """
-        loaded_json_metadata = [
-            json.load(open(json_filepath))
-            for json_filepath in json_filepath_list
-        ]
+        loaded_json_metadata =[]
+        for json_filepath in json_filepath_list:
+            with open(json_filepath, 'r') as f:
+                json_metadata = json.load(f)
+                loaded_json_metadata.append(json_metadata)
+
         return cls.from_json_metadata(loaded_json_metadata)
 
     @classmethod
