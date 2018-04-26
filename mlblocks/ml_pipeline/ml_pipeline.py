@@ -151,7 +151,7 @@ class MLPipeline(object):
                 hp.value = hyperparam_dict[hp.param_name]
         self.update_hyperparams(all_tunable_hyperparams)
 
-    def fit(self, x, y):
+    def fit(self, x, y, fit_params={}):
         """Fits this pipeline to the specified training data.
 
         Args:
@@ -159,12 +159,19 @@ class MLPipeline(object):
                 first step of the pipeline.
             y: Training targets. Must fulfill label requirements for
                 all steps of the pipeline.
+            fit_params: Any params to pass into fit.
+                In the form {(step name, param name): param value}
         """
+        param_dict = {step_name : {} for step_name in self.dataflow}
+        for key, value in fit_params.items():
+            name, param = key
+            param_dict[name][param] = fit_params[key]
+
         # Initially our transformed data is simply our input data.
         transformed_data = x
         for step_name in self.dataflow:
             step = self.steps_dict[step_name]
-            step.fit(transformed_data, y)
+            step.fit(transformed_data, y, **param_dict[step_name])
             transformed_data = step.produce(transformed_data)
 
     def predict(self, x):
