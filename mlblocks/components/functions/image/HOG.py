@@ -16,14 +16,6 @@ class HOG(object):
         self.img_dimension_x = img_dimension_x
         self.img_dimension_y = img_dimension_y
 
-    def fit(self, X, y):
-        """The fit function of the HOG primitive.
-
-        There is nothing to fit, so we do nothing here.
-        """
-        # TODO: remove this once we have better parsing logic.
-        pass
-
     def make_hog_features(self, X):
         """The transform function of the HOG primitive.
 

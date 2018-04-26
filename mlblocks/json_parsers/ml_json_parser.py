@@ -113,11 +113,14 @@ class MLJsonParser(object):
         build_method = self.build_mlblock_model
 
         def mlblock_fit(self, *args, **kwargs):
-            getattr(self.model, fit_method_name)(*args, **kwargs)
+            # Only fit if fit method provided.
+            if fit_method_name:
+                getattr(self.model, fit_method_name)(*args, **kwargs)
 
         ml_block_instance.fit = mlblock_fit.__get__(ml_block_instance, MLBlock)
 
         def mlblock_produce(self, *args, **kwargs):
+            # Every MLBlock needs a produce method.
             return getattr(self.model, produce_method_name)(*args, **kwargs)
 
         ml_block_instance.produce = mlblock_produce.__get__(
