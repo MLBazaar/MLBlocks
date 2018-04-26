@@ -5,7 +5,7 @@
     "produce": "predict",
     "optimizer": "keras.optimizers.Adadelta",
     "loss": "keras.losses.categorical_crossentropy",
-    "non_tunable_hyperparameters": {
+    "fixed_hyperparameters": {
         "input_shape": [224, 224, 3],
         "conv1_filters": 32,
         "conv1_activation": "relu",
@@ -13,7 +13,7 @@
         "conv2_activation": "relu",
         "dense1_units": 128,
         "dense1_activation": "relu",
-        "dense2_units": 10,
+        "dense2_units": 1,
         "dense2_activation": "softmax"
     },
     "tunable_hyperparameters": {

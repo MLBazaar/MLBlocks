@@ -3,7 +3,8 @@
     "class": "mlblocks.components.functions.image.HOG.HOG",
     "fit": "fit",
     "produce": "make_hog_features",
-    "hyperparameters": {
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {
         "num_orientations": {
             "type": "int",
             "range": [9, 9]

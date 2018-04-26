@@ -109,15 +109,31 @@ class MLPipeline(object):
 
         return cls.from_json_filepaths(json_filepaths)
 
-    def update_hyperparams(self, hyperparams):
-        """Updates the specified hyperparameters of this pipeline.
+    def update_fixed_hyperparams(self, fixed_hyperparams):
+        """Updates the specified fixed hyperparameters of this pipeline.
+
+        Args:
+            fixed_hyperparams: A dict mapping
+                (step name, fixed hyperparam name) pairs to their
+                corresponding values.
+        """
+        for (step_name, hyperparam_name) in fixed_hyperparams:
+            step = self.steps_dict[step_name]
+            step.fixed_hyperparams[hyperparam_name] = fixed_hyperparams[(
+                step_name, hyperparam_name)]
+            # Update the hyperparams in the actual model as well.
+            step.update_model(step.fixed_hyperparams, step.tunable_hyperparams)
+
+    def update_tunable_hyperparams(self, tunable_hyperparams):
+        """Updates the specified tunable hyperparameters of this
+        pipeline.
 
         Unspecified hyperparameters are not affected.
 
         Args:
-            hyperparams: A list of MLHyperparams to update.
+            tunable_hyperparams: A list of MLHyperparams to update.
         """
-        for hyperparam in hyperparams:
+        for hyperparam in tunable_hyperparams:
             step_name = hyperparam.step_name
             step = self.steps_dict[step_name]
             step.tunable_hyperparams[hyperparam.param_name] = hyperparam
@@ -125,6 +141,20 @@ class MLPipeline(object):
         # Update the hyperparams in the actual model as well.
         for step in self.steps_dict.values():
             step.model = step.model.__class__(**step.tunable_hyperparams)
+
+    def get_fixed_hyperparams(self):
+        """Gets all fixed hyperparameters belonging to this pipeline.
+
+        Returns:
+            A dict mapping (step name, fixed hyperparam name) pairs to
+            fixed hyperparam values.
+        """
+        fixed_hyperparams = {}
+        for step in self.steps_dict.values():
+            for hp_name in step.fixed_hyperparams:
+                fixed_hyperparams[(step.name,
+                                   hp_name)] = step.fixed_hyperparams[hp_name]
+        return fixed_hyperparams
 
     def get_tunable_hyperparams(self):
         """Gets all tunable hyperparameters belonging to this pipeline.
@@ -149,7 +179,7 @@ class MLPipeline(object):
         for hp in all_tunable_hyperparams:
             if hp.param_name in hyperparam_dict:
                 hp.value = hyperparam_dict[hp.param_name]
-        self.update_hyperparams(all_tunable_hyperparams)
+        self.update_tunable_hyperparams(all_tunable_hyperparams)
 
     def fit(self, x, y):
         """Fits this pipeline to the specified training data.

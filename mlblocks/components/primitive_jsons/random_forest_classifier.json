@@ -3,7 +3,8 @@
     "class": "sklearn.ensemble.RandomForestClassifier",
     "fit": "fit",
     "produce": "predict",
-    "hyperparameters": {
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {
         "criterion": {
             "type": "string",
             "values": ["entropy", "gini"]

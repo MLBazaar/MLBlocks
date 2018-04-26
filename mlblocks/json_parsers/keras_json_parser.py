@@ -1,7 +1,6 @@
 import importlib
 
 from mlblocks.json_parsers.ml_json_parser import MLJsonParser
-from mlblocks.ml_pipeline.ml_block import MLBlock
 from mlblocks.ml_pipeline.ml_hyperparam import MLHyperparam
 
 
@@ -21,33 +20,8 @@ class KerasJsonParser(MLJsonParser):
         """
         super(KerasJsonParser, self).__init__(block_json)
 
-    def build_mlblock(self):
-        block_name = self.block_json['name']
-        tunable_hyperparams = self.get_mlhyperparams(block_name)
-        model = self.build_mlblock_model(tunable_hyperparams)
-
-        ml_block_instance = MLBlock(
-            name=block_name,
-            model=model,
-            tunable_hyperparams=tunable_hyperparams)
-        ml_block_instance.fit = getattr(ml_block_instance.model,
-                                        self.block_json['fit'])
-        ml_block_instance.produce = getattr(ml_block_instance.model,
-                                            self.block_json['produce'])
-
-        return ml_block_instance
-
-    def build_mlblock_model(self, tunable_hyperparameters):
-        """Builds the model for this primitive block.
-
-        Args:
-            tunable_hyperparameters: The hyperparameters to build this
-            model with. Should be specified as a kwargs dict mapping
-            hyperparameter name to MLHyperparam object.
-
-        Returns:
-            The model instance of this primitive block.
-        """
+    def build_mlblock_model(self, fixed_hyperparameters,
+                            tunable_hyperparameters):
         # Load the class for this primitive step.
         full_module_class = self.block_json['class']
         assert (full_module_class == 'keras.models.Sequential')
@@ -61,9 +35,11 @@ class KerasJsonParser(MLJsonParser):
             layer_kwargs = {}
             for param in layer_metadata['parameters']:
                 hp_name = layer_metadata['parameters'][param]
-                layer_kwargs[param] = tunable_hyperparameters[
-                    hp_name].value if hp_name in tunable_hyperparameters else self.block_json[
-                        'non_tunable_hyperparameters'][hp_name]
+                if hp_name in tunable_hyperparameters:
+                    layer_kwargs[param] = tunable_hyperparameters[
+                        hp_name].value
+                else:
+                    layer_kwargs[param] = fixed_hyperparameters[hp_name]
             layer = layer_class(**layer_kwargs)
             model.add(layer)
 
@@ -73,7 +49,8 @@ class KerasJsonParser(MLJsonParser):
 
         return model
 
-    def _get_class(self, full_module_class):
+    @staticmethod
+    def _get_class(full_module_class):
         # Loads a class given the full module name.
         # e.g. keras.layers.Dense or keras.models.Sequential
         module_name = '.'.join(full_module_class.split('.')[:-1])
@@ -83,15 +60,6 @@ class KerasJsonParser(MLJsonParser):
         return actual_class
 
     def get_mlhyperparams(self, block_name):
-        """Gets the hyperparameters belonging to this primitive block.
-
-        Args:
-            block_name: The name of this primitive block.
-
-        Returns:
-            A dict mapping hyperparameter names to MLHyperparam
-            objects.
-        """
         tunable_hyperparams = {}
         for hp_name in self.block_json['tunable_hyperparameters'].keys():
             hp_info = self.block_json['tunable_hyperparameters'][hp_name]

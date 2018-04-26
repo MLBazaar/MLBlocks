@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """Integration tests for tabular pipelines."""
 
 import unittest
@@ -83,4 +82,3 @@ class TestTabularRegressors(unittest.TestCase):
         predicted_y_val = rf_regressor.predict(self.X_test)
         score = r2_score(self.y_test, predicted_y_val)
         print("\nr2 score: %f" % score)
-
