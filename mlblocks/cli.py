@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """Console script for mlblocks."""
 import sys
 import click
