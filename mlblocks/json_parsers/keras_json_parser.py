@@ -61,7 +61,9 @@ class KerasJsonParser(MLJsonParser):
             layer_kwargs = {}
             for param in layer_metadata['parameters']:
                 hp_name = layer_metadata['parameters'][param]
-                layer_kwargs[param] = tunable_hyperparameters[hp_name].value if hp_name in tunable_hyperparameters else self.block_json['non_tunable_hyperparameters'][hp_name]
+                layer_kwargs[param] = tunable_hyperparameters[
+                    hp_name].value if hp_name in tunable_hyperparameters else self.block_json[
+                        'non_tunable_hyperparameters'][hp_name]
             layer = layer_class(**layer_kwargs)
             model.add(layer)
 
