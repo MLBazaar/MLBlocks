@@ -25,8 +25,8 @@ class MLBlock(object):
         self.model = model
         self.tunable_hyperparams = tunable_hyperparams
 
-    def fit(self):
+    def fit(self, x, y):
         raise NotImplementedError
 
-    def produce(self):
+    def produce(self, x, y):
         raise NotImplementedError

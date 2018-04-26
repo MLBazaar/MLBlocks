@@ -1,7 +1,7 @@
 import json
 import os
 
-from mlblocks.json_parsers.ml_json_parser import MLJsonParser
+from mlblocks.json_parsers import ml_json_parser, keras_json_parser
 
 
 class MLPipeline(object):
@@ -44,11 +44,21 @@ class MLPipeline(object):
         """
         block_steps = []
         for json_md in json_metadata:
-            parser = MLJsonParser(json_md)
-            parser.block_json = json_md
+            parser = cls._get_parser(json_md)
             block_steps.append(parser.build_mlblock())
 
         return cls(block_steps)
+
+    @classmethod
+    def _get_parser(cls, json_block_metadata):
+        # TODO: Implement better logic for deciding what parser to
+        # use. Maybe some sort of config mapping parser to modules?
+        parser = ml_json_parser.MLJsonParser(json_block_metadata)
+        full_module_class = json_block_metadata['class']
+        # For now, hardcode this logic for Keras.
+        if full_module_class.startswith('keras'):
+            parser = keras_json_parser.KerasJsonParser(json_block_metadata)
+        return parser
 
     @classmethod
     def from_json_filepaths(cls, json_filepath_list):

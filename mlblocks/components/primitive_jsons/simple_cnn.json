@@ -1,0 +1,99 @@
+{
+    "name": "simple_cnn",
+    "class": "keras.models.Sequential",
+    "fit": "fit",
+    "produce": "predict",
+    "optimizer": "keras.optimizers.Adadelta",
+    "loss": "keras.losses.categorical_crossentropy",
+    "non_tunable_hyperparameters": {
+        "input_shape": [224, 224, 3],
+        "conv1_filters": 32,
+        "conv1_activation": "relu",
+        "conv2_filters": 64,
+        "conv2_activation": "relu",
+        "dense1_units": 128,
+        "dense1_activation": "relu",
+        "dense2_units": 10,
+        "dense2_activation": "softmax"
+    },
+    "tunable_hyperparameters": {
+        "conv1_kernel_dim": {
+            "type": "int",
+            "range": [3, 10]
+        },
+        "conv2_kernel_dim": {
+            "type": "int",
+            "range": [3, 10]
+        },
+        "max_pool_size": {
+            "type": "int",
+            "range": [2, 10]
+        },
+        "dropout1_percent": {
+            "type": "float",
+            "range": [0.0, 0.75]
+        },
+        "dropout2_percent": {
+            "type": "float",
+            "range": [0.0, 0.75]
+        }
+    },
+    "root_hyperparameters": ["conv_kernel_dim", "max_pool_size", "dropout_percent"],
+    "conditional_hyperparameters": {},
+    "compilation_hyperparameters": ["optimizer", "loss"],
+    "layers": [
+        {
+            "class": "keras.layers.Conv2D",
+            "parameters": {
+                "filters": "conv1_filters",
+                "kernel_size": "conv1_kernel_dim",
+                "activation": "conv1_activation",
+                "input_shape": "input_shape"
+            }
+        },
+        {
+            "class": "keras.layers.Conv2D",
+            "parameters": {
+                "filters": "conv2_filters",
+                "kernel_size": "conv2_kernel_dim",
+                "activation": "conv2_activation"
+            }
+        },
+        {
+            "class": "keras.layers.MaxPooling2D",
+            "parameters": {
+                "pool_size": "max_pool_size"
+            }
+        },
+        {
+            "class": "keras.layers.Dropout",
+            "parameters": {
+                "rate": "dropout1_percent"
+            }
+        },
+        {
+            "class": "keras.layers.Flatten",
+            "parameters": {}
+        },
+        {
+            "class": "keras.layers.Dense",
+            "parameters": {
+                "units": "dense1_units",
+                "activation": "dense1_activation"
+            }
+        },
+        {
+            "class": "keras.layers.Dropout",
+            "parameters": {
+                "rate": "dropout2_percent"
+            }
+        },
+        {
+            "class": "keras.layers.Dense",
+            "parameters": {
+                "units": "dense2_units",
+                "activation": "dense2_activation"
+            }
+        }
+    ]
+}
