@@ -1,0 +1,18 @@
+{
+    "name": "multinomial_nb",
+    "class": "sklearn.naive_bayes.MultinomialNB",
+    "fit": "fit",
+    "produce": "predict",
+    "fixed_hyperparameters": {
+        "fit_prior": true,
+        "class_prior": null
+    },
+    "tunable_hyperparameters": {
+        "alpha": {
+            "type": "float",
+            "values": [0.01, 1.0]
+        }
+    },
+    "root_hyperparameters": ["alpha"],
+    "conditional_hyperparameters": {}
+}

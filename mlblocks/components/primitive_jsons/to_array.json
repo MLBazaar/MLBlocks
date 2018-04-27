@@ -1,0 +1,10 @@
+{
+    "name": "to_array",
+    "class": "mlblocks.components.functions.tabular.ml_utils_block.MLUtilsBlock",
+    "fit": "",
+    "produce": "to_array",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}

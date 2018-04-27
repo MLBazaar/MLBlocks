@@ -1,0 +1,36 @@
+{
+    "name": "count_vectorizer",
+    "class": "sklearn.feature_extraction.text.CountVectorizer",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": {
+        "input": "content",
+        "encoding": "utf-8",
+        "decode_error": "strict",
+        "strip_accents": null,
+        "lowercase": true,
+        "preprocessor": null,
+        "tokenizer": null,
+        "stop_words": null,
+        "ngram_range": [1, 1],
+        "analyzer": "word",
+        "vocabulary": null,
+        "binary": false
+    },
+    "tunable_hyperparameters": {
+        "max_features": {
+            "type": "int",
+            "range": [1000, 40000]
+        },
+        "max_df": {
+            "type": "float",
+            "range": [0.99, 1.0]
+        },
+        "min_df": {
+            "type": "float",
+            "range": [0.0, 0.01]
+        }
+    },
+    "root_hyperparameters": ["max_features", "max_df", "min_df"],
+    "conditional_hyperparameters": {}
+}
