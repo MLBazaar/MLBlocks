@@ -43,8 +43,8 @@ class KerasJsonParser(MLJsonParser):
             layer = layer_class(**layer_kwargs)
             model.add(layer)
 
-        optimizer = self._get_class(self.block_json['optimizer'])()
-        loss = self._get_class(self.block_json['loss'])
+        optimizer = self._get_class(fixed_hyperparameters['optimizer'])()
+        loss = self._get_class(fixed_hyperparameters['loss'])
         model.compile(loss=loss, optimizer=optimizer)
 
         return model

@@ -56,7 +56,7 @@ class MLPipeline(object):
         parser = ml_json_parser.MLJsonParser(json_block_metadata)
         full_module_class = json_block_metadata['class']
         # For now, hardcode this logic for Keras.
-        if full_module_class.startswith('keras'):
+        if full_module_class.startswith('keras.models.Sequential'):
             parser = keras_json_parser.KerasJsonParser(json_block_metadata)
         return parser
 
@@ -204,7 +204,11 @@ class MLPipeline(object):
         transformed_data = x
         for step_name in self.dataflow:
             step = self.steps_dict[step_name]
-            step.fit(transformed_data, y, **param_dict[step_name])
+            try:
+                step.fit(transformed_data, y, **param_dict[step_name])
+            except TypeError:
+                # Some components only fit on an X.
+                step.fit(transformed_data, **param_dict[step_name])
             transformed_data = step.produce(transformed_data)
 
     def predict(self, x):

@@ -1,0 +1,12 @@
+{
+    "name": "tokenizer",
+    "class": "keras.preprocessing.text.Tokenizer",
+    "fit": "fit_on_texts",
+    "produce": "texts_to_sequences",
+    "fixed_hyperparameters": {
+        "num_words": 20000
+    },
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": ["num_orientations", "num_cell_pixels", "num_cells_block"],
+    "conditional_hyperparameters": {}
+}

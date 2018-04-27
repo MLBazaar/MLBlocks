@@ -4,7 +4,10 @@
 
 import unittest
 
+import keras
+
 from mlblocks.components.pipelines.text.traditional_text import TraditionalTextPipeline
+from mlblocks.components.pipelines.text.lstm_text import LstmTextClassifier
 
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.metrics import f1_score
@@ -48,4 +51,43 @@ class TestImageClassifiers(unittest.TestCase):
         print("\nScoring pipeline...")
         predicted_y_val = traditional_text.predict(self.X_test)
         score = f1_score(predicted_y_val, self.y_test, average='micro')
+        print("\nf1 micro score: %f" % score)
+
+    def test_lstm_text(self):
+        print("\n============================================" +
+              "\nTesting Text LSTM" +
+              "\n============================================")
+        # 10 classes for digits.
+        lstm_text = LstmTextClassifier(num_classes=20)
+        print(lstm_text.steps_dict['lstm_text'].model.summary())
+
+        # Check that the hyperparameters are correct.
+        for hyperparam in lstm_text.get_fixed_hyperparams():
+            print(
+                str(hyperparam) + ":",
+                lstm_text.get_fixed_hyperparams()[hyperparam])
+        for hyperparam in lstm_text.get_tunable_hyperparams():
+            print(hyperparam)
+
+        # Check that the steps are correct.
+        expected_steps = {'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'}
+        steps = set(lstm_text.steps_dict.keys())
+        self.assertSetEqual(expected_steps, steps)
+
+        # Only use 1/30 of the data for quick testing.
+        x_sample = self.X[:len(self.X) // 30]
+        y_sample = self.y[:len(self.y) // 30]
+        x_test_sample = self.X_test[:len(self.X_test) // 30]
+        y_test_sample = self.y_test[:len(self.y_test) // 30]
+
+        y_cat = keras.utils.np_utils.to_categorical(y_sample)
+
+        # Check that we can score properly.
+        print("\nFitting pipeline...")
+        lstm_text.fit(x_sample, y_cat)
+        print("\nFit pipeline.")
+
+        print("\nScoring pipeline...")
+        predicted_y_labels = lstm_text.predict(x_test_sample)
+        score = f1_score(predicted_y_labels, y_test_sample, average='micro')
         print("\nf1 micro score: %f" % score)
