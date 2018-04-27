@@ -3,8 +3,6 @@
     "class": "keras.models.Sequential",
     "fit": "fit",
     "produce": "predict",
-    "optimizer": "keras.optimizers.Adadelta",
-    "loss": "keras.losses.categorical_crossentropy",
     "fixed_hyperparameters": {
         "input_shape": [224, 224, 3],
         "conv1_filters": 32,
@@ -14,7 +12,9 @@
         "dense1_units": 128,
         "dense1_activation": "relu",
         "dense2_units": 1,
-        "dense2_activation": "softmax"
+        "dense2_activation": "linear",
+        "optimizer": "keras.optimizers.Adam",
+        "loss": "keras.losses.mean_squared_error"
     },
     "tunable_hyperparameters": {
         "conv1_kernel_dim": {
@@ -40,7 +40,6 @@
     },
     "root_hyperparameters": ["conv_kernel_dim", "max_pool_size", "dropout_percent"],
     "conditional_hyperparameters": {},
-    "compilation_hyperparameters": ["optimizer", "loss"],
     "layers": [
         {
             "class": "keras.layers.Conv2D",

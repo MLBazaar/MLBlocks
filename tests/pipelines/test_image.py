@@ -8,7 +8,7 @@ import keras
 import numpy as np
 
 from mlblocks.components.pipelines.image.traditional_image import TraditionalImagePipeline
-from mlblocks.components.pipelines.image.simple_cnn import SimpleCNN
+from mlblocks.components.pipelines.image.simple_cnn import SimpleCnnClassifier
 
 from sklearn.datasets import fetch_mldata
 from sklearn.metrics import f1_score
@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 
 
 class TestImageClassifiers(unittest.TestCase):
-    """Integration test for image classifiers."""
+    """Integration tests for image classifiers."""
 
     def setUp(self):
         """Set up image classification data"""
@@ -59,7 +59,7 @@ class TestImageClassifiers(unittest.TestCase):
               "\nTesting Simple CNN" +
               "\n============================================")
         # 10 classes for digits.
-        simple_cnn = SimpleCNN(num_classes=10)
+        simple_cnn = SimpleCnnClassifier(num_classes=10)
 
         # Check that the hyperparameters are correct.
         for hyperparam in simple_cnn.get_fixed_hyperparams():
@@ -70,7 +70,7 @@ class TestImageClassifiers(unittest.TestCase):
             print(hyperparam)
 
         # Check that the steps are correct.
-        expected_steps = {'simple_cnn'}
+        expected_steps = {'simple_cnn', 'convert_class_probs'}
         steps = set(simple_cnn.steps_dict.keys())
         self.assertSetEqual(expected_steps, steps)
 
@@ -93,7 +93,6 @@ class TestImageClassifiers(unittest.TestCase):
         print("\nFit pipeline.")
 
         print("\nScoring pipeline...")
-        predicted_y_probs = simple_cnn.predict(prep_x_test)
-        predicted_y_labels = np.argmax(predicted_y_probs, axis=1)
+        predicted_y_labels = simple_cnn.predict(prep_x_test)
         score = f1_score(predicted_y_labels, y_test_sample, average='micro')
         print("\nf1 micro score: %f" % score)
