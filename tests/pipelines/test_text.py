@@ -14,7 +14,7 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
 
-class TestImageClassifiers(unittest.TestCase):
+class TestTextClassifiers(unittest.TestCase):
     """Integration tests for text classifiers."""
 
     def setUp(self):
@@ -65,7 +65,6 @@ class TestImageClassifiers(unittest.TestCase):
               "\n============================================")
         # 10 classes for digits.
         lstm_text = LstmTextClassifier(num_classes=20)
-        print(lstm_text.steps_dict['lstm_text'].model.summary())
 
         # Check that the hyperparameters are correct.
         for hyperparam in lstm_text.get_fixed_hyperparams():

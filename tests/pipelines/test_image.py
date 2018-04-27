@@ -75,10 +75,10 @@ class TestImageClassifiers(unittest.TestCase):
         self.assertSetEqual(expected_steps, steps)
 
         # Only use 1/10 of the data for quick testing.
-        x_sample = self.X[:len(self.X) // 10]
-        y_sample = self.y[:len(self.y) // 10]
-        x_test_sample = self.X_test[:len(self.X_test) // 10]
-        y_test_sample = self.y_test[:len(self.y_test) // 10]
+        x_sample = self.X[:len(self.X) // 30]
+        y_sample = self.y[:len(self.y) // 30]
+        x_test_sample = self.X_test[:len(self.X_test) // 30]
+        y_test_sample = self.y_test[:len(self.y_test) // 30]
 
         # Properly format data.
         prep_x = np.array([np.resize(im, (224, 224, 3))
