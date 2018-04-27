@@ -4,8 +4,8 @@
 
 import unittest
 
-from mlblocks.components.pipelines.tabular.random_forest_classifier import RandomForestClassifier
-from mlblocks.components.pipelines.tabular.random_forest_regressor import RandomForestRegressor
+from mlblocks.components.pipelines.tabular.random_forest import RandomForestClassifier
+from mlblocks.components.pipelines.tabular.random_forest import RandomForestRegressor
 
 from sklearn.datasets import load_wine, load_boston
 from sklearn.metrics import f1_score, r2_score
