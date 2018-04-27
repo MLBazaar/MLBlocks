@@ -5,6 +5,7 @@ class MLUtilsBlock(object):
     """
     Utils for transforming general data in a pipeline.
     """
+
     def to_array(self, X):
         return X.toarray()
 

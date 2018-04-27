@@ -7,6 +7,7 @@ class SequencePadder(object):
 
     Has applications in timeseries, text, etc.
     """
+
     def __init__(self, pad_length):
         self.pad_length = pad_length
 

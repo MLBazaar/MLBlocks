@@ -10,9 +10,16 @@ class LstmTextClassifier(MLPipeline):
     """
 
     def __new__(cls, num_classes, pad_length=None, optimizer=None, loss=None):
-        lstm = MLPipeline.from_dm_json(['tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'])
+        lstm = MLPipeline.from_dm_json([
+            'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'
+        ])
 
-        update_params = {('lstm_text', 'dense_units'): num_classes, ('lstm_text', 'dense_activation'): 'softmax', ('lstm_text', 'optimizer'): 'keras.optimizers.Adadelta', ('lstm_text', 'loss'): 'keras.losses.categorical_crossentropy'}
+        update_params = {
+            ('lstm_text', 'dense_units'): num_classes,
+            ('lstm_text', 'dense_activation'): 'softmax',
+            ('lstm_text', 'optimizer'): 'keras.optimizers.Adadelta',
+            ('lstm_text', 'loss'): 'keras.losses.categorical_crossentropy'
+        }
         if optimizer is not None:
             update_params[('lstm_text', 'optimizer')] = optimizer
         if loss is not None:
@@ -27,7 +34,8 @@ class LstmTextClassifier(MLPipeline):
 
 class LstmTextRegressor(MLPipeline):
     def __new__(cls, optimizer=None, loss=None):
-        lstm = MLPipeline.from_dm_json(['tokenizer', 'sequence_padder', 'lstm_text'])
+        lstm = MLPipeline.from_dm_json(
+            ['tokenizer', 'sequence_padder', 'lstm_text'])
 
         update_params = {}
         if optimizer is not None:

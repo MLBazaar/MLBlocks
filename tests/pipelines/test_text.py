@@ -21,7 +21,10 @@ class TestImageClassifiers(unittest.TestCase):
         """Set up text classification data"""
         newsgroups = fetch_20newsgroups()
         self.X, self.X_test, self.y, self.y_test = train_test_split(
-            newsgroups.data, newsgroups.target, train_size=9051, test_size=2263)
+            newsgroups.data,
+            newsgroups.target,
+            train_size=9051,
+            test_size=2263)
 
     def test_traditional_text(self):
         print("\n============================================" +
@@ -39,7 +42,10 @@ class TestImageClassifiers(unittest.TestCase):
             print(hyperparam)
 
         # Check that the steps are correct.
-        expected_steps = {'count_vectorizer', 'to_array', 'tfidf_transformer', 'multinomial_nb'}
+        expected_steps = {
+            'count_vectorizer', 'to_array', 'tfidf_transformer',
+            'multinomial_nb'
+        }
         steps = set(traditional_text.steps_dict.keys())
         self.assertSetEqual(expected_steps, steps)
 
@@ -70,7 +76,9 @@ class TestImageClassifiers(unittest.TestCase):
             print(hyperparam)
 
         # Check that the steps are correct.
-        expected_steps = {'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'}
+        expected_steps = {
+            'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'
+        }
         steps = set(lstm_text.steps_dict.keys())
         self.assertSetEqual(expected_steps, steps)
 

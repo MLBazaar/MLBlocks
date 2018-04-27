@@ -6,6 +6,7 @@ class CustomCountVectorizer(CountVectorizer):
     Count vectorizer that allows only the upper bound of the max_ngram
     hyperparameter to be tuned.
     """
+
     # Defaults are from sklearn
     def __init__(self, max_features=None, max_df=1, min_df=1, max_ngram=1):
         super(CustomCountVectorizer, self).__init__(
