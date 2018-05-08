@@ -12,8 +12,11 @@ with open('HISTORY.md') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Click>=6.0',
-    
+    'Keras>=2.1.6',
+    'numpy>=1.14.3',
+    'scikit-image>=0.13.1',
+    'scikit-learn>=0.19.1',
+    'tensorflow>=1.8.0',
 ]
 
 setup_requirements = ['pytest-runner', ]
