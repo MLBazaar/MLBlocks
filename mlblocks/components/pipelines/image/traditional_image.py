@@ -7,4 +7,4 @@ class TraditionalImagePipeline(MLPipeline):
     """
 
     def __new__(cls, *args, **kwargs):
-        return MLPipeline.from_dm_json(['HOG', 'random_forest_classifier'])
+        return MLPipeline.from_ml_json(['HOG', 'random_forest_classifier'])

@@ -81,7 +81,7 @@ class MLPipeline(object):
         return cls.from_json_metadata(loaded_json_metadata)
 
     @classmethod
-    def from_dm_json(cls, json_names):
+    def from_ml_json(cls, json_names):
         """Initializes a DmPipeline with a list of step names.
 
         These step names should correspond to the JSON file names

@@ -10,7 +10,7 @@ class LstmTextClassifier(MLPipeline):
     """
 
     def __new__(cls, num_classes, pad_length=None, optimizer=None, loss=None):
-        lstm = MLPipeline.from_dm_json([
+        lstm = MLPipeline.from_ml_json([
             'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'
         ])
 
@@ -34,7 +34,7 @@ class LstmTextClassifier(MLPipeline):
 
 class LstmTextRegressor(MLPipeline):
     def __new__(cls, optimizer=None, loss=None):
-        lstm = MLPipeline.from_dm_json(
+        lstm = MLPipeline.from_ml_json(
             ['tokenizer', 'sequence_padder', 'lstm_text'])
 
         update_params = {}

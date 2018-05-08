@@ -20,7 +20,7 @@ class SimpleCnnClassifier(MLPipeline):
     """
 
     def __new__(cls, num_classes, optimizer=None, loss=None):
-        simple_cnn = MLPipeline.from_dm_json(
+        simple_cnn = MLPipeline.from_ml_json(
             ['simple_cnn', 'convert_class_probs'])
 
         update_params = {
@@ -40,7 +40,7 @@ class SimpleCnnClassifier(MLPipeline):
 
 class SimpleCnnRegressor(MLPipeline):
     def __new__(cls, optimizer=None, loss=None):
-        simple_cnn = MLPipeline.from_dm_json(['simple_cnn'])
+        simple_cnn = MLPipeline.from_ml_json(['simple_cnn'])
 
         update_params = {}
         if optimizer is not None:

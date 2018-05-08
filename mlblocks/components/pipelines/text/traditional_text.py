@@ -7,7 +7,7 @@ class TraditionalTextPipeline(MLPipeline):
     """
 
     def __new__(cls, *args, **kwargs):
-        return MLPipeline.from_dm_json([
+        return MLPipeline.from_ml_json([
             'count_vectorizer', 'to_array', 'tfidf_transformer',
             'multinomial_nb'
         ])
