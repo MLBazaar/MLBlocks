@@ -169,16 +169,19 @@ class MLPipeline(object):
         return tunable_hyperparams
 
     def set_from_hyperparam_dict(self, hyperparam_dict):
-        """Sets the hyperparameters of this pipeline from a name: value
-        mapping.
+        """Sets the hyperparameters of this pipeline from a dict.
+
+        This dict maps as follows:
+            (step name, hyperparam name): value
 
         Args:
-            hyperparam_dict: A dict mapping hyperparam names to values.
+            hyperparam_dict: A dict mapping (step name, hyperparam name)
+                tuples to hyperparam values.
         """
         all_tunable_hyperparams = self.get_tunable_hyperparams()
         for hp in all_tunable_hyperparams:
-            if hp.param_name in hyperparam_dict:
-                hp.value = hyperparam_dict[hp.param_name]
+            if (hp.step_name, hp.param_name) in hyperparam_dict:
+                hp.value = hyperparam_dict[(hp.step_name, hp.param_name)]
         self.update_tunable_hyperparams(all_tunable_hyperparams)
 
     def fit(self, x, y, fit_params=None):
