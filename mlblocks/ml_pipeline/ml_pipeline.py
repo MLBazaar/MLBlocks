@@ -137,10 +137,8 @@ class MLPipeline(object):
             step_name = hyperparam.step_name
             step = self.steps_dict[step_name]
             step.tunable_hyperparams[hyperparam.param_name] = hyperparam
-
-        # Update the hyperparams in the actual model as well.
-        for step in self.steps_dict.values():
-            step.model = step.model.__class__(**step.tunable_hyperparams)
+            # Update the hyperparams in the actual model as well.
+            step.update_model(step.fixed_hyperparams, step.tunable_hyperparams)
 
     def get_fixed_hyperparams(self):
         """Gets all fixed hyperparameters belonging to this pipeline.

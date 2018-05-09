@@ -44,6 +44,11 @@ class TestImageClassifiers(unittest.TestCase):
         steps = set(traditional_image.steps_dict.keys())
         self.assertSetEqual(expected_steps, steps)
 
+        # Check that we can update our pipeline's tunable hyperparameter
+        # values.
+        hp_dict = {('rf_classifier', 'max_depth'): 9}
+        traditional_image.set_from_hyperparam_dict(hp_dict)
+
         # Check that we can score properly.
         print("\nFitting pipeline...")
         traditional_image.fit(self.X, self.y)
