@@ -54,8 +54,8 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8 and isort
-	flake8 mlblocks tests
-	isort -c --recursive mlblocks tests
+	flake8 mlblocks tests examples
+	isort -c --recursive mlblocks tests examples
 
 fixlint: ## fix lint issues using autoflake, autopep8, and isort
 	find mlblocks -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
@@ -65,6 +65,10 @@ fixlint: ## fix lint issues using autoflake, autopep8, and isort
 	find tests -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
 	autopep8 --in-place --recursive --aggressive tests
 	isort --apply --atomic --recursive tests
+
+	find examples -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+	autopep8 --in-place --recursive --aggressive examples
+	isort --apply --atomic --recursive examples
 
 test: ## run tests quickly with the default Python
 	pytest

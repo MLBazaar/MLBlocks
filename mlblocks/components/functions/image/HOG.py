@@ -1,6 +1,7 @@
+import math
+
 import numpy as np
 from skimage.feature import hog
-import math
 
 
 class HOG(object):

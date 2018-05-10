@@ -1,7 +1,7 @@
 import json
 import os
 
-from mlblocks.json_parsers import ml_json_parser, keras_json_parser
+from mlblocks.json_parsers import keras_json_parser, ml_json_parser
 
 
 class MLPipeline(object):
