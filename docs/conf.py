@@ -18,14 +18,9 @@
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 #
-import os
-import sys
-
 import sphinx_rtd_theme # For read the docs theme
 from recommonmark.parser import CommonMarkParser
 from recommonmark.transform import AutoStructify
-
-sys.path.insert(0, os.path.abspath('..'))
 
 import mlblocks
 
