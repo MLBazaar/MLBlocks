@@ -2,12 +2,8 @@
 Credits
 =======
 
-Development Lead
-----------------
-
-* William Xue <wgxue@mit.edu>
-
 Contributors
 ------------
 
-None yet. Why not be the first?
+* William Xue <wgxue@mit.edu>
+* Carles Sala <carles@pythiac.com>

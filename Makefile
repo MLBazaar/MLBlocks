@@ -29,7 +29,7 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-build clean-pyc clean-test clean-docs ## remove all build, test, coverage, docs and Python artifacts
+clean: clean-build clean-pyc clean-coverage clean-test clean-docs ## remove all build, test, coverage, docs and Python artifacts
 
 clean-build: ## remove build artifacts
 	rm -fr build/
@@ -44,15 +44,18 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
+clean-coverage: ## remove coverage artifacts
+	rm -f .coverage
+	rm -f .coverage.*
+	rm -fr htmlcov/
+
 clean-test: ## remove test and coverage artifacts
 	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8 and isort
-	flake8 mlblocks tests
-	isort -c --recursive mlblocks tests
+	flake8 mlblocks tests examples
+	isort -c --recursive mlblocks tests examples
 
 fixlint: ## fix lint issues using autoflake, autopep8, and isort
 	find mlblocks -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
@@ -63,13 +66,17 @@ fixlint: ## fix lint issues using autoflake, autopep8, and isort
 	autopep8 --in-place --recursive --aggressive tests
 	isort --apply --atomic --recursive tests
 
+	find examples -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
+	autopep8 --in-place --recursive --aggressive examples
+	isort --apply --atomic --recursive examples
+
 test: ## run tests quickly with the default Python
 	pytest
 
 test-all: ## run tests on every Python version with tox
 	tox
 
-coverage: ## check code coverage quickly with the default Python
+coverage: clean-coverage ## check code coverage quickly with the default Python
 	coverage run --source mlblocks -m pytest
 	coverage report -m
 	coverage html
@@ -77,6 +84,7 @@ coverage: ## check code coverage quickly with the default Python
 
 clean-docs: ## remove previously built docs
 	rm -f docs/mlblocks.rst
+	rm -f docs/mlblocks.*.rst
 	rm -f docs/modules.rst
 	$(MAKE) -C docs clean
 

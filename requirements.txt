@@ -1,5 +1,0 @@
-Keras
-numpy
-scikit-image
-sklearn
-tensorflow

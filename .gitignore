@@ -64,6 +64,9 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/mlblocks.*.rst
+docs/mlblocks.rst
+docs/modules.rst
 
 # PyBuilder
 target/
@@ -100,3 +103,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# other
+.DS_Store
