@@ -1,5 +1,4 @@
 from mlblocks.json_parsers.ml_json_parser import MLJsonParser
-from mlblocks.ml_pipeline.ml_hyperparam import MLHyperparam
 
 
 class KerasJsonParser(MLJsonParser):
