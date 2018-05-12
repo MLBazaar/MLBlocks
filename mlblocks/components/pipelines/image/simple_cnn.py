@@ -2,11 +2,10 @@ from mlblocks.ml_pipeline.ml_pipeline import MLPipeline
 
 
 class SimpleCnnClassifier(MLPipeline):
-    """
-    CNN image pipeline.
+    """CNN image pipeline.
 
     Based on:
-    github.com/keras-team/keras/blob/master/examples/mnist_cnn.py
+    https://github.com/keras-team/keras/blob/master/examples/mnist_cnn.py
 
     Layers:
         Conv2D

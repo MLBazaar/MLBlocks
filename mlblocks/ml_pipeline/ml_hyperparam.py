@@ -2,9 +2,7 @@ import random
 
 
 class Type(object):
-    """
-    Possible Hyperparameter types.
-    """
+    """Hyperparameter types."""
     INT = "int"
     INT_EXP = "int_exp"
     INT_CAT = "int_cat"
@@ -13,6 +11,11 @@ class Type(object):
     FLOAT_CAT = "float_cat"
     STRING = "string"
     BOOL = "bool"
+
+
+_CATEGORICAL_TYPES = (Type.STRING, Type.BOOL, Type.INT_CAT, Type.FLOAT_CAT)
+_INTEGER_TYPES = (Type.INT, Type.INT_EXP)
+_FLOAT_TYPES = (Type.FLOAT, Type.FLOAT_EXP)
 
 
 class MLHyperparam(object):
@@ -35,13 +38,9 @@ class MLHyperparam(object):
         value: The current value of this hyperparameter.
     """
 
-    def __init__(self,
-                 param_name,
-                 param_type,
-                 param_range,
-                 is_conditional=False,
-                 value=None):
-        """Initializes this Hyperparameter.
+    def __init__(self, param_name, param_type, param_range,
+                 is_conditional=False, value=None):
+        """Initialize this Hyperparameter.
 
         Args:
             param_name: The name of this Hyperparameter.
@@ -70,33 +69,34 @@ class MLHyperparam(object):
         self.value = value if value is not None else self._random_init()
 
     def _random_init(self):
-        """Randomly initializes this hyperparameter.
-
-        Initializes this hyperparameter to a random value in its range.
-        """
+        """Initialize using random values within param_range."""
         # Strings and bools should always be categorical
-        if self.param_type in [
-                Type.STRING, Type.BOOL, Type.INT_CAT, Type.FLOAT_CAT
-        ]:
+        if self.param_type in _CATEGORICAL_TYPES:
             value = random.choice(self.param_range)
-        elif self.param_type in [Type.INT, Type.INT_EXP]:
+
+        elif self.param_type in _INTEGER_TYPES:
             value = random.randint(*self.param_range)
-        elif self.param_type in [Type.FLOAT, Type.FLOAT_EXP]:
+
+        elif self.param_type in _FLOAT_TYPES:
             value = random.uniform(*self.param_range)
+
         else:
             raise AttributeError("Unexpected parameter type:", self.param_type)
 
         return value
 
     def __str__(self):
-        return "Hyperparameter: " \
-               "Name: {0}, " \
-               "Step Name: {1}, " \
-               "Type: {2}, " \
-               "Range: {3}, " \
-               "Value: {4}" \
-            .format(self.param_name,
-                    self.step_name,
-                    self.param_type,
-                    self.param_range,
-                    self.value)
+        return (
+            "Hyperparameter: "
+            "Name: {0}, "
+            "Step Name: {1}, "
+            "Type: {2}, "
+            "Range: {3}, "
+            "Value: {4}"
+        ).format(
+            self.param_name,
+            self.step_name,
+            self.param_type,
+            self.param_range,
+            self.value
+        )

@@ -13,8 +13,7 @@ class MLPipeline(object):
     """
 
     def __init__(self, steps, dataflow=None):
-        """Initializes a DmPipeline with a list of corresponding
-        DmSteps.
+        """Initialize a DmPipeline with a list of corresponding DmSteps.
 
         Args:
             steps: A list of DmSteps composing this pipeline.
@@ -31,16 +30,28 @@ class MLPipeline(object):
         ]
 
     @classmethod
+    def _get_parser(cls, json_block_metadata):
+        # TODO: Implement better logic for deciding what parser to
+        # use. Maybe some sort of config mapping parser to modules?
+        parser = ml_json_parser.MLJsonParser(json_block_metadata)
+        full_module_class = json_block_metadata['class']
+
+        # For now, hardcode this logic for Keras.
+        if full_module_class.startswith('keras.models.Sequential'):
+            parser = keras_json_parser.KerasJsonParser(json_block_metadata)
+
+        return parser
+
+    @classmethod
     def from_json_metadata(cls, json_metadata):
-        """Initializes a DmPipeline with a list of JSON metadata
-        defining DmSteps.
+        """Initialize a DmPipeline with a list of dicts defining DmSteps.
 
         Args:
-            json_metadata: A list of JSON objects representing the
+            json_metadata: A list of dicts representing the
                 DmSteps composing this pipeline.
 
         Returns:
-            A DmPipeline defined by the JSON steps.
+            A DmPipeline defined by the provided dicts.
         """
         block_steps = []
         for json_md in json_metadata:
@@ -50,20 +61,8 @@ class MLPipeline(object):
         return cls(block_steps)
 
     @classmethod
-    def _get_parser(cls, json_block_metadata):
-        # TODO: Implement better logic for deciding what parser to
-        # use. Maybe some sort of config mapping parser to modules?
-        parser = ml_json_parser.MLJsonParser(json_block_metadata)
-        full_module_class = json_block_metadata['class']
-        # For now, hardcode this logic for Keras.
-        if full_module_class.startswith('keras.models.Sequential'):
-            parser = keras_json_parser.KerasJsonParser(json_block_metadata)
-        return parser
-
-    @classmethod
     def from_json_filepaths(cls, json_filepath_list):
-        """Initializes a DmPipeline with a list of paths to JSON files
-        defining DmSteps.
+        """Initialize a DmPipeline with a list of paths to JSON files.
 
         Args:
             json_filepath_list: A list of paths to JSON files
@@ -82,7 +81,7 @@ class MLPipeline(object):
 
     @classmethod
     def from_ml_json(cls, json_names):
-        """Initializes a DmPipeline with a list of step names.
+        """Initialize a DmPipeline with a list of step names.
 
         These step names should correspond to the JSON file names
         present in the components/primitive_jsons directory.
@@ -99,34 +98,35 @@ class MLPipeline(object):
 
         json_filepaths = []
         for json_name in json_names:
-            path_to_json = os.path.join(json_dir, '%s.%s' % (json_name,
-                                                             'json'))
+            json_filename = '{}.{}'.format(json_name, 'json')
+            path_to_json = os.path.join(json_dir, json_filename)
             if not os.path.isfile(path_to_json):
-                raise ValueError(
-                    "No JSON corresponding to the specified name (%s) exists."
-                    % json_name)
+                error = ("No JSON corresponding to the specified "
+                         "name ({}) exists.".format(json_name))
+                raise ValueError(error)
+
             json_filepaths.append(path_to_json)
 
         return cls.from_json_filepaths(json_filepaths)
 
     def update_fixed_hyperparams(self, fixed_hyperparams):
-        """Updates the specified fixed hyperparameters of this pipeline.
+        """Update the specified fixed hyperparameters of this pipeline.
 
         Args:
             fixed_hyperparams: A dict mapping
                 (step name, fixed hyperparam name) pairs to their
                 corresponding values.
         """
-        for (step_name, hyperparam_name) in fixed_hyperparams:
+        for step_name, hyperparam_name in fixed_hyperparams:
             step = self.steps_dict[step_name]
-            step.fixed_hyperparams[hyperparam_name] = fixed_hyperparams[(
-                step_name, hyperparam_name)]
+            hyperparam = fixed_hyperparams[(step_name, hyperparam_name)]
+            step.fixed_hyperparams[hyperparam_name] = hyperparam
+
             # Update the hyperparams in the actual model as well.
             step.update_model(step.fixed_hyperparams, step.tunable_hyperparams)
 
     def update_tunable_hyperparams(self, tunable_hyperparams):
-        """Updates the specified tunable hyperparameters of this
-        pipeline.
+        """Update the specified tunable hyperparameters of this pipeline.
 
         Unspecified hyperparameters are not affected.
 
@@ -141,7 +141,7 @@ class MLPipeline(object):
             step.update_model(step.fixed_hyperparams, step.tunable_hyperparams)
 
     def get_fixed_hyperparams(self):
-        """Gets all fixed hyperparameters belonging to this pipeline.
+        """Get all the fixed hyperparameters belonging to this pipeline.
 
         Returns:
             A dict mapping (step name, fixed hyperparam name) pairs to
@@ -150,12 +150,13 @@ class MLPipeline(object):
         fixed_hyperparams = {}
         for step in self.steps_dict.values():
             for hp_name in step.fixed_hyperparams:
-                fixed_hyperparams[(step.name,
-                                   hp_name)] = step.fixed_hyperparams[hp_name]
+                hyperparam = step.fixed_hyperparams[hp_name]
+                fixed_hyperparams[(step.name, hp_name)] = hyperparam
+
         return fixed_hyperparams
 
     def get_tunable_hyperparams(self):
-        """Gets all tunable hyperparameters belonging to this pipeline.
+        """Get all tunable hyperparameters belonging to this pipeline.
 
         Returns:
             A list of tunable hyperparameters belonging to this
@@ -164,10 +165,11 @@ class MLPipeline(object):
         tunable_hyperparams = []
         for step in self.steps_dict.values():
             tunable_hyperparams += list(step.tunable_hyperparams.values())
+
         return tunable_hyperparams
 
     def set_from_hyperparam_dict(self, hyperparam_dict):
-        """Sets the hyperparameters of this pipeline from a dict.
+        """Set the hyperparameters of this pipeline from a dict.
 
         This dict maps as follows:
             (step name, hyperparam name): value
@@ -180,10 +182,11 @@ class MLPipeline(object):
         for hp in all_tunable_hyperparams:
             if (hp.step_name, hp.param_name) in hyperparam_dict:
                 hp.value = hyperparam_dict[(hp.step_name, hp.param_name)]
+
         self.update_tunable_hyperparams(all_tunable_hyperparams)
 
     def fit(self, x, y, fit_params=None):
-        """Fits this pipeline to the specified training data.
+        """Fit this pipeline to the specified training data.
 
         Args:
             x: Training data. Must fulfill input requirements of the
@@ -210,11 +213,11 @@ class MLPipeline(object):
             except TypeError:
                 # Some components only fit on an X.
                 step.fit(transformed_data, **param_dict[step_name])
+
             transformed_data = step.produce(transformed_data)
 
     def predict(self, x):
-        """Makes predictions with this pipeline on the specified input
-        data.
+        """Make predictions with this pipeline on the specified input data.
 
         fit() must be called at least once before predict().
 

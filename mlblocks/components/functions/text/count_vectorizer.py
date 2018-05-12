@@ -2,9 +2,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 
 class CustomCountVectorizer(CountVectorizer):
-    """
-    Count vectorizer that allows only the upper bound of the max_ngram
-    hyperparameter to be tuned.
+    """CountVectorizer with tunable ngram_range.
+
+    Count CountVectorizer that allows only the upper bound of
+    the ngram_range hyperparameter to be tuned.
     """
 
     # Defaults are from sklearn
@@ -17,4 +18,5 @@ class CustomCountVectorizer(CountVectorizer):
             analyzer="word",
             tokenizer=None,
             preprocessor=None,
-            stop_words=None)
+            stop_words=None
+        )

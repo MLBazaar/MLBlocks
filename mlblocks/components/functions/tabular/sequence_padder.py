@@ -2,8 +2,7 @@ from keras.preprocessing.sequence import pad_sequences
 
 
 class SequencePadder(object):
-    """
-    Wrapper for keras.preprocessing.sequence.pad_sequences.
+    """Wrapper for keras.preprocessing.sequence.pad_sequences.
 
     Has applications in timeseries, text, etc.
     """
@@ -12,6 +11,5 @@ class SequencePadder(object):
         self.pad_length = pad_length
 
     def pad_sequences(self, X):
-        """Pads a sequence of data to a certain length.
-        """
+        """Pads the given sequence of data to self.pad_length."""
         return pad_sequences(X, maxlen=self.pad_length)

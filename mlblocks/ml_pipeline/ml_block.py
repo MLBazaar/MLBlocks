@@ -14,7 +14,7 @@ class MLBlock(object):
     """
 
     def __init__(self, name, model, fixed_hyperparams, tunable_hyperparams):
-        """ Initializes this MLBlock.
+        """Initialize this MLBlock.
 
         Args:
             name: The name of this step primitive.

@@ -2,12 +2,11 @@ from mlblocks.ml_pipeline.ml_pipeline import MLPipeline
 
 
 class LstmTextClassifier(MLPipeline):
-    """
-    LSTM text pipeline via Keras.
+    """LSTM text pipeline via Keras.
 
     From:
     http://www.developintelligence.com/blog/2017/06/practical-neural-networks-keras-classifying-yelp-reviews/
-    """
+    """  # noqa
 
     def __new__(cls, num_classes, pad_length=None, optimizer=None, loss=None):
         lstm = MLPipeline.from_ml_json([
