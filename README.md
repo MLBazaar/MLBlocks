@@ -12,13 +12,13 @@ Pipelines and primitives for machine learning and data science.
 
 ## Overview
 
-MLBlocks is a simple framework for composing end-to-end tunable data science
-pipelines.
+MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines.
 
-At a high level, it transforms JSON specifications of data science primitives
-into MLBlock instances, which expose tunable hyperparameters via MLHyperparams
-and can be composed together to form MLPipelines, which model end-to-end
-tunable data science pipelines.
+ At a high level:
+ * Machine learning primitives are specified using standardized JSONs 
+ * User (or an external automated engine) specifies a list of primitives 
+ * The library transforms JSON specifications of machine learning primitives (blocks) into MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes a MLPipeline
+ * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to data and predict on a new set of data. 
 
 ## Submodules
 
