@@ -5,12 +5,10 @@ from skimage.feature import hog
 
 
 class HOG(object):
-    def __init__(self,
-                 num_orientations,
-                 num_cell_pixels,
-                 num_cells_block,
-                 img_dimension_x=None,
-                 img_dimension_y=None):
+
+    def __init__(self, num_orientations, num_cell_pixels, num_cells_block,
+                 img_dimension_x=None, img_dimension_y=None):
+
         self.num_orientations = num_orientations
         self.num_cell_pixels = num_cell_pixels
         self.num_cells_block = num_cells_block
@@ -18,7 +16,7 @@ class HOG(object):
         self.img_dimension_y = img_dimension_y
 
     def make_hog_features(self, X):
-        """The transform function of the HOG primitive.
+        """Call the transform function of the HOG primitive.
 
         NOTE: Get a "ValueError: Negative dimensions" with some settings
         of the hyperparameters.
@@ -41,8 +39,8 @@ class HOG(object):
                 pixels_per_cell=(self.num_cell_pixels, self.num_cell_pixels),
                 cells_per_block=(self.num_cells_block, self.num_cells_block),
                 block_norm='L2-Hys',
-                visualise=False)
+                visualise=False
+            )
             return features
 
-        output = np.apply_along_axis(lambda x: make_hog(x), axis=1, arr=X)
-        return output
+        return np.apply_along_axis(lambda x: make_hog(x), axis=1, arr=X)

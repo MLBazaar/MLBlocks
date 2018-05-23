@@ -1,4 +1,7 @@
-[![][pypi-img]][pypi-url] [![][travis-img]][travis-url]
+[![CircleCI][circleci-img]][circleci-url]
+
+[circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
+[circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
 
 # MLBlocks
 
@@ -6,11 +9,6 @@ Pipelines and primitives for machine learning and data science.
 
 - Free software: MIT license
 - Documentation: https://HDI-Project.github.io/mlblocks
-
-[travis-img]: https://travis-ci.org/HDI-Project/mlblocks.svg?branch=master
-[travis-url]: https://travis-ci.org/HDI-Project/mlblocks
-[pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
-[pypi-url]: https://pypi.python.org/pypi/mlblocks
 
 ## Overview
 
@@ -47,7 +45,7 @@ For neural keras primitives, refer to `simple_cnn.json`.
 The functions sublibrary provides the code for some auxiliary custom functions
 that are useful when creating pipelines. Each custom function should also have
 a corresponding primitive JSON. A useful example is the HOG featurization step
-for image pipelines, defined in `functions/image/HOG.py` amd
+for image pipelines, defined in `functions/image/hog.py` amd
 `primitive_jsons/HOG.json`.
 
 ### Pipelines
