@@ -96,7 +96,7 @@ class MLJsonParser(object):
 
             hyperparam = MLHyperparam(
                 hp_name, hp_type, hp_range, hp_is_cond, hp_val)
-            hyperparam.step_name = block_name
+            hyperparam.block_name = block_name
 
             tunable_hyperparams[hp_name] = hyperparam
 

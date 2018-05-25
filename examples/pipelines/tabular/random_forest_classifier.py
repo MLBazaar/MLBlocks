@@ -25,10 +25,10 @@ rf_classifier = RandomForestClassifier()
 for hyperparam in rf_classifier.get_tunable_hyperparams():
     print(hyperparam)
 
-# Check that the steps are correct.
-expected_steps = {'rf_classifier'}
-steps = set(rf_classifier.steps_dict.keys())
-assert expected_steps == steps
+# Check that the blocks are correct.
+expected_blocks = {'rf_classifier'}
+blocks = set(rf_classifier.blocks.keys())
+assert expected_blocks == blocks
 
 # Check that we can score properly.
 print("\nFitting pipeline...")

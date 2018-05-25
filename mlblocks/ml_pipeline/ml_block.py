@@ -17,7 +17,7 @@ class MLBlock(object):
         """Initialize this MLBlock.
 
         Args:
-            name: The name of this step primitive.
+            name: The name of this block primitive.
             model: The actual model of this primitive that acts on
                 data.
             fixed_hyperparams: A dictionary mapping this primitive's
