@@ -24,7 +24,7 @@ class LstmTextClassifier(MLPipeline):
         if loss is not None:
             update_params[('lstm_text', 'loss')] = loss
         if pad_length is not None:
-            update_params[('text_padder', 'pad_length')] = pad_length
+            update_params[('sequence_padder', 'pad_length')] = pad_length
             update_params[('lstm_text', 'pad_length')] = pad_length
         lstm.update_fixed_hyperparams(update_params)
 
@@ -32,7 +32,7 @@ class LstmTextClassifier(MLPipeline):
 
 
 class LstmTextRegressor(MLPipeline):
-    def __new__(cls, optimizer=None, loss=None):
+    def __new__(cls, pad_length=None, optimizer=None, loss=None):
         lstm = MLPipeline.from_ml_json(
             ['tokenizer', 'sequence_padder', 'lstm_text'])
 
@@ -41,6 +41,9 @@ class LstmTextRegressor(MLPipeline):
             update_params[('lstm_text', 'optimizer')] = optimizer
         if loss is not None:
             update_params[('lstm_text', 'loss')] = loss
+        if pad_length is not None:
+            update_params[('sequence_padder', 'pad_length')] = pad_length
+            update_params[('lstm_text', 'pad_length')] = pad_length
         lstm.update_fixed_hyperparams(update_params)
 
         return lstm

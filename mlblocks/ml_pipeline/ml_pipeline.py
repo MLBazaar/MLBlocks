@@ -185,7 +185,7 @@ class MLPipeline(object):
 
         self.update_tunable_hyperparams(all_tunable_hyperparams)
 
-    def fit(self, x, y, fit_params=None):
+    def fit(self, x, y, fit_params=None, produce_params=None):
         """Fit this pipeline to the specified training data.
 
         Args:
@@ -198,23 +198,30 @@ class MLPipeline(object):
         """
         if fit_params is None:
             fit_params = {}
+        if produce_params is None:
+            produce_params = {}
 
-        param_dict = {step_name: {} for step_name in self.dataflow}
+        fit_param_dict = {step_name: {} for step_name in self.dataflow}
         for key, value in fit_params.items():
             name, param = key
-            param_dict[name][param] = fit_params[key]
+            fit_param_dict[name][param] = fit_params[key]
+
+        produce_param_dict = {step_name: {} for step_name in self.dataflow}
+        for key, value in produce_params.items():
+            name, param = key
+            produce_param_dict[name][param] = produce_params[key]
 
         # Initially our transformed data is simply our input data.
         transformed_data = x
         for step_name in self.dataflow:
             step = self.steps_dict[step_name]
             try:
-                step.fit(transformed_data, y, **param_dict[step_name])
+                step.fit(transformed_data, y, **fit_param_dict[step_name])
             except TypeError:
                 # Some components only fit on an X.
-                step.fit(transformed_data, **param_dict[step_name])
+                step.fit(transformed_data, **fit_param_dict[step_name])
 
-            transformed_data = step.produce(transformed_data, **param_dict[step_name])
+            transformed_data = step.produce(transformed_data, **produce_param_dict[step_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.

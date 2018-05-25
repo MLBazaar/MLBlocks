@@ -94,8 +94,8 @@ assert expected_steps == steps
 # Check that we can score properly.
 print("\nFitting pipeline...")
 X, sample_freqs = load_and_segment(filepaths)
-fit_params = {('audio_featurizer', 'sample_freqs'): sample_freqs}
-audio_pipeline.fit(X, y, fit_params=fit_params)
+produce_params = {('audio_featurizer', 'sample_freqs'): sample_freqs}
+audio_pipeline.fit(X, y, produce_params=produce_params)
 print("\nFit pipeline.")
 
 print("\nScoring pipeline...")
