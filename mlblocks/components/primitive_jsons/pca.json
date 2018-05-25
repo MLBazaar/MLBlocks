@@ -1,0 +1,10 @@
+{
+    "name": "pca",
+    "class": "sklearn.decomposition.PCA",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}

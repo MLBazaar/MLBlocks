@@ -214,9 +214,9 @@ class MLPipeline(object):
                 # Some components only fit on an X.
                 step.fit(transformed_data, **param_dict[step_name])
 
-            transformed_data = step.produce(transformed_data)
+            transformed_data = step.produce(transformed_data, **param_dict[step_name])
 
-    def predict(self, x):
+    def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
 
         fit() must be called at least once before predict().
@@ -228,10 +228,18 @@ class MLPipeline(object):
         Returns:
             The predicted values.
         """
+        if predict_params is None:
+            predict_params = {}
+
+        param_dict = {step_name: {} for step_name in self.dataflow}
+        for key, value in predict_params.items():
+            name, param = key
+            param_dict[name][param] = predict_params[key]
+
         transformed_data = x
         for step_name in self.dataflow:
             step = self.steps_dict[step_name]
-            transformed_data = step.produce(transformed_data)
+            transformed_data = step.produce(transformed_data, **param_dict[step_name])
 
         # The last value stored in transformed_data is our final output value.
         return transformed_data

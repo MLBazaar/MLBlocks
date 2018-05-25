@@ -4,7 +4,7 @@
     "fit": "",
     "produce": "pad_sequences",
     "fixed_hyperparameters": {
-        "pad_length": 1500
+        "pad_length": null
     },
     "tunable_hyperparameters": {},
     "root_hyperparameters": [],

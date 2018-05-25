@@ -1,0 +1,10 @@
+{
+    "name": "audio_featurizer",
+    "class": "mlblocks.components.functions.audio.featurize_audio.AudioFeaturizer",
+    "fit": "",
+    "produce": "produce",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
