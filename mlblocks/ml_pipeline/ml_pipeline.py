@@ -89,52 +89,6 @@ class MLPipeline(object):
 
             self.blocks[block.name] = block
 
-    # @classmethod
-    # def from_json_filepaths(cls, json_filepath_list):
-    #     """Initialize a MLPipeline with a list of paths to JSON files.
-
-    #     Args:
-    #         json_filepath_list: A list of paths to JSON files
-    #             representing the MLBlocks composing this pipeline.
-
-    #     Returns:
-    #         A MLPipeline defined by the JSON files.
-    #     """
-    #     loaded_json_metadata = []
-    #     for json_filepath in json_filepath_list:
-    #         with open(json_filepath, 'r') as f:
-    #             json_metadata = json.load(f)
-    #             loaded_json_metadata.append(json_metadata)
-
-    #     return cls(loaded_json_metadata)
-
-    # @classmethod
-    # def from_ml_json(cls, json_names):
-    #     """Initialize a MLPipeline with a list of block names.
-
-    #     These block names should correspond to the JSON file names
-    #     present in the components/primitive_jsons directory.
-
-    #     Args:
-    #         json_names: A list of primitive names corresponding to
-    #             JSON files in components/primitive_jsons.
-
-    #     Returns:
-    #         A MLPipeline defined by the JSON primitive names.
-    #     """
-    #     json_filepaths = []
-    #     for json_name in json_names:
-    #         json_filename = '{}.{}'.format(json_name, 'json')
-    #         path_to_json = os.path.join(_JSON_DIR, json_filename)
-    #         if not os.path.isfile(path_to_json):
-    #             error = ("No JSON corresponding to the specified "
-    #                      "name ({}) exists.".format(json_name))
-    #             raise ValueError(error)
-
-    #         json_filepaths.append(path_to_json)
-
-    #     return cls.from_json_filepaths(json_filepaths)
-
     def get_fixed_hyperparams(self):
         """Get all the fixed hyperparameters belonging to this pipeline.
 
