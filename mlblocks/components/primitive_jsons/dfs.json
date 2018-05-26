@@ -1,14 +1,9 @@
 {
     "name": "dfs",
     "class": "mlblocks.components.functions.multitable.dfs.DeepFeatureSynthesis",
-    "fit": "",
-    "produce": "dfs",
-    "fixed_hyperparameters": {
-        "target_entity": null,
-        "cutoff_time": null,
-        "training_window": null,
-        "verbose": false
-    },
+    "fit": "fit",
+    "produce": "produce",
+    "fixed_hyperparameters": {},
     "tunable_hyperparameters": {
         "max_depth": {
             "type": "int",
