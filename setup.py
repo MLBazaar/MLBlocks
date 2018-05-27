@@ -47,7 +47,7 @@ setup(
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
     name='mlblocks',
-    packages=find_packages(include=['mlblocks']),
+    packages=find_packages(include=['mlblocks', 'mlblocks.*']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
