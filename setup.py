@@ -19,7 +19,7 @@ requirements = [
     'scikit-learn>=0.19.1',
     'tensorflow>=1.7.0',
     'pandas>=0.22.0',
-    'featuretools>=0.1.17'
+    'featuretools==0.1.17'
 ]
 
 setup_requirements = ['pytest-runner', ]
