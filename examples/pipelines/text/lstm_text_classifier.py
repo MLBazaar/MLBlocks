@@ -33,12 +33,12 @@ for hyperparam in lstm_text.get_fixed_hyperparams():
 for hyperparam in lstm_text.get_tunable_hyperparams():
     print(hyperparam)
 
-# Check that the steps are correct.
-expected_steps = {
+# Check that the blocks are correct.
+expected_blocks = {
     'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'
 }
-steps = set(lstm_text.steps_dict.keys())
-assert expected_steps == steps
+blocks = set(lstm_text.blocks.keys())
+assert expected_blocks == blocks
 
 # Only use 1/30 of the data for quick testing.
 x_sample = X[:len(X) // 30]

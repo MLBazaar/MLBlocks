@@ -21,11 +21,11 @@ _FLOAT_TYPES = (Type.FLOAT, Type.FLOAT_EXP)
 class MLHyperparam(object):
     """A Hyperparameter that the DeepMining system can act on.
 
-    Should belong to a DmStep.
+    Should belong to a MLBLock.
 
     Attributes:
         param_name: The name of this hyperparameter.
-        step_name: The name of the DmStep this hyperparameter belongs
+        block_name: The name of the MLBLock this hyperparameter belongs
             to.
         param_type: The type of this hyperparameter. See the Type object
             in this module for possible types.
@@ -56,7 +56,7 @@ class MLHyperparam(object):
                 specified.
         """
         self.param_name = param_name
-        self.step_name = None
+        self.block_name = None
 
         self.param_type = param_type
         self.param_range = param_range
@@ -89,13 +89,13 @@ class MLHyperparam(object):
         return (
             "Hyperparameter: "
             "Name: {0}, "
-            "Step Name: {1}, "
+            "Block Name: {1}, "
             "Type: {2}, "
             "Range: {3}, "
             "Value: {4}"
         ).format(
             self.param_name,
-            self.step_name,
+            self.block_name,
             self.param_type,
             self.param_range,
             self.value
