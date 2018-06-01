@@ -32,10 +32,10 @@ for hyperparam in simple_cnn.get_fixed_hyperparams():
 for hyperparam in simple_cnn.get_tunable_hyperparams():
     print(hyperparam)
 
-# Check that the steps are correct.
-expected_steps = {'simple_cnn', 'convert_class_probs'}
-steps = set(simple_cnn.steps_dict.keys())
-assert expected_steps == steps
+# Check that the blocks are correct.
+expected_blocks = {'simple_cnn', 'convert_class_probs'}
+blocks = set(simple_cnn.blocks.keys())
+assert expected_blocks == blocks
 
 # Properly format data.
 prep_x = np.array([np.resize(im, (224, 224, 3))

@@ -19,7 +19,7 @@ class KerasJsonParser(MLJsonParser):
 
     def build_mlblock_model(self, fixed_hyperparameters,
                             tunable_hyperparameters):
-        # Load the class for this primitive step.
+        # Load the class for this primitive block.
         full_module_class = self.block_json['class']
         assert (full_module_class == 'keras.models.Sequential')   # ??
         sequential_class = self._get_class(full_module_class)

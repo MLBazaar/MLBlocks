@@ -1,129 +1,137 @@
 import json
 import os
+from collections import OrderedDict, defaultdict
 
 from mlblocks.json_parsers import keras_json_parser, ml_json_parser
+from mlblocks.ml_pipeline.ml_block import MLBlock
+
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_JSON_DIR = os.path.join(_CURRENT_DIR, '../components/primitive_jsons')
 
 
 class MLPipeline(object):
     """A pipeline that the DeepMining system can operate on.
 
     Attributes:
-        steps_dict: A dictionary mapping this pipeline's step names to
-            DMSteps.
+        blocks: A dictionary mapping this pipeline's block names to
+                the actual MLBlock objects.
+        BLOCKS: A list containing the blocks to load. Used in Subclasses.
     """
 
-    def __init__(self, steps, dataflow=None):
-        """Initialize a DmPipeline with a list of corresponding DmSteps.
-
-        Args:
-            steps: A list of DmSteps composing this pipeline.
-        """
-        # Contains the actual primitives.
-        self.steps_dict = {
-            k: v
-            for (k, v) in [(step.name, step) for step in steps]
-        }
-
-        # For now, just use a list to order the steps.
-        self.dataflow = dataflow if dataflow is not None else [
-            step.name for step in steps
-        ]
+    BLOCKS = None
 
     @classmethod
     def _get_parser(cls, json_block_metadata):
+        # TODO: Make this a MLBlock method
         # TODO: Implement better logic for deciding what parser to
         # use. Maybe some sort of config mapping parser to modules?
+        # IDEA: organize the primitives by libraries, and decide
+        # which parser to use depending on the JSON path
         parser = ml_json_parser.MLJsonParser(json_block_metadata)
-        full_module_class = json_block_metadata['class']
 
         # For now, hardcode this logic for Keras.
+        full_module_class = json_block_metadata['class']
         if full_module_class.startswith('keras.models.Sequential'):
             parser = keras_json_parser.KerasJsonParser(json_block_metadata)
 
         return parser
 
     @classmethod
-    def from_json_metadata(cls, json_metadata):
-        """Initialize a DmPipeline with a list of dicts defining DmSteps.
+    def get_block_path(cls, block_name):
+        """Locate the JSON file of the given primitive."""
 
-        Args:
-            json_metadata: A list of dicts representing the
-                DmSteps composing this pipeline.
+        if os.path.isfile(block_name):
+            return block_name
 
-        Returns:
-            A DmPipeline defined by the provided dicts.
-        """
-        block_steps = []
-        for json_md in json_metadata:
-            parser = cls._get_parser(json_md)
-            block_steps.append(parser.build_mlblock())
+        json_filename = '{}.{}'.format(block_name, 'json')
+        block_path = os.path.join(_JSON_DIR, json_filename)
 
-        return cls(block_steps)
+        if not os.path.isfile(block_path):
+            error = ("No JSON corresponding to the specified "
+                     "name ({}) exists.".format(block_name))
+            raise ValueError(error)
 
-    @classmethod
-    def from_json_filepaths(cls, json_filepath_list):
-        """Initialize a DmPipeline with a list of paths to JSON files.
-
-        Args:
-            json_filepath_list: A list of paths to JSON files
-                representing the DmSteps composing this pipeline.
-
-        Returns:
-            A DmPipeline defined by the JSON files.
-        """
-        loaded_json_metadata = []
-        for json_filepath in json_filepath_list:
-            with open(json_filepath, 'r') as f:
-                json_metadata = json.load(f)
-                loaded_json_metadata.append(json_metadata)
-
-        return cls.from_json_metadata(loaded_json_metadata)
+        return block_path
 
     @classmethod
-    def from_ml_json(cls, json_names):
-        """Initialize a DmPipeline with a list of step names.
+    def load_block(cls, block):
+        """Build block from either a Block name or a config dict.
 
-        These step names should correspond to the JSON file names
-        present in the components/primitive_jsons directory.
+        If a string is given, it is used to locate and load the corresponding
+        JSON file, and then loaded.
+        """
+        if isinstance(block, str):
+            block_path = cls.get_block_path(block)
+            with open(block_path, 'r') as f:
+                block = json.load(f)
+
+        parser = cls._get_parser(block)
+        return parser.build_mlblock()
+
+    def __init__(self, blocks=None):
+        """Initialize a MLPipeline with a list of corresponding MLBlocks.
 
         Args:
-            json_names: A list of primitive names corresponding to
-                JSON files in components/primitive_jsons.
+            blocks: A list of MLBlocks composing this pipeline. MLBlocks
+                    can be either MLBlock instances or primitive names to
+                    load from the configuration JSON files.
+        """
+
+        blocks = blocks or self.BLOCKS
+
+        if not blocks:
+            raise ValueError("At least one block is needed")
+
+        self.blocks = OrderedDict()
+        for block in blocks:
+            if not isinstance(block, MLBlock):
+                block = self.load_block(block)
+
+            self.blocks[block.name] = block
+
+    def get_fixed_hyperparams(self):
+        """Get all the fixed hyperparameters belonging to this pipeline.
 
         Returns:
-            A DmPipeline defined by the JSON primitive names.
+            A dict mapping (block name, fixed hyperparam name) pairs to
+            fixed hyperparam values.
         """
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        json_dir = os.path.join(current_dir, '../components/primitive_jsons')
+        fixed_hyperparams = {}
+        for block in self.blocks.values():
+            for hp_name in block.fixed_hyperparams:
+                hyperparam = block.fixed_hyperparams[hp_name]
+                fixed_hyperparams[(block.name, hp_name)] = hyperparam
 
-        json_filepaths = []
-        for json_name in json_names:
-            json_filename = '{}.{}'.format(json_name, 'json')
-            path_to_json = os.path.join(json_dir, json_filename)
-            if not os.path.isfile(path_to_json):
-                error = ("No JSON corresponding to the specified "
-                         "name ({}) exists.".format(json_name))
-                raise ValueError(error)
-
-            json_filepaths.append(path_to_json)
-
-        return cls.from_json_filepaths(json_filepaths)
+        return fixed_hyperparams
 
     def update_fixed_hyperparams(self, fixed_hyperparams):
         """Update the specified fixed hyperparameters of this pipeline.
 
         Args:
             fixed_hyperparams: A dict mapping
-                (step name, fixed hyperparam name) pairs to their
+                (block name, fixed hyperparam name) pairs to their
                 corresponding values.
         """
-        for step_name, hyperparam_name in fixed_hyperparams:
-            step = self.steps_dict[step_name]
-            hyperparam = fixed_hyperparams[(step_name, hyperparam_name)]
-            step.fixed_hyperparams[hyperparam_name] = hyperparam
+        for block_name, hyperparam_name in fixed_hyperparams:
+            block = self.blocks[block_name]
+            hyperparam = fixed_hyperparams[(block_name, hyperparam_name)]
+            block.fixed_hyperparams[hyperparam_name] = hyperparam
 
             # Update the hyperparams in the actual model as well.
-            step.update_model(step.fixed_hyperparams, step.tunable_hyperparams)
+            block.update_model(block.fixed_hyperparams, block.tunable_hyperparams)
+
+    def get_tunable_hyperparams(self):
+        """Get all tunable hyperparameters belonging to this pipeline.
+
+        Returns:
+            A list of tunable hyperparameters belonging to this
+            pipeline.
+        """
+        tunable_hyperparams = []
+        for block in self.blocks.values():
+            tunable_hyperparams += list(block.tunable_hyperparams.values())
+
+        return tunable_hyperparams
 
     def update_tunable_hyperparams(self, tunable_hyperparams):
         """Update the specified tunable hyperparameters of this pipeline.
@@ -134,54 +142,26 @@ class MLPipeline(object):
             tunable_hyperparams: A list of MLHyperparams to update.
         """
         for hyperparam in tunable_hyperparams:
-            step_name = hyperparam.step_name
-            step = self.steps_dict[step_name]
-            step.tunable_hyperparams[hyperparam.param_name] = hyperparam
+            block_name = hyperparam.block_name
+            block = self.blocks[block_name]
+            block.tunable_hyperparams[hyperparam.param_name] = hyperparam
             # Update the hyperparams in the actual model as well.
-            step.update_model(step.fixed_hyperparams, step.tunable_hyperparams)
-
-    def get_fixed_hyperparams(self):
-        """Get all the fixed hyperparameters belonging to this pipeline.
-
-        Returns:
-            A dict mapping (step name, fixed hyperparam name) pairs to
-            fixed hyperparam values.
-        """
-        fixed_hyperparams = {}
-        for step in self.steps_dict.values():
-            for hp_name in step.fixed_hyperparams:
-                hyperparam = step.fixed_hyperparams[hp_name]
-                fixed_hyperparams[(step.name, hp_name)] = hyperparam
-
-        return fixed_hyperparams
-
-    def get_tunable_hyperparams(self):
-        """Get all tunable hyperparameters belonging to this pipeline.
-
-        Returns:
-            A list of tunable hyperparameters belonging to this
-            pipeline.
-        """
-        tunable_hyperparams = []
-        for step in self.steps_dict.values():
-            tunable_hyperparams += list(step.tunable_hyperparams.values())
-
-        return tunable_hyperparams
+            block.update_model(block.fixed_hyperparams, block.tunable_hyperparams)
 
     def set_from_hyperparam_dict(self, hyperparam_dict):
         """Set the hyperparameters of this pipeline from a dict.
 
         This dict maps as follows:
-            (step name, hyperparam name): value
+            (block name, hyperparam name): value
 
         Args:
-            hyperparam_dict: A dict mapping (step name, hyperparam name)
+            hyperparam_dict: A dict mapping (block name, hyperparam name)
                 tuples to hyperparam values.
         """
         all_tunable_hyperparams = self.get_tunable_hyperparams()
         for hp in all_tunable_hyperparams:
-            if (hp.step_name, hp.param_name) in hyperparam_dict:
-                hp.value = hyperparam_dict[(hp.step_name, hp.param_name)]
+            if (hp.block_name, hp.param_name) in hyperparam_dict:
+                hp.value = hyperparam_dict[(hp.block_name, hp.param_name)]
 
         self.update_tunable_hyperparams(all_tunable_hyperparams)
 
@@ -190,38 +170,37 @@ class MLPipeline(object):
 
         Args:
             x: Training data. Must fulfill input requirements of the
-                first step of the pipeline.
+                first block of the pipeline.
             y: Training targets. Must fulfill label requirements for
-                all steps of the pipeline.
+                all blocks of the pipeline.
             fit_params: Any params to pass into fit.
-                In the form {(step name, param name): param value}
+                In the form {(block name, param name): param value}
         """
         if fit_params is None:
             fit_params = {}
         if produce_params is None:
             produce_params = {}
 
-        fit_param_dict = {step_name: {} for step_name in self.dataflow}
+        fit_param_dict = defaultdict(dict)
         for key, value in fit_params.items():
             name, param = key
             fit_param_dict[name][param] = fit_params[key]
 
-        produce_param_dict = {step_name: {} for step_name in self.dataflow}
+        produce_param_dict = defaultdict(dict)
         for key, value in produce_params.items():
             name, param = key
             produce_param_dict[name][param] = produce_params[key]
 
         # Initially our transformed data is simply our input data.
         transformed_data = x
-        for step_name in self.dataflow:
-            step = self.steps_dict[step_name]
+        for block_name, block in self.blocks.items():
             try:
-                step.fit(transformed_data, y, **fit_param_dict[step_name])
+                block.fit(transformed_data, y, **fit_param_dict[block_name])
             except TypeError:
                 # Some components only fit on an X.
-                step.fit(transformed_data, **fit_param_dict[step_name])
+                block.fit(transformed_data, **fit_param_dict[block_name])
 
-            transformed_data = step.produce(transformed_data, **produce_param_dict[step_name])
+            transformed_data = block.produce(transformed_data, **produce_param_dict[step_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
@@ -230,7 +209,7 @@ class MLPipeline(object):
 
         Args:
             x: Input data. Must fulfill input requirements of the first
-                step of the pipeline.
+                block of the pipeline.
 
         Returns:
             The predicted values.
@@ -238,26 +217,25 @@ class MLPipeline(object):
         if predict_params is None:
             predict_params = {}
 
-        param_dict = {step_name: {} for step_name in self.dataflow}
+        param_dict = defaultdict(dict)
         for key, value in predict_params.items():
             name, param = key
             param_dict[name][param] = predict_params[key]
 
         transformed_data = x
-        for step_name in self.dataflow:
-            step = self.steps_dict[step_name]
-            transformed_data = step.produce(transformed_data, **param_dict[step_name])
+        for block in self.blocks.values():
+            transformed_data = block.produce(transformed_data, **param_dict[step_name])
 
         # The last value stored in transformed_data is our final output value.
         return transformed_data
 
-    def __str__(self):
-        return str(self.to_dict())
-
     def to_dict(self):
         all_tunable_hyperparams = self.get_tunable_hyperparams()
         return {
-            '{0}__{1}'.format(hyperparam.step_name, hyperparam.param_name):
+            '{0}__{1}'.format(hyperparam.block_name, hyperparam.param_name):
             hyperparam.value
             for hyperparam in all_tunable_hyperparams
         }
+
+    def __str__(self):
+        return str(self.to_dict())

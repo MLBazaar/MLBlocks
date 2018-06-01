@@ -32,13 +32,13 @@ for hyperparam in traditional_text.get_fixed_hyperparams():
 for hyperparam in traditional_text.get_tunable_hyperparams():
     print(hyperparam)
 
-# Check that the steps are correct.
-expected_steps = {
+# Check that the blocks are correct.
+expected_blocks = {
     'count_vectorizer', 'to_array', 'tfidf_transformer',
     'multinomial_nb'
 }
-steps = set(traditional_text.steps_dict.keys())
-assert expected_steps == steps
+blocks = set(traditional_text.blocks.keys())
+assert expected_blocks == blocks
 
 # Check that we can score properly.
 print("\nFitting pipeline...")

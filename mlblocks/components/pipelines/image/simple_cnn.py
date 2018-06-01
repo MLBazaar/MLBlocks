@@ -17,10 +17,10 @@ class SimpleCnnClassifier(MLPipeline):
         Dropout
         Dense
     """
+    BLOCKS = ['simple_cnn', 'convert_class_probs']
 
-    def __new__(cls, num_classes, optimizer=None, loss=None):
-        simple_cnn = MLPipeline.from_ml_json(
-            ['simple_cnn', 'convert_class_probs'])
+    def __init__(self, num_classes, optimizer=None, loss=None):
+        super(SimpleCnnClassifier, self).__init__()
 
         update_params = {
             ('simple_cnn', 'dense2_units'): num_classes,
@@ -30,22 +30,25 @@ class SimpleCnnClassifier(MLPipeline):
         }
         if optimizer is not None:
             update_params[('simple_cnn', 'optimizer')] = optimizer
+
         if loss is not None:
             update_params[('simple_cnn', 'loss')] = loss
-        simple_cnn.update_fixed_hyperparams(update_params)
 
-        return simple_cnn
+        self.update_fixed_hyperparams(update_params)
 
 
 class SimpleCnnRegressor(MLPipeline):
-    def __new__(cls, optimizer=None, loss=None):
-        simple_cnn = MLPipeline.from_ml_json(['simple_cnn'])
+
+    BLOCKS = ['simple_cnn']
+
+    def __init__(self, optimizer=None, loss=None):
+        super(SimpleCnnRegressor, self).__init__()
 
         update_params = {}
         if optimizer is not None:
             update_params[('simple_cnn', 'optimizer')] = optimizer
+
         if loss is not None:
             update_params[('simple_cnn', 'loss')] = loss
-        simple_cnn.update_fixed_hyperparams(update_params)
 
-        return simple_cnn
+        self.update_fixed_hyperparams(update_params)

@@ -11,7 +11,7 @@ with open('README.md') as readme_file:
 with open('HISTORY.md') as history_file:
     history = history_file.read()
 
-requirements = [
+install_requires = [
     'Keras>=2.1.5',
     'numpy>=1.14.0',
     'opencv-python>=3.4.0.12',
@@ -22,9 +22,14 @@ requirements = [
     'featuretools==0.1.17'
 ]
 
-setup_requirements = ['pytest-runner', ]
+tests_require = [
+    'mock>=2.0.0',
+    'pytest>=3.4.2',
+]
 
-test_requirements = ['pytest', ]
+setup_requires = [
+    'pytest-runner>=2.11.1',
+]
 
 setup(
     author='MIT Data To AI Lab',
@@ -40,18 +45,21 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     description="Pipelines and primitives for machine learning and data science.",
+    extras_require={
+        'test': tests_require
+    },
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=install_requires,
     keywords='machine learning classification',
     license="MIT license",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
-    setup_requires=setup_requirements,
+    setup_requires=setup_requires,
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.1.0',
+    version='0.1.0-dev',
     zip_safe=False,
 )

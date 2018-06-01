@@ -8,10 +8,10 @@ class LstmTextClassifier(MLPipeline):
     http://www.developintelligence.com/blog/2017/06/practical-neural-networks-keras-classifying-yelp-reviews/
     """  # noqa
 
-    def __new__(cls, num_classes, pad_length=None, optimizer=None, loss=None):
-        lstm = MLPipeline.from_ml_json([
-            'tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs'
-        ])
+    BLOCKS = ['tokenizer', 'sequence_padder', 'lstm_text', 'convert_class_probs']
+
+    def __init__(self, num_classes, pad_length=None, optimizer=None, loss=None):
+        super(LstmTextClassifier, self).__init__()
 
         update_params = {
             ('lstm_text', 'dense_units'): num_classes,
@@ -19,31 +19,36 @@ class LstmTextClassifier(MLPipeline):
             ('lstm_text', 'optimizer'): 'keras.optimizers.Adadelta',
             ('lstm_text', 'loss'): 'keras.losses.categorical_crossentropy'
         }
+
         if optimizer is not None:
             update_params[('lstm_text', 'optimizer')] = optimizer
+
         if loss is not None:
             update_params[('lstm_text', 'loss')] = loss
+
         if pad_length is not None:
             update_params[('sequence_padder', 'pad_length')] = pad_length
             update_params[('lstm_text', 'pad_length')] = pad_length
-        lstm.update_fixed_hyperparams(update_params)
 
-        return lstm
+        self.update_fixed_hyperparams(update_params)
 
 
 class LstmTextRegressor(MLPipeline):
-    def __new__(cls, pad_length=None, optimizer=None, loss=None):
-        lstm = MLPipeline.from_ml_json(
-            ['tokenizer', 'sequence_padder', 'lstm_text'])
 
-        update_params = {}
+    BLOCKS = ['tokenizer', 'sequence_padder', 'lstm_text']
+
+    def __init__(self, pad_length=None, optimizer=None, loss=None):
+        super(LstmTextRegressor, self).__init__()
+
+        update_params = dict()
         if optimizer is not None:
             update_params[('lstm_text', 'optimizer')] = optimizer
+
         if loss is not None:
             update_params[('lstm_text', 'loss')] = loss
+
         if pad_length is not None:
             update_params[('sequence_padder', 'pad_length')] = pad_length
             update_params[('lstm_text', 'pad_length')] = pad_length
-        lstm.update_fixed_hyperparams(update_params)
 
-        return lstm
+        self.update_fixed_hyperparams(update_params)
