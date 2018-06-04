@@ -16,9 +16,6 @@ install_requires = [
     'numpy>=1.14.0',
     'opencv-python>=3.4.0.12',
     'scikit-image>=0.13.1',
-    'scikit-learn>=0.19.1',
-    'tensorflow>=1.7.0',
-    'pandas>=0.22.0',
     'featuretools==0.1.17'
 ]
 
