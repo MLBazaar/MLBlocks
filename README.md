@@ -15,10 +15,10 @@ Pipelines and primitives for machine learning and data science.
 MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines.
 
  At a high level:
- * Machine learning primitives are specified using standardized JSONs 
- * User (or an external automated engine) specifies a list of primitives 
+ * Machine learning primitives are specified using standardized JSONs
+ * User (or an external automated engine) specifies a list of primitives
  * The library transforms JSON specifications of machine learning primitives (blocks) into MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes a MLPipeline
- * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to data and predict on a new set of data. 
+ * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to data and predict on a new set of data.
 
 ## Submodules
 
@@ -84,31 +84,37 @@ You can also clone the repository and install it from sources
 
 ### Initializing a pipeline
 
-With MLBlocks, we can simply initialize a pipeline consisting of primitives
-in our library by passing in a list of JSON names into the MLPipeline
-`from_ml_json` method:
+With MLBlocks, we can simply initialize a pipeline by passing it the list
+of MLBlocks that will compose it.
+
 
 ```
->>> from mlblocks.ml_pipeline.ml_pipeline import MLPipeline
->>> image_pipeline = MLPipeline.from_ml_json(['HOG', 'random_forest_classifier'])
+>>> from mlblocks.mlpipeline import MLPipeline
+>>> image_pipeline = MLPipeline(['HOG', 'random_forest_classifier'])
 ```
 
-We can also initialize from full path names to JSON files or from
-already-loaded JSON dictionaries via the MLPipeline `from_json_filepaths` and
-`from_json_metadata` methods respectively.
+Alternatively, each block name can be replaced by:
 
-#### Initialization from pipeline sublibrary
-
-As previously mentioned, we maintain a pipeline sublibrary that contains
-several wrappers around specified pipelines for various problem types.
-We can simply initialize via the wrapper constructors:
+* The path to a json file containing the metadata of the primitive
+* A dict containing the metadata of the primitive
+* An MLBlock instance
 
 ```
->>> from mlblocks.components.pipelines.image.traditional_image import TraditionalImagePipeline
->>> image_pipeline = TraditionalImagePipeline()
+>>> from mlblocks.mlblock import MLBlock
+>>> a_block = MLBlock(...)
+>>> a_primitive_dict = {
+...     "name": "some_primitive_name",
+...     "class": "the.primitive.Class",
+...     "fit": "the_fit_method_name",
+...     "produce": "the_produce_method_name",
+...     "fixed_hyperparameters": {},
+...     "tunable_hyperparameters": {},
+...     "root_hyperparameters": [],
+...     "conditional_hyperparameters": {}
+... }
+>>> blocks = [a_block, 'path/to/a/primitive.json', a_primitive_dict]
+>>> pipeline = MLPipeline(blocks)
 ```
-
-At this point, we can already fit and predict on data.
 
 ### Obtaining and updating hyperparameters
 
@@ -200,5 +206,3 @@ these predictions, we can do useful things, such as obtain an accuracy score.
 >>> print(score)
 0.85
 ```
-
-

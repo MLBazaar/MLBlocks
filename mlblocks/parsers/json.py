@@ -1,14 +1,13 @@
-import importlib
-
-from mlblocks.ml_pipeline.ml_block import MLBlock
-from mlblocks.ml_pipeline.ml_hyperparam import MLHyperparam
+from mlblocks.mlblock import MLBlock
+from mlblocks.mlhyperparam import MLHyperparam
+from mlblocks.parsers import import_object
 
 
 class MLJsonParser(object):
     """A basic JSON primitive parser.
 
     Supports loading JSONS in the format shown in:
-        components/primitive_jsons/random_forest_classifier.json
+        mlblocks/primitives/random_forest_classifier.json
     """
 
     def __init__(self, block_json):
@@ -16,20 +15,9 @@ class MLJsonParser(object):
 
         Args:
             block_json: A JSON dict to parse into an MLBlock.
-                See components/primitive_jsons for JSON examples.
+                See mlblocks/primitives for JSON examples.
         """
         self.block_json = block_json
-
-    @staticmethod
-    def _get_class(full_module_class):
-        """Loads a class given the full module name.
-
-        e.g. keras.layers.Dense or keras.models.Sequential
-        """
-        module_name = '.'.join(full_module_class.split('.')[:-1])
-        class_name = full_module_class.split('.')[-1]
-        module = importlib.import_module(module_name)
-        return getattr(module, class_name)
 
     def build_mlblock(self):
         block_name = self.block_json['name']
@@ -38,18 +26,18 @@ class MLJsonParser(object):
         model = self.build_mlblock_model(fixed_hyperparams,
                                          tunable_hyperparams)
 
-        ml_block_instance = MLBlock(
+        instance = MLBlock(
             name=block_name,
             model=model,
             fixed_hyperparams=fixed_hyperparams,
-            tunable_hyperparams=tunable_hyperparams)
+            tunable_hyperparams=tunable_hyperparams
+        )
 
-        self.default_update_ml_block_instance_methods(ml_block_instance)
+        self.replace_instance_methods(instance)
 
-        return ml_block_instance
+        return instance
 
-    def build_mlblock_model(self, fixed_hyperparameters,
-                            tunable_hyperparameters):
+    def build_mlblock_model(self, fixed_hyperparameters, tunable_hyperparameters):
         """Build the model for this primitive block.
 
         Args:
@@ -64,7 +52,7 @@ class MLJsonParser(object):
         Returns:
             The model instance of this primitive block.
         """
-        block_class = self._get_class(self.block_json['class'])
+        block_class = import_object(self.block_json['class'])
 
         model_kwargs = fixed_hyperparameters.copy()
         model_kwargs.update({
@@ -102,19 +90,19 @@ class MLJsonParser(object):
 
         return tunable_hyperparams
 
-    def default_update_ml_block_instance_methods(self, ml_block_instance):
-        """Update the instance methods of the specified MLBlock instance.
+    def replace_instance_methods(self, instance):
+        """Replace the instance methods of the specified MLBlock instance.
 
         See the MLBlock class for instance method details.
 
-        fit and produce are updated with the fit and produce methods specified
+        fit and produce are replaced with the fit and produce methods specified
         in the JSON.
 
-        update_model is updated with a function that rebuilds the model via
+        update_model is replaced with a function that rebuilds the model via
             build_mlblock_method and updates the model.
 
         Args:
-            ml_block_instance: The MLBlock instance to update methods for.
+            instance: The MLBlock instance to replace methods for.
         """
         # Declare fit and predict methods in this way so that they
         # remain bound to the MLBlock instance's model.
@@ -122,22 +110,20 @@ class MLJsonParser(object):
         produce_method_name = self.block_json['produce']
         build_method = self.build_mlblock_model
 
-        def mlblock_fit(self, *args, **kwargs):
+        def fit(self, *args, **kwargs):
             # Only fit if fit method provided.
             if fit_method_name:
                 getattr(self.model, fit_method_name)(*args, **kwargs)
 
-        ml_block_instance.fit = mlblock_fit.__get__(ml_block_instance, MLBlock)
+        instance.fit = fit.__get__(instance, MLBlock)
 
-        def mlblock_produce(self, *args, **kwargs):
+        def produce(self, *args, **kwargs):
             # Every MLBlock needs a produce method.
             return getattr(self.model, produce_method_name)(*args, **kwargs)
 
-        ml_block_instance.produce = mlblock_produce.__get__(
-            ml_block_instance, MLBlock)
+        instance.produce = produce.__get__(instance, MLBlock)
 
-        def mlblock_update_model(self, fixed_hyperparams, tunable_hyperparams):
+        def update_model(self, fixed_hyperparams, tunable_hyperparams):
             self.model = build_method(fixed_hyperparams, tunable_hyperparams)
 
-        ml_block_instance.update_model = mlblock_update_model.__get__(
-            ml_block_instance, MLBlock)
+        instance.update_model = update_model.__get__(instance, MLBlock)
