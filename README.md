@@ -31,9 +31,9 @@ The MLBlocks consists of several modules and folders:
 * `mlpipeline.py`: Defines the `MLPipeline` class that allows combining multiple MLBlocks.
 * `mlhyperparam.py`: Defines the MLHyperparam, an abstraction of an MLBlock tunable
   hyperparameter.
-* `functions` is a submodule that contains a collection of helper functions used to integrate
+* `functions`: is a submodule that contains a collection of helper functions used to integrate
   primitives into MLBlocks
-* `parsers` defines the parsers: classes that initialize MLBlock instances
+* `parsers`: defines the parsers: classes that initialize MLBlock instances
   from JSON primitives.
 * `primitives`: folder that contains the collection of JSON primitives.
 
