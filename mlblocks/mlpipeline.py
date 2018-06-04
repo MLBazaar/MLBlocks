@@ -2,11 +2,12 @@ import json
 import os
 from collections import OrderedDict, defaultdict
 
-from mlblocks.json_parsers import keras_json_parser, ml_json_parser
-from mlblocks.ml_pipeline.ml_block import MLBlock
+from mlblocks.mlblock import MLBlock
+from mlblocks.parsers.json import MLJsonParser
+from mlblocks.parsers.keras import KerasJsonParser
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-_JSON_DIR = os.path.join(_CURRENT_DIR, '../components/primitive_jsons')
+_JSON_DIR = os.path.join(_CURRENT_DIR, 'primitives')
 
 
 class MLPipeline(object):
@@ -21,23 +22,23 @@ class MLPipeline(object):
     BLOCKS = None
 
     @classmethod
-    def _get_parser(cls, json_block_metadata):
+    def _get_parser(cls, metadata):
         # TODO: Make this a MLBlock method
         # TODO: Implement better logic for deciding what parser to
         # use. Maybe some sort of config mapping parser to modules?
         # IDEA: organize the primitives by libraries, and decide
         # which parser to use depending on the JSON path
-        parser = ml_json_parser.MLJsonParser(json_block_metadata)
 
         # For now, hardcode this logic for Keras.
-        full_module_class = json_block_metadata['class']
-        if full_module_class.startswith('keras.models.Sequential'):
-            parser = keras_json_parser.KerasJsonParser(json_block_metadata)
+        if metadata['class'] == 'keras.models.Sequential':
+            parser = KerasJsonParser(metadata)
+        else:
+            parser = MLJsonParser(metadata)
 
         return parser
 
     @classmethod
-    def get_block_path(cls, block_name):
+    def _get_block_path(cls, block_name):
         """Locate the JSON file of the given primitive."""
 
         if os.path.isfile(block_name):
@@ -54,14 +55,14 @@ class MLPipeline(object):
         return block_path
 
     @classmethod
-    def load_block(cls, block):
+    def _load_block(cls, block):
         """Build block from either a Block name or a config dict.
 
         If a string is given, it is used to locate and load the corresponding
         JSON file, and then loaded.
         """
         if isinstance(block, str):
-            block_path = cls.get_block_path(block)
+            block_path = cls._get_block_path(block)
             with open(block_path, 'r') as f:
                 block = json.load(f)
 
@@ -85,7 +86,7 @@ class MLPipeline(object):
         self.blocks = OrderedDict()
         for block in blocks:
             if not isinstance(block, MLBlock):
-                block = self.load_block(block)
+                block = self._load_block(block)
 
             self.blocks[block.name] = block
 
@@ -197,10 +198,11 @@ class MLPipeline(object):
             try:
                 block.fit(transformed_data, y, **fit_param_dict[block_name])
             except TypeError:
-                # Some components only fit on an X.
+                # Some blocks only fit on an X.
                 block.fit(transformed_data, **fit_param_dict[block_name])
 
-            transformed_data = block.produce(transformed_data, **produce_param_dict[step_name])
+            transformed_data = block.produce(
+                transformed_data, **produce_param_dict[block_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
@@ -223,8 +225,9 @@ class MLPipeline(object):
             param_dict[name][param] = predict_params[key]
 
         transformed_data = x
-        for block in self.blocks.values():
-            transformed_data = block.produce(transformed_data, **param_dict[step_name])
+        for block_name, block in self.blocks.items():
+            transformed_data = block.produce(
+                transformed_data, **param_dict[block_name])
 
         # The last value stored in transformed_data is our final output value.
         return transformed_data

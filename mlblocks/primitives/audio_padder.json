@@ -1,6 +1,6 @@
 {
     "name": "audio_padder",
-    "class": "mlblocks.components.functions.audio.pad_audio.AudioPadder",
+    "class": "mlblocks.functions.audio.pad_audio.AudioPadder",
     "fit": "fit",
     "produce": "produce",
     "fixed_hyperparameters": {},

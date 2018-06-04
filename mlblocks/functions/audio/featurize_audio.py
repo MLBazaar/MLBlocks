@@ -61,7 +61,7 @@ def spectral_entropy(data, numOfShortBlocks=10):
     """Computes the spectral entropy"""
     data = np.mean(data, axis=1)
 
-    nFFT = len(data)//2
+    nFFT = len(data) // 2
     X = FFT(data, nFFT)
     L = len(X)                         # number of frame data
     Eol = np.sum(X ** 2)            # total spectral energy
@@ -70,11 +70,14 @@ def spectral_entropy(data, numOfShortBlocks=10):
     if L != subWinLength * numOfShortBlocks:
         X = X[0:subWinLength * numOfShortBlocks]
 
-    subWindows = X.reshape(subWinLength, numOfShortBlocks, order='F').copy()  # define sub-frames (using matrix reshape)
-    s = np.sum(subWindows ** 2, axis=0) / (Eol + eps)                      # compute spectral sub-energies
-    En = -np.sum(s*np.log2(s + eps))                                    # compute spectral entropy
+    # define sub-frames (using matrix reshape)
+    subWindows = X.reshape(subWinLength, numOfShortBlocks, order='F').copy()
 
-    return En
+    # compute spectral sub-energies
+    s = np.sum(subWindows ** 2, axis=0) / (Eol + eps)
+
+    # compute spectral entropy
+    return -np.sum(s * np.log2(s + eps))
 
 
 def rand_attr1(data):
@@ -89,7 +92,7 @@ def zcr(data):
 
     count = len(data)
     countZ = np.sum(np.abs(np.diff(np.sign(data)))) / 2
-    return (np.float64(countZ) / np.float64(count-1.0))
+    return (np.float64(countZ) / np.float64(count - 1.0))
 
 
 def spectral_flux(d0, d1):
@@ -99,17 +102,15 @@ def spectral_flux(d0, d1):
     # compute the spectral flux as the sum of square distances:
     d0 = np.mean(d0, axis=1)
     d1 = np.mean(d1, axis=1)
-    nFFT = min(len(d0)//2, len(d1)//2)
+    nFFT = min(len(d0) // 2, len(d1) // 2)
     X = FFT(d0, nFFT)
     Xprev = FFT(d1, nFFT)
 
-    L = min(len(X), len(Xprev))
+    # L = min(len(X), len(Xprev))
 
     sumX = np.sum(X + eps)
     sumPrevX = np.sum(Xprev + eps)
-    F = np.sum((X / sumX - Xprev/sumPrevX) ** 2)
-
-    return F
+    return np.sum((X / sumX - Xprev / sumPrevX) ** 2)
 
 
 def energy_entropy(data, fs, numOfShortBlocks=10):
@@ -136,10 +137,10 @@ def spectral_centroid_and_spread(data, fs):
     """Computes spectral centroid of frame (given abs(FFT))"""
     data = np.mean(data, axis=1)
 
-    nFFT = len(data)//2
+    nFFT = len(data) // 2
     X = FFT(data, nFFT)
 
-    ind = (np.arange(1, len(X) + 1)) * (fs/(2.0 * len(X)))
+    ind = (np.arange(1, len(X) + 1)) * (fs / (2.0 * len(X)))
 
     Xt = X.copy()
     Xt = Xt / Xt.max()
@@ -162,12 +163,13 @@ def spectral_centroid_and_spread(data, fs):
 def spectral_rolloff(data, coeff):
     """Computes spectral roll-off"""
     data = np.mean(data, axis=1)
-    nFFT = len(data)//2
-    X = FFT(data,nFFT)
+    nFFT = len(data) // 2
+    X = FFT(data, nFFT)
 
     totalEnergy = np.sum(X ** 2)
     fftLength = len(X)
-    Thres = coeff*totalEnergy
+    Thres = coeff * totalEnergy
+
     # Find the spectral rolloff as the frequency position where the
     # respective spectral energy is equal to c*totalEnergy
     CumSum = np.cumsum(X ** 2) + eps
@@ -176,4 +178,5 @@ def spectral_rolloff(data, coeff):
         mC = np.float64(a[0]) / (float(fftLength))
     else:
         mC = 0.0
+
     return mC
