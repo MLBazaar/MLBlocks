@@ -1,5 +1,8 @@
+[![PyPi][pypi-img]][pypi-url]
 [![CircleCI][circleci-img]][circleci-url]
 
+[pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
+[pypi-url]: https://pypi.python.org/pypi/mlblocks
 [circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
 [circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
 
@@ -20,24 +23,25 @@ MLBlocks is a simple framework for composing end-to-end tunable machine learning
  * The library transforms JSON specifications of machine learning primitives (blocks) into MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes a MLPipeline
  * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to data and predict on a new set of data.
 
-## Submodules
+## Project Structure
 
-* `components` is a library of various data science functions, primitives, and
-  fully-specified pipelines.
-* `json_parsers` defines Parsers: classes that initialize MLBlock instances
+The MLBlocks consists of several modules and folders:
+
+* `mlblocks.py`: Defines the `MLBlocks` core class of the library.
+* `mlpipeline.py`: Defines the `MLPipeline` class that allows combining multiple MLBlocks.
+* `mlhyperparam.py`: Defines the MLHyperparam, an abstraction of an MLBlock tunable
+  hyperparameter.
+* `functions` is a submodule that contains a collection of helper functions used to integrate
+  primitives into MLBlocks
+* `parsers` defines the parsers: classes that initialize MLBlock instances
   from JSON primitives.
-
-## Components
-
-The components library consists of three sublibraries: `primitive_jsons`,
-`functions`, and `pipelines`.
+* `primitives`: folder that contains the collection of JSON primitives.
 
 ### Primitive JSONS
 
-The primitive JSONS sublibrary is the main component of our components library.
-It defines primitives as JSON files. The format of said JSON files varies
-slightly depending on the model source library, but generally
-`random_forest_classifier.json` is a good starting example to look at.
+The primitive JSONs are the main component of our library.
+The format of said JSON files varies slightly depending on the model source library,
+but generally `random_forest_classifier.json` is a good starting example to look at.
 For neural keras primitives, refer to `simple_cnn.json`.
 
 ### Functions
@@ -45,14 +49,8 @@ For neural keras primitives, refer to `simple_cnn.json`.
 The functions sublibrary provides the code for some auxiliary custom functions
 that are useful when creating pipelines. Each custom function should also have
 a corresponding primitive JSON. A useful example is the HOG featurization step
-for image pipelines, defined in `functions/image/hog.py` amd
-`primitive_jsons/HOG.json`.
-
-### Pipelines
-
-The pipelines sublibrary provides thin wrappers around useful, fully-specified,
-untuned pipelines. `image/traditional_image.py` provides a useful basic
-example, while `text/lstm_text.py` is a good starting neural example.
+for image pipelines, defined in `functions/image/hog.py` and
+`primitives/HOG.json`.
 
 ## Parsers
 
@@ -61,16 +59,13 @@ specifications. All parsers should extend the MLParser base class, particularly
 overriding the `build_mlblock` method. Other quality-of-life helper functions
 are provided in the MLParser class as well.
 
-The MLParser class can be found in `ml_json_parser.py`.
-
 ## Installation
 
 ### Install with pip
 
-MLBlocks is not published in PyPi yet, but you can already install the latest
-release using pip
+The simplest and recommended way to install MLBlocks is using `pip`:
 
-	pip install -e git+https://github.com/HDI-Project/MLBlocks.git#egg=mlblocks
+	pip install mlblocks
 
 ### Install from sources
 
@@ -87,33 +82,9 @@ You can also clone the repository and install it from sources
 With MLBlocks, we can simply initialize a pipeline by passing it the list
 of MLBlocks that will compose it.
 
-
 ```
 >>> from mlblocks.mlpipeline import MLPipeline
 >>> image_pipeline = MLPipeline(['HOG', 'random_forest_classifier'])
-```
-
-Alternatively, each block name can be replaced by:
-
-* The path to a json file containing the metadata of the primitive
-* A dict containing the metadata of the primitive
-* An MLBlock instance
-
-```
->>> from mlblocks.mlblock import MLBlock
->>> a_block = MLBlock(...)
->>> a_primitive_dict = {
-...     "name": "some_primitive_name",
-...     "class": "the.primitive.Class",
-...     "fit": "the_fit_method_name",
-...     "produce": "the_produce_method_name",
-...     "fixed_hyperparameters": {},
-...     "tunable_hyperparameters": {},
-...     "root_hyperparameters": [],
-...     "conditional_hyperparameters": {}
-... }
->>> blocks = [a_block, 'path/to/a/primitive.json', a_primitive_dict]
->>> pipeline = MLPipeline(blocks)
 ```
 
 ### Obtaining and updating hyperparameters
