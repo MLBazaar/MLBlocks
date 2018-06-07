@@ -1,6 +1,6 @@
 {
     "name": "sequence_padder",
-    "class": "mlblocks.functions.tabular.sequence_padder.SequencePadder",
+    "class": "mlblocks.components.functions.tabular.sequence_padder.SequencePadder",
     "fit": "",
     "produce": "pad_sequences",
     "fixed_hyperparameters": {

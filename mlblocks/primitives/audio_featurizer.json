@@ -1,6 +1,6 @@
 {
     "name": "audio_featurizer",
-    "class": "mlblocks.functions.audio.featurize_audio.AudioFeaturizer",
+    "class": "mlblocks.components.functions.audio.featurize_audio.AudioFeaturizer",
     "fit": "",
     "produce": "produce",
     "fixed_hyperparameters": {},

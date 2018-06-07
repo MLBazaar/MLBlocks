@@ -183,14 +183,12 @@ class MLPipeline(object):
             produce_params = {}
 
         fit_param_dict = defaultdict(dict)
-        for key, value in fit_params.items():
-            name, param = key
-            fit_param_dict[name][param] = fit_params[key]
+        for (name, param), value in fit_params.items():
+            fit_param_dict[name][param] = value
 
         produce_param_dict = defaultdict(dict)
-        for key, value in produce_params.items():
-            name, param = key
-            produce_param_dict[name][param] = produce_params[key]
+        for (name, param), value in produce_params.items():
+            produce_param_dict[name][param] = value
 
         # Initially our transformed data is simply our input data.
         transformed_data = x
@@ -220,9 +218,8 @@ class MLPipeline(object):
             predict_params = {}
 
         param_dict = defaultdict(dict)
-        for key, value in predict_params.items():
-            name, param = key
-            param_dict[name][param] = predict_params[key]
+        for (name, param), value in predict_params.items():
+            param_dict[name][param] = value
 
         transformed_data = x
         for block_name, block in self.blocks.items():

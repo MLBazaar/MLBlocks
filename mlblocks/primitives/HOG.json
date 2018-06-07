@@ -1,6 +1,6 @@
 {
     "name": "HOG",
-    "class": "mlblocks.functions.image.hog.HOG",
+    "class": "mlblocks.components.functions.image.hog.HOG",
     "fit": "",
     "produce": "make_hog_features",
     "fixed_hyperparameters": {},

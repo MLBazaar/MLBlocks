@@ -1,0 +1,15 @@
+{
+    "name": "imputer",
+    "class": "sklearn.preprocessing.Imputer",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {
+        "strategy": {
+            "type": "string",
+            "values": ["mean", "median", "most_frequent"]
+        }
+    },
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
