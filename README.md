@@ -31,8 +31,8 @@ The MLBlocks consists of several modules and folders:
 * `mlpipeline.py`: Defines the `MLPipeline` class that allows combining multiple MLBlocks.
 * `mlhyperparam.py`: Defines the MLHyperparam, an abstraction of an MLBlock tunable
   hyperparameter.
-* `functions`: is a submodule that contains a collection of helper functions used to integrate
-  primitives into MLBlocks
+* `components`: is a submodule that contains a collection of helper functions used to integrate
+  primitives into MLBlocks, as well as some custom primitives.
 * `parsers`: defines the parsers: classes that initialize MLBlock instances
   from JSON primitives.
 * `primitives`: folder that contains the collection of JSON primitives.
@@ -44,12 +44,12 @@ The format of said JSON files varies slightly depending on the model source libr
 but generally `random_forest_classifier.json` is a good starting example to look at.
 For neural keras primitives, refer to `simple_cnn.json`.
 
-### Functions
+### Components
 
-The functions sublibrary provides the code for some auxiliary custom functions
+The components subpackage provides the code for some auxiliary custom functions
 that are useful when creating pipelines. Each custom function should also have
 a corresponding primitive JSON. A useful example is the HOG featurization step
-for image pipelines, defined in `functions/image/hog.py` and
+for image pipelines, defined in `components/functions/image/hog.py` and
 `primitives/HOG.json`.
 
 ## Parsers

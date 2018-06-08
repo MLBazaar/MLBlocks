@@ -1,0 +1,15 @@
+{
+    "name": "categorical_encoder",
+    "class": "mlblocks.primitives.custom.preprocessors.encoders.CategoricalEncoder",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {
+        "max_labels": {
+            "type": "int",
+            "values": [0, 10]
+        }
+    },
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
