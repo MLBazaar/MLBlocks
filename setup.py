@@ -12,7 +12,7 @@ with open('HISTORY.md') as history_file:
     history = history_file.read()
 
 install_requires = [
-    'Keras>=2.1.5',
+    'keras>=2.1.3',
     'numpy>=1.14.0',
     'opencv-python>=3.4.0.12',
     'scikit-image>=0.13.1',
@@ -56,6 +56,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.1.0',
+    version='0.1.1-dev',
     zip_safe=False,
 )

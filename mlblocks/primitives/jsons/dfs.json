@@ -1,6 +1,6 @@
 {
     "name": "dfs",
-    "class": "mlblocks.functions.multitable.dfs.DeepFeatureSynthesis",
+    "class": "mlblocks.primitives.custom.preprocessors.multitable.dfs.DeepFeatureSynthesis",
     "fit": "fit",
     "produce": "produce",
     "fixed_hyperparameters": {},

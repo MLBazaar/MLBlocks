@@ -1,8 +1,8 @@
 {
-    "name": "audio_featurizer",
-    "class": "mlblocks.functions.audio.featurize_audio.AudioFeaturizer",
+    "name": "to_array",
+    "class": "mlblocks.primitives.custom.preprocessors.tabular.ml_utils_block.MLUtilsBlock",
     "fit": "",
-    "produce": "produce",
+    "produce": "to_array",
     "fixed_hyperparameters": {},
     "tunable_hyperparameters": {},
     "root_hyperparameters": [],

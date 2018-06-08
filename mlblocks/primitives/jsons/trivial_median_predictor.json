@@ -1,8 +1,8 @@
 {
-    "name": "audio_padder",
-    "class": "mlblocks.functions.audio.pad_audio.AudioPadder",
+    "name": "trivial_predictor",
+    "class": "mlblocks.primitives.custom.predictors.trivial.TrivialMedianPredictor",
     "fit": "fit",
-    "produce": "produce",
+    "produce": "predict",
     "fixed_hyperparameters": {},
     "tunable_hyperparameters": {},
     "root_hyperparameters": [],

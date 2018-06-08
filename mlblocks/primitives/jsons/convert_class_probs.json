@@ -1,6 +1,6 @@
 {
     "name": "convert_class_probs",
-    "class": "mlblocks.functions.tabular.ml_utils_block.MLUtilsBlock",
+    "class": "mlblocks.primitives.custom.preprocessors.tabular.ml_utils_block.MLUtilsBlock",
     "fit": "",
     "produce": "convert_class_probs",
     "fixed_hyperparameters": {},

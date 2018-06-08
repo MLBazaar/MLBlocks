@@ -1,0 +1,10 @@
+{
+    "name": "trivial_predictor",
+    "class": "mlblocks.primitives.custom.predictors.trivial.TrivialPredictor",
+    "fit": "fit",
+    "produce": "predict",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
