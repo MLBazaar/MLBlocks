@@ -31,7 +31,7 @@ class OneHotLabelEncoder(object):
         self.max_labels = max_labels
 
     def fit(self, feature):
-        self.dummies = feature.value_counts().index.astype(str)
+        self.dummies = pd.Series(feature.value_counts().index).astype(str)
         if self.max_labels:
             self.dummies = self.dummies[:self.max_labels]
 
