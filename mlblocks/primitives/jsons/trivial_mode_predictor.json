@@ -1,6 +1,6 @@
 {
     "name": "trivial_predictor",
-    "class": "mlblocks.components.primitives.trivial.TrivialPredictor",
+    "class": "mlblocks.primitives.custom.predictors.trivial.TrivialModePredictor",
     "fit": "fit",
     "produce": "predict",
     "fixed_hyperparameters": {},

@@ -7,7 +7,7 @@ from mlblocks.parsers.json import MLJsonParser
 from mlblocks.parsers.keras import KerasJsonParser
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-_JSON_DIR = os.path.join(_CURRENT_DIR, 'primitives')
+_JSON_DIR = os.path.join(_CURRENT_DIR, 'primitives/jsons')
 
 
 class MLPipeline(object):

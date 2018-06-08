@@ -1,6 +1,6 @@
 {
     "name": "categorical_encoder",
-    "class": "mlblocks.components.primitives.encoding.CategoricalEncoder",
+    "class": "mlblocks.primitives.custom.preprocessors.encoders.CategoricalEncoder",
     "fit": "fit",
     "produce": "transform",
     "fixed_hyperparameters": {},
