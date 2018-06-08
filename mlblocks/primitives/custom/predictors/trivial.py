@@ -26,7 +26,7 @@ class TrivialModePredictor(TrivialPredictor):
             LOGGER.error("Could not compute y.mode(). Using default.")
 
 
-class TrivialMedianPredictor(object):
+class TrivialMedianPredictor(TrivialPredictor):
 
     def fit(self, X, y):
         try:

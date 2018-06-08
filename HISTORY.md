@@ -1,5 +1,10 @@
 # History
 
+## 0.1.2
+
+* Fix bug in TrivialMedianPredictor
+* Fix bug in OneHotLabelEncoder
+
 ## 0.1.1
 
 * New project structure and primitives for integration into MIT-TA2.
