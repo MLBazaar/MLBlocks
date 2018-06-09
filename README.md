@@ -1,3 +1,12 @@
+<p align="center"> 
+<img width=30% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
+</p>
+
+<p align="center"> 
+<i>MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines</i> 
+</p>
+
+
 [![PyPi][pypi-img]][pypi-url]
 [![CircleCI][circleci-img]][circleci-url]
 
@@ -6,7 +15,6 @@
 [circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
 [circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
 
-# MLBlocks
 
 Pipelines and primitives for machine learning and data science.
 
@@ -15,9 +23,7 @@ Pipelines and primitives for machine learning and data science.
 
 ## Overview
 
-MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines.
-
- At a high level:
+At a high level:
  * Machine learning primitives are specified using standardized JSONs
  * User (or an external automated engine) specifies a list of primitives
  * The library transforms JSON specifications of machine learning primitives (blocks) into MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes a MLPipeline
