@@ -1,3 +1,12 @@
+<p align="center"> 
+<img width=30% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
+</p>
+
+<p align="center"> 
+<i>MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines</i> 
+</p>
+
+
 [![PyPi][pypi-img]][pypi-url]
 [![CircleCI][circleci-img]][circleci-url]
 
@@ -6,7 +15,6 @@
 [circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
 [circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
 
-# MLBlocks
 
 Pipelines and primitives for machine learning and data science.
 
@@ -15,9 +23,7 @@ Pipelines and primitives for machine learning and data science.
 
 ## Overview
 
-MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines.
-
- At a high level:
+At a high level:
  * Machine learning primitives are specified using standardized JSONs
  * User (or an external automated engine) specifies a list of primitives
  * The library transforms JSON specifications of machine learning primitives (blocks) into MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes a MLPipeline
@@ -177,3 +183,8 @@ these predictions, we can do useful things, such as obtain an accuracy score.
 >>> print(score)
 0.85
 ```
+# History 
+In its first iteration in 2015, MLBlocks was designed for only multi table, multi entity temporal data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis:
+* [Machine learning blocks](https://dai.lids.mit.edu/wp-content/uploads/2018/06/Mlblocks_Bryan.pdf). Bryan Collazo. Masters thesis, MIT EECS, 2015.   
+
+With recent availability of a multitude of libraries and tools, we decided it was time to integrate them and expand the library to address other data types: images, text, graph, time series and integrate with deep learning libraries.

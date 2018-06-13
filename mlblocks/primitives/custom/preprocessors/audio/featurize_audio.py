@@ -121,7 +121,7 @@ def energy_entropy(data, fs, numOfShortBlocks=10):
     L = len(data)
     subWinLength = int(np.floor(L / numOfShortBlocks))
     if L != subWinLength * numOfShortBlocks:
-            data = data[0:subWinLength * numOfShortBlocks]
+        data = data[0:subWinLength * numOfShortBlocks]
     # subWindows is of size [numOfShortBlocks x L]
     subWindows = data.reshape(subWinLength, numOfShortBlocks, order='F').copy()
 
