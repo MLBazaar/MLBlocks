@@ -1,5 +1,5 @@
-import pandas as pd
 import featuretools as ft
+import pandas as pd
 from featuretools import variable_types as vtypes
 from featuretools.selection import remove_low_information_features
 

@@ -37,31 +37,31 @@ class EstimatorFeatureSelector(object):
         as the estimator, and shows the output when passing both a pandas.DataFrame
         and a numpy.ndarray.
 
-	>>> import pandas as pd
-	>>> df = pd.DataFrame([
-	    ... {'a': 1, 'b': 1, 'c': 1},
-	    ... {'a': 1, 'b': 2, 'c': 1},
-	    ... {'a': 2, 'b': 1, 'c': 2},
-	    ... {'a': 2, 'b': 2, 'c': 2}
-	    ... ])
-	>>> X = df[['a', 'b']]
-	>>> y = df.c
-	>>> from mlblocks.primitives.custom.preprocessors.feature_selection \
-	...         import EstimatorFeatureSelector
-	>>> from sklearn.ensemble import ExtraTreesClassifier
-	>>> efs = EstimatorFeatureSelector(ExtraTreesClassifier)
-	>>> efs.fit(X, y)
-	>>> efs.transform(X)
-	   a
-	   0  1
-	   1  1
-	   2  2
-	   3  2
-	>>> efs.transform(X.values)
-	array([[1],
-	       [1],
-	       [2],
-	       [2]])
+        >>> import pandas as pd
+        >>> df = pd.DataFrame([
+            ... {'a': 1, 'b': 1, 'c': 1},
+            ... {'a': 1, 'b': 2, 'c': 1},
+            ... {'a': 2, 'b': 1, 'c': 2},
+            ... {'a': 2, 'b': 2, 'c': 2}
+            ... ])
+        >>> X = df[['a', 'b']]
+        >>> y = df.c
+        >>> from mlblocks.primitives.custom.preprocessors.feature_selection \
+        ...         import EstimatorFeatureSelector
+        >>> from sklearn.ensemble import ExtraTreesClassifier
+        >>> efs = EstimatorFeatureSelector(ExtraTreesClassifier)
+        >>> efs.fit(X, y)
+        >>> efs.transform(X)
+           a
+           0  1
+           1  1
+           2  2
+           3  2
+        >>> efs.transform(X.values)
+        array([[1],
+               [1],
+               [2],
+               [2]])
     """
 
     ESTIMATOR = None
