@@ -1,5 +1,5 @@
 {
-    "name": "trivial_predictor",
+    "name": "trivial_median_predictor",
     "class": "mlblocks.primitives.custom.predictors.trivial.TrivialMedianPredictor",
     "fit": "fit",
     "produce": "predict",

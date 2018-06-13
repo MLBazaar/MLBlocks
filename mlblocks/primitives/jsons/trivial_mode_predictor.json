@@ -1,5 +1,5 @@
 {
-    "name": "trivial_predictor",
+    "name": "trivial_mode_predictor",
     "class": "mlblocks.primitives.custom.predictors.trivial.TrivialModePredictor",
     "fit": "fit",
     "produce": "predict",

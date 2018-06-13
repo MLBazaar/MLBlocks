@@ -14,7 +14,7 @@ class TrivialPredictor(object):
         pass
 
     def predict(self, X):
-        return pd.Series(self.prediction, index=X.index)
+        return pd.Series(self.prediction, index=X.index).values
 
 
 class TrivialModePredictor(TrivialPredictor):
