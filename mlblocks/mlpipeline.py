@@ -22,7 +22,7 @@ class MLPipeline(object):
     BLOCKS = None
 
     @classmethod
-    def _get_parser(cls, metadata):
+    def _get_parser(cls, metadata, init_params):
         # TODO: Make this a MLBlock method
         # TODO: Implement better logic for deciding what parser to
         # use. Maybe some sort of config mapping parser to modules?
@@ -31,11 +31,11 @@ class MLPipeline(object):
 
         # For now, hardcode this logic for Keras.
         if metadata['class'] == 'keras.models.Sequential':
-            parser = KerasJsonParser(metadata)
+            parser_class = KerasJsonParser
         else:
-            parser = MLJsonParser(metadata)
+            parser_class = MLJsonParser
 
-        return parser
+        return parser_class(metadata, init_params)
 
     @classmethod
     def _get_block_path(cls, block_name):
@@ -55,7 +55,7 @@ class MLPipeline(object):
         return block_path
 
     @classmethod
-    def _load_block(cls, block):
+    def _load_block(cls, block, init_params):
         """Build block from either a Block name or a config dict.
 
         If a string is given, it is used to locate and load the corresponding
@@ -66,10 +66,25 @@ class MLPipeline(object):
             with open(block_path, 'r') as f:
                 block = json.load(f)
 
-        parser = cls._get_parser(block)
+        parser = cls._get_parser(block, init_params)
         return parser.build_mlblock()
 
-    def __init__(self, blocks=None):
+    @staticmethod
+    def get_nested(params):
+        nested_params = defaultdict(dict)
+
+        if params:
+            for key, value in params.items():
+                if isinstance(key, tuple):
+                    name, param = key
+                    nested_params[name][param] = value
+                else:
+                    # already nested
+                    nested_params[key] = value
+
+        return nested_params
+
+    def __init__(self, blocks=None, init_params=None):
         """Initialize a MLPipeline with a list of corresponding MLBlocks.
 
         Args:
@@ -79,6 +94,7 @@ class MLPipeline(object):
         """
 
         blocks = blocks or self.BLOCKS
+        init_params = self.get_nested(init_params)
 
         if not blocks:
             raise ValueError("At least one block is needed")
@@ -86,7 +102,7 @@ class MLPipeline(object):
         self.blocks = OrderedDict()
         for block in blocks:
             if not isinstance(block, MLBlock):
-                block = self._load_block(block)
+                block = self._load_block(block, init_params)
 
             self.blocks[block.name] = block
 
@@ -177,30 +193,20 @@ class MLPipeline(object):
             fit_params: Any params to pass into fit.
                 In the form {(block name, param name): param value}
         """
-        if fit_params is None:
-            fit_params = {}
-        if produce_params is None:
-            produce_params = {}
-
-        fit_param_dict = defaultdict(dict)
-        for (name, param), value in fit_params.items():
-            fit_param_dict[name][param] = value
-
-        produce_param_dict = defaultdict(dict)
-        for (name, param), value in produce_params.items():
-            produce_param_dict[name][param] = value
+        fit_params = self.get_nested(fit_params)
+        produce_params = self.get_nested(produce_params)
 
         # Initially our transformed data is simply our input data.
         transformed_data = x
         for block_name, block in self.blocks.items():
+            block_fit_params = fit_params[block_name]
             try:
-                block.fit(transformed_data, y, **fit_param_dict[block_name])
+                block.fit(transformed_data, y, **block_fit_params)
             except TypeError:
                 # Some blocks only fit on an X.
-                block.fit(transformed_data, **fit_param_dict[block_name])
+                block.fit(transformed_data, **block_fit_params)
 
-            transformed_data = block.produce(
-                transformed_data, **produce_param_dict[block_name])
+            transformed_data = block.produce(transformed_data, **produce_params[block_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
@@ -214,20 +220,20 @@ class MLPipeline(object):
         Returns:
             The predicted values.
         """
-        if predict_params is None:
-            predict_params = {}
-
-        param_dict = defaultdict(dict)
-        for (name, param), value in predict_params.items():
-            param_dict[name][param] = value
+        predict_params = self.get_nested(predict_params)
 
         transformed_data = x
         for block_name, block in self.blocks.items():
-            transformed_data = block.produce(
-                transformed_data, **param_dict[block_name])
+            transformed_data = block.produce(transformed_data, **predict_params[block_name])
 
         # The last value stored in transformed_data is our final output value.
         return transformed_data
+
+    def to_nested_dicts(self):
+        return {
+            block.name: block.tunable_hyperparams
+            for block in self.blocks.values()
+        }
 
     def to_dict(self):
         all_tunable_hyperparams = self.get_tunable_hyperparams()
