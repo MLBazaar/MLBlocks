@@ -1,5 +1,5 @@
 {
-    "name": "simple_cnn",
+    "name": "single_cnn_regressor",
     "class": "keras.models.Sequential",
     "fit": "fit",
     "produce": "predict",

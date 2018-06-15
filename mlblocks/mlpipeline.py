@@ -182,7 +182,7 @@ class MLPipeline(object):
 
         self.update_tunable_hyperparams(all_tunable_hyperparams)
 
-    def fit(self, x, y, fit_params=None, produce_params=None):
+    def fit(self, x, y, fit_params=None, predict_params=None):
         """Fit this pipeline to the specified training data.
 
         Args:
@@ -194,7 +194,7 @@ class MLPipeline(object):
                 In the form {(block name, param name): param value}
         """
         fit_params = self.get_nested(fit_params)
-        produce_params = self.get_nested(produce_params)
+        predict_params = self.get_nested(predict_params)
 
         # Initially our transformed data is simply our input data.
         transformed_data = x
@@ -206,7 +206,7 @@ class MLPipeline(object):
                 # Some blocks only fit on an X.
                 block.fit(transformed_data, **block_fit_params)
 
-            transformed_data = block.produce(transformed_data, **produce_params[block_name])
+            transformed_data = block.produce(transformed_data, **predict_params[block_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
