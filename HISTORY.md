@@ -1,5 +1,13 @@
 # History
 
+## 0.1.4 - MIT-TA2 Image
+
+* Allow passing `init_params` on `MLPipeline` creation.
+* Fix bug with MLHyperparam types and Keras.
+* Rename `produce_params` as `predict_params`.
+* Add SingleCNN Classifier and Regressor primitives.
+* Simplify and improve Trivial Predictor
+
 ## 0.1.3 - MIT-TA2 Multi Table
 
 * Improve RandomForest primitive ranges
