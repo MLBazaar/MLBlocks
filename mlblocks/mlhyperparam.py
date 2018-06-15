@@ -83,7 +83,6 @@ class MLHyperparam(object):
         else:
             self._value = value
 
-
     def _random_init(self):
         """Initialize using random values within param_range."""
         # Strings and bools should always be categorical
