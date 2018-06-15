@@ -11,12 +11,12 @@ class KerasJsonParser(MLJsonParser):
 
     def build_mlblock_model(self, fixed_hyperparameters, tunable_hyperparameters):
         # Load the class for this primitive block.
-        full_module_class = self.block_json['class']
+        full_module_class = self.metadata['class']
         assert (full_module_class == 'keras.models.Sequential')
         sequential_class = import_object(full_module_class)
         model = sequential_class()
 
-        layers = self.block_json['layers']
+        layers = self.metadata['layers']
         for layer_metadata in layers:
             layer_module_class = layer_metadata['class']
             layer_class = import_object(layer_module_class)
