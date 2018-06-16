@@ -1,6 +1,6 @@
 {
-    "name": "best_partition",
-    "class": "mlblocks.primitives.custom.best_partition.BestPartition",
+    "name": "community_best_partition",
+    "class": "mlblocks.primitives.custom.community_best_partition.CommunityBestPartition",
     "fit": "fit",
     "produce": "produce",
     "fixed_hyperparameters": {},
