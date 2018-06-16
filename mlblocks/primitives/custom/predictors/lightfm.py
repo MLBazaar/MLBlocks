@@ -11,7 +11,7 @@ class LightFM(lightfm.LightFM):
 
     def get_columns(self, X):
         if hasattr(X, 'iloc'):
-            return X.iloc[:, 0], X.iloc[:, 1]
+            return X.iloc[:, 0].values, X.iloc[:, 1].values
         else:
             return X[:, 0], X[:, 1]
 
@@ -22,8 +22,5 @@ class LightFM(lightfm.LightFM):
 
     def predict(self, X):
         user_ids, item_ids = self.get_columns(X)
-        return super(LightFM, self).predict(
-            user_ids=user_ids,
-            item_ids=item_ids,
-            num_threads=self.num_threads
-        )
+        predict = super(LightFM, self).predict
+        return predict(user_ids, item_ids, num_threads=self.num_threads)
