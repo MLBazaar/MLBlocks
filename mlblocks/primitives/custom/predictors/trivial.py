@@ -10,7 +10,7 @@ class TrivialPredictor(object):
 
     def __init__(self, default=0, method=None):
         self.prediction = default
-        self._method = getattr(self, '_' + method)
+        self._method = getattr(self, '_' + method) if method else None
 
     def _mode(self, y):
         return y.mode().iloc[0]
