@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 
@@ -69,10 +70,21 @@ class CategoricalEncoder(object):
     def __init__(self, max_labels=None, copy=True, categorical_features=None):
         self.max_labels = max_labels
         self.copy = copy
-        self.features = categorical_features or []
+        self.features = categorical_features
+
+    def detect_features(self, X):
+        features = []
+        for column in X.columns:
+            if not np.issubdtype(X[column].dtype, np.number):
+                features.append(column)
+
+        return features
 
     def fit(self, X, y=None, categorical_features=None):
         features = categorical_features or self.features
+        if not features:
+            features = self.detect_features(X)
+
         self.encoders = dict()
         for feature in features:
             encoder = OneHotLabelEncoder(feature, self.max_labels)
