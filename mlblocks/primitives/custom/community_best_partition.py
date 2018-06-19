@@ -1,6 +1,6 @@
+import community as co
 import numpy as np
 import pandas as pd
-import community as co
 
 
 class CommunityBestPartition(object):
