@@ -24,3 +24,4 @@ coverage>=4.5.1
 tox>=2.9.1
 
 .[test]
+.[primitives]

@@ -10,18 +10,21 @@ class MLJsonParser(object):
         mlblocks/primitives/random_forest_classifier.json
     """
 
-    def __init__(self, block_json):
+    def __init__(self, metadata, init_params):
         """Initialize a basic JSON parser for a given JSON.
 
         Args:
-            block_json: A JSON dict to parse into an MLBlock.
+            metadata: A JSON dict to parse into an MLBlock.
                 See mlblocks/primitives for JSON examples.
         """
-        self.block_json = block_json
+        self.metadata = metadata
+        self.init_params = init_params[self.metadata['name']]
 
     def build_mlblock(self):
-        block_name = self.block_json['name']
-        fixed_hyperparams = self.block_json['fixed_hyperparameters']
+        block_name = self.metadata['name']
+        fixed_hyperparams = self.metadata['fixed_hyperparameters']
+        fixed_hyperparams.update(self.init_params)
+
         tunable_hyperparams = self.get_mlhyperparams(block_name)
         model = self.build_mlblock_model(fixed_hyperparams,
                                          tunable_hyperparams)
@@ -52,7 +55,7 @@ class MLJsonParser(object):
         Returns:
             The model instance of this primitive block.
         """
-        block_class = import_object(self.block_json['class'])
+        block_class = import_object(self.metadata['class'])
 
         model_kwargs = fixed_hyperparameters.copy()
         model_kwargs.update({
@@ -73,8 +76,8 @@ class MLJsonParser(object):
             objects.
         """
         tunable_hyperparams = {}
-        tunable_hps = self.block_json['tunable_hyperparameters']
-        root_hps = set(self.block_json['root_hyperparameters'])
+        tunable_hps = self.metadata['tunable_hyperparameters']
+        root_hps = set(self.metadata['root_hyperparameters'])
 
         for hp_name, hp_info in tunable_hps.items():
             hp_type = hp_info['type']
@@ -106,8 +109,8 @@ class MLJsonParser(object):
         """
         # Declare fit and predict methods in this way so that they
         # remain bound to the MLBlock instance's model.
-        fit_method_name = self.block_json['fit']
-        produce_method_name = self.block_json['produce']
+        fit_method_name = self.metadata['fit']
+        produce_method_name = self.metadata['produce']
         build_method = self.build_mlblock_model
 
         def fit(self, *args, **kwargs):

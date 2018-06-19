@@ -1,0 +1,20 @@
+{
+    "name": "extra_trees_classifier_feature_selector",
+    "class": "mlblocks.primitives.custom.preprocessors.feature_selection.ExtraTreesClassifierFeatureSelector",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": "TODO: fixed_hyperparameters need to be defined.",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {
+        "bypass": {
+            "type": "bool",
+            "values": [true, false]
+        },
+        "threshold": {
+            "type": "string",
+            "values": [null, "mean", "median"]
+        }
+    },
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}

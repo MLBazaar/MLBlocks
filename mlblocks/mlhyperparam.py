@@ -66,7 +66,22 @@ class MLHyperparam(object):
         self.is_conditional = is_conditional
 
         # Value randomly initialized in range if not specified.
-        self.value = value if value is not None else self._random_init()
+        self._value = value if value is not None else self._random_init()
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if self.param_type in _INTEGER_TYPES:
+            self._value = int(value)
+
+        elif self.param_type in _FLOAT_TYPES:
+            self._value = float(value)
+
+        else:
+            self._value = value
 
     def _random_init(self):
         """Initialize using random values within param_range."""
