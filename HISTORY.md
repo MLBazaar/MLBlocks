@@ -1,6 +1,17 @@
 # History
 
-## 0.1.4 - MIT-TA2 Image
+## 0.1.6 - Text and Graph Pipelines
+
+* Add LSTM classifier and regressor primitives.
+* Add OneHotEncoder and MultiLabelEncoder primitives.
+* Add several NetworkX graph featurization primitives.
+* Add `community.best_partition` primitive.
+
+## 0.1.5 - Collaborative Filtering Pipelines
+
+* Add LightFM primitive.
+
+## 0.1.4 - Image pipelines improved
 
 * Allow passing `init_params` on `MLPipeline` creation.
 * Fix bug with MLHyperparam types and Keras.
@@ -8,7 +19,7 @@
 * Add SingleCNN Classifier and Regressor primitives.
 * Simplify and improve Trivial Predictor
 
-## 0.1.3 - MIT-TA2 Multi Table
+## 0.1.3 - Multi Table pipelines improved
 
 * Improve RandomForest primitive ranges
 * Improve DFS primitive
@@ -21,7 +32,7 @@
 * Fix bug in TrivialMedianPredictor
 * Fix bug in OneHotLabelEncoder
 
-## 0.1.1 - MIT-TA2 Single Table
+## 0.1.1 - Single Table pipelines improved
 
 * New project structure and primitives for integration into MIT-TA2.
 * MIT-TA2 default pipelines and single table pipelines fully working.
