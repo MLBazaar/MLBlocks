@@ -65,6 +65,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.1.6',
+    version='0.1.7-dev',
     zip_safe=False,
 )
