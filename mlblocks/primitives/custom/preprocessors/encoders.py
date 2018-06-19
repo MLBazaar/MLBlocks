@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+import logging
+
+LOGGER = logging.getLogger(__name__)
+
 
 class OneHotLabelEncoder(object):
     """Combination of LabelEncoder + OneHotEncoder.
@@ -81,12 +85,11 @@ class CategoricalEncoder(object):
         return features
 
     def fit(self, X, y=None, categorical_features=None):
-        features = categorical_features or self.features
-        if not features:
-            features = self.detect_features(X)
+        if not self.features:
+            self.features = categorical_features or self.detect_features(X)
 
         self.encoders = dict()
-        for feature in features:
+        for feature in self.features:
             encoder = OneHotLabelEncoder(feature, self.max_labels)
             encoder.fit(X[feature])
             self.encoders[feature] = encoder
@@ -96,6 +99,7 @@ class CategoricalEncoder(object):
             X = X.copy()
 
         for name, encoder in self.encoders.items():
+            LOGGER.debug("Encoding feature %s", name)
             feature = X.pop(name)
             encoded = encoder.transform(feature)
             X = pd.concat([X, encoded], axis=1)
