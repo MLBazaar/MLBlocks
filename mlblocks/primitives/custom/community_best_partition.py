@@ -8,7 +8,7 @@ class CommunityBestPartition(object):
     def fit(self, X, y):
         pass
 
-    def produce(self, X, partition=None, grap=None):
+    def produce(self, X, partition=None, graph=None):
         partition = partition or co.best_partition(graph)
         values = [b for a, b in partition.items()]
         missing_community_index = np.max(values) + 10
