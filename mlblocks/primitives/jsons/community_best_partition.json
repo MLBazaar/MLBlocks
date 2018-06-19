@@ -1,0 +1,10 @@
+{
+    "name": "community_best_partition",
+    "class": "mlblocks.primitives.custom.community_best_partition.CommunityBestPartition",
+    "fit": "fit",
+    "produce": "produce",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}

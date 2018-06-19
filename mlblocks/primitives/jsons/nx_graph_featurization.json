@@ -1,0 +1,10 @@
+{
+    "name": "nx_graph_featurization",
+    "class": "mlblocks.primitives.custom.nx_graph_featurization.GraphFeaturization",
+    "fit": "fit",
+    "produce": "produce",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}

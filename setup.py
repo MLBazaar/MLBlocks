@@ -12,16 +12,24 @@ with open('HISTORY.md') as history_file:
     history = history_file.read()
 
 install_requires = [
-    'keras>=2.1.3',
-    'numpy>=1.14.0',
-    'opencv-python>=3.4.0.12',
-    'scikit-image>=0.13.1',
-    'featuretools==0.1.17'
 ]
 
 tests_require = [
     'mock>=2.0.0',
     'pytest>=3.4.2',
+]
+
+primitives_require = [
+    'Keras>=2.1.6',
+    'featuretools>=0.1.17',
+    'lightfm>=1.15',
+    'networkx>=2.0',
+    'numpy>=1.14.0',
+    'opencv-python>=3.4.0.12',
+    'python-louvain>=0.10',
+    'scikit-image>=0.13.1',
+    'scikit-learn>=0.19.1',
+    'scipy>=1.1.0',
 ]
 
 setup_requires = [
@@ -42,7 +50,8 @@ setup(
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
-        'test': tests_require
+        'test': tests_require,
+        'primitives': primitives_require
     },
     include_package_data=True,
     install_requires=install_requires,
@@ -56,6 +65,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.1.4',
+    version='0.1.6-dev',
     zip_safe=False,
 )
