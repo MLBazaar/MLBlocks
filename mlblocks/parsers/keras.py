@@ -33,6 +33,7 @@ class KerasJsonParser(MLJsonParser):
 
         optimizer = import_object(fixed_hyperparameters['optimizer'])()
         loss = import_object(fixed_hyperparameters['loss'])
-        model.compile(loss=loss, optimizer=optimizer)
+        metrics = fixed_hyperparameters.get('metrics')
+        model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
 
         return model

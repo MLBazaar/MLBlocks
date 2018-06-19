@@ -20,14 +20,16 @@ tests_require = [
 ]
 
 primitives_require = [
-    'scipy>=1.1.0',
-    'lightfm>=1.15',
+    'Keras>=2.1.6',
     'featuretools>=0.1.17',
+    'lightfm>=1.15',
+    'networkx>=2.0',
     'numpy>=1.14.0',
     'opencv-python>=3.4.0.12',
+    'python-louvain>=0.10',
     'scikit-image>=0.13.1',
-    'Keras>=2.1.6',
     'scikit-learn>=0.19.1',
+    'scipy>=1.1.0',
 ]
 
 setup_requires = [

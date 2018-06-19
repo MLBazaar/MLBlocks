@@ -1,0 +1,10 @@
+{
+    "name": "multi_label_encoder",
+    "class": "mlblocks.primitives.custom.multi_label_encoder.MultiLabelEncoder",
+    "fit": "fit",
+    "produce": "produce",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
