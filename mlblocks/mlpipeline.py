@@ -212,7 +212,8 @@ class MLPipeline(object):
                 block.fit(transformed_data, **block_fit_params)
 
             LOGGER.debug("Producing block %s", block_name)
-            transformed_data = block.produce(transformed_data, **predict_params[block_name])
+            if len(self.blocks) > 1:
+                transformed_data = block.produce(transformed_data, **predict_params[block_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
