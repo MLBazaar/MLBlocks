@@ -1,7 +1,7 @@
+import numpy as np
 from keras.layers import Dense, Dropout
 from keras.models import Model
 from keras.optimizers import SGD, RMSprop
-import numpy as np
 
 OPTIMIZERS = {
     'sgd': SGD,
@@ -15,13 +15,11 @@ class PretrainedImageBase(object):
     image width/height needs to be >71, and num channels must equal 3
     """
 
-    base_model = None
+    _base_model_class = None
     base_model_preprocess_func = None
 
     def __init__(self,
                  input_shape,
-                 base_model,
-                 base_model_preprocess_func,
                  classes=1000,
                  start_optimizer='rmsprop',
                  optimizer='sgd',
@@ -46,14 +44,23 @@ class PretrainedImageBase(object):
         self.metrics = metrics
         self.start_training_layer = start_training_layer
 
-        self.base_model = base_model
-        self.preprocess_data = base_model_preprocess_func
+        self.base_model = self.base_model_class()(weights='imagenet', pooling='avg',
+                                                  include_top=False)
+        self.preprocess_data = self.base_model_preprocess_func()
         x = self.base_model.output
         x = Dense(256, activation='relu')(x)
         x = Dropout(0.5)(x)
         predictions = Dense(self.classes, activation='sigmoid')(x)
 
         self.model = Model(inputs=self.base_model.input, outputs=predictions)
+
+    @classmethod
+    def base_model_class(cls):
+        return cls._base_model_class
+
+    @classmethod
+    def base_model_preprocess_func(cls):
+        return cls._base_model_preprocess_func
 
     def fit(self, X, y=None, epochs=10, start_epochs=5, batch_size=16):
         X = self.preprocess_data(X)
