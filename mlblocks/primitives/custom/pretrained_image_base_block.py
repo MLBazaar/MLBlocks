@@ -2,6 +2,7 @@ import numpy as np
 from keras.layers import Dense, Dropout
 from keras.models import Model, Sequential
 from keras.optimizers import SGD, RMSprop
+from .learning_utils import CyclicLR
 import tempfile
 from tqdm import tqdm
 
@@ -27,6 +28,14 @@ class PretrainedImageBase(object):
                  optimizer='sgd',
                  start_learning_rate=1e-1,
                  learning_rate=1e-3,
+                 cyclical_learning_rate=False,
+                 cyclical_base_lr=.001,
+                 cyclical_max_lr=.006,
+                 cyclical_step_size=2000,
+                 cyclical_mode='triangular2',
+                 cyclical_gamma=1,
+                 cyclical_scale_fn=None,
+                 cyclical_scale_mode='cycle',
                  loss=None,
                  metrics=None,
                  start_training_layer=115):
@@ -45,6 +54,14 @@ class PretrainedImageBase(object):
         self.loss = loss
         self.metrics = metrics
         self.start_training_layer = start_training_layer
+
+        self.callbacks = []
+        if cyclical_learning_rate:
+            clr = CyclicLR(base_lr=cyclical_base_lr, max_lr=cyclical_max_lr,
+                           step_size=cyclical_step_size, mode=cyclical_mode,
+                           gamma=cyclical_gamma, scale_fn=cyclical_scale_fn,
+                           scale_mode=cyclical_scale_mode)
+            self.callbacks = [self.clr]
 
         self.base_model = self.base_model_class()(weights='imagenet', pooling='avg',
                                                   include_top=False)
@@ -78,7 +95,8 @@ class PretrainedImageBase(object):
                 'validation_data': validation_data,
                 'generator': False,
                 'epochs': start_epochs,
-                'batch_size': batch_size
+                'batch_size': batch_size,
+                'callbacks': self.callbacks,
             }
 
             fit_params = {
@@ -86,6 +104,7 @@ class PretrainedImageBase(object):
                 'y': y,
                 'epochs': epochs,
                 'batch_size': batch_size,
+                'callbacks': self.callbacks,
             }
             fit_func = 'fit'
         else:
@@ -94,7 +113,8 @@ class PretrainedImageBase(object):
                 'validation_data': validation_data,
                 'generator': True,
                 'epochs': start_epochs,
-                'batch_size': batch_size
+                'batch_size': batch_size,
+                'callbacks': self.callbacks,
             }
             fit_params = {
                 'generator': X,
@@ -102,6 +122,7 @@ class PretrainedImageBase(object):
                 'epochs': epochs,
                 'validation_data': validation_data,
                 'validation_steps': validation_steps,
+                'callbacks': self.callbacks,
             }
             fit_func = 'fit_generator'
         weights_file = self._train_topnet(**top_model_fit_params)
@@ -123,7 +144,7 @@ class PretrainedImageBase(object):
 
     #TODO: needs to be able to import hdf5
     def _train_topnet(self, X, y=None, generator=False,
-                      validation_data=None,
+                      validation_data=None, callbacks=None,
                       epochs=50, batch_size=16):
         if generator:
             bottleneck_features_train = []
@@ -172,6 +193,7 @@ class PretrainedImageBase(object):
                        y_train,
                        batch_size=batch_size,
                        epochs=epochs,
+                       callbacks=callbacks,
                        validation_data=validation_data)
         _, save_weights_file = tempfile.mkstemp()
         self.model.save_weights(save_weights_file)
