@@ -1,7 +1,9 @@
 import numpy as np
 from keras.layers import Dense, Dropout
-from keras.models import Model
+from keras.models import Model, Sequential
 from keras.optimizers import SGD, RMSprop
+import tempfile
+from tqdm import tqdm
 
 OPTIMIZERS = {
     'sgd': SGD,
@@ -16,7 +18,7 @@ class PretrainedImageBase(object):
     """
 
     _base_model_class = None
-    base_model_preprocess_func = None
+    _base_model_preprocess_func = None
 
     def __init__(self,
                  input_shape,
@@ -50,6 +52,9 @@ class PretrainedImageBase(object):
         x = self.base_model.output
         x = Dense(256, activation='relu')(x)
         x = Dropout(0.5)(x)
+        # binary, we just check True/False, don't need 2 classes
+        if self.classes == 2:
+            self.classes = 1
         predictions = Dense(self.classes, activation='sigmoid')(x)
 
         self.model = Model(inputs=self.base_model.input, outputs=predictions)
@@ -62,14 +67,45 @@ class PretrainedImageBase(object):
     def base_model_preprocess_func(cls):
         return cls._base_model_preprocess_func
 
-    def fit(self, X, y=None, epochs=10, start_epochs=5, batch_size=16):
-        X = self.preprocess_data(X)
+    def fit(self, X, y=None, epochs=10, start_epochs=5, batch_size=16,
+            generator=False, steps_per_epoch=None,
+            validation_data=None, validation_steps=None):
+        if not generator:
+            X = self.preprocess_data(X)
+            top_model_fit_params = {
+                'X': X,
+                'y': y,
+                'validation_data': validation_data,
+                'generator': False,
+                'epochs': start_epochs,
+                'batch_size': batch_size
+            }
 
-        for layer in self.base_model.layers:
-            layer.trainable = False
-
-        self.model.compile(self.start_optimizer, loss=self.loss, metrics=self.metrics)
-        self.model.fit(X, y, epochs=start_epochs, batch_size=batch_size)
+            fit_params = {
+                'x': X,
+                'y': y,
+                'epochs': epochs,
+                'batch_size': batch_size,
+            }
+            fit_func = 'fit'
+        else:
+            top_model_fit_params = {
+                'X': X,
+                'validation_data': validation_data,
+                'generator': True,
+                'epochs': start_epochs,
+                'batch_size': batch_size
+            }
+            fit_params = {
+                'generator': X,
+                'steps_per_epoch': steps_per_epoch,
+                'epochs': epochs,
+                'validation_data': validation_data,
+                'validation_steps': validation_steps,
+            }
+            fit_func = 'fit_generator'
+        weights_file = self._train_topnet(**top_model_fit_params)
+        self._add_and_load_topnet(weights_file)
 
         for layer in self.model.layers[:self.start_training_layer]:
             layer.trainable = False
@@ -77,9 +113,119 @@ class PretrainedImageBase(object):
             layer.trainable = True
 
         self.model.compile(optimizer=self.optimizer, loss=self.loss)
-        self.model.fit(X, y, epochs=epochs, batch_size=batch_size)
+        getattr(self.model, fit_func)(**fit_params)
 
-    def produce(self, X):
-        X = self.preprocess_data(X)
-        preds = self.model.predict(X)
-        return np.argmax(preds, axis=1)
+    def produce(self, X, generator=False, only_top_model=False):
+        if only_top_model:
+            return self._predict_top_model(X, generator=generator)
+        else:
+            return self._predict_full_model(X, generator=generator)
+
+    #TODO: needs to be able to import hdf5
+    def _train_topnet(self, X, y=None, generator=False,
+                      validation_data=None,
+                      epochs=50, batch_size=16):
+        if generator:
+            bottleneck_features_train = []
+            y_train = []
+            train_generator = X
+            len_gen = len(train_generator)
+            for i, x_y in enumerate(tqdm(train_generator,
+                                         desc="generating base model train features")):
+                x, y = x_y
+                features = self.base_model.predict_on_batch(x)
+                bottleneck_features_train.append(features)
+                y_train.append(y)
+                if i == len_gen - 1:
+                    break
+            train_generator.reset()
+            bottleneck_features_train = np.concatenate(bottleneck_features_train, axis=0)
+            y_train = np.concatenate(y_train)
+
+            if validation_data is not None:
+                bottleneck_features_valid = []
+                y_valid = []
+                valid_generator = validation_data
+                len_gen = len(valid_generator)
+                for i, x_y in enumerate(tqdm(valid_generator,
+                                             desc="generating base model validation features")):
+                    features = self.base_model.predict_on_batch(x)
+                    bottleneck_features_valid.append(features)
+                    y_valid.append(y)
+                    if i == len_gen - 1:
+                        break
+                valid_generator.reset()
+                bottleneck_features_valid = np.concatenate(bottleneck_features_valid, axis=0)
+                y_valid = np.concatenate(y_valid)
+                validation_data = (bottleneck_features_valid, y_valid)
+        else:
+            bottleneck_features_train = self.base_model.predict(X)
+            y_train = y
+            if validation_data is not None:
+                validation_data = (self.base_model.predict(validation_data[0]), validation_data[1])
+
+        self.model = self._build_top_model()
+
+        self.model.compile(optimizer=self.start_optimizer, loss=self.loss)
+
+        self.model.fit(bottleneck_features_train,
+                       y_train,
+                       batch_size=batch_size,
+                       epochs=epochs,
+                       validation_data=validation_data)
+        _, save_weights_file = tempfile.mkstemp()
+        self.model.save_weights(save_weights_file)
+        return save_weights_file
+
+    def _build_top_model(self):
+        top_model = Sequential()
+        top_model.add(Dense(256, input_shape=self.base_model.output_shape[1:], activation='relu'))
+        top_model.add(Dropout(0.5))
+        # binary, we just check True/False, don't need 2 classes
+        if self.classes == 2:
+            self.classes = 1
+        top_model.add(Dense(self.classes, activation='sigmoid'))
+        return top_model
+
+    def _add_and_load_topnet(self, top_model_weights_path):
+        top_model = self._build_top_model()
+        top_model.load_weights(top_model_weights_path)
+        self.model = Model(inputs=self.base_model.input,
+                           outputs=top_model(self.base_model.output))
+
+    def _predict_top_model(self, X, generator=False):
+        if generator:
+            predictions = []
+            len_gen = len(X)
+            for i, x_y in enumerate(tqdm(X, desc="generating prediction inputs")):
+                if isinstance(x_y, tuple):
+                    x = x_y[0]
+                else:
+                    x = x_y
+                features = self.base_model.predict_on_batch(x)
+                preds = self.model.predict_on_batch(features)
+                predictions.append(preds)
+                if i == len_gen - 1:
+                    break
+            preds = np.concatenate(predictions, axis=0)
+            preds = self.model.predict_generator(X)
+        else:
+            X = self.preprocess_data(X)
+            features = self.base_model.predict(X)
+            preds = self.model.predict(features)
+        if self.classes > 1:
+            return np.argmax(preds, axis=1)
+        return preds[:, 0]
+
+    def _predict_full_model(self, X, generator=False):
+        if generator:
+            preds = self.model.predict_generator(X)
+        else:
+            X = self.preprocess_data(X)
+            preds = self.model.predict(X)
+        if self.classes > 1:
+            return np.argmax(preds, axis=1)
+        return preds[:, 0]
+
+
+
