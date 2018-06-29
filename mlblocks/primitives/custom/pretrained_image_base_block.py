@@ -2,7 +2,7 @@ import numpy as np
 from keras.layers import Dense, Dropout
 from keras.models import Model, Sequential
 from keras.optimizers import SGD, RMSprop
-from .learning_utils import CyclicLR
+from .learning_utils import CyclicLR, SnapshotCallbackBuilder
 import tempfile
 from tqdm import tqdm
 
@@ -23,6 +23,7 @@ class PretrainedImageBase(object):
 
     def __init__(self,
                  input_shape,
+                 train_full_network=True,
                  classes=1000,
                  start_optimizer='rmsprop',
                  optimizer='sgd',
@@ -36,9 +37,13 @@ class PretrainedImageBase(object):
                  cyclical_gamma=1,
                  cyclical_scale_fn=None,
                  cyclical_scale_mode='cycle',
+                 snapshot_ensemble=False,
+                 num_snapshots=5,
                  loss=None,
                  metrics=None,
                  start_training_layer=115):
+        self.train_full_network = train_full_network
+        # TODO: add clr and snapshot hyperparameters to all jsons
         self.input_shape = input_shape
         self.classes = classes
         self.start_optimizer = start_optimizer
@@ -55,13 +60,17 @@ class PretrainedImageBase(object):
         self.metrics = metrics
         self.start_training_layer = start_training_layer
 
+        self.start_callbacks = []
         self.callbacks = []
         if cyclical_learning_rate:
             clr = CyclicLR(base_lr=cyclical_base_lr, max_lr=cyclical_max_lr,
                            step_size=cyclical_step_size, mode=cyclical_mode,
                            gamma=cyclical_gamma, scale_fn=cyclical_scale_fn,
                            scale_mode=cyclical_scale_mode)
-            self.callbacks = [self.clr]
+            self.start_callbacks.append(clr)
+            self.callbacks.append(clr)
+        self.snapshot_ensemble = snapshot_ensemble
+        self.num_snapshots = num_snapshots
 
         self.base_model = self.base_model_class()(weights='imagenet', pooling='avg',
                                                   include_top=False)
@@ -87,6 +96,12 @@ class PretrainedImageBase(object):
     def fit(self, X, y=None, epochs=10, start_epochs=5, batch_size=16,
             generator=False, steps_per_epoch=None,
             validation_data=None, validation_steps=None):
+
+        if self.snapshot_ensemble:
+            start_snapshot = SnapshotCallbackBuilder(start_epochs, self.num_snapshots, self.start_learning_rate)
+            snapshot = SnapshotCallbackBuilder(epochs, self.num_snapshots, self.learning_rate)
+            self.start_callbacks.extend(start_snapshot.get_callbacks(model_prefix='Model_'))
+            self.callbacks.extend(snapshot.get_callbacks(model_prefix='Model_'))
         if not generator:
             X = self.preprocess_data(X)
             top_model_fit_params = {
@@ -96,7 +111,7 @@ class PretrainedImageBase(object):
                 'generator': False,
                 'epochs': start_epochs,
                 'batch_size': batch_size,
-                'callbacks': self.callbacks,
+                'callbacks': self.start_callbacks,
             }
 
             fit_params = {
@@ -114,7 +129,7 @@ class PretrainedImageBase(object):
                 'generator': True,
                 'epochs': start_epochs,
                 'batch_size': batch_size,
-                'callbacks': self.callbacks,
+                'callbacks': self.start_callbacks,
             }
             fit_params = {
                 'generator': X,
@@ -126,23 +141,23 @@ class PretrainedImageBase(object):
             }
             fit_func = 'fit_generator'
         weights_file = self._train_topnet(**top_model_fit_params)
-        self._add_and_load_topnet(weights_file)
+        if self.train_full_network:
+            self._add_and_load_topnet(weights_file)
 
-        for layer in self.model.layers[:self.start_training_layer]:
-            layer.trainable = False
-        for layer in self.model.layers[self.start_training_layer:]:
-            layer.trainable = True
+            for layer in self.model.layers[:self.start_training_layer]:
+                layer.trainable = False
+            for layer in self.model.layers[self.start_training_layer:]:
+                layer.trainable = True
 
-        self.model.compile(optimizer=self.optimizer, loss=self.loss)
-        getattr(self.model, fit_func)(**fit_params)
+            self.model.compile(optimizer=self.optimizer, loss=self.loss)
+            getattr(self.model, fit_func)(**fit_params)
 
-    def produce(self, X, generator=False, only_top_model=False):
-        if only_top_model:
-            return self._predict_top_model(X, generator=generator)
-        else:
+    def produce(self, X, generator=False):
+        if self.train_full_network:
             return self._predict_full_model(X, generator=generator)
+        else:
+            return self._predict_top_model(X, generator=generator)
 
-    #TODO: needs to be able to import hdf5
     def _train_topnet(self, X, y=None, generator=False,
                       validation_data=None, callbacks=None,
                       epochs=50, batch_size=16):
@@ -185,18 +200,18 @@ class PretrainedImageBase(object):
             if validation_data is not None:
                 validation_data = (self.base_model.predict(validation_data[0]), validation_data[1])
 
-        self.model = self._build_top_model()
+        self.top_model = self._build_top_model()
 
-        self.model.compile(optimizer=self.start_optimizer, loss=self.loss)
+        self.top_model.compile(optimizer=self.start_optimizer, loss=self.loss)
 
-        self.model.fit(bottleneck_features_train,
-                       y_train,
-                       batch_size=batch_size,
-                       epochs=epochs,
-                       callbacks=callbacks,
-                       validation_data=validation_data)
+        self.top_model.fit(bottleneck_features_train,
+                           y_train,
+                           batch_size=batch_size,
+                           epochs=epochs,
+                           callbacks=callbacks,
+                           validation_data=validation_data)
         _, save_weights_file = tempfile.mkstemp()
-        self.model.save_weights(save_weights_file)
+        self.top_model.save_weights(save_weights_file)
         return save_weights_file
 
     def _build_top_model(self):
@@ -210,6 +225,8 @@ class PretrainedImageBase(object):
         return top_model
 
     def _add_and_load_topnet(self, top_model_weights_path):
+        # TODO: do we need to save/load weights, or can we just
+        # use reference to self.top_model?
         top_model = self._build_top_model()
         top_model.load_weights(top_model_weights_path)
         self.model = Model(inputs=self.base_model.input,
@@ -225,16 +242,16 @@ class PretrainedImageBase(object):
                 else:
                     x = x_y
                 features = self.base_model.predict_on_batch(x)
-                preds = self.model.predict_on_batch(features)
+                preds = self.top_model.predict_on_batch(features)
                 predictions.append(preds)
                 if i == len_gen - 1:
                     break
             preds = np.concatenate(predictions, axis=0)
-            preds = self.model.predict_generator(X)
+            preds = self.top_model.predict_generator(X)
         else:
             X = self.preprocess_data(X)
             features = self.base_model.predict(X)
-            preds = self.model.predict(features)
+            preds = self.top_model.predict(features)
         if self.classes > 1:
             return np.argmax(preds, axis=1)
         return preds[:, 0]
