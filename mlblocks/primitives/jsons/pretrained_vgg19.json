@@ -4,10 +4,10 @@
     "fit": "fit",
     "fixed_hyperparameters": {
         "classes": "SPECIFY THIS",
-        "cyclical_learning_rate": false,
+        "cyclical_learning_rate": true,
         "input_shape": "SPECIFY THIS",
         "loss": "categorical_crossentropy",
-        "snapshot_ensemble": false,
+        "snapshot_ensemble": true,
         "start_training_layer": 126,
         "train_full_network": false
     },

@@ -247,7 +247,6 @@ class PretrainedImageBase(object):
                 if i == len_gen - 1:
                     break
             preds = np.concatenate(predictions, axis=0)
-            preds = self.top_model.predict_generator(X)
         else:
             X = self.preprocess_data(X)
             features = self.base_model.predict(X)
