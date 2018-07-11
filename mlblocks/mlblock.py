@@ -3,10 +3,8 @@
 import importlib
 import inspect
 import json
-import os
 
-
-_JSON_DIR = '.'
+from mlblocks import get_primitive_path
 
 
 def import_object(object_name):
@@ -18,34 +16,20 @@ def import_object(object_name):
 class MLBlock(object):
 
     @classmethod
-    def _get_path(cls, name):
-        """Locate the JSON file of the given primitive."""
-
-        if os.path.isfile(name):
-            return name
-
-        json_filename = '{}.{}'.format(name, 'json')
-        path = os.path.join(_JSON_DIR, json_filename)
-
-        if not os.path.isfile(path):
-            raise ValueError("Unknown primitive: {}".format(name))
-
-        return path
-
-    @classmethod
     def _load_metadata(cls, name):
         """Locate and load the corresponding JSON file."""
 
-        json_path = cls._get_path(name)
+        # json_path = cls._get_path(name)
+        json_path = get_primitive_path(name)
         with open(json_path, 'r') as f:
-            return json.load(f)
+            return json.load(f), json_path
 
     def __new__(cls, name, **kwargs):
         if cls is not MLBlock:
             return super().__new__(cls)
 
         else:
-            metadata = cls._load_metadata(name)
+            metadata, json_path = cls._load_metadata(name)
 
             primitive = import_object(metadata['primitive'])
             metadata['primitive'] = primitive
@@ -57,6 +41,7 @@ class MLBlock(object):
 
             instance = super(MLBlock, cls).__new__(subcls)
             instance.metadata = metadata
+            instance.json_path = json_path
 
             return instance
 
