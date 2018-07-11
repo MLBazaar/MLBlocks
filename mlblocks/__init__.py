@@ -24,10 +24,8 @@ def add_primitives_path(path):
 def get_primitive_path(name):
     """Locate the JSON definition of the given primitive."""
 
-    parts = name.split('.')
-    parts[-1] = '{}.{}'.format(parts[-1], 'json')
     for base_path in PRIMITIVES_PATHS:
-        json_path = os.path.join(base_path, *parts)
+        json_path = os.path.join(base_path, name)
         if os.path.isfile(json_path):
             return json_path
 
