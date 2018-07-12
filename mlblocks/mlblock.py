@@ -19,79 +19,88 @@ class MLBlock(object):
     def _load_metadata(cls, name):
         """Locate and load the corresponding JSON file."""
 
-        # json_path = cls._get_path(name)
         json_path = get_primitive_path(name)
         with open(json_path, 'r') as f:
             return json.load(f), json_path
 
-    def __new__(cls, name, **kwargs):
-        if cls is not MLBlock:
-            return super().__new__(cls)
+    @staticmethod
+    def _parse_args(args_list):
+        args_dict = dict()
+        for arg in args_list:
+            args_dict[arg['name']] = arg['type']
 
-        else:
-            metadata, json_path = cls._load_metadata(name)
+        return args_dict
 
-            primitive = import_object(metadata['primitive'])
-            metadata['primitive'] = primitive
+    def _extract_params(self, kwargs):
+        init_params = dict()
+        fit_params = dict()
+        produce_params = dict()
+        hyperparameters = self.metadata.get('hyperparameters', dict())
 
-            if inspect.isclass(primitive):
-                subcls = ClassBlock
-            else:
-                subcls = FunctionBlock
-
-            instance = super(MLBlock, cls).__new__(subcls)
-            instance.metadata = metadata
-            instance.json_path = json_path
-
-            return instance
-
-    def _get_fixed_hyperparams(self, kwargs, hyperparameters):
-        arguments = dict()
-        for param in hyperparameters.get('fixed', list()):
-            name = param['name']
+        for name, param in hyperparameters.get('fixed', dict()).items():
             if name in kwargs:
                 value = kwargs.pop(name)
+
             elif 'default' in param:
                 value = param['default']
+
             else:
                 raise TypeError("Required argument '{}' not found".format(name))
 
-            arguments[name] = value
+            fixed[name] = value
+
+        for name in kwargs.keys():
+            if name in self.fit_args.keys():
+                fit_params[name] = kwargs.pop(name)
+
+            elif name in self.produce_args.keys():
+                produce_params[name] = kwargs.pop(name)
 
         if kwargs:
             error = "Unexpected hyperparameters '{}'".format(', '.join(kwargs.keys()))
             raise TypeError(error)
 
-        return arguments
+        return init_params, fit_params, produce_params
 
     def __init__(self, name, **kwargs):
-        self.name = self.metadata['name']
+        self.name = name
 
-        self.primitive = self.metadata['primitive']
+        metadata, json_path = cls._load_metadata(name)
+        self.metadata = metadata
+        instance.json_path = json_path
 
-        hyperparameters = self.metadata.get('hyperparameters', dict())
+        self.primitive = import_object(metadata['primitive'])
+        self._class = inspect.isclass(self.primitive)
 
-        fixed_hyperparameters = self._get_fixed_hyperparams(kwargs, hyperparameters)
-        self._hyperparamters = fixed_hyperparameters
+        self._fit = self.metadata.get('fit', dict())
+        self.fit_args = self._parse_args(self._fit.get('args', []))
+        self.fit_method = self._fit.get('method')
 
+        self._produce = self.metadata['produce']
+        self.produce_args = self._parse_args(self._produce['args'])
+        self.produce_output = self._produce['output']
+        self.produce_method = self._produce['method']
+
+        init_params, fit_params, produce_params = self._extract_params(kwargs)
+        self._hyperparamters = init_params
+        self._fit_params = fit_params
+        self._produce_params = produce_params
+
+        tunable = hyperparameters.get('tunable', dict())
         self._tunable = {
             name: param
-            for name, param in hyperparameters.get('tunable', dict()).items()
-            if name not in fixed_hyperparameters
+            for name, param in tunable.items()
+            if name not in fixed
             # TODO: filter conditionals
         }
 
-        default_hyperparameters = {
+        default = {
             name: param['default']
             for name, param in self._tunable.items()
             # TODO: support undefined defaults
         }
 
-        self.set_hyperparameters(default_hyperparameters)
-
-        self._produce = self.metadata['produce']
-        self.produce_args = self._produce['args']
-        self.produce_output = self._produce['output']
+        self.set_hyperparameters(default)
 
     def get_tunable_hyperparameters(self):
         return self._tunable
@@ -99,54 +108,24 @@ class MLBlock(object):
     def get_hyperparameters(self):
         return self._hyperparamters
 
-    def fit(self, *args, **kwargs):
-        pass
-
-    # ################ #
-    # Abstract methods #
-    # ################ #
-
-    def set_hyperparameters(self, hyperparameters):
-        raise NotImplementedError()
-
-    def produce(self, *args, **kwargs):
-        raise NotImplementedError()
-
-
-class FunctionBlock(MLBlock):
-
     def set_hyperparameters(self, hyperparameters):
         self._hyperparamters.update(hyperparameters)
 
-    def produce(self, **kwargs):
-        kwargs.update(self._hyperparamters)
-        return self.primitive(**kwargs)
-
-
-class ClassBlock(MLBlock):
-
-    def __init__(self, name, **kwargs):
-        super(ClassBlock, self).__init__(name, **kwargs)
-
-        self.produce_method = self._produce['method']
-
-        fit = self.metadata.get('fit')
-        if fit is not None:
-            self.fit_method = fit['method']
-            self.fit_args = fit['args']
-
-        else:
-            self.fit_method = None
-            self.fit_args = dict()
-
-    def set_hyperparameters(self, hyperparameters):
-        self._hyperparamters.update(hyperparameters)
-
-        self.instance = self.primitive(**self._hyperparamters)
-
-    def produce(self, **kwargs):
-        return getattr(self.instance, self.produce_method)(**kwargs)
+        if self._class:
+            self.instance = self.primitive(**self._hyperparamters)
 
     def fit(self, **kwargs):
+        fit_args = self._fit_params.copy()
+        fit_args.update(kwargs)
         if self.fit_method is not None:
-            getattr(self.instance, self.fit_method)(**kwargs)
+            getattr(self.instance, self.fit_method)(**fit_args)
+
+    def produce(self, **kwargs):
+        produce_args = self._produce_params.copy()
+        produce_args.update(kwargs)
+        if self._class:
+            return getattr(self.instance, self.produce_method)(**produce_args)
+
+        else:
+            produce_args.update(self._hyperparamters)
+            return self.primitive(**produce_args)
