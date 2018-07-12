@@ -45,18 +45,17 @@ class MLPipeline(object):
 
     @staticmethod
     def _get_block_args(block_args, variables):
-        # TODO: type validation and/or transformation
-        # should be done here
+        # TODO: type validation and/or transformation should be done here
+
         args = dict()
-        for block_arg in block_args:
-            name = block_arg['name']
+        for name in block_args.keys():
+            # name = block_arg['name']
             args[name] = variables[name]
 
         return args
 
     def _get_outputs(outputs, block_outputs):
-        # TODO: type validation and/or transformation
-        # should be done here
+        # TODO: type validation and/or transformation should be done here
 
         if len(outputs) != len(block_outputs):
             error = 'Invalid number of outputs. Expected {} but got {}'.format(
