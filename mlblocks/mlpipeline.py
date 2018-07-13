@@ -87,6 +87,20 @@ class MLPipeline(object):
 
         return nested_params
 
+    @classmethod
+    def get_nested_hyperparams(cls, hyperparams):
+        if isinstance(hyperparams, dict):
+            return cls.get_nested(hyperparams)
+
+        else:
+            nested_hyperparams = defaultdict(dict)
+            for hyperparam in hyperparams:
+                block_name = hyperparam.block_name
+                param_name = hyperparam.param_name
+                nested_hyperparams[block_name][param_name] = hyperparam
+
+            return nested_hyperparams
+
     def __init__(self, blocks=None, init_params=None):
         """Initialize a MLPipeline with a list of corresponding MLBlocks.
 
@@ -161,14 +175,18 @@ class MLPipeline(object):
         Args:
             tunable_hyperparams: A list of MLHyperparams to update.
         """
-        for hyperparam in tunable_hyperparams:
-            block_name = hyperparam.block_name
+        # group by block
+        hyperparams = self.get_nested_hyperparams(tunable_hyperparams)
+
+        # update each block in one shot
+        for block_name, block_params in hyperparams.items():
             block = self.blocks[block_name]
-            block.tunable_hyperparams[hyperparam.param_name] = hyperparam
+            block.tunable_hyperparams.update(block_params)
+
             # Update the hyperparams in the actual model as well.
             block.update_model(block.fixed_hyperparams, block.tunable_hyperparams)
 
-    def set_from_hyperparam_dict(self, hyperparam_dict):
+    def set_from_hyperparam_dict(self, hyperparams_dict):
         """Set the hyperparameters of this pipeline from a dict.
 
         This dict maps as follows:
@@ -178,12 +196,14 @@ class MLPipeline(object):
             hyperparam_dict: A dict mapping (block name, hyperparam name)
                 tuples to hyperparam values.
         """
-        all_tunable_hyperparams = self.get_tunable_hyperparams()
-        for hp in all_tunable_hyperparams:
-            if (hp.block_name, hp.param_name) in hyperparam_dict:
-                hp.value = hyperparam_dict[(hp.block_name, hp.param_name)]
+        hyperparams = self.get_nested_hyperparams(self.get_tunable_hyperparams())
+        hyperparams_dict = self.get_nested(hyperparams_dict)
 
-        self.update_tunable_hyperparams(all_tunable_hyperparams)
+        for block, params in hyperparams_dict.items():
+            for param, value in params.items():
+                hyperparams[block][param].value = value
+
+        self.update_tunable_hyperparams(hyperparams)
 
     def fit(self, x, y, fit_params=None, predict_params=None):
         """Fit this pipeline to the specified training data.
@@ -201,7 +221,7 @@ class MLPipeline(object):
 
         # Initially our transformed data is simply our input data.
         transformed_data = x
-        for block_name, block in self.blocks.items():
+        for index, (block_name, block) in enumerate(self.blocks.items()):
             block_fit_params = fit_params[block_name]
             try:
                 LOGGER.debug("Fitting block %s", block_name)
@@ -212,7 +232,8 @@ class MLPipeline(object):
                 block.fit(transformed_data, **block_fit_params)
 
             LOGGER.debug("Producing block %s", block_name)
-            transformed_data = block.produce(transformed_data, **predict_params[block_name])
+            if len(self.blocks) > index:
+                transformed_data = block.produce(transformed_data, **predict_params[block_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
