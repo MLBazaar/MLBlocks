@@ -31,11 +31,10 @@ class MLBlock(object):
 
         return args_dict
 
-    def _extract_params(self, kwargs):
+    def _extract_params(self, kwargs, hyperparameters):
         init_params = dict()
         fit_params = dict()
         produce_params = dict()
-        hyperparameters = self.metadata.get('hyperparameters', dict())
 
         for name, param in hyperparameters.get('fixed', dict()).items():
             if name in kwargs:
@@ -47,7 +46,7 @@ class MLBlock(object):
             else:
                 raise TypeError("Required argument '{}' not found".format(name))
 
-            fixed[name] = value
+            init_params[name] = value
 
         for name in kwargs.keys():
             if name in self.fit_args.keys():
@@ -65,9 +64,9 @@ class MLBlock(object):
     def __init__(self, name, **kwargs):
         self.name = name
 
-        metadata, json_path = cls._load_metadata(name)
+        metadata, json_path = self._load_metadata(name)
         self.metadata = metadata
-        instance.json_path = json_path
+        self.json_path = json_path
 
         self.primitive = import_object(metadata['primitive'])
         self._class = inspect.isclass(self.primitive)
@@ -81,7 +80,8 @@ class MLBlock(object):
         self.produce_output = self._produce['output']
         self.produce_method = self._produce['method']
 
-        init_params, fit_params, produce_params = self._extract_params(kwargs)
+        hyperparameters = self.metadata.get('hyperparameters', dict())
+        init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
         self._hyperparamters = init_params
         self._fit_params = fit_params
         self._produce_params = produce_params
@@ -90,7 +90,7 @@ class MLBlock(object):
         self._tunable = {
             name: param
             for name, param in tunable.items()
-            if name not in fixed
+            if name not in init_params
             # TODO: filter conditionals
         }
 
