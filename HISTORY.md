@@ -1,5 +1,9 @@
 # History
 
+## 0.1.7 - Nested hyperparams dicts
+
+* Support passing hyperparams as nested dicts.
+
 ## 0.1.6 - Text and Graph Pipelines
 
 * Add LSTM classifier and regressor primitives.
