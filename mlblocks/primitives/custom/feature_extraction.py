@@ -2,7 +2,6 @@ import logging
 
 import numpy as np
 import pandas as pd
-
 from sklearn.feature_extraction.text import CountVectorizer
 
 LOGGER = logging.getLogger(__name__)
@@ -156,7 +155,7 @@ class StringVectorizer(FeatureExtractor):
         self.vectorizers[x.name] = vectorizer
 
     def _transform(self, x):
-        vectorizer =  self.vectorizers[x.name]
+        vectorizer = self.vectorizers[x.name]
         bow = vectorizer.transform(x.fillna('').astype(str))
         bow_columns = ['{}_{}'.format(x.name, f) for f in vectorizer.get_feature_names()]
         return pd.DataFrame(bow.toarray(), columns=bow_columns, index=x.index)

@@ -1,6 +1,6 @@
+from mlblocks import import_object
 from mlblocks.mlblock import MLBlock
 from mlblocks.mlhyperparam import MLHyperparam
-from mlblocks import import_object
 
 
 class MLJsonParser(object):
