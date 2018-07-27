@@ -1,5 +1,9 @@
+import logging
+
 import networkx as nx
 import numpy as np
+
+LOGGER = logging.getLogger(__name__)
 
 
 class LinkPrediction(object):
@@ -13,8 +17,12 @@ class LinkPrediction(object):
 
         for i, graph in enumerate(graphs):
             def apply(function):
-                values = function(graph, pairs)
-                return np.array(list(values))[:, 2]
+                try:
+                    values = function(graph, pairs)
+                    return np.array(list(values))[:, 2]
+                except ZeroDivisionError:
+                    LOGGER.warn("ZeroDivisionError captured running %s", function)
+                    return np.zeros(len(pairs))
 
             i = str(i)
             X['jc_' + i] = apply(nx.jaccard_coefficient)

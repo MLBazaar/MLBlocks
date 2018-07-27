@@ -1,0 +1,10 @@
+{
+    "name": "datetime_featurizer",
+    "class": "mlblocks.primitives.custom.feature_extraction.DatetimeFeaturizer",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": {},
+    "tunable_hyperparameters": {},
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}

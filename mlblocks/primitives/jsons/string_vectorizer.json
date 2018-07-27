@@ -1,0 +1,41 @@
+{
+    "name": "string_vectorizer",
+    "class": "mlblocks.primitives.custom.feature_extraction.StringVectorizer",
+    "fit": "fit",
+    "produce": "transform",
+    "fixed_hyperparameters": {
+        "input": "content",
+        "decode_error": "ignore",
+        "analyzer": "word"
+    },
+    "unused_hyperparameters": {
+        "stop_words": {
+            "type": "string",
+            "values": ["english", null]
+        },
+        "stop_words": {
+            "type": "string",
+            "values": ["english", null]
+        },
+        "strip_accents": {
+            "type": "string",
+            "values": ["ascii", "unicode", null]
+        }
+    },
+    "tunable_hyperparameters": {
+        "lowercase": {
+            "type": "bool",
+            "values": [true, false]
+        },
+        "binary": {
+            "type": "bool",
+            "values": [true, false]
+        },
+        "max_features": {
+            "type": "int",
+            "values": [1, 1000]
+        }
+    },
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
