@@ -1,0 +1,57 @@
+{
+    "name": "xgb_regressor",
+    "class": "xgboost.XGBRegressor",
+    "fit": "fit",
+    "produce": "predict",
+    "fixed_hyperparameters": {
+        "n_jobs": -1
+    },
+    "documentation": "https://xgboost.readthedocs.io/en/latest/parameter.html",
+    "unused_hyperparameters": {
+        "subsample": {
+            "type": "float",
+            "values": [0, 1]
+        },
+        "colsample_bytree": {
+            "type": "float",
+            "values": [0, 1]
+        },
+        "colsample_bylevel": {
+            "type": "float",
+            "values": [0, 1]
+        },
+        "scale_pos_weight": {
+            "type": "float",
+            "values": [0, 1]
+        }
+    },
+    "tunable_hyperparameters": {
+        "n_estimators": {
+            "type": "int",
+            "default": 100,
+            "values": [10, 500]
+        },
+        "max_depth": {
+            "type": "int",
+            "default": 3,
+            "values": [3, 10]
+        },
+        "learning_rate": {
+            "type": "float",
+            "default": 0.1,
+            "values": [0, 1]
+        },
+        "gamma": {
+            "type": "float",
+            "default": 0.0,
+            "values": [0, 1]
+        },
+        "min_child_weight": {
+            "type": "int",
+            "default": 1,
+            "values": [1, 10]
+        }
+    },
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
+}
