@@ -1,4 +1,4 @@
-from mlblocks.parsers import import_object
+from mlblocks import import_object
 from mlblocks.parsers.json import MLJsonParser
 
 

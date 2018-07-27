@@ -1,6 +1,6 @@
 {
     "name": "single_cnn_classifier",
-    "class": "keras.models.Sequential",
+    "class": "mlblocks.primitives.keras.Sequential",
     "fit": "fit",
     "produce": "predict",
     "fixed_hyperparameters": {
@@ -10,56 +10,56 @@
         "dense_units": "NUMBER_OF_CLASSES",
         "dense_activation": "softmax",
         "optimizer": "keras.optimizers.Adadelta",
-        "loss": "keras.losses.categorical_crossentropy"
+        "loss": "keras.losses.categorical_crossentropy",
+        "layers": [
+            {
+                "class": "keras.layers.Conv2D",
+                "parameters": {
+                    "filters": "conv_filters",
+                    "kernel_size": "conv_kernel_size",
+                    "activation": "conv_activation",
+                    "input_shape": "input_shape"
+                }
+            },
+            {
+                "class": "keras.layers.MaxPooling2D",
+                "parameters": {
+                    "pool_size": "max_pooling_pool_size"
+                }
+            },
+            {
+                "class": "keras.layers.Dropout",
+                "parameters": {
+                    "rate": "dropout_rate"
+                }
+            },
+            {
+                "class": "keras.layers.Flatten",
+                "parameters": {}
+            },
+            {
+                "class": "keras.layers.Dense",
+                "parameters": {
+                    "units": "dense_units",
+                    "activation": "dense_activation"
+                }
+            }
+        ]
     },
     "tunable_hyperparameters": {
-        "conv_kernel_dim": {
+        "conv_kernel_size": {
             "type": "int",
             "range": [3, 10]
         },
-        "max_pool_size": {
+        "max_pooling_pool_size": {
             "type": "int",
             "range": [2, 10]
         },
-        "dropout_percent": {
+        "dropout_rate": {
             "type": "float",
             "range": [0.0, 0.75]
         }
     },
-    "root_hyperparameters": ["conv_kernel_dim", "max_pool_size", "dropout_percent"],
-    "conditional_hyperparameters": {},
-    "layers": [
-        {
-            "class": "keras.layers.Conv2D",
-            "parameters": {
-                "filters": "conv_filters",
-                "kernel_size": "conv_kernel_dim",
-                "activation": "conv_activation",
-                "input_shape": "input_shape"
-            }
-        },
-        {
-            "class": "keras.layers.MaxPooling2D",
-            "parameters": {
-                "pool_size": "max_pool_size"
-            }
-        },
-        {
-            "class": "keras.layers.Dropout",
-            "parameters": {
-                "rate": "dropout_percent"
-            }
-        },
-        {
-            "class": "keras.layers.Flatten",
-            "parameters": {}
-        },
-        {
-            "class": "keras.layers.Dense",
-            "parameters": {
-                "units": "dense_units",
-                "activation": "dense_activation"
-            }
-        }
-    ]
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
 }

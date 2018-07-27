@@ -1,6 +1,6 @@
 {
     "name": "lstm_text_regressor",
-    "class": "keras.models.Sequential",
+    "class": "mlblocks.primitives.keras.Sequential",
     "fit": "fit",
     "produce": "predict",
     "fixed_hyperparameters": {
@@ -9,73 +9,75 @@
         "dense_units": 1,
         "dense_activation": "linear",
         "optimizer": "keras.optimizers.Adam",
-        "loss": "keras.losses.mean_squared_error"
+        "loss": "keras.losses.mean_squared_error",
+        "layers": [
+            {
+                "class": "keras.layers.Embedding",
+                "parameters": {
+                    "input_dim": "embedding_input_dim",
+                    "output_dim": "embedding_output_dim",
+                    "input_length": "pad_length"
+                }
+            },
+            {
+                "class": "keras.layers.Dropout",
+                "parameters": {
+                    "rate": "dropout_rate"
+                }
+            },
+            {
+                "class": "keras.layers.Conv1D",
+                "parameters": {
+                    "filters": "embedding_output_dim",
+                    "kernel_size": "conv_kernel_size",
+                    "activation": "conv_activation"
+                }
+            },
+            {
+                "class": "keras.layers.MaxPooling1D",
+                "parameters": {
+                    "pool_size": "max_pooling_pool_size"
+                }
+            },
+            {
+                "class": "keras.layers.LSTM",
+                "parameters": {
+                    "units": "embedding_output_dim"
+                }
+            },
+            {
+                "class": "keras.layers.Dense",
+                "parameters": {
+                    "units": "dense_units",
+                    "activation": "dense_activation"
+                }
+            }
+        ]
     },
-    "tunable_hyperparameters": {
-        "num_top_words": {
+    "untunable_hyperparameters": {
+        "embedding_input_dim": {
             "type": "int",
             "range": [1000, 40000]
-        },
-        "embedding_size": {
+        }
+    },
+    "tunable_hyperparameters": {
+        "embedding_output_dim": {
             "type": "int",
             "range": [100, 500]
         },
-        "dropout_percent": {
+        "dropout_rate": {
             "type": "float",
             "range": [0.1, 0.75]
         },
-        "conv_kernel_dim": {
+        "conv_kernel_size": {
             "type": "int",
             "range": [3, 10]
         },
-        "pool_size": {
+        "max_pooling_pool_size": {
             "type": "int",
             "range": [2, 10]
         }
     },
-    "root_hyperparameters": ["num_top_words", "embedding_size", "dropout_percent", "conv_kernel_dim", "pool_size"],
-    "conditional_hyperparameters": {},
-    "layers": [
-        {
-            "class": "keras.layers.Embedding",
-            "parameters": {
-                "input_dim": "num_top_words",
-                "output_dim": "embedding_size",
-                "input_length": "pad_length"
-            }
-        },
-        {
-            "class": "keras.layers.Dropout",
-            "parameters": {
-                "rate": "dropout_percent"
-            }
-        },
-        {
-            "class": "keras.layers.Conv1D",
-            "parameters": {
-                "filters": "embedding_size",
-                "kernel_size": "conv_kernel_dim",
-                "activation": "conv_activation"
-            }
-        },
-        {
-            "class": "keras.layers.MaxPooling1D",
-            "parameters": {
-                "pool_size": "pool_size"
-            }
-        },
-        {
-            "class": "keras.layers.LSTM",
-            "parameters": {
-                "units": "embedding_size"
-            }
-        },
-        {
-            "class": "keras.layers.Dense",
-            "parameters": {
-                "units": "dense_units",
-                "activation": "dense_activation"
-            }
-        }
-    ]
+    "root_hyperparameters": [],
+    "conditional_hyperparameters": {}
 }

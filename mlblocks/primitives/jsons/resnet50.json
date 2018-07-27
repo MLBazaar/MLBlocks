@@ -1,0 +1,14 @@
+{
+    "name": "resnet50",
+    "class": "keras.applications.resnet50.ResNet50",
+    "conditional_hyperparameters": {},
+    "fit": null,
+    "produce": "predict",
+    "fixed_hyperparameters": {
+        "weights": "imagenet",
+        "pooling": "avg",
+        "include_top": false
+    },
+    "root_hyperparameters": [],
+    "tunable_hyperparameters": {}
+}
