@@ -222,18 +222,20 @@ class MLPipeline(object):
         # Initially our transformed data is simply our input data.
         transformed_data = x
         for index, (block_name, block) in enumerate(self.blocks.items()):
-            block_fit_params = fit_params[block_name]
-            try:
-                LOGGER.debug("Fitting block %s", block_name)
-                block.fit(transformed_data, y, **block_fit_params)
-            except TypeError:
-                # Some blocks only fit on an X.
-                LOGGER.debug("TypeError on block %s. Retrying without `y`", block_name)
-                block.fit(transformed_data, **block_fit_params)
+            if transformed_data is not None and transformed_data.shape[0]:
+                block_fit_params = fit_params[block_name]
+                try:
+                    LOGGER.debug("Fitting block %s", block_name)
+                    block.fit(transformed_data, y, **block_fit_params)
+                except TypeError:
+                    # Some blocks only fit on an X.
+                    LOGGER.debug("TypeError on block %s. Retrying without `y`", block_name)
+                    block.fit(transformed_data, **block_fit_params)
 
-            LOGGER.debug("Producing block %s", block_name)
-            if len(self.blocks) > index:
-                transformed_data = block.produce(transformed_data, **predict_params[block_name])
+                LOGGER.debug("Producing block %s", block_name)
+                if len(self.blocks) > index:
+                    transformed_data = block.produce(
+                        transformed_data, **predict_params[block_name])
 
     def predict(self, x, predict_params=None):
         """Make predictions with this pipeline on the specified input data.
