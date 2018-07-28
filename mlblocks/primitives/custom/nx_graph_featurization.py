@@ -25,7 +25,6 @@ class GraphFeaturization(object):
 
         merged = X.merge(features, left_on=node_column, right_index=True, how='left')
 
-        # graph_data = pd.DataFrame(list(graph.nodes.values())).set_index('nodeID')
         graph_data = pd.DataFrame(dict(graph.nodes.items())).T
         graph_data.index = graph_data.index.astype(index_type)
 
