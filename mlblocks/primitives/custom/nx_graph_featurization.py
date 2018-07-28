@@ -22,12 +22,6 @@ class GraphFeaturization(object):
         features['cc_' + node_column] = apply(nx.closeness_centrality)
         features['bc_' + node_column] = apply(nx.betweenness_centrality)
         features['clustering_' + node_column] = apply(nx.clustering)
-        features['ec_' + node_column] = apply(nx.eigenvector_centrality)
-        features['kc_' + node_column] = apply(nx.katz_centrality)
-        features['comc_' + node_column] = apply(nx.communicability_betweenness_centrality)
-        features['lc_' + node_column] = apply(nx.load_centrality)
-        features['nr_' + node_column] = apply(nx.algorithms.bipartite.node_redundancy)
-        features['lac_' + node_column] = apply(nx.algorithms.bipartite.cluster.latapy_clustering)
 
         merged = X.merge(features, left_on=node_column, right_index=True, how='left')
 
