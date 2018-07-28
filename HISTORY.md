@@ -1,5 +1,9 @@
 # History
 
+## 0.1.9 - Bugfix Release
+
+* Disable some NetworkX functions for incompatibilities with some types of graphs.
+
 ## 0.1.8 - New primitives and some improvements
 
 * Improve the NetworkX primitives.
