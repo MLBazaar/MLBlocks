@@ -4,7 +4,7 @@ import importlib
 import inspect
 import json
 
-from mlblocks import get_primitive_path
+import mlblocks
 
 
 def import_object(object_name):
@@ -19,7 +19,7 @@ class MLBlock(object):
     def _load_metadata(cls, name):
         """Locate and load the corresponding JSON file."""
 
-        json_path = get_primitive_path(name)
+        json_path = mlblocks.get_primitive_path(name)
         with open(json_path, 'r') as f:
             return json.load(f), json_path
 
@@ -78,7 +78,7 @@ class MLBlock(object):
         self._produce = self.metadata['produce']
         self.produce_args = self._parse_args(self._produce['args'])
         self.produce_output = self._produce['output']
-        self.produce_method = self._produce['method']
+        self.produce_method = self._produce.get('method')
 
         hyperparameters = self.metadata.get('hyperparameters', dict())
         init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
