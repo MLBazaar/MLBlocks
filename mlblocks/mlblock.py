@@ -23,14 +23,6 @@ class MLBlock(object):
         with open(json_path, 'r') as f:
             return json.load(f), json_path
 
-    @staticmethod
-    def _parse_args(args_list):
-        args_dict = dict()
-        for arg in args_list:
-            args_dict[arg['name']] = arg['type']
-
-        return args_dict
-
     def _extract_params(self, kwargs, hyperparameters):
         init_params = dict()
         fit_params = dict()
@@ -69,16 +61,17 @@ class MLBlock(object):
         self.json_path = json_path
 
         self.primitive = import_object(metadata['primitive'])
-        self._class = inspect.isclass(self.primitive)
 
         self._fit = self.metadata.get('fit', dict())
-        self.fit_args = self._parse_args(self._fit.get('args', []))
+        self.fit_args = self._fit.get('args', [])
         self.fit_method = self._fit.get('method')
 
         self._produce = self.metadata['produce']
-        self.produce_args = self._parse_args(self._produce['args'])
+        self.produce_args = self._produce['args']
         self.produce_output = self._produce['output']
         self.produce_method = self._produce.get('method')
+
+        self._class = bool(self.produce_method)
 
         hyperparameters = self.metadata.get('hyperparameters', dict())
         init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)

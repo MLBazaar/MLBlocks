@@ -14,21 +14,23 @@ class MLPipeline(object):
         """Initialize a MLPipeline with a list of corresponding MLBlocks.
 
         Args:
-            blocks: A list of MLBlocks composing this pipeline. MLBlocks
-                    can be either MLBlock instances or primitive names to
-                    load from the configuration JSON files.
+            blocks: List with the names of the primitives that will
+                    compose this pipeline.
+            init_params: dictionary containing initialization arguments to
+                         be passed when creating the MLBlocks instances.
+                         The dictionary keys must be the corresponding primitive
+                         names and the values must be another dictionary that will
+                         be passed as `**kargs` to the MLBlock instance.
         """
         init_params = init_params or dict()
 
         self.blocks = OrderedDict()
         block_names_count = Counter()
         for block in blocks:
-            block_names_count.update(block)
-            block_name = '{}_{}'.format(block, block_names_count[block])
-
+            block_names_count.update([block])
+            block_name = '{}#{}'.format(block, block_names_count[block])
             block_params = init_params.get(block_name, dict())
             mlblock = MLBlock(block, **block_params)
-
             self.blocks[block_name] = mlblock
 
     def get_tunable_hyperparameters(self):
@@ -36,10 +38,14 @@ class MLPipeline(object):
         for block_name, block in self.blocks.items():
             tunable[block_name] = block.get_tunable_hyperparameters()
 
+        return tunable
+
     def get_hyperparameters(self):
         hyperparameters = {}
         for block_name, block in self.blocks.items():
             hyperparameters[block_name] = block.get_hyperparameters()
+
+        return hyperparameters
 
     def set_hyperparameters(self, hyperparameters):
         for block_name, block_hyperparams in hyperparameters.items():
@@ -49,19 +55,24 @@ class MLPipeline(object):
     def _get_block_args(block_args, variables):
         # TODO: type validation and/or transformation should be done here
 
-        args = dict()
-        for name in block_args.keys():
-            # name = block_arg['name']
-            args[name] = variables[name]
+        kwargs = dict()
+        for arg in block_args:
+            name = arg['name']
+            keyword = arg.get('keyword', name)
+            kwargs[keyword] = variables[name]
 
-        return args
+        return kwargs
 
-    def _get_outputs(outputs, block_outputs):
+    def _get_outputs(self, outputs, block_outputs):
         # TODO: type validation and/or transformation should be done here
 
-        if len(outputs) != len(block_outputs):
+        if not isinstance(outputs, tuple):
+            outputs = (outputs, )
+
+        elif len(outputs) != len(block_outputs):
             error = 'Invalid number of outputs. Expected {} but got {}'.format(
                 len(block_outputs), len(outputs))
+
             raise ValueError(error)
 
         output_dict = dict()
@@ -71,8 +82,12 @@ class MLPipeline(object):
 
         return output_dict
 
-    def fit(self, **inputs):
-        variables = inputs.copy()
+    def fit(self, X=None, y=None, **kwargs):
+        variables = {
+            'X': X,
+            'y': y
+        }
+        variables.update(kwargs)
 
         last_block_name = list(self.blocks.keys())[-1]
         for block_name, block in self.blocks.items():
@@ -90,8 +105,11 @@ class MLPipeline(object):
                 output_dict = self._get_outputs(outputs, block.produce_output)
                 variables.update(output_dict)
 
-    def predict(self, **inputs):
-        variables = inputs.copy()
+    def predict(self, X=None, **kwargs):
+        variables = {
+            'X': X
+        }
+        variables.update(kwargs)
 
         last_block_name = list(self.blocks.keys())[-1]
         for block_name, block in self.blocks.items():
