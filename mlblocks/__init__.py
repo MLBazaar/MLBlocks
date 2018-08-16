@@ -19,8 +19,8 @@ __all__ = [
 
 
 PRIMITIVES_PATHS = [
-    os.path.join(os.getcwd(), 'mlprimitives'),
-    os.path.join(sys.prefix, 'mlprimitives'),
+    os.path.join(os.getcwd(), 'mlblocks_primitives'),
+    os.path.join(sys.prefix, 'mlblocks_primitives'),
 ]
 
 
