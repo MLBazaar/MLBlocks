@@ -1,9 +1,9 @@
-<p align="center"> 
+<p align="center">
 <img width=30% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
 </p>
 
-<p align="center"> 
-<i>MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines</i> 
+<p align="center">
+<i>MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines</i>
 </p>
 
 
@@ -26,44 +26,29 @@ Pipelines and primitives for machine learning and data science.
 At a high level:
  * Machine learning primitives are specified using standardized JSONs
  * User (or an external automated engine) specifies a list of primitives
- * The library transforms JSON specifications of machine learning primitives (blocks) into MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes a MLPipeline
- * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to data and predict on a new set of data.
+ * The library transforms JSON specifications of machine learning primitives (blocks) into
+   MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes
+   a MLPipeline
+ * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to
+   data and predict on a new set of data.
 
 ## Project Structure
 
-The MLBlocks consists of several modules and folders:
+The MLBlocks consists of the following modules and folders:
 
-* `mlblocks.py`: Defines the `MLBlocks` core class of the library.
-* `mlpipeline.py`: Defines the `MLPipeline` class that allows combining multiple MLBlocks.
-* `mlhyperparam.py`: Defines the MLHyperparam, an abstraction of an MLBlock tunable
-  hyperparameter.
-* `components`: is a submodule that contains a collection of helper functions used to integrate
-  primitives into MLBlocks, as well as some custom primitives.
-* `parsers`: defines the parsers: classes that initialize MLBlock instances
-  from JSON primitives.
-* `primitives`: folder that contains the collection of JSON primitives.
+* `mlblocks.mlblocks`: Defines the `MLBlock` core class of the library.
+* `mlblocks.mlpipeline`: Defines the `MLPipeline` class that allows combining multiple MLBlock
+  instances.
+* `mlblocks_primitives`: folder that contains the collection of JSON primitives. This folder
+  can either be provided by the user or installed via the MLPrimitives subproject.
 
 ### Primitive JSONS
 
 The primitive JSONs are the main component of our library.
-The format of said JSON files varies slightly depending on the model source library,
-but generally `random_forest_classifier.json` is a good starting example to look at.
-For neural keras primitives, refer to `simple_cnn.json`.
+The contents of said JSON files varies slightly depending on the model source library,
+but they all have a common structure.
 
-### Components
-
-The components subpackage provides the code for some auxiliary custom functions
-that are useful when creating pipelines. Each custom function should also have
-a corresponding primitive JSON. A useful example is the HOG featurization step
-for image pipelines, defined in `components/functions/image/hog.py` and
-`primitives/HOG.json`.
-
-## Parsers
-
-Parsers provide the logic to create MLBlock instances from JSON primitive
-specifications. All parsers should extend the MLParser base class, particularly
-overriding the `build_mlblock` method. Other quality-of-life helper functions
-are provided in the MLParser class as well.
+Examples of such JSON files can be found inside the `examples` folder.
 
 ## Installation
 
@@ -79,9 +64,26 @@ You can also clone the repository and install it from sources
 
     git clone git@github.com:HDI-Project/MLBlocks.git
     cd MLBlocks
-    make install
+    pip install -e .
 
 ## Usage
+
+The following points cover the most basic usage of the MLBlocks library.
+
+Note that in order to be able to execute the given code snippets, you will
+need to install a couple of additional libraries, which you can do by running:
+
+```
+pip install mlblocks[demo]
+```
+
+if you installed the library from PyPi or
+
+```
+pip install -e .[demo]
+```
+
+If you installed from sources.
 
 ### Initializing a pipeline
 
@@ -89,69 +91,115 @@ With MLBlocks, we can simply initialize a pipeline by passing it the list
 of MLBlocks that will compose it.
 
 ```
->>> from mlblocks.mlpipeline import MLPipeline
->>> image_pipeline = MLPipeline(['HOG', 'random_forest_classifier'])
+>>> from mlblocks import MLPipeline
+>>> pipeline = MLPipeline(['sklearn.ensemble.RandomForestClassifier'])
 ```
 
 ### Obtaining and updating hyperparameters
 
-Upon initialization, a pipeline has random hyperparameter values. For a
+Upon initialization, a pipeline has a set of default hyperparamters. For a
 particular data science problem, we may want to set or view the values and
 attributes of particular hyperparameters. For example, we may need to pass in
 the current hyperparameter values of our pipeline into a third party tuner.
 
-For tunable hyperparameters, we use `get_tunable_hyperparams`
-and `update_tunable_hyperparams`, in which we obtain a list of MLHyperparams
-and pass in a list of updated MLHyperparams respectively.
+To obtain the list of tunable hyperparameters can be obtained by calling the pipeline
+method `get_tunable_hyperparameters`.
 
 ```
->>> tunable_hp = image_pipeline.get_tunable_hyperparams()
->>> print('\n'.join(map(str, tunable_hp)))
-Hyperparameter: Name: num_orientations, Step Name: HOG, Type: int, Range: [9, 9], Value: 9
-Hyperparameter: Name: num_cell_pixels, Step Name: HOG, Type: int, Range: [8, 8], Value: 8
-Hyperparameter: Name: num_cells_block, Step Name: HOG, Type: int, Range: [3, 3], Value: 3
-Hyperparameter: Name: criterion, Step Name: rf_classifier, Type: string, Range: ['entropy', 'gini'], Value: entropy
-Hyperparameter: Name: max_features, Step Name: rf_classifier, Type: float, Range: [0.1, 1.0], Value: 0.9134616693335704
-Hyperparameter: Name: max_depth, Step Name: rf_classifier, Type: int, Range: [2, 10], Value: 2
-Hyperparameter: Name: min_samples_split, Step Name: rf_classifier, Type: int, Range: [2, 4], Value: 3
-Hyperparameter: Name: min_samples_leaf, Step Name: rf_classifier, Type: int, Range: [1, 3], Value: 3
-Hyperparameter: Name: n_estimators, Step Name: rf_classifier, Type: int_cat, Range: [100], Value: 100
-Hyperparameter: Name: n_jobs, Step Name: rf_classifier, Type: int_cat, Range: [-1], Value: -1
->>> image_pipeline.update_tunable_hyperparams(tunable_hp)
+>>> tunable_hp = pipeline.get_tunable_hyperparameters()
+>>> import json
+>>> print(json.dumps(tunable_hp, indent=4))
+{
+    "sklearn.ensemble.RandomForestClassifier#1": {
+        "criterion": {
+            "type": "str",
+            "default": "entropy",
+            "values": [
+                "entropy",
+                "gini"
+            ]
+        },
+        "max_features": {
+            "type": "str",
+            "default": null,
+            "range": [
+                null,
+                "auto",
+                "log2"
+            ]
+        },
+        "max_depth": {
+            "type": "int",
+            "default": 10,
+            "range": [
+                1,
+                30
+            ]
+        },
+        "min_samples_split": {
+            "type": "float",
+            "default": 0.1,
+            "range": [
+                0.0001,
+                0.5
+            ]
+        },
+        "min_samples_leaf": {
+            "type": "float",
+            "default": 0.1,
+            "range": [
+                0.0001,
+                0.5
+            ]
+        },
+        "n_estimators": {
+            "type": "int",
+            "default": 30,
+            "values": [
+                2,
+                500
+            ]
+        },
+        "class_weight": {
+            "type": "str",
+            "default": null,
+            "range": [
+                null,
+                "balanced"
+            ]
+        }
+    }
+}
 ```
 
-If we only want to update the value of certain tunable hyperparameters, we can
-use the `set_from_hyperparam_dict` method, in which we provide a mapping of
-(step name, hyperparameter name) tuples to values to update to as input.
+To obtain the values that the hyperparmeters of our pipeline currently has,
+the method `get_hyperparameters` can be used.
 
 ```
->>> hp_dict = {('rf_classifier', 'max_depth'): 9}
->>> image_pipeline.set_from_hyperparam_dict(hp_dict)
->>> updated_hp = image_pipeline.get_tunable_hyperparams()
->>> print('\n'.join(map(str, updated_hp)))
-Hyperparameter: Name: num_orientations, Step Name: HOG, Type: int, Range: [9, 9], Value: 9
-Hyperparameter: Name: num_cell_pixels, Step Name: HOG, Type: int, Range: [8, 8], Value: 8
-Hyperparameter: Name: num_cells_block, Step Name: HOG, Type: int, Range: [3, 3], Value: 3
-Hyperparameter: Name: criterion, Step Name: rf_classifier, Type: string, Range: ['entropy', 'gini'], Value: entropy
-Hyperparameter: Name: max_features, Step Name: rf_classifier, Type: float, Range: [0.1, 1.0], Value: 0.9134616693335704
-Hyperparameter: Name: max_depth, Step Name: rf_classifier, Type: int, Range: [2, 10], Value: 9
-Hyperparameter: Name: min_samples_split, Step Name: rf_classifier, Type: int, Range: [2, 4], Value: 3
-Hyperparameter: Name: min_samples_leaf, Step Name: rf_classifier, Type: int, Range: [1, 3], Value: 3
-Hyperparameter: Name: n_estimators, Step Name: rf_classifier, Type: int_cat, Range: [100], Value: 100
-Hyperparameter: Name: n_jobs, Step Name: rf_classifier, Type: int_cat, Range: [-1], Value: -1
+>>> current_hp = pipeline.get_hyperparameters()
+>>> print(json.dumps(current_hp, indent=4))
+{
+    "sklearn.ensemble.RandomForestClassifier#1": {
+        "n_jobs": -1,
+        "criterion": "entropy",
+        "max_features": null,
+        "max_depth": 10,
+        "min_samples_split": 0.1,
+        "min_samples_leaf": 0.1,
+        "n_estimators": 30,
+        "class_weight": null
+    }
+}
 ```
 
-Sometimes, we might want to obtain and update fixed hyperparameters. We can
-use analogous `get_fixed_hyperparams` and `update_fixed_hyperparams`. Similarly
-to the `set_from_hyperparam_dict`, the outputs of and input to these functions
-respectively are mappings of (step name, hyperparameter name) tuples to
-hyperparameter values.
+Similarly, to set different hyperparameter values, the method `set_hyperparameters`
+can be used.
 
 ```
->>> hp_to_update = {('rf_classifier', 'bootstrap'): True}
->>> image_pipeline.update_fixed_hyperparams(hp_to_update)
->>> image_pipeline.get_fixed_hyperparams()
-{('rf_classifier', 'bootstrap'): True}
+>>> new_hyperparameters = {'sklearn.ensemble.RandomForestClassifier#1': {'max_depth': 20}}
+>>> pipeline.set_hyperparameters(new_hyperparameters)
+>>> pipeline.get_hyperparameters()['sklearn.ensemble.RandomForestClassifier#1']['max_depth']
+20
 ```
 
 ### Making predictions
@@ -161,30 +209,33 @@ predictions on a dataset.
 
 To do this, we first call the `fit` method if necessary. This takes in training
 data and labels as well as any other parameters each individual step may
-use during fitting. These are specified as mappings from (step name, fit
-parameter name) tuples to fit parameter values.
+use during fitting.
 
 ```
->>> from sklearn.datasets import fetch_mldata
+>>> from sklearn.datasets import load_wine
 >>> from sklearn.model_selection import train_test_split
->>> mnist = fetch_mldata('MNIST original')
->>> X, X_test, y, y_test = train_test_split(mnist.data, mnist.target, train_size=1000, test_size=300)
->>> optional_fit_params = {('rf_classifier', 'sample_weight'): None}
->>> image_pipeline.fit(X, y, optional_fit_params)
+>>> wine = load_wine()
+>>> X_train, X_test, y_train, y_test = train_test_split(wine.data, wine.target)
+>>> pipeline.fit(X_train, y_train)
 ```
 
 Once we have fit our model to our data, we can simply make predictions. From
 these predictions, we can do useful things, such as obtain an accuracy score.
 
 ```
+>>> y_pred = pipeline.predict(X_test)
 >>> from sklearn.metrics import accuracy_score
->>> predicted_y_val = image_pipeline.predict(X_test)
->>> score = accuracy_score(y_test, predicted_y_val)
->>> print(score)
-0.85
+>>> accuracy_score(y_test, y_pred)
+1.0
 ```
-# History 
-In its first iteration in 2015, MLBlocks was designed for only multi table, multi entity temporal data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis:
-* [Machine learning blocks](https://dai.lids.mit.edu/wp-content/uploads/2018/06/Mlblocks_Bryan.pdf). Bryan Collazo. Masters thesis, MIT EECS, 2015.   
 
-With recent availability of a multitude of libraries and tools, we decided it was time to integrate them and expand the library to address other data types: images, text, graph, time series and integrate with deep learning libraries.
+# History
+
+In its first iteration in 2015, MLBlocks was designed for only multi table, multi entity temporal
+data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis:
+* [Machine learning blocks](https://dai.lids.mit.edu/wp-content/uploads/2018/06/Mlblocks_Bryan.pdf).
+  Bryan Collazo. Masters thesis, MIT EECS, 2015.
+
+With recent availability of a multitude of libraries and tools, we decided it was time to integrate
+them and expand the library to address other data types: images, text, graph, time series and
+integrate with deep learning libraries.

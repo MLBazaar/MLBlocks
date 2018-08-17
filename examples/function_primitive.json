@@ -1,0 +1,96 @@
+{
+    "name": "the_primitive_name",
+    "author": "Author Name <and@author.email>",
+    "documentation": "http://link.to/the/primitive/docs",
+    "description": "A human readable description.",
+    "classifiers": {
+        "type": "primitive_type",
+        "subtype": "primitive_subtype"
+    },
+    "modalities": ["some", "modalities", "such", "as", "image", "or", "graph"],
+    "primitive": "full.python.path.to.a_function",
+    "produce": {
+        "args": [
+            {
+                "name": "X",
+                "keyword": "optional_name_of_the_produce_method_argument",
+                "description": "each input can be described",
+                "type": "DataFrame"
+            }
+        ],
+        "output": [
+            {
+                "descrtiption": "each output argument can be described",
+                "name": "y",
+                "type": "Series"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": [
+            {
+                "name": "a_required_hyperparameter",
+                "descrtiption": "this is a non tunable hyperparameter that needs to be specified by the user, because it does not have a default value",
+                "type": "int"
+            },
+            {
+                "name": "an_optional_hyperparameter",
+                "descrtiption": "this is a non tunable hyperparameter that is optional, because it has a default value",
+                "type": "int",
+                "default": 1
+            }
+        ],
+        "tunable": {
+            "a_simple_range_hyperparameter": {
+                "description": "hyperparameter documentation can be put here",
+                "default": 1,
+                "type": "int",
+                "range": [1, 10]
+            },
+            "a_categorical_hyperparameter_of_type_int": {
+                "description": "Note that it has the filed `values` instead of `range`",
+                "default": 1,
+                "type": "int",
+                "values": [1, 3, 7, 10]
+            },
+            "a_categorical_hyperparameter_of_type_str": {
+                "default": "a",
+                "type": "str",
+                "values": ["a", "b", "c"]
+            },
+            "a_multi_type_hyperprameter": {
+                "description": "this is a hyperparameter that allows more than one type",
+                "type": "multitype",
+                "default": "auto",
+                "types": {
+                    "int": {
+                        "description": "documentation can also be included here",
+                        "range": [1, 10]
+                    },
+                    "string": {
+                        "values": ["some", "string", "values"]
+                    }
+                }
+            },
+            "conditional_hyperparameter": {
+                "description": "this is a hyperparameter whose valid values depend on the value of another hyperpameter",
+                "type": "conditional",
+                "condition": "the_name_of_the_other_hyperparameter",
+                "values": {
+                    "a": {
+                        "description": "this hyperparameter definition will be used if the value of the other hyperparameter is `a`",
+                        "type": "int",
+                        "default": 0,
+                        "range": [0, 10]
+                    },
+                    "*": {
+                        "description": "this will be used only if the value does not match any other definition",
+                        "type": "float",
+                        "default": 0.0,
+                        "range": [0.0, 1.0]
+                    }
+                }
+            }
+        }
+    }
+}

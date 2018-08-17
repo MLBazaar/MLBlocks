@@ -45,6 +45,13 @@ development_requires = [
 ]
 
 
+demo_requires = [
+    'numpy==1.15.0',
+    'scikit-learn==0.19.2',
+    'scipy==1.1.0',
+]
+
+
 setup(
     author='MIT Data To AI Lab',
     author_email='dailabmit@gmail.com',
@@ -60,7 +67,8 @@ setup(
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
         'test': tests_require,
-        'dev': tests_require + development_requires
+        'dev': tests_require + development_requires,
+        'demo': demo_requires
     },
     include_package_data=True,
     install_requires=install_requires,
