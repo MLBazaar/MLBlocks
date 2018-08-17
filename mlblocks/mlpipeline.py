@@ -50,7 +50,7 @@ class MLPipeline(object):
 
                 mlblock = MLBlock(block, **block_params)
                 self.blocks[block_name] = mlblock
-            except:
+            except Exception as e:
                 LOGGER.exception("Exception caught building MLBlock {}".format(block))
                 raise
 
