@@ -1,42 +1,130 @@
+# -*- coding: utf-8 -*-
+
+import importlib
+import json
+
+import mlblocks
+
+
+def import_object(object_name):
+    """Import an object from its Fully Qualified Name."""
+    package, name = object_name.rsplit('.', 1)
+    return getattr(importlib.import_module(package), name)
+
+
 class MLBlock(object):
-    """A single primitive in an MLPipeline.
-    Simply defines the interface. Implementation should be done in an
-    MLParser.
 
-    Attributes:
-        name: The name of this primitive.
-        model: The actual model of this primitive that acts on data.
-        fixed_hyperparams: A dictionary mapping this primitive's
-            non-tunable hyperparameter names to their corresponding
-            values.
-        tunable_hyperparams: A dictionary mapping this primitive's
-            hyperparameter names to corresponding Hyperparam objects.
-    """
+    @classmethod
+    def _load_metadata(cls, name):
+        """Locate and load the corresponding JSON file."""
 
-    def __init__(self, name, model, fixed_hyperparams, tunable_hyperparams):
-        """Initialize this MLBlock.
+        json_path = mlblocks.get_primitive_path(name)
+        with open(json_path, 'r') as f:
+            return json.load(f), json_path
 
-        Args:
-            name: The name of this block primitive.
-            model: The actual model of this primitive that acts on
-                data.
-            fixed_hyperparams: A dictionary mapping this primitive's
-                non-tunable hyperparameter names to their corresponding
-                values.
-            tunable_hyperparams: A dictionary mapping this
-                primitive's hyperparameter names to corresponding
-                MLHyperparam objects.
-        """
+    def _extract_params(self, kwargs, hyperparameters):
+        init_params = dict()
+        fit_params = dict()
+        produce_params = dict()
+
+        for name, param in hyperparameters.get('fixed', dict()).items():
+            if name in kwargs:
+                value = kwargs.pop(name)
+
+            elif 'default' in param:
+                value = param['default']
+
+            else:
+                raise TypeError("Required argument '{}' not found".format(name))
+
+            init_params[name] = value
+
+        for name, param in hyperparameters.get('tunable', dict()).items():
+            if name in kwargs:
+                init_params[name] = kwargs.pop(name)
+
+        fit_args = [arg['name'] for arg in self.fit_args]
+        produce_args = [arg['name'] for arg in self.produce_args]
+
+        for name in kwargs.keys():
+            if name in fit_args:
+                fit_params[name] = kwargs.pop(name)
+
+            elif name in produce_args:
+                produce_params[name] = kwargs.pop(name)
+
+        if kwargs:
+            error = "Unexpected hyperparameters '{}'".format(', '.join(kwargs.keys()))
+            raise TypeError(error)
+
+        return init_params, fit_params, produce_params
+
+    def __init__(self, name, **kwargs):
         self.name = name
-        self.model = model
-        self.fixed_hyperparams = fixed_hyperparams
-        self.tunable_hyperparams = tunable_hyperparams
 
-    def update_model(self, fixed_hyperparams, tunable_hyperparams):
-        raise NotImplementedError
+        metadata, json_path = self._load_metadata(name)
+        self.metadata = metadata
+        self.json_path = json_path
 
-    def fit(self, x, y):
-        raise NotImplementedError
+        self.primitive = import_object(metadata['primitive'])
 
-    def produce(self, x, y):
-        raise NotImplementedError
+        self._fit = self.metadata.get('fit', dict())
+        self.fit_args = self._fit.get('args', [])
+        self.fit_method = self._fit.get('method')
+
+        self._produce = self.metadata['produce']
+        self.produce_args = self._produce['args']
+        self.produce_output = self._produce['output']
+        self.produce_method = self._produce.get('method')
+
+        self._class = bool(self.produce_method)
+
+        hyperparameters = self.metadata.get('hyperparameters', dict())
+        init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
+        self._hyperparamters = init_params
+        self._fit_params = fit_params
+        self._produce_params = produce_params
+
+        tunable = hyperparameters.get('tunable', dict())
+        self._tunable = {
+            name: param
+            for name, param in tunable.items()
+            if name not in init_params
+            # TODO: filter conditionals
+        }
+
+        default = {
+            name: param['default']
+            for name, param in self._tunable.items()
+            # TODO: support undefined defaults
+        }
+
+        self.set_hyperparameters(default)
+
+    def get_tunable_hyperparameters(self):
+        return self._tunable
+
+    def get_hyperparameters(self):
+        return self._hyperparamters
+
+    def set_hyperparameters(self, hyperparameters):
+        self._hyperparamters.update(hyperparameters)
+
+        if self._class:
+            self.instance = self.primitive(**self._hyperparamters)
+
+    def fit(self, **kwargs):
+        fit_args = self._fit_params.copy()
+        fit_args.update(kwargs)
+        if self.fit_method is not None:
+            getattr(self.instance, self.fit_method)(**fit_args)
+
+    def produce(self, **kwargs):
+        produce_args = self._produce_params.copy()
+        produce_args.update(kwargs)
+        if self._class:
+            return getattr(self.instance, self.produce_method)(**produce_args)
+
+        else:
+            produce_args.update(self._hyperparamters)
+            return self.primitive(**produce_args)

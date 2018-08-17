@@ -1,5 +1,25 @@
 # History
 
+## 0.2.0 - New MLBlocks API
+
+A new MLBlocks API and Primitive format.
+
+This is a summary of the changes:
+
+* Primitives JSONs and Python code has been moved to a different repository, called MLPrimitives
+* Optional usage of multiple JSON primitive folders.
+* JSON format has been changed to allow more flexibility and features:
+    * input and output arguments, as well as argument types, can be specified for each method
+    * both classes and function as primitives are supported
+    * multitype and conditional hyperparameters fully supported
+    * data modalities and primitive classifiers introduced
+    * metadata such as documentation, description and author fields added
+* Parsers are removed, and now the MLBlock class is responsible for loading and reading the
+  JSON primitive.
+* Multiple blocks of the same primitive are supported within the same pipeline.
+* Arbitrary inputs and outputs for both pipelines and blocks are allowed.
+* Shared variables during pipeline execution, usable by multiple blocks.
+
 ## 0.1.9 - Bugfix Release
 
 * Disable some NetworkX functions for incompatibilities with some types of graphs.

@@ -5,36 +5,52 @@
 
 from setuptools import find_packages, setup
 
+
 with open('README.md') as readme_file:
     readme = readme_file.read()
+
 
 with open('HISTORY.md') as history_file:
     history = history_file.read()
 
+
 install_requires = [
 ]
+
 
 tests_require = [
     'mock>=2.0.0',
     'pytest>=3.4.2',
 ]
 
-primitives_require = [
-    'Keras>=2.1.6',
-    'featuretools>=0.1.17',
-    'lightfm>=1.15',
-    'networkx>=2.0',
-    'numpy>=1.14.0',
-    'opencv-python>=3.4.0.12',
-    'python-louvain>=0.10',
-    'scikit-image>=0.13.1',
-    'scikit-learn>=0.19.1',
-    'scipy>=1.1.0',
-]
 
 setup_requires = [
     'pytest-runner>=2.11.1',
 ]
+
+
+development_requires = [
+    'Sphinx>=1.7.1',
+    'bumpversion>=0.5.3',
+    'coverage>=4.5.1',
+    'flake8>=3.5.0',
+    'isort>=4.3.4',
+    'recommonmark>=0.4.0',
+    'sphinx_rtd_theme>=0.2.4',
+    'tox>=2.9.1',
+    'twine>=1.10.0',
+    'wheel>=0.30.0',
+    'autoflake>=1.2',  # keep this at the end to avoid
+    'autopep8>=1.3.5', # version incompatibilities with flake8
+]
+
+
+demo_requires = [
+    'numpy==1.15.0',
+    'scikit-learn==0.19.2',
+    'scipy==1.1.0',
+]
+
 
 setup(
     author='MIT Data To AI Lab',
@@ -51,11 +67,12 @@ setup(
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
         'test': tests_require,
-        'primitives': primitives_require
+        'dev': tests_require + development_requires,
+        'demo': demo_requires
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='machine learning classification',
+    keywords='auto machine learning classification regression data science pipeline',
     license="MIT license",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
@@ -65,6 +82,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.1.9',
+    version='0.2.0-dev',
     zip_safe=False,
 )
