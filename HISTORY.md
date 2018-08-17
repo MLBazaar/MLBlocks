@@ -1,5 +1,18 @@
 # History
 
+## 0.1.9 - Bugfix Release
+
+* Disable some NetworkX functions for incompatibilities with some types of graphs.
+
+## 0.1.8 - New primitives and some improvements
+
+* Improve the NetworkX primitives.
+* Add String Vectorization and Datetime Featurization primitives.
+* Refactor some Keras primitives to work with single dimension `y` arrays and be compatible with `pickle`.
+* Add XGBClassifier and XGBRegressor primitives.
+* Add some `keras.applications` pretrained networks as preprocessing primitives.
+* Add helper class to allow function primitives.
+
 ## 0.1.7 - Nested hyperparams dicts
 
 * Support passing hyperparams as nested dicts.
