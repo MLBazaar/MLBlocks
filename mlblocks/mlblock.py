@@ -39,11 +39,18 @@ class MLBlock(object):
 
             init_params[name] = value
 
+        for name, param in hyperparameters.get('tunable', dict()).items():
+            if name in kwargs:
+                init_params[name] = kwargs.pop(name)
+
+        fit_args = [arg['name'] for arg in self.fit_args]
+        produce_args = [arg['name'] for arg in self.produce_args]
+
         for name in kwargs.keys():
-            if name in self.fit_args.keys():
+            if name in fit_args:
                 fit_params[name] = kwargs.pop(name)
 
-            elif name in self.produce_args.keys():
+            elif name in produce_args:
                 produce_params[name] = kwargs.pop(name)
 
         if kwargs:
