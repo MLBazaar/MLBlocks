@@ -9,17 +9,19 @@
 
 [![PyPi][pypi-img]][pypi-url]
 [![CircleCI][circleci-img]][circleci-url]
+[![Travis][travis-img]][travis-url]
 
+[travis-img]: https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master
+[travis-url]: https://travis-ci.org/HDI-Project/MLBlocks
 [pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
 [pypi-url]: https://pypi.python.org/pypi/mlblocks
 [circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
 [circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
 
-
 Pipelines and primitives for machine learning and data science.
 
 - Free software: MIT license
-- Documentation: https://HDI-Project.github.io/mlblocks
+- Documentation: https://HDI-Project.github.io/MLBlocks
 
 ## Overview
 
