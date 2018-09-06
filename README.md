@@ -124,12 +124,15 @@ To do this, we first call the `fit` method passing the training data and the cor
 >>> pipeline.fit(X_train, y_train)
 ```
 
-Once we have fit our model to our data, we can simply make predictions. From these predictions,
-we can do useful things, such as obtain an accuracy score.
+Once we have fitted our model to our data, we can call the `predict` method passing new data
+to obtain predictions from the pipeline.
 
 ```python
 >>> from sklearn.metrics import accuracy_score as score
 >>> y_pred = pipeline.predict(X_test)
+>>> y_pred
+array([2, 1, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 0, 2, 1, 2, 0, 0, 0, 0, 0, 1,
+       1, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 1, 1, 0, 1])
 >>> score(y_test, y_pred)
 0.9473684210526315
 ```
