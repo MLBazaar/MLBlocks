@@ -66,9 +66,9 @@ setup(
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
+        'demo': demo_requires,
+        'dev': demo_requires + development_requires + tests_require,
         'test': tests_require,
-        'dev': tests_require + development_requires,
-        'demo': demo_requires
     },
     include_package_data=True,
     install_requires=install_requires,
