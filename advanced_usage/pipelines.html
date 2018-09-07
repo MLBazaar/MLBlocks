@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pipelines &mdash; MLBlocks 0.2.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Adding Primitives" href="adding_primitives.html" />
+    <link rel="prev" title="Hyperparameters" href="hyperparameters.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="primitives.html#class-primitives">Class Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="primitives.html#mlblock-class">MLBlock Class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mlpipeline-class">MLPipeline Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Pipelines</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/advanced_usage/pipelines.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pipelines">
+<h1>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="mlpipeline-class">
+<h2>MLPipeline Class<a class="headerlink" href="#mlpipeline-class" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">mlblocks.MLPipeline</span></code> class is the representation of a <strong>pipeline</strong>  within the <strong>MLBlocks</strong>
+library, and it works by combining multiple <code class="docutils literal notranslate"><span class="pre">MLBlock</span></code> instances, called <code class="docutils literal notranslate"><span class="pre">blocks</span></code> in this
+context, which then calls in succession for fitting and predicting.</p>
+<p>This one is the object which the user should be mostly interacting with.</p>
+<p>These are the expected inputs to create the instance:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">blocks</span></code>: A list containing the names of the primitives to load as MLBlock instances.</li>
+<li><code class="docutils literal notranslate"><span class="pre">init_params</span></code>: Hyperparameters to be used for the MLBlock instances creation, specified as a
+dictionary that contains the name of the blocks as keys and the set of keyword
+arguments to pass to each one of them specified as subdicts.</li>
+</ul>
+<p>And it has these available methods:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code>: Get a dictionary indicating which hyperparameters can be tuned
+for each primitive, with their types, available ranges, default values and documentation.</li>
+<li><code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code>: Get a dictionary with the hyperparameter values that each primitive
+is currently using.</li>
+<li><code class="docutils literal notranslate"><span class="pre">set_hyperparameters</span></code>: Set new hyperparameters for one or more primitives, passed as a
+dictionary where keys are the name of the blocks to modify and values are nested dictionaries
+with the hyperparameters to set.</li>
+<li><code class="docutils literal notranslate"><span class="pre">fit</span></code>: Call the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method and then the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of each block, in sequence,
+passing each time as input the output of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of the previous block.</li>
+<li><code class="docutils literal notranslate"><span class="pre">predict</span></code>: Call the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of each block in sequence passing each time as input
+the output of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of the previous block.</li>
+</ul>
+<p>For a more detailed description of the methods and their arguments, please check the API Reference
+section of the documentation.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="adding_primitives.html" class="btn btn-neutral float-right" title="Adding Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hyperparameters.html" class="btn btn-neutral" title="Hyperparameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.1-dev',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

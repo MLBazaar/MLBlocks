@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quickstart &mdash; MLBlocks 0.2.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Primitives" href="../advanced_usage/primitives.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#class-primitives">Class Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#mlblock-class">MLBlock Class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/hyperparameters.html">Hyperparameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#mlpipeline-class">MLPipeline Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Quickstart</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/getting_started/quickstart.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>Below is a short tutorial that will show you how to get started using <strong>MLBlocks</strong>.</p>
+<p>In this tutorial we will learn how to:</p>
+<ul class="simple">
+<li>Create a pipeline using multiple primitives</li>
+<li>Specify hyperparameters for each primitive in the pipeline</li>
+<li>Fit the pipeline using training data</li>
+<li>Use the pipeline to make predictions from new data</li>
+</ul>
+<div class="section" id="creating-a-pipeline">
+<h2>Creating a pipeline<a class="headerlink" href="#creating-a-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>With MLBlocks, creating a pipeline is as simple as specifying a list of primitives and passing
+them to the <cite>MLPipeline</cite> class:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+
+<span class="gp">In [2]: </span><span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span>
+<span class="gp">   ...: </span><span class="p">]</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [3]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
+<span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-3-021cae07d692&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
+
+<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlpipeline.py</span> in <span class="ni">__init__</span><span class="nt">(self, blocks, init_params, input_names, output_names)</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>                                         <span class="s2">&quot;for more than one block </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">),</span> <span class="n">block</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">82</span> 
+<span class="ne">---&gt; </span><span class="mi">83</span>                 <span class="n">mlblock</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mlblock</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span> 
+
+<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlblock.py</span> in <span class="ni">__init__</span><span class="nt">(self, name, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">112</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="g g-Whitespace">    </span><span class="mi">113</span> 
+<span class="ne">--&gt; </span><span class="mi">114</span>         <span class="n">metadata</span> <span class="o">=</span> <span class="n">mlblocks</span><span class="o">.</span><span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">115</span> 
+<span class="g g-Whitespace">    </span><span class="mi">116</span>         <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
+
+<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/__init__.py</span> in <span class="ni">load_primitive</span><span class="nt">(name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span>                 <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">91</span> 
+<span class="ne">---&gt; </span><span class="mi">92</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+<span class="ne">ValueError</span>: Unknown primitive: sklearn.preprocessing.StandardScaler
+</pre></div>
+</div>
+<p>Optionally, specific hyperparameters can be also set by specifying them in a dictionary:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">   ...: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="gp">   ...: </span>    <span class="p">}</span>
+<span class="gp">   ...: </span><span class="p">}</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [5]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
+<span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-5-6e57f1ffe211&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
+
+<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlpipeline.py</span> in <span class="ni">__init__</span><span class="nt">(self, blocks, init_params, input_names, output_names)</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>                                         <span class="s2">&quot;for more than one block </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">),</span> <span class="n">block</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">82</span> 
+<span class="ne">---&gt; </span><span class="mi">83</span>                 <span class="n">mlblock</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">84</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mlblock</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span> 
+
+<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlblock.py</span> in <span class="ni">__init__</span><span class="nt">(self, name, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">112</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="g g-Whitespace">    </span><span class="mi">113</span> 
+<span class="ne">--&gt; </span><span class="mi">114</span>         <span class="n">metadata</span> <span class="o">=</span> <span class="n">mlblocks</span><span class="o">.</span><span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">115</span> 
+<span class="g g-Whitespace">    </span><span class="mi">116</span>         <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
+
+<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/__init__.py</span> in <span class="ni">load_primitive</span><span class="nt">(name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span>                 <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">91</span> 
+<span class="ne">---&gt; </span><span class="mi">92</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+<span class="ne">ValueError</span>: Unknown primitive: sklearn.preprocessing.StandardScaler
+</pre></div>
+</div>
+<p>If you can see which hyperparameters a particular pipeline is using, you can do so by calling
+its <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
+<span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-6-595b8f33c7ba&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
+
+<span class="ne">NameError</span>: name &#39;pipeline&#39; is not defined
+</pre></div>
+</div>
+</div>
+<div class="section" id="making-predictions">
+<h2>Making predictions<a class="headerlink" href="#making-predictions" title="Permalink to this headline">¶</a></h2>
+<p>Once we have created the pipeline with the desired hyperparameters we can fit it
+and then use it to make predictions on new data.</p>
+<p>To do this, we first call the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing the training data and the corresponding labels.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+
+<span class="gp">In [8]: </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="gp">In [9]: </span><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+
+<span class="gp">In [10]: </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+
+<span class="gp">In [11]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-11-58e3b7912133&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;pipeline&#39; is not defined
+</pre></div>
+</div>
+<p>Once we have fitted our model to our data, we can call the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method passing new data
+to obtain predictions from the pipeline.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span> <span class="k">as</span> <span class="n">score</span>
+
+<span class="gp">In [13]: </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-13-a0c759197f3c&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;pipeline&#39; is not defined
+
+<span class="gp">In [14]: </span><span class="n">y_pred</span>
+<span class="go">                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------</span>
+<span class="go">NameError                                 Traceback (most recent call last)</span>
+<span class="go">&lt;ipython-input-14-3aaf935e6aec&gt; in &lt;module&gt;()</span>
+<span class="go">----&gt; 1 y_pred</span>
+
+<span class="go">NameError: name &#39;y_pred&#39; is not defined</span>
+
+<span class="gp">In [15]: </span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="go">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ---------------------------------------------------------------------------</span>
+<span class="go">NameError                                 Traceback (most recent call last)</span>
+<span class="go">&lt;ipython-input-15-50d94d89d6b3&gt; in &lt;module&gt;()</span>
+<span class="go">----&gt; 1 score(y_test, y_pred)</span>
+
+<span class="go">NameError: name &#39;y_pred&#39; is not defined</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../advanced_usage/primitives.html" class="btn btn-neutral float-right" title="Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.1-dev',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

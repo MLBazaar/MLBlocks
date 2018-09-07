@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; MLBlocks 0.2.1-dev documentation</title>
+  <title>Changelog &mdash; MLBlocks 0.2.1-dev documentation</title>
   
 
   
@@ -30,9 +30,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
- 
-
-
+    <link rel="prev" title="Credits" href="authors.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -109,11 +107,11 @@
 </li>
 </ul>
 <p class="caption"><span class="caption-text">References</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a></li>
 </ul>
 
             
@@ -159,10 +157,16 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Python Module Index</li>
+      <li>Changelog</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/changelog.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
         
       </li>
     
@@ -174,40 +178,126 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-m"><strong>m</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-m"><td></td><td>
-       <strong>m</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <a href="mlblocks.html#module-mlblocks"><code class="xref">mlblocks</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="mlblocks.html#module-mlblocks.mlblock"><code class="xref">mlblocks.mlblock</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="mlblocks.html#module-mlblocks.mlpipeline"><code class="xref">mlblocks.mlpipeline</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="new-mlblocks-api">
+<h2>0.2.0 - New MLBlocks API<a class="headerlink" href="#new-mlblocks-api" title="Permalink to this headline">¶</a></h2>
+<p>A new MLBlocks API and Primitive format.</p>
+<p>This is a summary of the changes:</p>
+<ul class="simple">
+<li>Primitives JSONs and Python code has been moved to a different repository, called MLPrimitives</li>
+<li>Optional usage of multiple JSON primitive folders.</li>
+<li><dl class="first docutils">
+<dt>JSON format has been changed to allow more flexibility and features:</dt>
+<dd><ul class="first last">
+<li>input and output arguments, as well as argument types, can be specified for each method</li>
+<li>both classes and function as primitives are supported</li>
+<li>multitype and conditional hyperparameters fully supported</li>
+<li>data modalities and primitive classifiers introduced</li>
+<li>metadata such as documentation, description and author fields added</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>Parsers are removed, and now the MLBlock class is responsible for loading and reading the
+JSON primitive.</li>
+<li>Multiple blocks of the same primitive are supported within the same pipeline.</li>
+<li>Arbitrary inputs and outputs for both pipelines and blocks are allowed.</li>
+<li>Shared variables during pipeline execution, usable by multiple blocks.</li>
+</ul>
+</div>
+<div class="section" id="bugfix-release">
+<h2>0.1.9 - Bugfix Release<a class="headerlink" href="#bugfix-release" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Disable some NetworkX functions for incompatibilities with some types of graphs.</li>
+</ul>
+</div>
+<div class="section" id="new-primitives-and-some-improvements">
+<h2>0.1.8 - New primitives and some improvements<a class="headerlink" href="#new-primitives-and-some-improvements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Improve the NetworkX primitives.</li>
+<li>Add String Vectorization and Datetime Featurization primitives.</li>
+<li>Refactor some Keras primitives to work with single dimension <cite>y</cite> arrays and be compatible with <cite>pickle</cite>.</li>
+<li>Add XGBClassifier and XGBRegressor primitives.</li>
+<li>Add some <cite>keras.applications</cite> pretrained networks as preprocessing primitives.</li>
+<li>Add helper class to allow function primitives.</li>
+</ul>
+</div>
+<div class="section" id="nested-hyperparams-dicts">
+<h2>0.1.7 - Nested hyperparams dicts<a class="headerlink" href="#nested-hyperparams-dicts" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Support passing hyperparams as nested dicts.</li>
+</ul>
+</div>
+<div class="section" id="text-and-graph-pipelines">
+<h2>0.1.6 - Text and Graph Pipelines<a class="headerlink" href="#text-and-graph-pipelines" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Add LSTM classifier and regressor primitives.</li>
+<li>Add OneHotEncoder and MultiLabelEncoder primitives.</li>
+<li>Add several NetworkX graph featurization primitives.</li>
+<li>Add <cite>community.best_partition</cite> primitive.</li>
+</ul>
+</div>
+<div class="section" id="collaborative-filtering-pipelines">
+<h2>0.1.5 - Collaborative Filtering Pipelines<a class="headerlink" href="#collaborative-filtering-pipelines" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Add LightFM primitive.</li>
+</ul>
+</div>
+<div class="section" id="image-pipelines-improved">
+<h2>0.1.4 - Image pipelines improved<a class="headerlink" href="#image-pipelines-improved" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Allow passing <cite>init_params</cite> on <cite>MLPipeline</cite> creation.</li>
+<li>Fix bug with MLHyperparam types and Keras.</li>
+<li>Rename <cite>produce_params</cite> as <cite>predict_params</cite>.</li>
+<li>Add SingleCNN Classifier and Regressor primitives.</li>
+<li>Simplify and improve Trivial Predictor</li>
+</ul>
+</div>
+<div class="section" id="multi-table-pipelines-improved">
+<h2>0.1.3 - Multi Table pipelines improved<a class="headerlink" href="#multi-table-pipelines-improved" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Improve RandomForest primitive ranges</li>
+<li>Improve DFS primitive</li>
+<li>Add Tree Based Feature Selection primitives</li>
+<li>Fix bugs in TrivialPredictor</li>
+<li>Improved documentation</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>0.1.2 - Bugfix release<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fix bug in TrivialMedianPredictor</li>
+<li>Fix bug in OneHotLabelEncoder</li>
+</ul>
+</div>
+<div class="section" id="single-table-pipelines-improved">
+<h2>0.1.1 - Single Table pipelines improved<a class="headerlink" href="#single-table-pipelines-improved" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>New project structure and primitives for integration into MIT-TA2.</li>
+<li>MIT-TA2 default pipelines and single table pipelines fully working.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>First release on PyPI.</li>
+</ul>
+</div>
+</div>
 
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="authors.html" class="btn btn-neutral" title="Credits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

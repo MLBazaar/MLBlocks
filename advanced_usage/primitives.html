@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Primitives &mdash; MLBlocks 0.2.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hyperparameters" href="hyperparameters.html" />
+    <link rel="prev" title="Quickstart" href="../getting_started/quickstart.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-primitives">Class Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mlblock-class">MLBlock Class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#mlpipeline-class">MLPipeline Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Primitives</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/advanced_usage/primitives.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="primitives">
+<h1>Primitives<a class="headerlink" href="#primitives" title="Permalink to this headline">¶</a></h1>
+<p>MLBlocks goal is to seamlessly combine any possible set of Machine Learning tools developed
+in Python, whether they are custom developments or belong to third party libraries, and
+build Pipelines out of them that can be fitted and then used to make predictions.</p>
+<p>We call each one of these Machine Learning tools a <strong>primitive</strong>.</p>
+<p>A valid MLBlocks primitive is an importable Python tool that:</p>
+<ul class="simple">
+<li>Might be a function or a class.</li>
+<li>If it is a class, it <strong>might</strong> have a <cite>fitting</cite> stage, where the primitive is passed some
+training data and it <cite>learns</cite> from it, and which can be executed with a single method call.
+Function primitives have no <cite>fitting</cite> stage.</li>
+<li><strong>Must</strong> have a <cite>producing</cite> stage, where the primitive is passed some data and it returns some
+other data, whether it is a transformation of the input data or some new data derived from it,
+such as a set of predictions. This <cite>producing</cite> stage must be executed with a single function or
+method call.</li>
+<li>Might have hyperparameters, additional arguments to be passed to either the function call or
+the class constructor in order to alter or control the way the fitting and producing stages work.</li>
+</ul>
+<div class="section" id="json-annotations">
+<h2>JSON Annotations<a class="headerlink" href="#json-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Each integrated primitive has an associated JSON file that specifies its methods, their arguments,
+their types and, most importantly, any possible hyperparameter that the primitive has, as well
+as their types, ranges and conditions, if any.</p>
+<p>These JSON annotations can be:</p>
+<ul class="simple">
+<li><strong>Installed</strong> using the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a> related project, which is the recommended approach.</li>
+<li><strong>Created by the user</strong> and configured for MLBlocks to use them.</li>
+</ul>
+<p>And the primitives can be of two types:</p>
+<ul class="simple">
+<li>Function Primitives: Simple functions that can be called directly.</li>
+<li>Class Primitives: Class objects that need to be instantiated before they can be used.</li>
+</ul>
+<p>Here are some simplified examples of these JSONs, but for more detailed examples, please refer to
+the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder.</p>
+<div class="section" id="function-primitives">
+<h3>Function Primitives<a class="headerlink" href="#function-primitives" title="Permalink to this headline">¶</a></h3>
+<p>The most simple type of primitives are simple functions that can be called directly, without
+the need to created any class instance before.</p>
+<p>In most cases, if not all, these functions do not have any associated learning process,
+and their behavior is always the same both during the fitting and the predicting phases
+of the pipeline.</p>
+<p>A simple example of such a primitive would be the <code class="docutils literal notranslate"><span class="pre">numpy.argmax</span></code> function, which expects a 2
+dimensional array as input, and returns a 1 dimensional array that indicates the index of the
+maximum values along an axis.</p>
+<p>The simplest JSON annotation for this primitive would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;primitive&quot;</span><span class="p">:</span> <span class="s2">&quot;numpy.argmax&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;produce&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ndarray&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ndarray&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;fixed&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;axis&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">1</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The main elements of this JSON are:</p>
+<ul class="simple">
+<li><strong>primitive</strong>: The fully qualified, directly importable name of the function to be used.</li>
+<li><strong>produce</strong>: A nested JSON that specifies the names and types of arguments and the output values
+of the primitive.</li>
+<li><strong>hyperparameters</strong>: A nested JSON that specifies the hyperparameters of this primitive.
+Note that multiple types of hyperparameters exist, but that this primitive has only one <code class="docutils literal notranslate"><span class="pre">fixed</span></code>
+hyperparameter, which mean that this is not tunable and that, even though the user can specify
+a value different than the default, changes are not expected during the MLBlock intance life cycle.</li>
+</ul>
+</div>
+<div class="section" id="class-primitives">
+<h3>Class Primitives<a class="headerlink" href="#class-primitives" title="Permalink to this headline">¶</a></h3>
+<p>A more complex type of primitives are classes which need to be instantiated before they can
+be used.</p>
+<p>In most cases, these classes will have an associated learning process, and they will have some
+fit method or equivalent that will be called during the fitting phase but not during the
+predicting one.</p>
+<p>A simple example of such a primitive would be the <code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code> class,
+which is used to standardize a set of values by calculating their z-score, which means centering
+them around 0 and scaling them to unit variance.</p>
+<p>This primitive has an associated learning process, where it calculates the mean and standard
+deviation of the training data, to later on use them to transform the prediction data to the
+same center and scale.</p>
+<p>The simplest JSON annotation for this primitive would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;primitive&quot;</span><span class="p">:</span> <span class="s2">&quot;sklearn.preprocessing.StandardScaler&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fit&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;fit&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ndarray&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;produce&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;transform&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ndarray&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ndarray&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;tunable&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;with_mean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;with_std&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that there are some details of this JSON annotation that make it different from the
+Function Primitive one that explained above:</p>
+<ul class="simple">
+<li><strong>primitive</strong>: The fully qualified, directly importable name of the class to be used. This
+class is the one that will be used to create the actual primitive instance.</li>
+<li><strong>fit</strong>: A nested JSON that specifies the name of the method to call during the fitting phase,
+which in this case happens to also be <code class="docutils literal notranslate"><span class="pre">fit</span></code>, as well as the names and types of
+arguments that this method expects.</li>
+<li><strong>produce</strong>: A nested JSON that specifies the name of the method to call during the predicting
+phase, in this case called <code class="docutils literal notranslate"><span class="pre">transform</span></code>, as well as the names and types of
+arguments that this method expects and its outputs.</li>
+<li><strong>hyperparameters</strong>: A nested JSON that specifies the hyperparameters of this primitive.
+In this case, only <code class="docutils literal notranslate"><span class="pre">tunable</span></code> hyperparameters are specified, with their
+names and types. If the type was something other than <code class="docutils literal notranslate"><span class="pre">bool</span></code>, a list or
+range of valid values would also be specified.</li>
+</ul>
+</div>
+<div class="section" id="mlblock-class">
+<h3>MLBlock Class<a class="headerlink" href="#mlblock-class" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">mlblocks.MLBlock</span></code> class is the representation of a primitive within the <strong>MLBlocks</strong>
+library.</p>
+<p>This is used to wrap the annotated primitives, offering a common and uniform interface to
+interact with any possible Machine Learning tool implemented in Python.</p>
+<p>These are the inputs required to create an <code class="docutils literal notranslate"><span class="pre">MLBlock</span></code> instance:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">name</span></code>: the name of the primitive JSON to load.</li>
+<li><code class="docutils literal notranslate"><span class="pre">**hyperparameters</span></code>: Hyperparameters of the primitive, passed as keyword arguments.</li>
+</ul>
+<p>And it has these available methods:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code>: Get a dictionary indicating which hyperparameters can be tuned
+for this primitive, with their types, available ranges, default
+values and documentation.</li>
+<li><code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code>: Get a dictionary with the hyperparameter values that the primitive is using.</li>
+<li><code class="docutils literal notranslate"><span class="pre">set_hyperparameters</span></code>: Set new hyperparameters for the primitive, recreating any necessary
+object for the changes to take effect.</li>
+<li><code class="docutils literal notranslate"><span class="pre">fit</span></code>: Call the method specified in the JSON annotation passing any required arguments.</li>
+<li><code class="docutils literal notranslate"><span class="pre">produce</span></code>: Call the method specified in the JSON annotation passing any required arguments and
+capture its outputs as variables.</li>
+</ul>
+<p>For a more detailed description of the methods and their arguments, please check the API Reference
+section of the documentation.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hyperparameters.html" class="btn btn-neutral float-right" title="Hyperparameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../getting_started/quickstart.html" class="btn btn-neutral" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.1-dev',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks package &mdash; MLBlocks 0.2.1-dev documentation</title>
+  <title>API Reference &mdash; MLBlocks 0.2.1-dev documentation</title>
   
 
   
@@ -29,7 +29,9 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Adding Primitives" href="advanced_usage/adding_primitives.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -106,8 +108,8 @@
 </li>
 </ul>
 <p class="caption"><span class="caption-text">References</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
@@ -156,14 +158,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>mlblocks package</li>
+      <li>API Reference</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/mlblocks.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/api_reference.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -177,393 +179,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="mlblocks-package">
-<h1>mlblocks package<a class="headerlink" href="#mlblocks-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-mlblocks.mlblock">
-<span id="mlblocks-mlblock-module"></span><h2>mlblocks.mlblock module<a class="headerlink" href="#module-mlblocks.mlblock" title="Permalink to this headline">¶</a></h2>
-<p>Package where the MLBlock class is defined.</p>
-<dl class="class">
-<dt id="mlblocks.mlblock.MLBlock">
-<em class="property">class </em><code class="descclassname">mlblocks.mlblock.</code><code class="descname">MLBlock</code><span class="sig-paren">(</span><em>name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.MLBlock" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>MLBlock Class.</p>
-<p>The MLBlock class represents a single step within an MLPipeline.</p>
-<p>It is responsible for loading and interpreting JSON primitives, as well
-as wrapping them and providing a common interface to run them.</p>
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.name">
-<code class="descname">name</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Name given to this MLBlock.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.primitive">
-<code class="descname">primitive</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.primitive" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>object</em> – the actual function or instance which this MLBlock
-wraps.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.fit_args">
-<code class="descname">fit_args</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.fit_args" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – specification of the arguments expected by the <cite>fit</cite>
-method.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.fit_method">
-<code class="descname">fit_method</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.fit_method" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – name of the primitive method to call on <cite>fit</cite>.
-<cite>None</cite> if the primitive is a function.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.produce_args">
-<code class="descname">produce_args</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.produce_args" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – specification of the arguments expected by the
-<cite>predict</cite> method.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.produce_output">
-<code class="descname">produce_output</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.produce_output" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – specification of the outputs of the <cite>produce</cite>
-method.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlblock.MLBlock.produce_method">
-<code class="descname">produce_method</code><a class="headerlink" href="#mlblocks.mlblock.MLBlock.produce_method" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – name of the primitive method to call on
-<cite>produce</cite>. <cite>None</cite> if the primitive is a function.</p>
-</dd></dl>
-
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) – Name given to this MLBlock.</li>
-<li><strong>**kwargs</strong> – Any additional arguments that will be used as
-hyperparameters or passed to the <cite>fit</cite> or <cite>produce</cite>
-methods.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – A <cite>TypeError</cite> is raised if a required argument is not
-found within the <cite>kwargs</cite> or if an unexpected
-argument has been given.</p>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="mlblocks.mlblock.MLBlock.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.MLBlock.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call the fit method of the primitive.</p>
-<p>The given keyword arguments will be passed directly to the <cite>fit</cite>
-method of the primitive instance specified in the JSON annotation.</p>
-<p>If any of the arguments expected by the produce method had been
-given during the MLBlock initialization, they will be passed as well.</p>
-<p>If the fit method was not specified in the JSON annotation, or if
-the primitive is a simple function, this will be a noop.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**kwargs</strong> – Any given keyword argument will be directly passed
-to the primitive fit method.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TypeError</span></code> – A <cite>TypeError</cite> might be raised if any argument not
-expected by the primitive fit method is given.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlblock.MLBlock.get_hyperparameters">
-<code class="descname">get_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.MLBlock.get_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get hyperparameters values that the current MLBlock is using.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>the dictionary containing the hyperparameter values that the</dt>
-<dd>MLBlock is currently using.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlblock.MLBlock.get_tunable_hyperparameters">
-<code class="descname">get_tunable_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.MLBlock.get_tunable_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the hyperparameters that can be tuned for this MLBlock.</p>
-<p>The list of hyperparameters is taken from the JSON annotation,
-filtering out any hyperparameter for which a value has been given
-during the initalization.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>the dictionary containing the hyperparameters that can be</dt>
-<dd>tuned, their types and, if applicable, the accepted
-ranges or values.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlblock.MLBlock.produce">
-<code class="descname">produce</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.MLBlock.produce" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call the primitive function, or the predict method of the primitive.</p>
-<p>The given keyword arguments will be passed directly to the primitive,
-if it is a simple function, or to the <cite>produce</cite> method of the
-primitive instance specified in the JSON annotation, if it is a class.</p>
-<p>If any of the arguments expected by the fit method had been given
-during the MLBlock initialization, they will be passed as well.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The output of the call to the primitive function or primitive
-produce method.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlblock.MLBlock.set_hyperparameters">
-<code class="descname">set_hyperparameters</code><span class="sig-paren">(</span><em>hyperparameters</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.MLBlock.set_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set new hyperparameters.</p>
-<p>Only the specified hyperparameters are modified, so any other
-hyperparameter keeps the value that had been previously given.</p>
-<p>If necessary, a new instance of the primitive is created.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hyperparameters</strong> (<em>dict</em>) – Dictionary containing as keys the name
-of the hyperparameters and as values
-the values to be used.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="mlblocks.mlblock.import_object">
-<code class="descclassname">mlblocks.mlblock.</code><code class="descname">import_object</code><span class="sig-paren">(</span><em>object_name</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlblock.import_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import an object from its Fully Qualified Name.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-mlblocks.mlpipeline">
-<span id="mlblocks-mlpipeline-module"></span><h2>mlblocks.mlpipeline module<a class="headerlink" href="#module-mlblocks.mlpipeline" title="Permalink to this headline">¶</a></h2>
-<p>Package where the MLPipeline class is defined.</p>
-<dl class="class">
-<dt id="mlblocks.mlpipeline.MLPipeline">
-<em class="property">class </em><code class="descclassname">mlblocks.mlpipeline.</code><code class="descname">MLPipeline</code><span class="sig-paren">(</span><em>blocks</em>, <em>init_params=None</em>, <em>input_names=None</em>, <em>output_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>MLPipeline Class.</p>
-<p>The <strong>MLPipeline</strong> class represents a Machine Learning Pipeline, which
-is an ordered collection of Machine Learning tools or Primitives,
-represented by <strong>MLBlock instances</strong>, that will be fitted and then used
-sequentially in order to produce results.</p>
-<p>The MLPipeline has two working modes or phases: <strong>fitting</strong> and
-<strong>predicting</strong>.</p>
-<p>During the <strong>fitting</strong> phase, each MLBlock instance, or <strong>block</strong> will be
-fitted and immediately after used to produce results on the same
-fitting data.
-This results will be then passed to the next block of the sequence
-as its fitting data, and this process will be repeated until the last
-block is fitted.</p>
-<p>During the <strong>predicting</strong> phase, each block will be used to produce results
-on the output of the previous one, until the last one has produce its
-results, which will be returned as the prediction of the pipeline.</p>
-<dl class="attribute">
-<dt id="mlblocks.mlpipeline.MLPipeline.blocks">
-<code class="descname">blocks</code><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.blocks" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>list</em> – OrderedDict of the block names and the corresponding
-MLBlock instances.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlpipeline.MLPipeline.input_names">
-<code class="descname">input_names</code><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.input_names" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – input_names dictionary, as given when the instance
-was created..</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="mlblocks.mlpipeline.MLPipeline.output_names">
-<code class="descname">output_names</code><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.output_names" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – output_names dictionary, as given when the instance
-was created.</p>
-</dd></dl>
-
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>blocks</strong> (<em>list</em>) – List with the names of the primitives that will
-compose this pipeline.</li>
-<li><strong>init_params</strong> (<em>dict</em>) – dictionary containing initialization arguments to
-be passed when creating the MLBlocks instances.
-The dictionary keys must be the corresponding
-primitive names and the values must be another
-dictionary that will be passed as <cite>**kargs</cite> to the
-MLBlock instance.</li>
-<li><strong>input_names</strong> (<em>dict</em>) – dictionary that maps input variable names with the
-actual names expected by each primitive. This
-allows reusing the same input argument for multiple
-primitives that name it differently, as well as
-passing different values to primitives that expect
-arguments named similary.</li>
-<li><strong>output_names</strong> (<em>dict</em>) – dictionary that maps output variable names with
-the name these variables will be given when stored
-in the context dictionary. This allows storing
-the output of different primitives in different
-variables, even if the primitive output name is
-the same one.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="mlblocks.mlpipeline.MLPipeline.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>X=None</em>, <em>y=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit the blocks of this pipeline.</p>
-<p>Sequentially call the <cite>fit</cite> and the <cite>produce</cite> methods of each block,
-capturing the outputs each <cite>produce</cite> method before calling the <cite>fit</cite>
-method of the next one.</p>
-<p>During the whole process a context dictionary is built, where both the
-passed arguments and the captured outputs of the <cite>produce</cite> methods
-are stored, and from which the arguments for the next <cite>fit</cite> and
-<cite>produce</cite> calls will be taken.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>X</strong> – Fit Data, which the pipeline will learn from.</li>
-<li><strong>y</strong> – Fit Data labels, which the pipeline will use to learn how to
-behave.</li>
-<li><strong>**kwargs</strong> – Any additional keyword arguments will be directly added
-to the context dictionary and available for the blocks.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlpipeline.MLPipeline.get_hyperparameters">
-<code class="descname">get_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.get_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the current hyperparamters of each block.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A dictionary containing the block names as keys and</dt>
-<dd>the current block hyperparameters dictionary as values.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlpipeline.MLPipeline.get_tunable_hyperparameters">
-<code class="descname">get_tunable_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.get_tunable_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the tunable hyperparamters of each block.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A dictionary containing the block names as keys and</dt>
-<dd>the block tunable hyperparameters dictionary as values.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlpipeline.MLPipeline.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce predictions using the blocks of this pipeline.</p>
-<p>Sequentially call the <cite>produce</cite> method of each block, capturing the
-outputs before calling the next one.</p>
-<p>During the whole process a context dictionary is built, where both the
-passed arguments and the captured outputs of the <cite>produce</cite> methods
-are stored, and from which the arguments for the next <cite>produce</cite> calls
-will be taken.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>X</strong> – Data which the pipeline will use to make predictions.</li>
-<li><strong>**kwargs</strong> – Any additional keyword arguments will be directly added
-to the context dictionary and available for the blocks.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="mlblocks.mlpipeline.MLPipeline.set_hyperparameters">
-<code class="descname">set_hyperparameters</code><span class="sig-paren">(</span><em>hyperparameters</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.mlpipeline.MLPipeline.set_hyperparameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set new hyperparameter values for some blocks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hyperparameters</strong> (<em>dict</em>) – A dictionary containing the block names as
-keys and the new hyperparameters dictionary
-as values.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-mlblocks">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mlblocks" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="module-mlblocks">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-mlblocks" title="Permalink to this headline">¶</a></h1>
 <p>MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
 seamlessly combining tools from any python library with a simple, common and uniform interface.</p>
 <ul class="simple">
@@ -573,8 +190,7 @@ seamlessly combining tools from any python library with a simple, common and uni
 <dl class="class">
 <dt id="mlblocks.MLBlock">
 <em class="property">class </em><code class="descclassname">mlblocks.</code><code class="descname">MLBlock</code><span class="sig-paren">(</span><em>name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLBlock" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>MLBlock Class.</p>
+<dd><p>MLBlock Class.</p>
 <p>The MLBlock class represents a single step within an MLPipeline.</p>
 <p>It is responsible for loading and interpreting JSON primitives, as well
 as wrapping them and providing a common interface to run them.</p>
@@ -757,8 +373,7 @@ the values to be used.</td>
 <dl class="class">
 <dt id="mlblocks.MLPipeline">
 <em class="property">class </em><code class="descclassname">mlblocks.</code><code class="descname">MLPipeline</code><span class="sig-paren">(</span><em>blocks</em>, <em>init_params=None</em>, <em>input_names=None</em>, <em>output_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>MLPipeline Class.</p>
+<dd><p>MLPipeline Class.</p>
 <p>The <strong>MLPipeline</strong> class represents a Machine Learning Pipeline, which
 is an ordered collection of Machine Learning tools or Primitives,
 represented by <strong>MLBlock instances</strong>, that will be fitted and then used
@@ -999,13 +614,21 @@ found.</td>
 </dd></dl>
 
 </div>
-</div>
 
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="advanced_usage/adding_primitives.html" class="btn btn-neutral" title="Adding Primitives" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

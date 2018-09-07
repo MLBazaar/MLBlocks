@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adding Primitives &mdash; MLBlocks 0.2.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api_reference.html" />
+    <link rel="prev" title="Pipelines" href="pipelines.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="primitives.html#class-primitives">Class Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="primitives.html#mlblock-class">MLBlock Class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#mlpipeline-class">MLPipeline Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Adding Primitives</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/advanced_usage/adding_primitives.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adding-primitives">
+<h1>Adding Primitives<a class="headerlink" href="#adding-primitives" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>MLBlocks</strong> library is only the engine and it has no use without primitives, so here we
+explain how to add new primitives for <strong>MLBlocks</strong>.</p>
+<div class="section" id="mlprimitives">
+<h2>MLPrimitives<a class="headerlink" href="#mlprimitives" title="Permalink to this headline">¶</a></h2>
+<p><strong>MLBlocks</strong> has a cousin project, <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which already includes a huge list of
+integrated primitives, so the easiest and recommended way to add primitives for <strong>MLBlocks</strong>
+is to install <strong>MLPrimitives</strong>.</p>
+<p>This can be achieved by running the commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">mlprimitives</span>
+</pre></div>
+</div>
+<p>For further details, please refer to the <a class="reference external" href="https://hdi-project.github.io/MLPrimitives/">MLPrimitives Documentation</a>.</p>
+</div>
+<div class="section" id="writing-primitives">
+<h2>Writing Primitives<a class="headerlink" href="#writing-primitives" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes you will find that you want to use a primitive that is not in the list of
+<a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/tree/master/mlblocks_primitives">MLPrimitives integrated primitives</a>, so you will have to integrate the primitive yourself
+by writing the corresponding <a class="reference external" href="primitives.html#json-annotations">JSON annotation</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you integrate new primitives for MLBlocks, please consider contributing them to the
+<strong>MLPrimitives</strong> project!</p>
+</div>
+<p>The first thing to do when adding a new primitive is making sure that it complies with the
+necessary requirements, which depend on whether the primitive is a function or a class.</p>
+<p>For <a class="reference external" href="primitives.html#function-primitives">Function Primitives</a>, the only requirement is that they have to be a single function.
+Calling multiple functions sequentially as part of a single primitive is not supported, and
+in order to achieve this you are expected to write a separated primitive for each function.</p>
+<p>For <a class="reference external" href="primitives.html#class-primitives">Class Primitives</a>, just like the function primitives, the <cite>fit</cite> and <cite>produce</cite> phases
+must consist of a single method each. Calling multiple methods sequentially within a single
+primitive is not supported either.</p>
+<p><a class="reference external" href="primitives.html#class-primitives">Class Primitives</a> also need to be able to be instantiated at once. Running setup or compiling
+calls after the instance creation is not possible.</p>
+</div>
+<div class="section" id="primitives-lookup">
+<h2>Primitives Lookup<a class="headerlink" href="#primitives-lookup" title="Permalink to this headline">¶</a></h2>
+<p>Once you have written the JSON annotation for your primitive, you will need to put in it in a
+place known to <strong>MLBlocks</strong>.</p>
+<p><strong>MLBlocks</strong> looks for primitives in the following folders, in this order:</p>
+<ol class="arabic simple">
+<li>Any folder specified by the user, starting by the latest one.</li>
+<li>A folder named <cite>mlblocks_primitives</cite> in the current working directory.</li>
+<li>A folder named <cite>mlblocks_primitives</cite> in the <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.prefix">system prefix</a>.</li>
+</ol>
+<p>The list of folders where <strong>MLBlocks</strong> will search for primitives can be seen at any time
+by calling the method <a class="reference external" href="../api_reference.html#mlblocks.get_primitives_paths">mlblocks.get_primitives_paths</a>.</p>
+</div>
+<div class="section" id="adding-a-primitives-folder">
+<h2>Adding a Primitives Folder<a class="headerlink" href="#adding-a-primitives-folder" title="Permalink to this headline">¶</a></h2>
+<p>The simplest option in order to quickly add new primitives is to put their JSON annotations
+in a folder called <cite>mlblocks_primitives</cite> in the root of your project, or in your current
+working directory.</p>
+<p>However, sometimes you will want to add a custom directory.</p>
+<p>This can be easily done by using the <a class="reference external" href="../api_reference.html#mlblocks.add_primitives_path">mlblocks.add_primitives_path</a> method.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pipelines.html" class="btn btn-neutral" title="Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.1-dev',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
