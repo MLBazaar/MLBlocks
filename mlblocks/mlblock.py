@@ -3,7 +3,6 @@
 """Package where the MLBlock class is defined."""
 
 import importlib
-import json
 
 import mlblocks
 
