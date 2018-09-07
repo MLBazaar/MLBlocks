@@ -23,7 +23,7 @@ __version__ = '0.2.1-dev'
 
 __all__ = [
     'MLBlock', 'MLPipeline', 'add_primitives_path',
-    'get_primitive_paths', 'load_primitive'
+    'get_primitives_paths', 'load_primitive'
 ]
 
 
