@@ -64,7 +64,9 @@ place known to **MLBlocks**.
 .. _system prefix: https://docs.python.org/3/library/sys.html#sys.prefix
 
 The list of folders where **MLBlocks** will search for primitives can be seen at any time
-in the variable ``mlblocks.PRIMTIVES_PATHS``.
+by calling the method `mlblocks.get_primitives_paths`_.
+
+.. _mlblocks.get_primitives_paths: ../api_reference.html#mlblocks.get_primitives_paths
 
 Adding a Primitives Folder
 --------------------------
@@ -75,6 +77,6 @@ working directory.
 
 However, sometimes you will want to add a custom directory.
 
-This can be easily done by using the `add_primitives_path`_ method.
+This can be easily done by using the `mlblocks.add_primitives_path`_ method.
 
-.. _add_primitives_path: api_reference.html#mlblocks.add_primitives_path
+.. _mlblocks.add_primitives_path: ../api_reference.html#mlblocks.add_primitives_path
