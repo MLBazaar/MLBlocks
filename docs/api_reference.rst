@@ -1,6 +1,9 @@
 API Reference
 =============
 
+mlblocks
+--------
+
 .. automodule:: mlblocks
    :members: add_primitives_path, get_primitive_path
 
