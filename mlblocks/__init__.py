@@ -51,7 +51,7 @@ def add_primitives_path(path):
         if not os.path.isdir(path):
             raise ValueError('Invalid path: {}'.format(path))
 
-        PRIMITIVES_PATHS.insert(0, path)
+        PRIMITIVES_PATHS.insert(0, os.path.abspath(path))
 
 
 def get_primitive_path(name):
