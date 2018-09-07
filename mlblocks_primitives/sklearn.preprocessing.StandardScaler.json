@@ -1,5 +1,4 @@
 {
-    "name": "sklearn.preprocessing.StandardScaler",
     "primitive": "sklearn.preprocessing.StandardScaler",
     "fit": {
         "method": "fit",

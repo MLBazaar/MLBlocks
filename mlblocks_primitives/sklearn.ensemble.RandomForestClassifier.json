@@ -1,5 +1,4 @@
 {
-    "name": "sklearn.ensemble.RandomForestClassifier",
     "primitive": "sklearn.ensemble.RandomForestClassifier",
     "fit": {
         "method": "fit",

@@ -29,7 +29,7 @@ as their types, ranges and conditions, if any.
 
 These JSON annotations can be:
 
-* **Installed** using the **MLPrimitives** related project, which is the recommended approach.
+* **Installed** using the `MLPrimitives`_ related project, which is the recommended approach.
 * **Created by the user** and configured for MLBlocks to use them.
 
 And the primitives can be of two types:
@@ -39,6 +39,8 @@ And the primitives can be of two types:
 
 Here are some simplified examples of these JSONs, but for more detailed examples, please refer to
 the ``examples`` folder.
+
+.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
 
 Function Primitives
 ~~~~~~~~~~~~~~~~~~~
@@ -57,7 +59,6 @@ maximum values along an axis.
 The simplest JSON annotation for this primitive would look like this::
 
     {
-        "name": "numpy.argmax",
         "primitive": "numpy.argmax",
         "produce": {
             "args": [
@@ -85,8 +86,6 @@ The simplest JSON annotation for this primitive would look like this::
 
 The main elements of this JSON are:
 
-* **name**: The name that is given to the primitive, and which will be used later on to add this
-  primitive to a pipeline.
 * **primitive**: The fully qualified, directly importable name of the function to be used.
 * **produce**: A nested JSON that specifies the names and types of arguments and the output values
   of the primitive.
@@ -116,7 +115,6 @@ same center and scale.
 The simplest JSON annotation for this primitive would look like this::
 
     {
-        "name": "sklearn.preprocessing.StandardScaler",
         "primitive": "sklearn.preprocessing.StandardScaler",
         "fit": {
             "method": "fit",

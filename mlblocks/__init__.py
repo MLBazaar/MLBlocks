@@ -8,6 +8,7 @@ seamlessly combining tools from any python library with a simple, common and uni
 * Documentation: https://HDI-Project.github.io/MLBlocks
 """
 
+import json
 import os
 import sys
 
@@ -21,16 +22,15 @@ __license__ = 'MIT'
 __version__ = '0.2.1-dev'
 
 __all__ = [
-    'MLBlock', 'MLPipeline', 'PRIMITIVES_PATHS',
-    'add_primitives_path', 'get_primitive_path'
+    'MLBlock', 'MLPipeline', 'add_primitives_path',
+    'get_primitive_paths', 'load_primitive'
 ]
 
 
-PRIMITIVES_PATHS = [
+_PRIMITIVES_PATHS = [
     os.path.join(os.getcwd(), 'mlblocks_primitives'),
     os.path.join(sys.prefix, 'mlblocks_primitives'),
 ]
-"""list: Paths where primitives will be looked for."""
 
 
 def add_primitives_path(path):
@@ -47,15 +47,24 @@ def add_primitives_path(path):
     Raises:
         ValueError: A `ValueError` will be raised if the path is not valid.
     """
-    if path not in PRIMITIVES_PATHS:
+    if path not in _PRIMITIVES_PATHS:
         if not os.path.isdir(path):
             raise ValueError('Invalid path: {}'.format(path))
 
-        PRIMITIVES_PATHS.insert(0, os.path.abspath(path))
+        _PRIMITIVES_PATHS.insert(0, os.path.abspath(path))
 
 
-def get_primitive_path(name):
-    """Locate the JSON annotation of the given primitive.
+def get_primitives_paths():
+    """Get the list of folders where the primitives will be looked for.
+
+    Returns:
+        list: The list of folders.
+    """
+    return _PRIMITIVES_PATHS
+
+
+def load_primitive(name):
+    """Locate and load the JSON annotation of the given primitive.
 
     All the paths found in PRIMTIVE_PATHS will be scanned to find a JSON file
     with the given name, and as soon as a JSON with the given name is found it
@@ -66,14 +75,18 @@ def get_primitive_path(name):
                     correspond to the primitive, not to the filename, as the
                     `.json` extension will be added dynamically.
 
+    Returns:
+        dict: The content of the JSON annotation file loaded into a dict.
+
     Raises:
         ValueError: A `ValueError` will be raised if the primitive cannot be
                     found.
     """
 
-    for base_path in PRIMITIVES_PATHS:
+    for base_path in _PRIMITIVES_PATHS:
         json_path = os.path.join(base_path, name + '.json')
         if os.path.isfile(json_path):
-            return json_path
+            with open(json_path, 'r') as json_file:
+                return json.load(json_file)
 
     raise ValueError("Unknown primitive: {}".format(name))
