@@ -91,8 +91,7 @@ Ready to contribute? Here's how to set up `MLBlocks` for local development.
     $ make test-all
 
 7. Make also sure to include the necessary documentation in the code as docstrings following
-   the [google](https://google.github.io/styleguide/pyguide.html?showone=Comments#Comments)
-   or the [numpy](https://numpydoc.readthedocs.io/en/latest/format.html) docstring style.
+   the `google docstring`_ style.
    If you want to view how your documentation will look like when it is published, you can
    generate and view the docs with this command::
 
@@ -105,6 +104,8 @@ Ready to contribute? Here's how to set up `MLBlocks` for local development.
     $ git push origin name-of-your-bugfix-or-feature
 
 9. Submit a pull request through the GitHub website.
+
+.. _google docstring: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
 
 Pull Request Guidelines
 -----------------------
