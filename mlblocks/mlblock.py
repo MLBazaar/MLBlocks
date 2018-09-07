@@ -14,7 +14,7 @@ def import_object(object_name):
     return getattr(importlib.import_module(package), name)
 
 
-class MLBlock(object):
+class MLBlock():
     """MLBlock Class.
 
     The MLBlock class represents a single step within an MLPipeline.
@@ -24,8 +24,6 @@ class MLBlock(object):
 
     Attributes:
         name (str): Name given to this MLBlock.
-        metadata (dict): Contents of the JSON annotation.
-        json_path (str): Path to the JSON annotation.
         primitive (object): the actual function or instance which this MLBlock
                             wraps.
         fit_args (dict): specification of the arguments expected by the `fit`
@@ -50,18 +48,7 @@ class MLBlock(object):
                    found within the `kwargs` or if an unexpected
                    argument has been given.
     """
-
-    @classmethod
-    def _load_metadata(cls, name):
-        """Locate and load the corresponding JSON file.
-
-        Args:
-            name (str): Name of the primitive to load.
-        """
-
-        json_path = mlblocks.get_primitive_path(name)
-        with open(json_path, 'r') as f:
-            return json.load(f), json_path
+    # pylint: disable=too-many-instance-attributes
 
     def _extract_params(self, kwargs, hyperparameters):
         """Extract init, fit and produce params from kwargs.
@@ -125,25 +112,24 @@ class MLBlock(object):
 
         self.name = name
 
-        metadata, json_path = self._load_metadata(name)
-        self.metadata = metadata
-        self.json_path = json_path
+        metadata = mlblocks.load_primitive(name)
 
         self.primitive = import_object(metadata['primitive'])
 
-        self._fit = self.metadata.get('fit', dict())
+        self._fit = metadata.get('fit', dict())
         self.fit_args = self._fit.get('args', [])
         self.fit_method = self._fit.get('method')
 
-        self._produce = self.metadata['produce']
+        self._produce = metadata['produce']
         self.produce_args = self._produce['args']
         self.produce_output = self._produce['output']
         self.produce_method = self._produce.get('method')
 
         self._class = bool(self.produce_method)
 
-        hyperparameters = self.metadata.get('hyperparameters', dict())
-        init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
+        hyperparameters = metadata.get('hyperparameters', dict())
+        init_params, fit_params, produce_params = self._extract_params(
+            kwargs, hyperparameters)
         self._hyperparamters = init_params
         self._fit_params = fit_params
         self._produce_params = produce_params
@@ -163,6 +149,9 @@ class MLBlock(object):
         }
 
         self.set_hyperparameters(default)
+
+    def __str__(self):
+        return 'MLBlock - {}'.format(self.name)
 
     def get_tunable_hyperparameters(self):
         """Get the hyperparameters that can be tuned for this MLBlock.
@@ -223,7 +212,7 @@ class MLBlock(object):
 
         Raises:
             TypeError: A `TypeError` might be raised if any argument not
-                       expected by the primitive fit method is give.
+                       expected by the primitive fit method is given.
         """
         if self.fit_method is not None:
             fit_args = self._fit_params.copy()
@@ -249,6 +238,5 @@ class MLBlock(object):
         if self._class:
             return getattr(self.instance, self.produce_method)(**produce_args)
 
-        else:
-            produce_args.update(self._hyperparamters)
-            return self.primitive(**produce_args)
+        produce_args.update(self._hyperparamters)
+        return self.primitive(**produce_args)
