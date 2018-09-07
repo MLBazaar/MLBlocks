@@ -18,5 +18,3 @@ Two types of hyperparameters exist:
   values can alter how well the primitive learns and is able to later on predict. For this reason,
   even though these hyperparameters do not alter the behavior of the primitive, they can be tuned
   to improve the prediction performance.
-
-TODO: Add here all the details for the hyperparameters

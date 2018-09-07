@@ -23,7 +23,7 @@ import sys
 
 import sphinx_rtd_theme # For read the docs theme
 from recommonmark.parser import CommonMarkParser
-from recommonmark.transform import AutoStructify
+# from recommonmark.transform import AutoStructify
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -67,9 +67,13 @@ source_parsers = {
 master_doc = 'index'
 
 # General information about the project.
-project = u'MLBlocks'
-copyright = u"2018, MIT Data To AI Lab"
-author = u"MIT Data To AI Lab"
+project = 'MLBlocks'
+slug = 'mlblocks'
+title = project + ' Documentation',
+copyright = '2018, MIT Data To AI Lab'
+author = 'MIT Data To AI Lab'
+description = 'Pipelines and Primitives for Machine Learning and Data Science.'
+user = 'HDI-Project'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -90,14 +94,13 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
+exclude_patterns = ['.py', '_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
-
 
 # -- Options for HTML output -------------------------------------------
 
@@ -110,8 +113,8 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # Readthedocs additions
 html_context = {
     'display_github': True,
-    'github_user': 'HDI-Project',
-    'github_repo': 'MLBlocks',
+    'github_user': user,
+    'github_repo': project,
     'github_version': 'master',
     'conf_py_path': '/docs/',
 }
@@ -132,7 +135,7 @@ html_theme_options = {
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = 'images/mlblocks-icon.ico'
+html_favicon = 'images/favicon.ico'
 
 # If given, this must be the name of an image file (path relative to the
 # configuration directory) that is the logo of the docs. It is placed at
@@ -142,7 +145,7 @@ html_favicon = 'images/mlblocks-icon.ico'
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'mlblocksdoc'
+htmlhelp_basename = slug + 'doc'
 
 
 # -- Options for LaTeX output ------------------------------------------
@@ -168,22 +171,26 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass
 # [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'mlblocks.tex',
-     u'MLBlocks Documentation',
-     u'MIT Data To AI Lab', 'manual'),
-]
+latex_documents = [(
+    master_doc,
+    slug + '.tex',
+    title,
+    author,
+    'manual'
+)]
 
 
 # -- Options for manual page output ------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'mlblocks',
-     u'MLBlocks Documentation',
-     [author], 1)
-]
+man_pages = [(
+    master_doc,
+    slug,
+    title,
+    [author],
+    1
+)]
 
 
 # -- Options for Texinfo output ----------------------------------------
@@ -191,14 +198,12 @@ man_pages = [
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'mlblocks',
-     u'MLBlocks Documentation',
-     author,
-     'mlblocks',
-     'One line description of project.',
-     'Miscellaneous'),
-]
-
-
-
+texinfo_documents = [(
+    master_doc,
+    slug,
+    title,
+    author,
+    slug,
+    description,
+    'Miscellaneous'
+)]

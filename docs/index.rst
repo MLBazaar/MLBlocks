@@ -47,18 +47,17 @@ integrate with deep learning libraries.
 .. _Machine learning blocks: https://github.com/HDI-Project/mlblocks
 .. _tarball: https://github.com/HDI-Project/mlblocks/tarball/master
 
-
 .. toctree::
-   :maxdepth: 2
-   :caption: Getting Started:
+   :caption: Getting Started
+   :titlesonly:
 
    self
    getting_started/install
    getting_started/quickstart
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Advanced Usage:
+   :caption: Advanced Usage
+   :maxdepth: 1
 
    advanced_usage/primitives
    advanced_usage/hyperparameters
@@ -66,14 +65,13 @@ integrate with deep learning libraries.
    advanced_usage/adding_primitives
 
 .. toctree::
-   :maxdepth: 2
-   :caption: References:
+   :caption: References
+   :titlesonly:
 
    api_reference
    contributing
    authors
    changelog
-
 
 Indices and tables
 ==================
