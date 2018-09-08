@@ -202,31 +202,6 @@ them to the <cite>MLPipeline</cite> class:</p>
 <span class="gp">   ...: </span>
 
 <span class="gp">In [3]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
-<span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="nn">&lt;ipython-input-3-021cae07d692&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
-
-<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlpipeline.py</span> in <span class="ni">__init__</span><span class="nt">(self, blocks, init_params, input_names, output_names)</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>                                         <span class="s2">&quot;for more than one block </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">),</span> <span class="n">block</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">82</span> 
-<span class="ne">---&gt; </span><span class="mi">83</span>                 <span class="n">mlblock</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">84</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mlblock</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span> 
-
-<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlblock.py</span> in <span class="ni">__init__</span><span class="nt">(self, name, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">112</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-<span class="g g-Whitespace">    </span><span class="mi">113</span> 
-<span class="ne">--&gt; </span><span class="mi">114</span>         <span class="n">metadata</span> <span class="o">=</span> <span class="n">mlblocks</span><span class="o">.</span><span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">115</span> 
-<span class="g g-Whitespace">    </span><span class="mi">116</span>         <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
-
-<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/__init__.py</span> in <span class="ni">load_primitive</span><span class="nt">(name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">90</span>                 <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">91</span> 
-<span class="ne">---&gt; </span><span class="mi">92</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-
-<span class="ne">ValueError</span>: Unknown primitive: sklearn.preprocessing.StandardScaler
 </pre></div>
 </div>
 <p>Optionally, specific hyperparameters can be also set by specifying them in a dictionary:</p>
@@ -238,42 +213,22 @@ them to the <cite>MLPipeline</cite> class:</p>
 <span class="gp">   ...: </span>
 
 <span class="gp">In [5]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
-<span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="nn">&lt;ipython-input-5-6e57f1ffe211&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
-
-<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlpipeline.py</span> in <span class="ni">__init__</span><span class="nt">(self, blocks, init_params, input_names, output_names)</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>                                         <span class="s2">&quot;for more than one block </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">),</span> <span class="n">block</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">82</span> 
-<span class="ne">---&gt; </span><span class="mi">83</span>                 <span class="n">mlblock</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">84</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mlblock</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span> 
-
-<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/mlblock.py</span> in <span class="ni">__init__</span><span class="nt">(self, name, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">112</span>         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-<span class="g g-Whitespace">    </span><span class="mi">113</span> 
-<span class="ne">--&gt; </span><span class="mi">114</span>         <span class="n">metadata</span> <span class="o">=</span> <span class="n">mlblocks</span><span class="o">.</span><span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">115</span> 
-<span class="g g-Whitespace">    </span><span class="mi">116</span>         <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
-
-<span class="nn">~/build/HDI-Project/MLBlocks/mlblocks/__init__.py</span> in <span class="ni">load_primitive</span><span class="nt">(name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">90</span>                 <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">91</span> 
-<span class="ne">---&gt; </span><span class="mi">92</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-
-<span class="ne">ValueError</span>: Unknown primitive: sklearn.preprocessing.StandardScaler
 </pre></div>
 </div>
 <p>If you can see which hyperparameters a particular pipeline is using, you can do so by calling
 its <code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code> method:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
-<span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">&lt;ipython-input-6-595b8f33c7ba&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
-
-<span class="ne">NameError</span>: name &#39;pipeline&#39; is not defined
+<span class="gh">Out[6]: </span><span class="go"></span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_mean&#39;: True,</span>
+<span class="go">  &#39;with_std&#39;: True},</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
+<span class="go">  &#39;n_estimators&#39;: 100,</span>
+<span class="go">  &#39;criterion&#39;: &#39;entropy&#39;,</span>
+<span class="go">  &#39;max_features&#39;: None,</span>
+<span class="go">  &#39;max_depth&#39;: 10,</span>
+<span class="go">  &#39;min_samples_split&#39;: 0.1,</span>
+<span class="go">  &#39;min_samples_leaf&#39;: 0.1,</span>
+<span class="go">  &#39;class_weight&#39;: None}}</span>
 </pre></div>
 </div>
 </div>
@@ -291,12 +246,6 @@ and then use it to make predictions on new data.</p>
 <span class="gp">In [10]: </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
 
 <span class="gp">In [11]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">&lt;ipython-input-11-58e3b7912133&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;pipeline&#39; is not defined
 </pre></div>
 </div>
 <p>Once we have fitted our model to our data, we can call the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method passing new data
@@ -304,28 +253,14 @@ to obtain predictions from the pipeline.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span> <span class="k">as</span> <span class="n">score</span>
 
 <span class="gp">In [13]: </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="nn">&lt;ipython-input-13-a0c759197f3c&gt;</span> in <span class="ni">&lt;module&gt;</span><span class="nt">()</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;pipeline&#39; is not defined
 
 <span class="gp">In [14]: </span><span class="n">y_pred</span>
-<span class="go">                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------</span>
-<span class="go">NameError                                 Traceback (most recent call last)</span>
-<span class="go">&lt;ipython-input-14-3aaf935e6aec&gt; in &lt;module&gt;()</span>
-<span class="go">----&gt; 1 y_pred</span>
-
-<span class="go">NameError: name &#39;y_pred&#39; is not defined</span>
+<span class="gh">Out[14]: </span><span class="go"></span>
+<span class="go">array([1, 0, 1, 1, 0, 1, 1, 2, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 2, 0, 1, 2,</span>
+<span class="go">       0, 1, 2, 1, 1, 2, 0, 1, 1, 0, 0, 0, 2, 1, 0, 2])</span>
 
 <span class="gp">In [15]: </span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
-<span class="go">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ---------------------------------------------------------------------------</span>
-<span class="go">NameError                                 Traceback (most recent call last)</span>
-<span class="go">&lt;ipython-input-15-50d94d89d6b3&gt; in &lt;module&gt;()</span>
-<span class="go">----&gt; 1 score(y_test, y_pred)</span>
-
-<span class="go">NameError: name &#39;y_pred&#39; is not defined</span>
+<span class="go">                                                                                                                                           Out[15]: 0.9473684210526315</span>
 </pre></div>
 </div>
 </div>
