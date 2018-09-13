@@ -197,49 +197,105 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.name">
 <code class="descname">name</code><a class="headerlink" href="#mlblocks.MLBlock.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Name given to this MLBlock.</p>
+<dd><p>Name given to this MLBlock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.primitive">
 <code class="descname">primitive</code><a class="headerlink" href="#mlblocks.MLBlock.primitive" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>object</em> – the actual function or instance which this MLBlock
+<dd><p>the actual function or instance which this MLBlock
 wraps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.fit_args">
 <code class="descname">fit_args</code><a class="headerlink" href="#mlblocks.MLBlock.fit_args" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – specification of the arguments expected by the <cite>fit</cite>
+<dd><p>specification of the arguments expected by the <cite>fit</cite>
 method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.fit_method">
 <code class="descname">fit_method</code><a class="headerlink" href="#mlblocks.MLBlock.fit_method" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – name of the primitive method to call on <cite>fit</cite>.
+<dd><p>name of the primitive method to call on <cite>fit</cite>.
 <cite>None</cite> if the primitive is a function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.produce_args">
 <code class="descname">produce_args</code><a class="headerlink" href="#mlblocks.MLBlock.produce_args" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – specification of the arguments expected by the
+<dd><p>specification of the arguments expected by the
 <cite>predict</cite> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.produce_output">
 <code class="descname">produce_output</code><a class="headerlink" href="#mlblocks.MLBlock.produce_output" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – specification of the outputs of the <cite>produce</cite>
+<dd><p>specification of the outputs of the <cite>produce</cite>
 method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.produce_method">
 <code class="descname">produce_method</code><a class="headerlink" href="#mlblocks.MLBlock.produce_method" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – name of the primitive method to call on
+<dd><p>name of the primitive method to call on
 <cite>produce</cite>. <cite>None</cite> if the primitive is a function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
@@ -392,22 +448,46 @@ results, which will be returned as the prediction of the pipeline.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLPipeline.blocks">
 <code class="descname">blocks</code><a class="headerlink" href="#mlblocks.MLPipeline.blocks" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>list</em> – OrderedDict of the block names and the corresponding
+<dd><p>OrderedDict of the block names and the corresponding
 MLBlock instances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLPipeline.input_names">
 <code class="descname">input_names</code><a class="headerlink" href="#mlblocks.MLPipeline.input_names" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – input_names dictionary, as given when the instance
+<dd><p>input_names dictionary, as given when the instance
 was created..</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="mlblocks.MLPipeline.output_names">
 <code class="descname">output_names</code><a class="headerlink" href="#mlblocks.MLPipeline.output_names" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>dict</em> – output_names dictionary, as given when the instance
+<dd><p>output_names dictionary, as given when the instance
 was created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
@@ -668,6 +748,7 @@ found.</td>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
