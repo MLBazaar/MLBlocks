@@ -14,7 +14,7 @@ Creating a pipeline
 -------------------
 
 With MLBlocks, creating a pipeline is as simple as specifying a list of primitives and passing
-them to the `MLPipeline` class:
+them to the `MLPipeline class`_:
 
 .. ipython:: python
 
@@ -25,7 +25,9 @@ them to the `MLPipeline` class:
     ]
     pipeline = MLPipeline(primitives)
 
-Optionally, specific hyperparameters can be also set by specifying them in a dictionary:
+.. _MLPipeline class: ../api_reference.html#mlblocks.MLPipeline
+
+Optionally, specific `hyperparameters`_ can be also set by specifying them in a dictionary:
 
 .. ipython:: python
 
@@ -36,12 +38,63 @@ Optionally, specific hyperparameters can be also set by specifying them in a dic
     }
     pipeline = MLPipeline(primitives, hyperparameters)
 
-If you can see which hyperparameters a particular pipeline is using, you can do so by calling
-its ``get_hyperparameters`` method:
+Once the pipeline has been instantiated, we can easily see what `hyperparameters`_ have been set
+for each block, by calling the `get_hyperparameters method`_.
+
+.. _get_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_hyperparameters
+
+The output of this method is a dictionary which has the name of each block as keys and
+a dictionary with the `hyperparameters`_ of the corresponding block as values.
 
 .. ipython:: python
 
     pipeline.get_hyperparameters()
+
+.. _hyperparameters: ../advanced_usage/hyperparameters.html
+
+Tunable Hyperparameters
+-----------------------
+
+One of the main features of `MLBlocks JSON Annotations`_ is the possibility to indicate
+the type and possible values that each primitive hyperparameter accepts.
+
+The list of possible hyperparameters and their details can easily be obtained from the pipeline
+instance by calling its `get_tunable_hyperparameters method`_.
+
+The output of this method is a dictionary that contains the list of tunable hyperparameters
+for each block in the pipeline, ready to be passed to any hyperparameter tuning library such
+as `BTB`_.
+
+.. ipython:: python
+
+    pipeline.get_tunable_hyperparameters()
+
+.. _MLBlocks JSON Annotations: ../advanced_usage/primitives.html#json-annotations
+.. _get_tunable_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_tunable_hyperparameters
+.. _BTB: https://github.com/HDI-Project/BTB
+
+Setting Hyperparameters
+-----------------------
+
+Modifying the hyperparameters of an already instantiated pipeline can be done using the
+`set_hyperparameters method`_, which expects a dictionary with the same format as the returned
+by the `get_hyperparameters method`_.
+
+Note that if a subset of the hyperparameters is passed, only these will be modified, and the
+other ones will remain unmodified.
+
+.. ipython:: python
+
+    new_hyperparameters = {
+        'sklearn.ensemble.RandomForestClassifier#1': {
+            'max_depth': 20
+        }
+    }
+    pipeline.set_hyperparameters(new_hyperparameters)
+    hyperparameters = pipeline.get_hyperparameters()
+    hyperparameters['sklearn.ensemble.RandomForestClassifier#1']['max_depth']
+
+.. _set_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.set_hyperparameters
 
 Making predictions
 ------------------
@@ -49,7 +102,8 @@ Making predictions
 Once we have created the pipeline with the desired hyperparameters we can fit it
 and then use it to make predictions on new data.
 
-To do this, we first call the ``fit`` method passing the training data and the corresponding labels.
+To do this, we first call the ``fit`` method passing the training data and the corresponding
+labels.
 
 .. ipython:: python
 
