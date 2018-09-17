@@ -34,6 +34,7 @@ development_requires = [
     'bumpversion>=0.5.3',
     'coverage>=4.5.1',
     'flake8>=3.5.0',
+    'graphviz==0.9',
     'ipython==6.5.0',
     'isort>=4.3.4',
     'matplotlib==2.2.3',
