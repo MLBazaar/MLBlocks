@@ -6,9 +6,6 @@ What is MLBlocks?
    :alt: MLBlocks
    :align: center
 
-MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
-seamlessly combining tools from any python library with a simple, common and uniform interface.
-
 MLBlocks is a simple framework for seamlessly combining any possible set of Machine Learning
 tools developed in Python, whether they are custom developments or belong to third party
 libraries, and build Pipelines out of them that can be fitted and then used to make predictions.
@@ -44,9 +41,6 @@ With recent availability of a multitude of libraries and tools, we decided it wa
 them and expand the library to address other data types: images, text, graph, time series and
 integrate with deep learning libraries.
 
-.. _Machine learning blocks: https://github.com/HDI-Project/mlblocks
-.. _tarball: https://github.com/HDI-Project/mlblocks/tarball/master
-
 .. toctree::
    :caption: Getting Started
    :titlesonly:
@@ -78,3 +72,6 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. _Machine learning blocks: https://github.com/HDI-Project/mlblocks
+.. _tarball: https://github.com/HDI-Project/mlblocks/tarball/master
