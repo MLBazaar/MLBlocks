@@ -7,7 +7,7 @@ explain how to add new primitives for **MLBlocks**.
 MLPrimitives
 ------------
 
-**MLBlocks** has a cousin project, `MLPrimitives`_, which already includes a huge list of
+**MLBlocks** has a related project, `MLPrimitives`_, which already includes a huge list of
 integrated primitives, so the easiest and recommended way to add primitives for **MLBlocks**
 is to install **MLPrimitives**.
 
