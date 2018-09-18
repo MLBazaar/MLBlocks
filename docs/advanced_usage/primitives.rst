@@ -12,7 +12,7 @@ What is a Primitive?
 
 A valid MLBlocks primitive is an importable Python object that:
 
-* Might be a function or a class.
+* Must be either a function or a class.
 * If it is a class, it **might** have a `fitting` stage, where the primitive is passed some
   training data and it `learns` from it, and which can be executed with a single method call.
   Function primitives have no `fitting` stage.
@@ -46,7 +46,6 @@ Here are some examples of primitives:
 +-----------------------------------------------+-----------+--------------+--------------------+
 | lightfm.LightFM                               | class     | fit          | predict            |
 +-----------------------------------------------+-----------+--------------+--------------------+
-
 
 JSON Annotations
 ----------------
@@ -197,33 +196,42 @@ Function Primitive one that explained above:
   names and types. If the type was something other than ``bool``, a list or
   range of valid values would also be specified.
 
-MLBlock Class
-~~~~~~~~~~~~~
+The MLBlock Class
+-----------------
 
-The `mlblocks.MLBlock`_ class is the representation of a primitive within the **MLBlocks**
-library.
+Within the **MLBlocks** library, a primitive is represented through the `mlblocks.MLBlock`_ class.
 
-This is used to wrap the annotated primitives, offering a common and uniform interface to
-interact with any possible Machine Learning tool implemented in Python.
+This is used to wrap around the annotated primitives, offering a common and uniform interface to
+all of them.
 
-These are the inputs required to create an `mlblocks.MLBlock`_ instance:
+More specifically, the `mlblocks.MLBlock`_ class offers two public methods, `fit`_ and `produce`_,
+which are directly linked to the methods specified in the `JSON Annotation`_:
 
-* ``name``: the name of the primitive JSON to load.
-* ``**hyperparameters``: Hyperparameters of the primitive, passed as keyword arguments.
+.. graphviz::
 
-And it has these available methods:
+    digraph {
+        {
+            node [shape=box]
+            a_method;
+            another_method;
+            fit;
+            produce;
+        }
+        subgraph cluster_1 {
+            {rank=same; fit produce};
+            fit -> produce [style=invis];
+            fit -> a_method;
+            produce -> another_method;
+            label = "MLBlock";
+            subgraph cluster_2 {
+                a_method;
+                another_method;
+                label = "A Primitive";
+            }
+        }
+    }
 
-* ``get_tunable_hyperparameters``: Get a dictionary indicating which hyperparameters can be
-  tuned for this primitive, with their types, available ranges, default values and documentation.
-* ``get_hyperparameters``: Get a dictionary with the hyperparameter values that the primitive is
-  using.
-* ``set_hyperparameters``: Set new hyperparameters for the primitive, recreating any necessary
-  object for the changes to take effect.
-* ``fit``: Call the method specified in the JSON annotation passing any required arguments.
-* ``produce``: Call the method specified in the JSON annotation passing any required arguments and
-  capture its outputs as variables.
-
-For a more detailed description of the methods and their arguments, please check the corresponding
+For a more detailed description of this class, please check the corresponding
 section in the `API Reference`_ documentation.
 
 .. _API Reference: ../api_reference.html
@@ -232,3 +240,5 @@ section in the `API Reference`_ documentation.
 .. _mlblocks.MLBlock: ../api_reference.html#mlblocks.MLBlock
 .. _pipelines: pipelines.html
 .. _examples folder: https://github.com/HDI-Project/MLBlocks/tree/master/examples
+.. _fit: ../api_reference.html#mlblocks.MLBlock.fit
+.. _produce: ../api_reference.html#mlblocks.MLBlock.produce
