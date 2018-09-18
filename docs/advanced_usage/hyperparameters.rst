@@ -92,12 +92,79 @@ depend on the value of other hyperparameters.
 Multitype Hyperparameters
 *************************
 
-TODO: Work in progress
+Some hyperparamters accept more than one type of value.
+
+For example, suppose a primitive exepcts a hyperparameter called `max_features` that can take
+one of three types:
+
+* An integer indicating the absolute number of features to use.
+* A float between 0 and 1 indicating the proportion of the maximum possible number of features.
+* The strings ``"min"``, ``"max"`` or ``"mean"``, indicating that the number needs to be computed
+  by the primitive itself in some way.
+
+In this case, the ``type`` of this hyperparameter is ``multitype``, and its specification could
+be as follows::
+
+    "max_features": {
+        "type": "multitype",
+        "default": "mean",
+        "types": {
+            "int": {
+                "range": [1, 100]
+            },
+            "float": {
+                "range": [0.1, 0.9]
+            },
+            "string": {
+                "values": ["mean", "min", "max"]
+            }
+        }
+    }
+
+Note how a new keyword ``types`` exist, that holds the possible values for each one of the
+possible types that this hyperparameter can have.
 
 Conditional Hyperparameters
 ***************************
 
-TODO: Work in progress
+In some other cases, the values that a hyperparameter can take depend on the value of another
+one.
+
+Suppose, for example, that the primitive explained in the previous point does not expect
+the ``mean``, ``min`` or ``max`` strings as values for the ``max_features`` hyperparameter,
+but as a separated one called ``max_feature_aggregation``, which is only used then the
+``max_features`` hyperparameter has been given the value ``auto``.
+
+In this case, the hyperparameters would be annotated like this::
+
+    "max_features": {
+        "type": "multitype",
+        "default": "auto",
+        "types": {
+            "int": {
+                "range": [1, 100]
+            },
+            "float": {
+                "range": [0.1, 0.9]
+            },
+            "string": {
+                "values": ["auto"]
+            }
+        }
+    }
+    "max_features_aggregation": {
+        "type": "conditional",
+        "condition": "mas_features",
+        "default": null,
+        "values": {
+            "auto": {
+                "description": "this will be used only if the value of max_features is `auto`",
+                "type": "str",
+                "default": "mean",
+                "range": ["mean", "max", "min"]
+            }
+        }
+    }
 
 
 .. _JSON Annotations: primitives.html#json-annotations
