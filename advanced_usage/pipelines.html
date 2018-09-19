@@ -28,6 +28,7 @@
 
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Adding Primitives" href="adding_primitives.html" />
@@ -86,17 +87,38 @@
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="primitives.html#json-annotations">JSON Annotations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="primitives.html#function-primitives">Function Primitives</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitives.html#class-primitives">Class Primitives</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitives.html#mlblock-class">MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html#the-mlblock-class">The MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#mlpipeline-class">MLPipeline Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-a-pipeline">What is a Pipeline?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-mlpipeline-class">The MLPipeline Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#block-names">Block Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#init-arguments">Init Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#context">Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#context-usage-examples">Context Usage Examples</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="adding_primitives.html">Adding Primitives</a><ul>
@@ -181,35 +203,230 @@
             
   <div class="section" id="pipelines">
 <h1>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="mlpipeline-class">
-<h2>MLPipeline Class<a class="headerlink" href="#mlpipeline-class" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">mlblocks.MLPipeline</span></code> class is the representation of a <strong>pipeline</strong>  within the <strong>MLBlocks</strong>
-library, and it works by combining multiple <code class="docutils literal notranslate"><span class="pre">MLBlock</span></code> instances, called <code class="docutils literal notranslate"><span class="pre">blocks</span></code> in this
-context, which then calls in succession for fitting and predicting.</p>
-<p>This one is the object which the user should be mostly interacting with.</p>
-<p>These are the expected inputs to create the instance:</p>
+<p>The overall goal of <strong>MLBlocks</strong> is to be able to build <strong>Pipelines</strong>.</p>
+<div class="section" id="what-is-a-pipeline">
+<h2>What is a Pipeline?<a class="headerlink" href="#what-is-a-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>Pipeline</strong> is a sequence of <a class="reference external" href="../primitives.html">primitives</a> working together to learn from training data and
+later on make predictions on new data as if they were a single object.</p>
+digraph {
+    rankdir=LR;
+    &quot;Input Data&quot; -&gt; &quot;Pipeline&quot;;
+    &quot;Pipeline&quot; -&gt; &quot;Predictions&quot;;
+}<p>Pipelines can have any possible composition, but the typical setup includes data cleanup,
+feature extraction and feature selection <a class="reference external" href="../primitives.html">primitives</a>, and ends up with one or more estimator
+<a class="reference external" href="../primitives.html">primitives</a> that generate the final predictions.</p>
+digraph {
+    rankdir=LR;
+    subgraph cluster {
+        &quot;Data Cleanup&quot; -&gt; &quot;Feature Extraction&quot; -&gt; &quot;Feature Selection&quot; -&gt; &quot;Estimator&quot;;
+        label = &quot;pipeline&quot;;
+        color=blue
+    }
+}<p>Also, just like <a class="reference external" href="../primitives.html">primitives</a>, pipelines have <a class="reference external" href="hyperparameters.html">hyperparameters</a>, which are nothing but the list
+of hyperparameters that the <a class="reference external" href="../primitives.html">primitives</a> that compose them expect, and which can be also tuned to
+improve their prediction performance.</p>
+</div>
+<div class="section" id="the-mlpipeline-class">
+<h2>The MLPipeline Class<a class="headerlink" href="#the-mlpipeline-class" title="Permalink to this headline">¶</a></h2>
+<p>In <strong>MLBlocks</strong>, a pipeline is represented by the <a class="reference external" href="../api_reference.html#mlblocks.MLPipeline">mlblocks.MLPipeline</a> class, which combines
+multiple <a class="reference external" href="../api_reference.html#mlblocks.MLBlock">mlblocks.MLBlock</a> instances, called <code class="docutils literal notranslate"><span class="pre">blocks</span></code> in this context, and calls them in
+succession for fitting and predicting.</p>
+<p>As you have seen in the <a class="reference external" href="../getting_started/quickstart.html">quickstart tutorial</a>, You can create an MLPipeline by simply
+passing it the list of primitives that will compose it:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+
+<span class="gp">In [2]: </span><span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span>
+<span class="gp">   ...: </span><span class="p">]</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [3]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="block-names">
+<h3>Block Names<a class="headerlink" href="#block-names" title="Permalink to this headline">¶</a></h3>
+<p>When the MLPipeline is created, a list of MLBlock instances has been created inside it.</p>
+<p>Each of this blocks is given a unique name which is composed by the primitive name and a counter,
+separated by a hash symbol <code class="docutils literal notranslate"><span class="pre">#</span></code>, allowing multiple blocks for the same primitive to exist
+within a single MLPipeline:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
+<span class="gh">Out[4]: </span><span class="go"></span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x14e848e099e8&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x14e848e09a58&gt;}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="init-arguments">
+<h3>Init Arguments<a class="headerlink" href="#init-arguments" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes, additional arguments need to be passed to the blocks during initialization.</p>
+<p>This can be done by passing an extra dictionary to the MLPipeline when it is created:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">   ...: </span>        <span class="s1">&#39;with_mean&#39;</span><span class="p">:</span> <span class="bp">False</span>
+<span class="gp">   ...: </span>    <span class="p">},</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">   ...: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="gp">   ...: </span>    <span class="p">}</span>
+<span class="gp">   ...: </span><span class="p">}</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [6]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This dictionary must have as keys the name of the blocks that the arguments belong to, and
+as values the dictionary that contains the argument names and their values.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If only one block of a specific primitive exists in the pipeline, the counter
+appended to its name can be skipped when specifying the arguments, as shown in the
+example.</p>
+</div>
+</div>
+</div>
+<div class="section" id="context">
+<h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
+<p>One element that plays an important role during the execution of the <a class="reference external" href="../api_reference.html#mlblocks.MLPipeline.fit">fit</a> and <a class="reference external" href="../api_reference.html#mlblocks.MLPipeline.predict">predict</a>
+methods of a pipeline is the <strong>Context dictionary</strong>.</p>
+<p>Each time any of these methods is called, a context dictionary is internally created and all
+the variables passed to the method are stored in it.</p>
+<p>Then, the following happens for each block:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">blocks</span></code>: A list containing the names of the primitives to load as MLBlock instances.</li>
-<li><code class="docutils literal notranslate"><span class="pre">init_params</span></code>: Hyperparameters to be used for the MLBlock instances creation, specified as a
-dictionary that contains the name of the blocks as keys and the set of keyword
-arguments to pass to each one of them specified as subdicts.</li>
+<li>The list of arguments that the method expects is retrieved from the block configuration.</li>
+<li>The corresponding values are read from the <strong>Context</strong> and passed to the method.</li>
+<li>The list of outputs that the method returns is retrieved from the block configuration.</li>
+<li>The indicated outputs are captured in order and put back to the <strong>Context</strong> dictionary
+using the name specified.</li>
 </ul>
-<p>And it has these available methods:</p>
-<ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code>: Get a dictionary indicating which hyperparameters can be tuned
-for each primitive, with their types, available ranges, default values and documentation.</li>
-<li><code class="docutils literal notranslate"><span class="pre">get_hyperparameters</span></code>: Get a dictionary with the hyperparameter values that each primitive
-is currently using.</li>
-<li><code class="docutils literal notranslate"><span class="pre">set_hyperparameters</span></code>: Set new hyperparameters for one or more primitives, passed as a
-dictionary where keys are the name of the blocks to modify and values are nested dictionaries
-with the hyperparameters to set.</li>
-<li><code class="docutils literal notranslate"><span class="pre">fit</span></code>: Call the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method and then the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of each block, in sequence,
-passing each time as input the output of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of the previous block.</li>
-<li><code class="docutils literal notranslate"><span class="pre">predict</span></code>: Call the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of each block in sequence passing each time as input
-the output of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of the previous block.</li>
-</ul>
-<p>For a more detailed description of the methods and their arguments, please check the API Reference
-section of the documentation.</p>
+<div class="section" id="context-usage-examples">
+<h3>Context Usage Examples<a class="headerlink" href="#context-usage-examples" title="Permalink to this headline">¶</a></h3>
+<p>The most simple version of this schema is one where all the blocks expect a single feature
+matrix as input, called <cite>X</cite>, and output another feature matrix, also called <cite>X</cite>, until the last
+one, which outputs the final prediction, called <cite>y</cite>.</p>
+<p>In this case, supposing that we only have 3 blocks, the sequence when the <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X)</span></code>
+call is issued would be:</p>
+<ol class="arabic simple">
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is stored in the <strong>Context</strong>.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled from the <strong>Context</strong> and passed to <cite>block1</cite>.</li>
+<li>The output from <cite>block1</cite> is put back into the <strong>Context</strong>, overwriting the old value.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to <cite>block2</cite>.</li>
+<li>The output from <cite>block2</cite> is put back into the <strong>Context</strong>, overwriting again the old value.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled for the last time from the <strong>Context</strong> and passed to <cite>block3</cite>.</li>
+<li>The output from <cite>block3</cite>, since it is the last one, is returned.</li>
+</ol>
+digraph G {
+    subgraph cluster_0 {
+        label = &quot;pipeline.predict(X)&quot;;
+
+        b1 [label=&quot;block1.produce(X)&quot;];
+        b2 [label=&quot;block2.produce(X)&quot;];
+        b3 [label=&quot;block3.produce(X)&quot;];
+
+        b1 -&gt; b2 -&gt; b3 [style=invis];
+
+        subgraph cluster_1 {
+            X1 [label=X];
+            X2 [label=X];
+            X3 [label=X];
+            X1 -&gt; X2 -&gt; X3 [style=&quot;dashed&quot;];
+            label = &quot;Context&quot;;
+        }
+
+    }
+
+    X -&gt; X1;
+    X1 -&gt; b1 [constraint=false];
+    b1 -&gt; X2 [label=modified];
+    X2 -&gt; b2 [constraint=false]
+    b2 -&gt; X3 [label=modified];
+    X3 -&gt; b3 [constraint=false]
+    b3 -&gt; y
+}<p>Another schema with some more complexity would be one where there is one primitive that
+needs to be passed an additional argument that provides information about the data.</p>
+<p>Suppose, for example, that there is a primitive that encodes categorical features, but
+it needs to be given the list of features that it needs to encode in a variable called
+<code class="docutils literal notranslate"><span class="pre">features</span></code>. Suppose also that this primitive is followed directly by an estimator primitive.</p>
+<p>In this case, the call would be <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X,</span> <span class="pre">features=features)</span></code>, and the sequence
+of actions would be:</p>
+<ol class="arabic simple">
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is stored in the <strong>Context</strong>.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is pulled from the <strong>Context</strong> and passed to the
+<cite>encoder</cite> block.</li>
+<li>The output from <cite>encoder</cite> is put back into the <strong>Context</strong> as <code class="docutils literal notranslate"><span class="pre">X</span></code>, overwriting the old value.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</li>
+<li>The output from the <cite>estimator</cite> block is returned.</li>
+</ol>
+digraph G {
+    subgraph cluster_0 {
+        label = &quot;pipeline.predict(X, features=features)&quot;;
+
+        b1 [label=&quot;encoder.produce(X, features=features)&quot;];
+        b2 [label=&quot;estimator.produce(X)&quot;];
+
+        b1 -&gt; b2 [style=invis];
+
+        subgraph cluster_1 {
+            X1 [label=X];
+            f1 [label=features];
+            X2 [label=X];
+            f1 -&gt; X1 [style=invis];
+            X1 -&gt; X2 [style=dashed];
+            label = &quot;Context&quot;;
+        }
+
+    }
+
+    {rank=same X features}
+    features -&gt; f1;
+    X -&gt; X1;
+    {X1 f1} -&gt; b1 [constraint=false];
+    b1 -&gt; X2 [label=encoded];
+    X2 -&gt; b2 [constraint=false]
+    b2 -&gt; y
+}<p>But, what if we also have a primitive, which we will call <cite>detector</cite>, that detects which features
+are categorical and want to use it instead of passing a manually crafted list of features?</p>
+<p>We can also achieve it using the <strong>Context</strong>!</p>
+<p>In this case, we go back to the <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X)</span></code> call, and let the <cite>detector</cite> primitive
+do its job:</p>
+<ol class="arabic simple">
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is stored in the <strong>Context</strong>.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled from the <strong>Context</strong> and passed to the <cite>detector</cite> block.</li>
+<li>The output from the <cite>detector</cite> block is stored in the <strong>Context</strong> as the <cite>features</cite> variable.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is pulled from the <strong>Context</strong> and passed to the
+<cite>encoder</cite> block.</li>
+<li>The output from <cite>encoder</cite> is put back into the <strong>Context</strong> as <code class="docutils literal notranslate"><span class="pre">X</span></code>, overwriting the old value.</li>
+<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</li>
+<li>The output from the <cite>estimator</cite> block is returned.</li>
+</ol>
+digraph G {
+    subgraph cluster_0 {
+        label = &quot;pipeline.predict(X)&quot;;
+
+        b0 [label=&quot;detector.produce(X)&quot;];
+        b1 [label=&quot;encoder.produce(X, features=features)&quot;];
+        b2 [label=&quot;estimator.produce(X)&quot;];
+
+        b0 -&gt; b1 -&gt; b2 [style=invis];
+
+        subgraph cluster_1 {
+            X1 [label=X];
+            f1 [label=features];
+            X2 [label=X];
+            X1 -&gt; f1 -&gt; X2 [style=invis];
+            X1 -&gt; X2 [style=dashed];
+            label = &quot;Context&quot;;
+        }
+
+    }
+
+    X -&gt; X1;
+    X1 -&gt; b0 [constraint=false];
+    b0 -&gt; f1;
+    {X1 f1} -&gt; b1 [constraint=false];
+    b1 -&gt; X2 [label=encoded];
+    X2 -&gt; b2 [constraint=false]
+    b2 -&gt; y
+}</div>
 </div>
 </div>
 

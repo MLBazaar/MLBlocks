@@ -28,6 +28,7 @@
 
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="API Reference" href="../api_reference.html" />
@@ -86,17 +87,38 @@
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="primitives.html#json-annotations">JSON Annotations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="primitives.html#function-primitives">Function Primitives</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitives.html#class-primitives">Class Primitives</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitives.html#mlblock-class">MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="primitives.html#the-mlblock-class">The MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipelines.html#mlpipeline-class">MLPipeline Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#what-is-a-pipeline">What is a Pipeline?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#the-mlpipeline-class">The MLPipeline Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#block-names">Block Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#init-arguments">Init Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines.html#context">Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipelines.html#context-usage-examples">Context Usage Examples</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Adding Primitives</a><ul>
@@ -185,7 +207,7 @@
 explain how to add new primitives for <strong>MLBlocks</strong>.</p>
 <div class="section" id="mlprimitives">
 <h2>MLPrimitives<a class="headerlink" href="#mlprimitives" title="Permalink to this headline">¶</a></h2>
-<p><strong>MLBlocks</strong> has a cousin project, <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which already includes a huge list of
+<p><strong>MLBlocks</strong> has a related project, <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which already includes a huge list of
 integrated primitives, so the easiest and recommended way to add primitives for <strong>MLBlocks</strong>
 is to install <strong>MLPrimitives</strong>.</p>
 <p>This can be achieved by running the commands:</p>
