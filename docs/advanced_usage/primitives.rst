@@ -111,14 +111,42 @@ The simplest JSON annotation for this primitive would look like this::
 
 The main elements of this JSON are:
 
-* **primitive**: The fully qualified, directly importable name of the function to be used.
+* **primitive**: The fully qualified, directly importable name of the function to be used::
+
+    "primitive": "numpy.argmax",
+
 * **produce**: A nested JSON that specifies the names and types of arguments and the output values
-  of the primitive.
+  of the primitive::
+
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    }
+
 * **hyperparameters**: A nested JSON that specifies the `hyperparameters`_ of this primitive.
   Note that multiple types of hyperparameters exist, but that this primitive has only one ``fixed``
   hyperparameter, which mean that this is not tunable and that, even though the user can specify
   a value different than the default, changes are not expected during the MLBlock instance life
-  cycle.
+  cycle::
+
+    "hyperparameters": {
+        "fixed": {
+            "axis": {
+                "type": "int",
+                "default": 1
+            }
+        }
+    }
 
 Class Primitives
 ~~~~~~~~~~~~~~~~
@@ -184,17 +212,61 @@ Note that there are some details of this JSON annotation that make it different 
 Function Primitive one that explained above:
 
 * **primitive**: The fully qualified, directly importable name of the class to be used. This
-  class is the one that will be used to create the actual primitive instance.
+  class is the one that will be used to create the actual primitive instance::
+
+    "primitive": "sklearn.preprocessing.StandardScaler",
+
 * **fit**: A nested JSON that specifies the name of the method to call during the fitting phase,
   which in this case happens to also be ``fit``, as well as the names and types of
-  arguments that this method expects.
+  arguments that this method expects::
+
+    "fit": {
+        "method": "fit",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    }
+
 * **produce**: A nested JSON that specifies the name of the method to call during the predicting
   phase, in this case called ``transform``, as well as the names and types of
-  arguments that this method expects and its outputs.
+  arguments that this method expects and its outputs::
+
+    "produce": {
+        "method": "transform",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    }
+
 * **hyperparameters**: A nested JSON that specifies the hyperparameters of this primitive.
   In this case, only ``tunable`` hyperparameters are specified, with their
   names and types. If the type was something other than ``bool``, a list or
-  range of valid values would also be specified.
+  range of valid values would also be specified::
+
+    "hyperparameters": {
+        "tunable": {
+            "with_mean": {
+                "type": "bool",
+                "default": true
+            },
+            "with_std": {
+                "type": "bool",
+                "default": true
+            }
+        }
+    }
 
 The MLBlock Class
 -----------------
@@ -207,26 +279,30 @@ all of them.
 More specifically, the `mlblocks.MLBlock`_ class offers two public methods, `fit`_ and `produce`_,
 which are directly linked to the methods specified in the JSON Annotation:
 
+For example, we can look at the `keras.preprocessing.text.Tokenizer`_ primitive from
+`MLPrimitives`_, which calls the method ``fit_on_texts`` when ``fit`` is called, and
+``tests_to_sequences`` when ``produce`` is called:
+
 .. graphviz::
 
     digraph {
         {
             node [shape=box]
-            a_method;
-            another_method;
+            fit_on_texts;
+            texts_to_sequences;
             fit;
             produce;
         }
         subgraph cluster_1 {
             {rank=same; fit produce};
             fit -> produce [style=invis];
-            fit -> a_method;
-            produce -> another_method;
-            label = "MLBlock";
+            fit -> fit_on_texts;
+            produce -> texts_to_sequences;
+            label = "mlblocks.MLBlock";
             subgraph cluster_2 {
-                a_method;
-                another_method;
-                label = "A Primitive";
+                fit_on_texts;
+                texts_to_sequences;
+                label = "keras.preprocessing.text.Tokenizer";
             }
         }
     }
@@ -236,6 +312,7 @@ section in the `API Reference`_ documentation.
 
 .. _API Reference: ../api_reference.html
 .. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
+.. _keras.preprocessing.text.Tokenizer: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.preprocessing.text.Tokenizer.json
 .. _hyperparameters: hyperparameters.html
 .. _mlblocks.MLBlock: ../api_reference.html#mlblocks.MLBlock
 .. _pipelines: pipelines.html
