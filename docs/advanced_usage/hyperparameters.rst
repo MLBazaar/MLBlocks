@@ -92,9 +92,9 @@ depend on the value of other hyperparameters.
 Multitype Hyperparameters
 *************************
 
-Some hyperparamters accept more than one type of value.
+Some hyperparameters accept more than one type of value.
 
-For example, suppose a primitive exepcts a hyperparameter called `max_features` that can take
+For example, suppose a primitive expects a hyperparameter called `max_features` that can take
 one of three types:
 
 * An integer indicating the absolute number of features to use.

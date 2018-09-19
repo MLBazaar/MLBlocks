@@ -205,7 +205,7 @@ This is used to wrap around the annotated primitives, offering a common and unif
 all of them.
 
 More specifically, the `mlblocks.MLBlock`_ class offers two public methods, `fit`_ and `produce`_,
-which are directly linked to the methods specified in the `JSON Annotation`_:
+which are directly linked to the methods specified in the JSON Annotation:
 
 .. graphviz::
 

@@ -40,10 +40,10 @@ The MLPipeline Class
 --------------------
 
 In **MLBlocks**, a pipeline is represented by the `mlblocks.MLPipeline`_ class, which combines
-multiple `mlblock.MLBlock`_ instances, called ``blocks`` in this context, and calls them in
+multiple `mlblocks.MLBlock`_ instances, called ``blocks`` in this context, and calls them in
 succession for fitting and predicting.
 
-As you have seen in the `quickstart tutorial`_, You can create an **MLPipeline** by simply
+As you have seen in the `quickstart tutorial`_, You can create an MLPipeline by simply
 passing it the list of primitives that will compose it:
 
 .. ipython:: python
@@ -72,7 +72,7 @@ within a single MLPipeline:
 Init Arguments
 ~~~~~~~~~~~~~~
 
-Sometimes, additional arguments need to be passed to the blocks during instatiation.
+Sometimes, additional arguments need to be passed to the blocks during initialization.
 
 This can be done by passing an extra dictionary to the MLPipeline when it is created:
 
@@ -106,9 +106,9 @@ the variables passed to the method are stored in it.
 
 Then, the following happens for each block:
 
-* The list of arguments that the method expects is retrieved from the the block config.
-* The correspoding values are read from the **Context** and passed to the method.
-* The list of outputs that the method returns is retrieved from the the block.
+* The list of arguments that the method expects is retrieved from the block configuration.
+* The corresponding values are read from the **Context** and passed to the method.
+* The list of outputs that the method returns is retrieved from the block configuration.
 * The indicated outputs are captured in order and put back to the **Context** dictionary
   using the name specified.
 
@@ -124,9 +124,9 @@ call is issued would be:
 
 1. The value of ``X`` is stored in the **Context**.
 2. The value of ``X`` is pulled from the **Context** and passed to `block1`.
-3. The output from `block1` is put back into the **Context**, overwritting the old value.
+3. The output from `block1` is put back into the **Context**, overwriting the old value.
 4. The value of ``X`` is pulled again from the **Context** and passed to `block2`.
-5. The output from `block2` is put back into the **Context**, overwritting again the old value.
+5. The output from `block2` is put back into the **Context**, overwriting again the old value.
 6. The value of ``X`` is pulled for the last time from the **Context** and passed to `block3`.
 7. The output from `block3`, since it is the last one, is returned.
 
@@ -161,7 +161,7 @@ call is issued would be:
         b3 -> y
     }
 
-Another schema with some more compelexity would be one where there is one primitive that
+Another schema with some more complexity would be one where there is one primitive that
 needs to be passed an additional argument that provides information about the data.
 
 Suppose, for example, that there is a primitive that encodes categorical features, but
@@ -174,7 +174,7 @@ of actions would be:
 1. The value of ``X`` and ``features`` is stored in the **Context**.
 2. The value of ``X`` and ``features`` is pulled from the **Context** and passed to the
    `encoder` block.
-3. The output from `encoder` is put back into the **Context** as ``X``, overwritting the old value.
+3. The output from `encoder` is put back into the **Context** as ``X``, overwriting the old value.
 4. The value of ``X`` is pulled again from the **Context** and passed to the `estimator` block.
 5. The output from the `estimator` block is returned.
 
@@ -212,7 +212,7 @@ of actions would be:
 
 
 But, what if we also have a primitive, which we will call `detector`, that detects which features
-are categorical and want to use it instead of passing the a manually crafted list of features?
+are categorical and want to use it instead of passing a manually crafted list of features?
 
 We can also achieve it using the **Context**!
 
@@ -224,7 +224,7 @@ do its job:
 3. The output from the `detector` block is stored in the **Context** as the `features` variable.
 4. The value of ``X`` and ``features`` is pulled from the **Context** and passed to the
    `encoder` block.
-5. The output from `encoder` is put back into the **Context** as ``X``, overwritting the old value.
+5. The output from `encoder` is put back into the **Context** as ``X``, overwriting the old value.
 6. The value of ``X`` is pulled again from the **Context** and passed to the `estimator` block.
 7. The output from the `estimator` block is returned.
 
@@ -264,8 +264,9 @@ do its job:
 
 .. _API Reference: ../api_reference.html
 .. _primitives: ../primitives.html
-.. _MLPipeline: ../api_reference.html#mlblocks.MLPipeline
+.. _mlblocks.MLPipeline: ../api_reference.html#mlblocks.MLPipeline
 .. _fit: ../api_reference.html#mlblocks.MLPipeline.fit
 .. _predict: ../api_reference.html#mlblocks.MLPipeline.predict
-.. _MLBlock: ../api_reference.html#mlblocks.MLBlock
+.. _mlblocks.MLBlock: ../api_reference.html#mlblocks.MLBlock
 .. _hyperparameters: hyperparameters.html
+.. _quickstart tutorial: ../getting_started/quickstart.html
