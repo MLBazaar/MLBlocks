@@ -57,12 +57,29 @@ hyperparameters have a default value, but most of the times their values have to
 set by the user.
 
 In the `JSON Annotations`_, these hyperparameters are specified as a JSON that has the argument
-name as the keyword and a nested JSON that specifies its details:
+name as the keyword and a nested JSON that specifies its details::
+
+    "fixed": {
+        "filters": {
+            "type": "str",
+            "default": "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\n"
+        },
+        "split": {
+            "type": "str",
+            "default": " "
+        },
+        "oov_token": {
+            "type": "str",
+            "default": null
+        }
+    }
+
+Each entry in the ``fixed`` hyperparameters contains:
 
 * **default**: This indicates the default value that the argument will take if the user does
   not specify another value when the `MLPipeline`_ is created. This keyword is optional, and
   if it is not specified, the user expected to always provide a value.
-* **type**: The type of the argument. This is only informative and is ignored by MLBlocks, but
+* **type**: The type of the argument. This is only informative and is not used by MLBlocks, but
   it is always included in all the `MLPrimitives`_ annotations.
 
 Tunable Hyperparameters
@@ -73,9 +90,28 @@ impact on the learning process and on how well the primitive learns from the dat
 For this reason, their values can be tuned to improve the prediction performance.
 
 In the `JSON Annotations`_, these hyperparameters are specified as a JSON that has the argument
-name as the keyword and a nested JSON that specifies its details:
+name as the keyword and a nested JSON that specifies its details::
 
-* **type**: The type of the argument.
+    "tunable": {
+        "num_words": {
+            "type": "int",
+            "default": null,
+            "range": [1, 10000]
+        },
+        "lower": {
+            "type": "bool",
+            "default": true
+        },
+        "char_level": {
+            "type": "bool",
+            "default": false
+        }
+    }
+
+Each entry in the ``tunable`` hyperparameters contains:
+
+* **type**: The type of the argument. This can be one of the primitive variable types, ``int``,
+  ``float``, ``str`` or ``bool``, or one of the special types, `multitype`_ or `conditional`_.
 * **default**: This indicates the default value that the argument will take if the user does
   not specify another value when the `MLPipeline`_ is created.
 * **range**: Optional - This is expected to be found in numeric hyperparameters, and specifies
@@ -171,3 +207,5 @@ In this case, the hyperparameters would be annotated like this::
 .. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
 .. _BTB: https://github.com/HDI-Project/BTB
 .. _MLPipeline: ../api_reference.html#mlblocks.MLPipeline
+.. _multitype: #multitype-hyperparameters
+.. _conditional: #conditional-hyperparameters
