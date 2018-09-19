@@ -517,7 +517,7 @@ which are directly linked to the methods specified in the JSON Annotation:</p>
 <p>For example, we can look at the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.preprocessing.text.Tokenizer.json">keras.preprocessing.text.Tokenizer</a> primitive from
 <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which calls the method <code class="docutils literal notranslate"><span class="pre">fit_on_texts</span></code> when <code class="docutils literal notranslate"><span class="pre">fit</span></code> is called, and
 <code class="docutils literal notranslate"><span class="pre">tests_to_sequences</span></code> when <code class="docutils literal notranslate"><span class="pre">produce</span></code> is called:</p>
-digraph {
+<div class="graphviz"><img src="../_images/graphviz-1dd149fc5db490bedf40a0b799bf98c467a75e54.png" alt="digraph {
     {
         node [shape=box]
         fit_on_texts;
@@ -537,7 +537,8 @@ digraph {
             label = &quot;keras.preprocessing.text.Tokenizer&quot;;
         }
     }
-}<p>For a more detailed description of this class, please check the corresponding
+}" class="graphviz" /></div>
+<p>For a more detailed description of this class, please check the corresponding
 section in the <a class="reference external" href="../api_reference.html">API Reference</a> documentation.</p>
 </div>
 </div>

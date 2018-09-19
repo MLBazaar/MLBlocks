@@ -208,21 +208,23 @@
 <h2>What is a Pipeline?<a class="headerlink" href="#what-is-a-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>A <strong>Pipeline</strong> is a sequence of <a class="reference external" href="../primitives.html">primitives</a> working together to learn from training data and
 later on make predictions on new data as if they were a single object.</p>
-digraph {
+<div class="graphviz"><img src="../_images/graphviz-45bfb948b6a00a900e1c8d8a92b006768feb8436.png" alt="digraph {
     rankdir=LR;
     &quot;Input Data&quot; -&gt; &quot;Pipeline&quot;;
     &quot;Pipeline&quot; -&gt; &quot;Predictions&quot;;
-}<p>Pipelines can have any possible composition, but the typical setup includes data cleanup,
+}" class="graphviz" /></div>
+<p>Pipelines can have any possible composition, but the typical setup includes data cleanup,
 feature extraction and feature selection <a class="reference external" href="../primitives.html">primitives</a>, and ends up with one or more estimator
 <a class="reference external" href="../primitives.html">primitives</a> that generate the final predictions.</p>
-digraph {
+<div class="graphviz"><img src="../_images/graphviz-42eef239691ae1b181822dc50b0cd50a99aaecb5.png" alt="digraph {
     rankdir=LR;
     subgraph cluster {
         &quot;Data Cleanup&quot; -&gt; &quot;Feature Extraction&quot; -&gt; &quot;Feature Selection&quot; -&gt; &quot;Estimator&quot;;
         label = &quot;pipeline&quot;;
         color=blue
     }
-}<p>Also, just like <a class="reference external" href="../primitives.html">primitives</a>, pipelines have <a class="reference external" href="hyperparameters.html">hyperparameters</a>, which are nothing but the list
+}" class="graphviz" /></div>
+<p>Also, just like <a class="reference external" href="../primitives.html">primitives</a>, pipelines have <a class="reference external" href="hyperparameters.html">hyperparameters</a>, which are nothing but the list
 of hyperparameters that the <a class="reference external" href="../primitives.html">primitives</a> that compose them expect, and which can be also tuned to
 improve their prediction performance.</p>
 </div>
@@ -252,8 +254,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x14e848e099e8&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x14e848e09a58&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2ad99b0657f0&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2ad99afc6550&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -314,7 +316,7 @@ call is issued would be:</p>
 <li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled for the last time from the <strong>Context</strong> and passed to <cite>block3</cite>.</li>
 <li>The output from <cite>block3</cite>, since it is the last one, is returned.</li>
 </ol>
-digraph G {
+<div class="graphviz"><img src="../_images/graphviz-d7c76748679956f5eb025d50582b3a6cc1b6affd.png" alt="digraph G {
     subgraph cluster_0 {
         label = &quot;pipeline.predict(X)&quot;;
 
@@ -341,7 +343,8 @@ digraph G {
     b2 -&gt; X3 [label=modified];
     X3 -&gt; b3 [constraint=false]
     b3 -&gt; y
-}<p>Another schema with some more complexity would be one where there is one primitive that
+}" class="graphviz" /></div>
+<p>Another schema with some more complexity would be one where there is one primitive that
 needs to be passed an additional argument that provides information about the data.</p>
 <p>Suppose, for example, that there is a primitive that encodes categorical features, but
 it needs to be given the list of features that it needs to encode in a variable called
@@ -356,7 +359,7 @@ of actions would be:</p>
 <li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</li>
 <li>The output from the <cite>estimator</cite> block is returned.</li>
 </ol>
-digraph G {
+<div class="graphviz"><img src="../_images/graphviz-f6c3f8af4e889ed42e60cea708a1803bca72ad28.png" alt="digraph G {
     subgraph cluster_0 {
         label = &quot;pipeline.predict(X, features=features)&quot;;
 
@@ -383,7 +386,8 @@ digraph G {
     b1 -&gt; X2 [label=encoded];
     X2 -&gt; b2 [constraint=false]
     b2 -&gt; y
-}<p>But, what if we also have a primitive, which we will call <cite>detector</cite>, that detects which features
+}" class="graphviz" /></div>
+<p>But, what if we also have a primitive, which we will call <cite>detector</cite>, that detects which features
 are categorical and want to use it instead of passing a manually crafted list of features?</p>
 <p>We can also achieve it using the <strong>Context</strong>!</p>
 <p>In this case, we go back to the <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X)</span></code> call, and let the <cite>detector</cite> primitive
@@ -398,7 +402,7 @@ do its job:</p>
 <li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</li>
 <li>The output from the <cite>estimator</cite> block is returned.</li>
 </ol>
-digraph G {
+<div class="graphviz"><img src="../_images/graphviz-d41fb91f18ade9832ae510b93acae2111254e4e8.png" alt="digraph G {
     subgraph cluster_0 {
         label = &quot;pipeline.predict(X)&quot;;
 
@@ -426,7 +430,8 @@ digraph G {
     b1 -&gt; X2 [label=encoded];
     X2 -&gt; b2 [constraint=false]
     b2 -&gt; y
-}</div>
+}" class="graphviz" /></div>
+</div>
 </div>
 </div>
 
