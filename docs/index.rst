@@ -59,6 +59,15 @@ integrate with deep learning libraries.
    advanced_usage/adding_primitives
 
 .. toctree::
+   :caption: Data Pipelines
+   :maxdepth: 1
+
+   data_pipelines/data_pipelines
+   data_pipelines/text
+   data_pipelines/image
+   data_pipelines/graph
+
+.. toctree::
    :caption: References
    :titlesonly:
 
