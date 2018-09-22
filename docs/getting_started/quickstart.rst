@@ -6,9 +6,13 @@ Below is a short tutorial that will show you how to get started using **MLBlocks
 In this tutorial we will learn how to:
 
 * Create a pipeline using multiple primitives
+* Obtain the list of tunable hyperparameters from the pipeline
 * Specify hyperparameters for each primitive in the pipeline
 * Fit the pipeline using training data
 * Use the pipeline to make predictions from new data
+
+.. note:: Some additional dependencies are required in order to run this Quickstart.
+          Make sure that `you have already installed them`_.
 
 Creating a pipeline
 -------------------
@@ -21,19 +25,17 @@ them to the `MLPipeline class`_:
     from mlblocks import MLPipeline
     primitives = [
         'sklearn.preprocessing.StandardScaler',
-        'sklearn.ensemble.RandomForestClassifier'
+        'xgboost.XGBClassifier'
     ]
     pipeline = MLPipeline(primitives)
-
-.. _MLPipeline class: ../api_reference.html#mlblocks.MLPipeline
 
 Optionally, specific `hyperparameters`_ can be also set by specifying them in a dictionary:
 
 .. ipython:: python
 
     hyperparameters = {
-        'sklearn.ensemble.RandomForestClassifier': {
-            'n_estimators': 100
+        'xgboost.XGBClassifier': {
+            'learning_rate': 0.1
         }
     }
     pipeline = MLPipeline(primitives, hyperparameters)
@@ -41,16 +43,12 @@ Optionally, specific `hyperparameters`_ can be also set by specifying them in a 
 Once the pipeline has been instantiated, we can easily see what `hyperparameters`_ have been set
 for each block, by calling the `get_hyperparameters method`_.
 
-.. _get_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_hyperparameters
-
 The output of this method is a dictionary which has the name of each block as keys and
 a dictionary with the `hyperparameters`_ of the corresponding block as values.
 
 .. ipython:: python
 
     pipeline.get_hyperparameters()
-
-.. _hyperparameters: ../advanced_usage/hyperparameters.html
 
 Tunable Hyperparameters
 -----------------------
@@ -69,10 +67,6 @@ as `BTB`_.
 
     pipeline.get_tunable_hyperparameters()
 
-.. _MLBlocks JSON Annotations: ../advanced_usage/primitives.html#json-annotations
-.. _get_tunable_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_tunable_hyperparameters
-.. _BTB: https://github.com/HDI-Project/BTB
-
 Setting Hyperparameters
 -----------------------
 
@@ -86,15 +80,13 @@ other ones will remain unmodified.
 .. ipython:: python
 
     new_hyperparameters = {
-        'sklearn.ensemble.RandomForestClassifier#1': {
-            'max_depth': 20
+        'xgboost.XGBClassifier#1': {
+            'max_depth': 10
         }
     }
     pipeline.set_hyperparameters(new_hyperparameters)
     hyperparameters = pipeline.get_hyperparameters()
-    hyperparameters['sklearn.ensemble.RandomForestClassifier#1']['max_depth']
-
-.. _set_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.set_hyperparameters
+    hyperparameters['xgboost.XGBClassifier#1']['max_depth']
 
 Making predictions
 ------------------
@@ -107,18 +99,24 @@ labels.
 
 .. ipython:: python
 
-    from sklearn.datasets import load_iris
-    from sklearn.model_selection import train_test_split
-    iris = load_iris()
-    X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target)
-    pipeline.fit(X_train, y_train)
+    from mlblocks.datasets import load_iris
+    dataset = load_iris()
+    pipeline.fit(dataset.train_data, dataset.train_target)
 
 Once we have fitted our model to our data, we can call the ``predict`` method passing new data
 to obtain predictions from the pipeline.
 
 .. ipython:: python
 
-    from sklearn.metrics import accuracy_score as score
-    y_pred = pipeline.predict(X_test)
-    y_pred
-    score(y_test, y_pred)
+    predictions = pipeline.predict(dataset.test_data)
+    predictions
+    dataset.score(dataset.test_target, predictions)
+
+.. _you have already installed them: install.html#additional-dependencies
+.. _MLPipeline class: ../api_reference.html#mlblocks.MLPipeline
+.. _get_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_hyperparameters
+.. _hyperparameters: ../advanced_usage/hyperparameters.html
+.. _MLBlocks JSON Annotations: ../advanced_usage/primitives.html#json-annotations
+.. _get_tunable_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_tunable_hyperparameters
+.. _BTB: https://github.com/HDI-Project/BTB
+.. _set_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.set_hyperparameters
