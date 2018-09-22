@@ -49,9 +49,7 @@ development_requires = [
 
 
 demo_requires = [
-    'numpy==1.15.0',
-    'scikit-learn==0.19.2',
-    'scipy==1.1.0',
+    'mlprimitives==0.1.1',
 ]
 
 
