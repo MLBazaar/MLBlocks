@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Image Pipelines &mdash; MLBlocks 0.2.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Graph Pipelines" href="graph.html" />
+    <link rel="prev" title="Text Pipelines" href="text.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#class-primitives">Class Primitives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#the-mlblock-class">The MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/hyperparameters.html">Hyperparameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_usage/hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_usage/hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#what-is-a-pipeline">What is a Pipeline?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#the-mlpipeline-class">The MLPipeline Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#block-names">Block Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#init-arguments">Init Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#context">Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pipeline_examples.html">Pipeline Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_examples.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_examples.html#classification-pipeline">Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="text.html#text-classification">Text Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="text.html#mlprimitives-keras-preprocessing-keras-lstm">MLPrimitives + Keras Preprocessing + Keras LSTM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="text.html#tabular-data-with-text">Tabular Data with Text</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="text.html#mlprimitives-scikit-learn-randomforestclassifier">MLPrimitives + Scikit-learn RandomForestClassifier</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Image Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#image-classification">Image Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#opencv-gaussianblur-keras-single-layer-cnn">OpenCV GaussianBlur + Keras Single Layer CNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-regression">Image Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#keras-mobilenet-xgbregressor">Keras MobileNet + XGBRegressor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graph.html">Graph Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graph.html#link-prediction">Link Prediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Image Pipelines</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/pipeline_examples/image.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="image-pipelines">
+<h1>Image Pipelines<a class="headerlink" href="#image-pipelines" title="Permalink to this headline">¶</a></h1>
+<p>Here we will be showing some examples using <strong>MLBlocks</strong> to resolve image problems.</p>
+<div class="section" id="image-classification">
+<h2>Image Classification<a class="headerlink" href="#image-classification" title="Permalink to this headline">¶</a></h2>
+<p>For the image classification examples we will be using the <a class="reference external" href="https://ieeexplore.ieee.org/document/291440/">USPS Dataset</a>, which we will
+load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_usps</span></code> function.</p>
+<p>The data of this dataset is a 3d numpy array vector with shape <code class="docutils literal notranslate"><span class="pre">(224,</span> <span class="pre">224,</span> <span class="pre">3)</span></code> containing 9298
+224x224 RGB photos of handwritten digits, and the target is a 1d numpy integer array containing
+the label of the digit represented in the image.</p>
+<div class="section" id="opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">
+<h3>OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier<a class="headerlink" href="#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier" title="Permalink to this headline">¶</a></h3>
+<p>In this first example, we will attempt to resolve the problem using some basic preprocessing
+with the <a class="reference external" href="https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">OpenCV GaussianBlur function</a>, to later on calculate the Histogram of Oriented
+Gradients using the corresponding <a class="reference external" href="http://scikit-image.org/docs/dev/api/skimage.feature.html#skimage.feature.hog">scikit-image function</a> to later on use a simple
+<a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier from scikit-learn</a> on the generated features.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_usps</span><span class="p">()</span>
+
+<span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;cv2.GaussianBlur&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;skimage.feature.hog&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span>
+<span class="p">]</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;skimage.feature.hog&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;multichannel&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s1">&#39;visualize&#39;</span><span class="p">:</span> <span class="bp">False</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="opencv-gaussianblur-keras-single-layer-cnn">
+<h2>OpenCV GaussianBlur + Keras Single Layer CNN<a class="headerlink" href="#opencv-gaussianblur-keras-single-layer-cnn" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will preprocess the images using the <a class="reference external" href="https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">OpenCV GaussianBlur function</a>
+and directly after go into a Single Layer CNN Classifier built on Keras using the corresponding
+<a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.SingleLayerCNNImageClassifier.json">MLPrimitives primitive</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_usps</span><span class="p">()</span>
+
+<span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;cv2.GaussianBlur&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;keras.Sequential.SingleLayerCNNImageClassifier&#39;</span>
+<span class="p">]</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;keras.Sequential.SingleLayerCNNImageClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;dense_units&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s1">&#39;epochs&#39;</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="image-regression">
+<h2>Image Regression<a class="headerlink" href="#image-regression" title="Permalink to this headline">¶</a></h2>
+<p>For the image regression examples we will be using the Handgeometry Dataset, which we will
+load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_handgeometry</span></code> function.</p>
+<p>The data of this dataset is a 3d numpy array vector with shape <code class="docutils literal notranslate"><span class="pre">(224,</span> <span class="pre">224,</span> <span class="pre">3)</span></code> containing 112
+224x224 RGB photos of hands, and the target is a 1d numpy float array containing the width of
+the wrist in centimeters.</p>
+<div class="section" id="keras-mobilenet-xgbregressor">
+<h3>Keras MobileNet + XGBRegressor<a class="headerlink" href="#keras-mobilenet-xgbregressor" title="Permalink to this headline">¶</a></h3>
+<p>Here we will introduce the usage of the <a class="reference external" href="https://keras.io/applications/">Pretrained Networks from Keras</a>.
+In particular, we will be using the <a class="reference external" href="https://keras.io/applications/#mobilenet">MobileNet</a> for feature extraction, and pass its features
+to an <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn">XGBRegressor</a> primitive.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_handgeometry</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_handgeometry</span><span class="p">()</span>
+
+<span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;keras.applications.mobilenet.preprocess_input&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;keras.applications.mobilenet.MobileNet&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;xgboost.XGBRegressor&#39;</span>
+<span class="p">]</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;xgboost.XGBRegressor&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="graph.html" class="btn btn-neutral float-right" title="Graph Pipelines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="text.html" class="btn btn-neutral" title="Text Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.1-dev',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

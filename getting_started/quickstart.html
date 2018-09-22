@@ -129,6 +129,44 @@
 </ul>
 </li>
 </ul>
+<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/pipeline_examples.html">Pipeline Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/pipeline_examples.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/pipeline_examples.html#classification-pipeline">Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/text.html">Text Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/text.html#text-classification">Text Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/text.html#mlprimitives-keras-preprocessing-keras-lstm">MLPrimitives + Keras Preprocessing + Keras LSTM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/text.html#tabular-data-with-text">Tabular Data with Text</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/text.html#mlprimitives-scikit-learn-randomforestclassifier">MLPrimitives + Scikit-learn RandomForestClassifier</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/image.html">Image Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#image-classification">Image Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/image.html#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#opencv-gaussianblur-keras-single-layer-cnn">OpenCV GaussianBlur + Keras Single Layer CNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#image-regression">Image Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/image.html#keras-mobilenet-xgbregressor">Keras MobileNet + XGBRegressor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/graph.html">Graph Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/graph.html#link-prediction">Link Prediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <p class="caption"><span class="caption-text">References</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
@@ -207,10 +245,16 @@
 <p>In this tutorial we will learn how to:</p>
 <ul class="simple">
 <li>Create a pipeline using multiple primitives</li>
+<li>Obtain the list of tunable hyperparameters from the pipeline</li>
 <li>Specify hyperparameters for each primitive in the pipeline</li>
 <li>Fit the pipeline using training data</li>
 <li>Use the pipeline to make predictions from new data</li>
 </ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some additional dependencies are required in order to run this Quickstart.
+Make sure that <a class="reference external" href="install.html#additional-dependencies">you have already installed them</a>.</p>
+</div>
 <div class="section" id="creating-a-pipeline">
 <h2>Creating a pipeline<a class="headerlink" href="#creating-a-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>With MLBlocks, creating a pipeline is as simple as specifying a list of primitives and passing
@@ -219,7 +263,7 @@ them to the <a class="reference external" href="../api_reference.html#mlblocks.M
 
 <span class="gp">In [2]: </span><span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
 <span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">,</span>
-<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;xgboost.XGBClassifier&#39;</span>
 <span class="gp">   ...: </span><span class="p">]</span>
 <span class="gp">   ...: </span>
 
@@ -228,8 +272,8 @@ them to the <a class="reference external" href="../api_reference.html#mlblocks.M
 </div>
 <p>Optionally, specific <a class="reference external" href="../advanced_usage/hyperparameters.html">hyperparameters</a> can be also set by specifying them in a dictionary:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">   ...: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;xgboost.XGBClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">   ...: </span>        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.1</span>
 <span class="gp">   ...: </span>    <span class="p">}</span>
 <span class="gp">   ...: </span><span class="p">}</span>
 <span class="gp">   ...: </span>
@@ -245,14 +289,12 @@ a dictionary with the <a class="reference external" href="../advanced_usage/hype
 <span class="gh">Out[6]: </span><span class="go"></span>
 <span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_mean&#39;: True,</span>
 <span class="go">  &#39;with_std&#39;: True},</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
-<span class="go">  &#39;n_estimators&#39;: 100,</span>
-<span class="go">  &#39;criterion&#39;: &#39;entropy&#39;,</span>
-<span class="go">  &#39;max_features&#39;: None,</span>
-<span class="go">  &#39;max_depth&#39;: 10,</span>
-<span class="go">  &#39;min_samples_split&#39;: 0.1,</span>
-<span class="go">  &#39;min_samples_leaf&#39;: 0.1,</span>
-<span class="go">  &#39;class_weight&#39;: None}}</span>
+<span class="go"> &#39;xgboost.XGBClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
+<span class="go">  &#39;learning_rate&#39;: 0.1,</span>
+<span class="go">  &#39;n_estimators&#39;: 10,</span>
+<span class="go">  &#39;max_depth&#39;: 3,</span>
+<span class="go">  &#39;gamma&#39;: 0,</span>
+<span class="go">  &#39;min_child_weight&#39;: 1}}</span>
 </pre></div>
 </div>
 </div>
@@ -270,22 +312,12 @@ as <a class="reference external" href="https://github.com/HDI-Project/BTB">BTB</
 <span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_mean&#39;: {&#39;type&#39;: &#39;bool&#39;,</span>
 <span class="go">   &#39;default&#39;: True},</span>
 <span class="go">  &#39;with_std&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True}},</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;criterion&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">   &#39;default&#39;: &#39;entropy&#39;,</span>
-<span class="go">   &#39;values&#39;: [&#39;entropy&#39;, &#39;gini&#39;]},</span>
-<span class="go">  &#39;max_features&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">   &#39;default&#39;: None,</span>
-<span class="go">   &#39;range&#39;: [None, &#39;auto&#39;, &#39;log2&#39;]},</span>
-<span class="go">  &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 10, &#39;range&#39;: [1, 30]},</span>
-<span class="go">  &#39;min_samples_split&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
-<span class="go">   &#39;default&#39;: 0.1,</span>
-<span class="go">   &#39;range&#39;: [0.0001, 0.5]},</span>
-<span class="go">  &#39;min_samples_leaf&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
-<span class="go">   &#39;default&#39;: 0.1,</span>
-<span class="go">   &#39;range&#39;: [0.0001, 0.5]},</span>
-<span class="go">  &#39;class_weight&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">   &#39;default&#39;: None,</span>
-<span class="go">   &#39;range&#39;: [None, &#39;balanced&#39;]}}}</span>
+<span class="go"> &#39;xgboost.XGBClassifier#1&#39;: {&#39;n_estimators&#39;: {&#39;type&#39;: &#39;int&#39;,</span>
+<span class="go">   &#39;default&#39;: 10,</span>
+<span class="go">   &#39;range&#39;: [10, 500]},</span>
+<span class="go">  &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 3, &#39;range&#39;: [3, 10]},</span>
+<span class="go">  &#39;gamma&#39;: {&#39;type&#39;: &#39;float&#39;, &#39;default&#39;: 0, &#39;range&#39;: [0, 1]},</span>
+<span class="go">  &#39;min_child_weight&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 1, &#39;range&#39;: [1, 10]}}}</span>
 </pre></div>
 </div>
 </div>
@@ -297,8 +329,8 @@ by the <a class="reference external" href="../api_reference.html#mlblocks.MLPipe
 <p>Note that if a subset of the hyperparameters is passed, only these will be modified, and the
 other ones will remain unmodified.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="n">new_hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier#1&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">   ...: </span>        <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">20</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;xgboost.XGBClassifier#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">   ...: </span>        <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">10</span>
 <span class="gp">   ...: </span>    <span class="p">}</span>
 <span class="gp">   ...: </span><span class="p">}</span>
 <span class="gp">   ...: </span>
@@ -307,8 +339,8 @@ other ones will remain unmodified.</p>
 
 <span class="gp">In [10]: </span><span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
 
-<span class="gp">In [11]: </span><span class="n">hyperparameters</span><span class="p">[</span><span class="s1">&#39;sklearn.ensemble.RandomForestClassifier#1&#39;</span><span class="p">][</span><span class="s1">&#39;max_depth&#39;</span><span class="p">]</span>
-<span class="gh">Out[11]: </span><span class="go">20</span>
+<span class="gp">In [11]: </span><span class="n">hyperparameters</span><span class="p">[</span><span class="s1">&#39;xgboost.XGBClassifier#1&#39;</span><span class="p">][</span><span class="s1">&#39;max_depth&#39;</span><span class="p">]</span>
+<span class="gh">Out[11]: </span><span class="go">10</span>
 </pre></div>
 </div>
 </div>
@@ -318,30 +350,24 @@ other ones will remain unmodified.</p>
 and then use it to make predictions on new data.</p>
 <p>To do this, we first call the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing the training data and the corresponding
 labels.</p>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
 
-<span class="gp">In [13]: </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="gp">In [13]: </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
 
-<span class="gp">In [14]: </span><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
-
-<span class="gp">In [15]: </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
-
-<span class="gp">In [16]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="gp">In [14]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once we have fitted our model to our data, we can call the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method passing new data
 to obtain predictions from the pipeline.</p>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span> <span class="k">as</span> <span class="n">score</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
 
-<span class="gp">In [18]: </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gp">In [16]: </span><span class="n">predictions</span>
+<span class="gh">Out[16]: </span><span class="go"></span>
+<span class="go">array([1, 2, 1, 0, 1, 1, 1, 0, 1, 2, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 2,</span>
+<span class="go">       1, 1, 1, 2, 1, 0, 0, 1, 0, 0, 0, 0, 2, 2, 2, 1])</span>
 
-<span class="gp">In [19]: </span><span class="n">y_pred</span>
-<span class="gh">Out[19]: </span><span class="go"></span>
-<span class="go">array([0, 2, 2, 1, 2, 0, 0, 2, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2, 0, 1, 2, 2,</span>
-<span class="go">       2, 0, 1, 1, 1, 1, 1, 1, 0, 0, 2, 0, 2, 1, 2, 0])</span>
-
-<span class="gp">In [20]: </span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
-<span class="go">                                                                                                                                           Out[20]: 0.9210526315789473</span>
+<span class="gp">In [17]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="go">                                                                                                                                           Out[17]: 0.9210526315789473</span>
 </pre></div>
 </div>
 </div>
