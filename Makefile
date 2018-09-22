@@ -91,8 +91,8 @@ docs: clean-docs ## generate Sphinx HTML documentation, including API docs
 viewdocs: docs ## view docs in browser
 	$(BROWSER) docs/_build/html/index.html
 
-servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+servedocs: viewdocs ## compile the docs watching for changes
+	watchmedo shell-command -W -R -D -p '*.rst' -c '$(MAKE) docs' .
 
 release: dist ## package and upload a release
 	twine upload dist/*
