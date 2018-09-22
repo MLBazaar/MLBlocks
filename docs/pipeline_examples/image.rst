@@ -9,6 +9,10 @@ Image Classification
 For the image classification examples we will be using the `USPS Dataset`_, which we will
 load using the ``mlblocks.dataset.load_usps`` function.
 
+The data of this dataset is a 3d numpy array vector with shape ``(224, 224, 3)`` containing 9298
+224x224 RGB photos of handwritten digits, and the target is a 1d numpy integer array containing
+the label of the digit represented in the image.
+
 OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -41,6 +45,8 @@ Gradients using the corresponding `scikit-image function`_ to later on use a sim
 
     predictions = pipeline.predict(dataset.test_data)
 
+    dataset.score(dataset.test_target, predictions)
+
 
 OpenCV GaussianBlur + Keras Single Layer CNN
 --------------------------------------------
@@ -72,12 +78,18 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
 
     predictions = pipeline.predict(dataset.test_data)
 
+    dataset.score(dataset.test_target, predictions)
+
 
 Image Regression
 ----------------
 
 For the image regression examples we will be using the Handgeometry Dataset, which we will
 load using the ``mlblocks.dataset.load_handgeometry`` function.
+
+The data of this dataset is a 3d numpy array vector with shape ``(224, 224, 3)`` containing 112
+224x224 RGB photos of hands, and the target is a 1d numpy float array containing the width of
+the wrist in centimeters.
 
 Keras MobileNet + XGBRegressor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
