@@ -7,7 +7,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from keras.preprocessing.image import img_to_array, load_img
-from sklearn.datasets import fetch_20newsgroups
+from sklearn import datasets
 from sklearn.metrics import accuracy_score, r2_score
 from sklearn.model_selection import train_test_split
 
@@ -102,14 +102,6 @@ def load_personae():
     return Dataset('personae', X, y, accuracy_score)
 
 
-def load_newsgroups():
-    newsgroups = fetch_20newsgroups()
-    X = newsgroups.data
-    y = newsgroups.target
-
-    return Dataset('newsgroups', X, y, accuracy_score)
-
-
 def load_umls():
     dataset_path = _load('umls')
     df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
@@ -120,3 +112,18 @@ def load_umls():
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
     return Dataset('umls', X, y, accuracy_score, graph=graph, node_columns=node_columns)
+
+
+def load_newsgroups():
+    dataset = datasets.fetch_20newsgroups()
+    return Dataset('newsgroups', dataset.data, dataset.target, accuracy_score)
+
+
+def load_iris():
+    dataset = datasets.load_iris()
+    return Dataset('iris', dataset.data, dataset.target, accuracy_score)
+
+
+def load_boston():
+    dataset = datasets.load_boston()
+    return Dataset('iris', dataset.data, dataset.target, r2_score)
