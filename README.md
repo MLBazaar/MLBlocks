@@ -68,7 +68,7 @@ them to the `MLPipeline` class:
 >>> from mlblocks import MLPipeline
 >>> primitives = [
 ...     'sklearn.preprocessing.StandardScaler',
-...     'sklearn.ensemble.RandomForestClassifier'
+...     'xgboost.XGBClassifier'
 ... ]
 >>> pipeline = MLPipeline(primitives)
 ```
@@ -77,8 +77,8 @@ Optionally, specific hyperparameters can be also set by specifying them in a dic
 
 ```python
 >>> hyperparameters = {
-...     'sklearn.ensemble.RandomForestClassifier': {
-...         'n_estimators': 100
+...     'xgboost.XGBClassifier': {
+...         'learning_rate': 0.1
 ...     }
 ... }
 >>> pipeline = MLPipeline(primitives, hyperparameters)
@@ -96,15 +96,13 @@ its `get_hyperparameters` method:
         "with_mean": true,
         "with_std": true
     },
-    "sklearn.ensemble.RandomForestClassifier#1": {
+    "xgboost.XGBClassifier#1": {
         "n_jobs": -1,
-        "n_estimators": 100,
-        "criterion": "entropy",
-        "max_features": null,
-        "max_depth": 10,
-        "min_samples_split": 0.1,
-        "min_samples_leaf": 0.1,
-        "class_weight": null
+        "learning_rate": 0.1,
+        "n_estimators": 10,
+        "max_depth": 3,
+        "gamma": 0,
+        "min_child_weight": 1
     }
 }
 ```
@@ -117,24 +115,21 @@ and then use it to make predictions on new data.
 To do this, we first call the `fit` method passing the training data and the corresponding labels.
 
 ```python
->>> from sklearn.datasets import load_iris
->>> from sklearn.model_selection import train_test_split
->>> iris = load_iris()
->>> X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target)
->>> pipeline.fit(X_train, y_train)
+>>> from mlblocks.datasets import load_iris
+>>> dataset = load_iris()
+>>> pipeline.fit(dataset.train_data, dataset.train_target)
 ```
 
 Once we have fitted our model to our data, we can call the `predict` method passing new data
 to obtain predictions from the pipeline.
 
 ```python
->>> from sklearn.metrics import accuracy_score as score
->>> y_pred = pipeline.predict(X_test)
->>> y_pred
-array([2, 1, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 0, 2, 1, 2, 0, 0, 0, 0, 0, 1,
-       1, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 1, 1, 0, 1])
->>> score(y_test, y_pred)
-0.9473684210526315
+>>> predictions = pipeline.predict(dataset.test_data)
+>>> predictions
+array([2, 0, 1, 0, 1, 0, 0, 1, 2, 1, 2, 1, 2, 2, 0, 1, 0, 2, 1, 1, 0, 1,
+       0, 2, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 2, 1, 2, 2])
+>>> dataset.score(dataset.test_target, predictions)
+0.9736842105263158
 ```
 
 # History
