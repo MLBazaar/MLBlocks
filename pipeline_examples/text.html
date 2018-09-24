@@ -254,10 +254,14 @@ that they are about.</p>
 <p>In this example we will start by applying some text cleanup using the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/text.py">TextCleaner primitive</a>
 from MLPrimitives, to then go into some <cite>keras preprocessing</cite> primitives and end
 using a <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.LSTMTextClassifier.json">Keras LSTM Classifier from MLPrimitives</a></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_newsgroups</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_newsgroups</span><span class="p">()</span>
+
+<span class="c1"># Make sure that we have the necessary data</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;stopwords&#39;</span><span class="p">)</span>
 
 <span class="c1"># Compute the vocabulary length.</span>
 <span class="c1"># This is required by the LSTM primitive</span>
@@ -308,10 +312,14 @@ or not.</p>
 <p>In this example use again the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/text.py">TextCleaner primitive</a>, then use a <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/feature_extraction.py">StringVectorizer primitive</a>,
 to encode all the string features, and go directly into the
 <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier from scikit-learn</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_personae</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_personae</span><span class="p">()</span>
+
+<span class="c1"># Make sure that we have the necessary data</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;stopwords&#39;</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;mlprimitives.text.TextCleaner&#39;</span><span class="p">,</span>

@@ -22,10 +22,14 @@ using a `Keras LSTM Classifier from MLPrimitives`_
 
 .. code-block:: python
 
+    import nltk
     from mlblocks import MLPipeline
     from mlblocks.datasets import load_newsgroups
 
     dataset = load_newsgroups()
+
+    # Make sure that we have the necessary data
+    nltk.download('stopwords')
 
     # Compute the vocabulary length.
     # This is required by the LSTM primitive
@@ -81,10 +85,14 @@ to encode all the string features, and go directly into the
 
 .. code-block:: python
 
+    import nltk
     from mlblocks import MLPipeline
     from mlblocks.datasets import load_personae
 
     dataset = load_personae()
+
+    # Make sure that we have the necessary data
+    nltk.download('stopwords')
 
     primitives = [
         'mlprimitives.text.TextCleaner',
