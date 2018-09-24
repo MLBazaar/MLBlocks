@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.1 - New Documentation
+-------------------------
+
+* Add mlblocks.datasets module with demo data download functions.
+* Extensive documentation, including multiple pipeline examples.
+
 0.2.0 - New MLBlocks API
 ------------------------
 

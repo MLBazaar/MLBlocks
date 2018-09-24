@@ -10,15 +10,12 @@ Pipelines and Primitives for Machine Learning and Data Science.
 
 
 [![PyPi][pypi-img]][pypi-url]
-[![CircleCI][circleci-img]][circleci-url]
 [![Travis][travis-img]][travis-url]
 
-[travis-img]: https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master
-[travis-url]: https://travis-ci.org/HDI-Project/MLBlocks
 [pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
 [pypi-url]: https://pypi.python.org/pypi/mlblocks
-[circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
-[circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
+[travis-img]: https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master
+[travis-url]: https://travis-ci.org/HDI-Project/MLBlocks
 
 MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
 seamlessly combining tools from any python library with a simple, common and uniform interface.
