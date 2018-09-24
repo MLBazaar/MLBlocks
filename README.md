@@ -3,230 +3,130 @@
 </p>
 
 <p align="center">
-<i>MLBlocks is a simple framework for composing end-to-end tunable machine learning pipelines</i>
+<i>
+Pipelines and Primitives for Machine Learning and Data Science.
+</i>
 </p>
 
 
 [![PyPi][pypi-img]][pypi-url]
-[![CircleCI][circleci-img]][circleci-url]
+[![Travis][travis-img]][travis-url]
 
 [pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
 [pypi-url]: https://pypi.python.org/pypi/mlblocks
-[circleci-img]: https://circleci.com/gh/HDI-Project/MLBlocks.svg?style=shield
-[circleci-url]: https://circleci.com/gh/HDI-Project/MLBlocks
+[travis-img]: https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master
+[travis-url]: https://travis-ci.org/HDI-Project/MLBlocks
 
+MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
+seamlessly combining tools from any python library with a simple, common and uniform interface.
 
-Pipelines and primitives for machine learning and data science.
+* Free software: MIT license
+* Documentation: https://HDI-Project.github.io/MLBlocks
 
-- Free software: MIT license
-- Documentation: https://HDI-Project.github.io/mlblocks
-
-## Overview
-
-At a high level:
- * Machine learning primitives are specified using standardized JSONs
- * User (or an external automated engine) specifies a list of primitives
- * The library transforms JSON specifications of machine learning primitives (blocks) into
-   MLBlock instances, which expose tunable hyperparameters via MLHyperparams and composes
-   a MLPipeline
- * The pipeline.fit and pipeline.predict functions then allow user to fit the pipeline to
-   data and predict on a new set of data.
-
-## Project Structure
-
-The MLBlocks consists of the following modules and folders:
-
-* `mlblocks.mlblocks`: Defines the `MLBlock` core class of the library.
-* `mlblocks.mlpipeline`: Defines the `MLPipeline` class that allows combining multiple MLBlock
-  instances.
-* `mlblocks_primitives`: folder that contains the collection of JSON primitives. This folder
-  can either be provided by the user or installed via the MLPrimitives subproject.
-
-### Primitive JSONS
-
-The primitive JSONs are the main component of our library.
-The contents of said JSON files varies slightly depending on the model source library,
-but they all have a common structure.
-
-Examples of such JSON files can be found inside the `examples` folder.
-
-## Installation
-
-### Install with pip
+# Installation
 
 The simplest and recommended way to install MLBlocks is using `pip`:
 
-	pip install mlblocks
-
-### Install from sources
-
-You can also clone the repository and install it from sources
-
-    git clone git@github.com:HDI-Project/MLBlocks.git
-    cd MLBlocks
-    pip install -e .
-
-## Usage
-
-The following points cover the most basic usage of the MLBlocks library.
-
-Note that in order to be able to execute the given code snippets, you will
-need to install a couple of additional libraries, which you can do by running:
-
+```bash
+pip install mlblocks
 ```
+
+Alternatively, you can also clone the repository and install it from sources
+
+```bash
+git clone git@github.com:HDI-Project/MLBlocks.git
+cd MLBlocks
+pip install -e .
+```
+
+# Usage Example
+
+Below there is a short example about how to use MLBlocks to create a simple pipeline, fit it
+using demo data and use it to make predictions.
+
+For advance usage and more detailed explanation about each component, please have a look
+at the [documentation](https://HDI-Project.github.io/MLBlocks)
+
+## Additional Libraries
+
+In order to be able to execute the given code snippets, you will need to install a couple of
+additional libraries, which you can do by running:
+
+```bash
 pip install mlblocks[demo]
 ```
 
-if you installed the library from PyPi or
+## Creating a pipeline
 
-```
-pip install -e .[demo]
-```
+With MLBlocks, creating a pipeline is as simple as specifying a list of primitives and passing
+them to the `MLPipeline` class:
 
-If you installed from sources.
-
-### Initializing a pipeline
-
-With MLBlocks, we can simply initialize a pipeline by passing it the list
-of MLBlocks that will compose it.
-
-```
+```python
 >>> from mlblocks import MLPipeline
->>> pipeline = MLPipeline(['sklearn.ensemble.RandomForestClassifier'])
+>>> primitives = [
+...     'sklearn.preprocessing.StandardScaler',
+...     'xgboost.XGBClassifier'
+... ]
+>>> pipeline = MLPipeline(primitives)
 ```
 
-### Obtaining and updating hyperparameters
+Optionally, specific hyperparameters can be also set by specifying them in a dictionary:
 
-Upon initialization, a pipeline has a set of default hyperparamters. For a
-particular data science problem, we may want to set or view the values and
-attributes of particular hyperparameters. For example, we may need to pass in
-the current hyperparameter values of our pipeline into a third party tuner.
-
-To obtain the list of tunable hyperparameters can be obtained by calling the pipeline
-method `get_tunable_hyperparameters`.
-
+```python
+>>> hyperparameters = {
+...     'xgboost.XGBClassifier': {
+...         'learning_rate': 0.1
+...     }
+... }
+>>> pipeline = MLPipeline(primitives, hyperparameters)
 ```
->>> tunable_hp = pipeline.get_tunable_hyperparameters()
+
+If you can see which hyperparameters a particular pipeline is using, you can do so by calling
+its `get_hyperparameters` method:
+
+```python
 >>> import json
->>> print(json.dumps(tunable_hp, indent=4))
+>>> hyperparameters = pipeline.get_hyperparameters()
+>>> print(json.dumps(hyperparameters, indent=4))
 {
-    "sklearn.ensemble.RandomForestClassifier#1": {
-        "criterion": {
-            "type": "str",
-            "default": "entropy",
-            "values": [
-                "entropy",
-                "gini"
-            ]
-        },
-        "max_features": {
-            "type": "str",
-            "default": null,
-            "range": [
-                null,
-                "auto",
-                "log2"
-            ]
-        },
-        "max_depth": {
-            "type": "int",
-            "default": 10,
-            "range": [
-                1,
-                30
-            ]
-        },
-        "min_samples_split": {
-            "type": "float",
-            "default": 0.1,
-            "range": [
-                0.0001,
-                0.5
-            ]
-        },
-        "min_samples_leaf": {
-            "type": "float",
-            "default": 0.1,
-            "range": [
-                0.0001,
-                0.5
-            ]
-        },
-        "n_estimators": {
-            "type": "int",
-            "default": 30,
-            "values": [
-                2,
-                500
-            ]
-        },
-        "class_weight": {
-            "type": "str",
-            "default": null,
-            "range": [
-                null,
-                "balanced"
-            ]
-        }
-    }
-}
-```
-
-To obtain the values that the hyperparmeters of our pipeline currently has,
-the method `get_hyperparameters` can be used.
-
-```
->>> current_hp = pipeline.get_hyperparameters()
->>> print(json.dumps(current_hp, indent=4))
-{
-    "sklearn.ensemble.RandomForestClassifier#1": {
+    "sklearn.preprocessing.StandardScaler#1": {
+        "with_mean": true,
+        "with_std": true
+    },
+    "xgboost.XGBClassifier#1": {
         "n_jobs": -1,
-        "criterion": "entropy",
-        "max_features": null,
-        "max_depth": 10,
-        "min_samples_split": 0.1,
-        "min_samples_leaf": 0.1,
-        "n_estimators": 30,
-        "class_weight": null
+        "learning_rate": 0.1,
+        "n_estimators": 10,
+        "max_depth": 3,
+        "gamma": 0,
+        "min_child_weight": 1
     }
 }
-```
-
-Similarly, to set different hyperparameter values, the method `set_hyperparameters`
-can be used.
-
-```
->>> new_hyperparameters = {'sklearn.ensemble.RandomForestClassifier#1': {'max_depth': 20}}
->>> pipeline.set_hyperparameters(new_hyperparameters)
->>> pipeline.get_hyperparameters()['sklearn.ensemble.RandomForestClassifier#1']['max_depth']
-20
 ```
 
 ### Making predictions
 
-Once we have set the appropriate hyperparameters for our pipeline, we can make
-predictions on a dataset.
+Once we have created the pipeline with the desired hyperparameters we can fit it
+and then use it to make predictions on new data.
 
-To do this, we first call the `fit` method if necessary. This takes in training
-data and labels as well as any other parameters each individual step may
-use during fitting.
+To do this, we first call the `fit` method passing the training data and the corresponding labels.
 
-```
->>> from sklearn.datasets import load_wine
->>> from sklearn.model_selection import train_test_split
->>> wine = load_wine()
->>> X_train, X_test, y_train, y_test = train_test_split(wine.data, wine.target)
->>> pipeline.fit(X_train, y_train)
+```python
+>>> from mlblocks.datasets import load_iris
+>>> dataset = load_iris()
+>>> pipeline.fit(dataset.train_data, dataset.train_target)
 ```
 
-Once we have fit our model to our data, we can simply make predictions. From
-these predictions, we can do useful things, such as obtain an accuracy score.
+Once we have fitted our model to our data, we can call the `predict` method passing new data
+to obtain predictions from the pipeline.
 
-```
->>> y_pred = pipeline.predict(X_test)
->>> from sklearn.metrics import accuracy_score
->>> accuracy_score(y_test, y_pred)
-1.0
+```python
+>>> predictions = pipeline.predict(dataset.test_data)
+>>> predictions
+array([2, 0, 1, 0, 1, 0, 0, 1, 2, 1, 2, 1, 2, 2, 0, 1, 0, 2, 1, 1, 0, 1,
+       0, 2, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 2, 1, 2, 2])
+>>> dataset.score(dataset.test_target, predictions)
+0.9736842105263158
 ```
 
 # History

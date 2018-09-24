@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from mock import patch
 
 import mlblocks
 
 
-@patch('mlblocks.PRIMITIVES_PATHS', new=['a', 'b'])
+@patch('mlblocks._PRIMITIVES_PATHS', new=['a', 'b'])
 def test_add_primitives_path():
-    mlblocks.add_primitives_path('c')
+    mlblocks.add_primitives_path('tests')
 
-    assert mlblocks.PRIMITIVES_PATHS == ['c', 'a', 'b']
+    expected_path = os.path.abspath('tests')
+
+    assert mlblocks._PRIMITIVES_PATHS == [expected_path, 'a', 'b']

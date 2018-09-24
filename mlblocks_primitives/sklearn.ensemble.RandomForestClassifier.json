@@ -1,15 +1,5 @@
 {
-    "name": "sklearn.ensemble.RandomForestClassifier",
-    "author": "Carles Sala <carles@pythiac.com>",
-    "documentation": "http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html",
-    "description": "Scikit-learn RandomForestClassifier.",
-    "classifiers": {
-        "type": "estimator",
-        "subtype": "classifier"
-    },
-    "modalities": [],
     "primitive": "sklearn.ensemble.RandomForestClassifier",
-    "validation_dataset": "wine",
     "fit": {
         "method": "fit",
         "args": [

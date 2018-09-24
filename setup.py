@@ -34,7 +34,10 @@ development_requires = [
     'bumpversion>=0.5.3',
     'coverage>=4.5.1',
     'flake8>=3.5.0',
+    'graphviz==0.9',
+    'ipython==6.5.0',
     'isort>=4.3.4',
+    'matplotlib==2.2.3',
     'recommonmark>=0.4.0',
     'sphinx_rtd_theme>=0.2.4',
     'tox>=2.9.1',
@@ -46,9 +49,7 @@ development_requires = [
 
 
 demo_requires = [
-    'numpy==1.15.0',
-    'scikit-learn==0.19.2',
-    'scipy==1.1.0',
+    'mlprimitives==0.1.1',
 ]
 
 
@@ -66,9 +67,9 @@ setup(
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
+        'demo': demo_requires,
+        'dev': demo_requires + development_requires + tests_require,
         'test': tests_require,
-        'dev': tests_require + development_requires,
-        'demo': demo_requires
     },
     include_package_data=True,
     install_requires=install_requires,
@@ -82,6 +83,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.2.0',
+    version='0.2.1-dev',
     zip_safe=False,
 )
