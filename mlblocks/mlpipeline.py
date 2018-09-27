@@ -335,7 +335,12 @@ class MLPipeline():
         hyperparameters = pipeline_spec.pop('hyperparameters', None)
         tunable = pipeline_spec.pop('tunable_hyperparameters', None)
 
-        pipeline = cls(**pipeline_spec)
+        pipeline = cls(
+            pipeline_spec['primitives'],
+            pipeline_spec.get('init_params', dict()),
+            pipeline_spec.get('input_names', dict()),
+            pipeline_spec.get('output_names', dict()),
+        )
 
         if hyperparameters:
             pipeline.set_hyperparameters(hyperparameters)
