@@ -262,6 +262,49 @@ class MLPipeline():
         return outputs
 
     def save(self, path):
+        """Save the specification of this MLPipeline in a JSON file.
+
+        The JSON file structure contains all the `__init__` arguments of the
+        MLPipeline, as well as the current hyperparameter values and the
+        specification of the tunable_hyperparameters::
+
+            {
+                "primitives": [
+                    "a_primitive",
+                    "another_primitive"
+                ],
+                "init_params": {
+                    "a_primitive": {
+                        "an_argument": "a_value"
+                    }
+                },
+                "hyperparameters": {
+                    "a_primitive#1": {
+                        "an_argument": "a_value",
+                        "another_argument": "another_value",
+                    },
+                    "another_primitive#1": {
+                        "yet_another_argument": "yet_another_value"
+                     }
+                },
+                "tunable_hyperparameters": {
+                    "another_primitive#1": {
+                        "yet_another_argument": {
+                            "type": "str",
+                            "default": "a_default_value",
+                            "values": [
+                                "a_default_value",
+                                "yet_another_value"
+                            ]
+                        }
+                    }
+                }
+            }
+
+
+        Args:
+            path (str): Path to the JSON file to write.
+        """
         pipeline_spec = {
             'primitives': self.primitives,
             'init_params': self.init_params,
@@ -275,6 +318,17 @@ class MLPipeline():
 
     @classmethod
     def load(cls, path):
+        """Create a new MLPipeline from a JSON specification.
+
+        The JSON file format is the same as the one created by the save method.
+
+        Args:
+            path (str): Path of the JSON file to load.
+
+        Returns:
+            MLPipeline: A new MLPipeline instance with the specification found
+                        in the JSON file.
+        """
         with open(path, 'r') as in_file:
             pipeline_spec = json.load(in_file)
 
