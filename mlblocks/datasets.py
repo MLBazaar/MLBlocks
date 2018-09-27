@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from keras.preprocessing.image import img_to_array, load_img
 from sklearn import datasets
-from sklearn.metrics import accuracy_score, r2_score, normalized_mutual_info_score
+from sklearn.metrics import accuracy_score, normalized_mutual_info_score, r2_score
 from sklearn.model_selection import train_test_split
 
 INPUT_SHAPE = [224, 224, 3]
