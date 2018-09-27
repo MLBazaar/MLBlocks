@@ -204,7 +204,6 @@ def load_boston():
 
 
 LOADERS = {
-    # 'audio/classification': load_esc50,
     'graph/community_detection': load_amazon,
     'graph/graph_matching': load_dic28,
     'graph/linkPrediction': load_umls,
@@ -215,7 +214,6 @@ LOADERS = {
     'single_table/collaborative_filtering': load_jester,
     'single_table/regression': load_boston,
     'text/classification': load_personae,
-    # 'timeseries/classification': load_trace,
 }
 
 
