@@ -2,6 +2,7 @@
 
 """Package where the MLPipeline class is defined."""
 
+import json
 import logging
 from collections import Counter, OrderedDict
 
@@ -33,16 +34,20 @@ class MLPipeline():
     results, which will be returned as the prediction of the pipeline.
 
     Attributes:
+        primitives (list): List of the names of the primitives that compose
+                           this pipeline.
         blocks (list): OrderedDict of the block names and the corresponding
                        MLBlock instances.
+        init_params (dict): init_params dictionary, as given when the instance
+                            was created.
         input_names (dict): input_names dictionary, as given when the instance
-                            was created..
+                            was created.
         output_names (dict): output_names dictionary, as given when the instance
                              was created.
 
     Args:
-        blocks (list): List with the names of the primitives that will
-                       compose this pipeline.
+        primitives (list): List with the names of the primitives that will
+                           compose this pipeline.
         init_params (dict): dictionary containing initialization arguments to
                             be passed when creating the MLBlocks instances.
                             The dictionary keys must be the corresponding
@@ -63,32 +68,41 @@ class MLPipeline():
                              the same one.
     """
 
-    def __init__(self, blocks, init_params=None, input_names=None, output_names=None):
-        init_params = init_params or dict()
+    def _get_tunable_hyperparameters(self):
+        tunable = {}
+        for block_name, block in self.blocks.items():
+            tunable[block_name] = block.get_tunable_hyperparameters()
 
+        return tunable
+
+    def __init__(self, primitives, init_params=None, input_names=None, output_names=None):
+        self.primitives = primitives
+        self.init_params = init_params or dict()
         self.blocks = OrderedDict()
+
         block_names_count = Counter()
-        for block in blocks:
+        for primitive in primitives:
             try:
-                block_names_count.update([block])
-                block_count = block_names_count[block]
-                block_name = '{}#{}'.format(block, block_count)
-                block_params = init_params.get(block_name, dict())
+                block_names_count.update([primitive])
+                block_count = block_names_count[primitive]
+                block_name = '{}#{}'.format(primitive, block_count)
+                block_params = self.init_params.get(block_name, dict())
                 if not block_params:
-                    block_params = init_params.get(block, dict())
+                    block_params = self.init_params.get(primitive, dict())
                     if block_params and block_count > 1:
                         LOGGER.warning(("Non-numbered init_params are being used "
-                                        "for more than one block %s."), block)
+                                        "for more than one block %s."), primitive)
 
-                mlblock = MLBlock(block, **block_params)
-                self.blocks[block_name] = mlblock
+                block = MLBlock(primitive, **block_params)
+                self.blocks[block_name] = block
 
             except Exception:
-                LOGGER.exception("Exception caught building MLBlock %s", block)
+                LOGGER.exception("Exception caught building MLBlock %s", primitive)
                 raise
 
         self.input_names = input_names or dict()
         self.output_names = output_names or dict()
+        self._tunable_hyperparameters = self._get_tunable_hyperparameters()
 
     def get_tunable_hyperparameters(self):
         """Get the tunable hyperparamters of each block.
@@ -97,11 +111,7 @@ class MLPipeline():
             dict: A dictionary containing the block names as keys and
                   the block tunable hyperparameters dictionary as values.
         """
-        tunable = {}
-        for block_name, block in self.blocks.items():
-            tunable[block_name] = block.get_tunable_hyperparameters()
-
-        return tunable
+        return self._tunable_hyperparameters.copy()
 
     def get_hyperparameters(self):
         """Get the current hyperparamters of each block.
@@ -250,3 +260,33 @@ class MLPipeline():
                 context.update(output_dict)
 
         return outputs
+
+    def save(self, path):
+        pipeline_spec = {
+            'primitives': self.primitives,
+            'init_params': self.init_params,
+            'input_names': self.input_names,
+            'output_names': self.output_names,
+            'hyperparameters': self.get_hyperparameters(),
+            'tunable_hyperparameters': self._tunable_hyperparameters
+        }
+        with open(path, 'w') as out_file:
+            json.dump(pipeline_spec, out_file, indent=4)
+
+    @classmethod
+    def load(cls, path):
+        with open(path, 'r') as in_file:
+            pipeline_spec = json.load(in_file)
+
+        hyperparameters = pipeline_spec.pop('hyperparameters', None)
+        tunable = pipeline_spec.pop('tunable_hyperparameters', None)
+
+        pipeline = cls(**pipeline_spec)
+
+        if hyperparameters:
+            pipeline.set_hyperparameters(hyperparameters)
+
+        if tunable is not None:
+            pipeline._tunable_hyperparameters = tunable
+
+        return pipeline
