@@ -488,7 +488,7 @@ the values to be used.</td>
 
 <dl class="class">
 <dt id="mlblocks.MLPipeline">
-<em class="property">class </em><code class="descclassname">mlblocks.</code><code class="descname">MLPipeline</code><span class="sig-paren">(</span><em>blocks</em>, <em>init_params=None</em>, <em>input_names=None</em>, <em>output_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mlblocks.</code><code class="descname">MLPipeline</code><span class="sig-paren">(</span><em>primitives</em>, <em>init_params=None</em>, <em>input_names=None</em>, <em>output_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>MLPipeline Class.</p>
 <p>The <strong>MLPipeline</strong> class represents a Machine Learning Pipeline, which
 is an ordered collection of Machine Learning tools or Primitives,
@@ -506,6 +506,21 @@ block is fitted.</p>
 on the output of the previous one, until the last one has produce its
 results, which will be returned as the prediction of the pipeline.</p>
 <dl class="attribute">
+<dt id="mlblocks.MLPipeline.primitives">
+<code class="descname">primitives</code><a class="headerlink" href="#mlblocks.MLPipeline.primitives" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of the names of the primitives that compose
+this pipeline.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="mlblocks.MLPipeline.blocks">
 <code class="descname">blocks</code><a class="headerlink" href="#mlblocks.MLPipeline.blocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>OrderedDict of the block names and the corresponding
@@ -521,10 +536,25 @@ MLBlock instances.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="mlblocks.MLPipeline.init_params">
+<code class="descname">init_params</code><a class="headerlink" href="#mlblocks.MLPipeline.init_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>init_params dictionary, as given when the instance
+was created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="mlblocks.MLPipeline.input_names">
 <code class="descname">input_names</code><a class="headerlink" href="#mlblocks.MLPipeline.input_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>input_names dictionary, as given when the instance
-was created..</p>
+was created.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -555,7 +585,7 @@ was created.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>blocks</strong> (<em>list</em>) – List with the names of the primitives that will
+<li><strong>primitives</strong> (<em>list</em>) – List with the names of the primitives that will
 compose this pipeline.</li>
 <li><strong>init_params</strong> (<em>dict</em>) – dictionary containing initialization arguments to
 be passed when creating the MLBlocks instances.
@@ -608,6 +638,29 @@ to the context dictionary and available for the blocks.</li>
 </table>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="mlblocks.MLPipeline.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new MLPipeline from a dict specification.</p>
+<p>The dict structure is the same as the one created by the to_dict method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metadata</strong> (<em>dict</em>) – Dictionary containing the pipeline specification.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>A new MLPipeline instance with the details found in the</dt>
+<dd>given specification dictionary.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline">MLPipeline</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="mlblocks.MLPipeline.get_hyperparameters">
 <code class="descname">get_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.get_hyperparameters" title="Permalink to this definition">¶</a></dt>
@@ -648,6 +701,29 @@ to the context dictionary and available for the blocks.</li>
 </table>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="mlblocks.MLPipeline.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new MLPipeline from a JSON specification.</p>
+<p>The JSON file format is the same as the one created by the save method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) – Path of the JSON file to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>A new MLPipeline instance with the specification found</dt>
+<dd>in the JSON file.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline">MLPipeline</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="mlblocks.MLPipeline.predict">
 <code class="descname">predict</code><span class="sig-paren">(</span><em>X=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.predict" title="Permalink to this definition">¶</a></dt>
@@ -674,6 +750,21 @@ to the context dictionary and available for the blocks.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="mlblocks.MLPipeline.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the specification of this MLPipeline in a JSON file.</p>
+<p>The content of the JSON file is the dict returned by the <cite>to_dict</cite> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) – Path to the JSON file to write.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="mlblocks.MLPipeline.set_hyperparameters">
 <code class="descname">set_hyperparameters</code><span class="sig-paren">(</span><em>hyperparameters</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.set_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set new hyperparameter values for some blocks.</p>
@@ -687,6 +778,49 @@ as values.</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mlblocks.MLPipeline.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the details of this MLPipeline in a dict.</p>
+<p>The dict structure contains all the <cite>__init__</cite> arguments of the
+MLPipeline, as well as the current hyperparameter values and the
+specification of the tunable_hyperparameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;primitives&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;a_primitive&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;another_primitive&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;init_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;a_primitive&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;an_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;a_value&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;a_primitive#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;an_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;a_value&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;another_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;another_value&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;another_primitive#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;yet_another_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;yet_another_value&quot;</span>
+         <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;tunable_hyperparameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;another_primitive#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;yet_another_argument&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;a_default_value&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;a_default_value&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;yet_another_value&quot;</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
