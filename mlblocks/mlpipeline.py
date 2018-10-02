@@ -261,10 +261,10 @@ class MLPipeline():
 
         return outputs
 
-    def save(self, path):
-        """Save the specification of this MLPipeline in a JSON file.
+    def to_dict(self):
+        """Return all the details of this MLPipeline in a dict.
 
-        The JSON file structure contains all the `__init__` arguments of the
+        The dict structure contains all the `__init__` arguments of the
         MLPipeline, as well as the current hyperparameter values and the
         specification of the tunable_hyperparameters::
 
@@ -300,12 +300,8 @@ class MLPipeline():
                     }
                 }
             }
-
-
-        Args:
-            path (str): Path to the JSON file to write.
         """
-        pipeline_spec = {
+        return {
             'primitives': self.primitives,
             'init_params': self.init_params,
             'input_names': self.input_names,
@@ -313,8 +309,48 @@ class MLPipeline():
             'hyperparameters': self.get_hyperparameters(),
             'tunable_hyperparameters': self._tunable_hyperparameters
         }
+
+    def save(self, path):
+        """Save the specification of this MLPipeline in a JSON file.
+
+        The content of the JSON file is the dict returned by the `to_dict` method.
+
+        Args:
+            path (str): Path to the JSON file to write.
+        """
         with open(path, 'w') as out_file:
-            json.dump(pipeline_spec, out_file, indent=4)
+            json.dump(self.to_dict(), out_file, indent=4)
+
+    @classmethod
+    def from_dict(cls, metadata):
+        """Create a new MLPipeline from a dict specification.
+
+        The dict structure is the same as the one created by the to_dict method.
+
+        Args:
+            metadata (dict): Dictionary containing the pipeline specification.
+
+        Returns:
+            MLPipeline: A new MLPipeline instance with the details found in the
+                        given specification dictionary.
+        """
+        hyperparameters = metadata.get('hyperparameters')
+        tunable = metadata.get('tunable_hyperparameters')
+
+        pipeline = cls(
+            metadata['primitives'],
+            metadata.get('init_params'),
+            metadata.get('input_names'),
+            metadata.get('output_names'),
+        )
+
+        if hyperparameters:
+            pipeline.set_hyperparameters(hyperparameters)
+
+        if tunable is not None:
+            pipeline._tunable_hyperparameters = tunable
+
+        return pipeline
 
     @classmethod
     def load(cls, path):
@@ -330,22 +366,6 @@ class MLPipeline():
                         in the JSON file.
         """
         with open(path, 'r') as in_file:
-            pipeline_spec = json.load(in_file)
+            metadata = json.load(in_file)
 
-        hyperparameters = pipeline_spec.pop('hyperparameters', None)
-        tunable = pipeline_spec.pop('tunable_hyperparameters', None)
-
-        pipeline = cls(
-            pipeline_spec['primitives'],
-            pipeline_spec.get('init_params', dict()),
-            pipeline_spec.get('input_names', dict()),
-            pipeline_spec.get('output_names', dict()),
-        )
-
-        if hyperparameters:
-            pipeline.set_hyperparameters(hyperparameters)
-
-        if tunable is not None:
-            pipeline._tunable_hyperparameters = tunable
-
-        return pipeline
+        return cls.from_dict(metadata)
