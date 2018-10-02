@@ -164,7 +164,7 @@ class MLBlock():
                   tuned, their types and, if applicable, the accepted
                   ranges or values.
         """
-        return self._tunable
+        return self._tunable.copy()
 
     def get_hyperparameters(self):
         """Get hyperparameters values that the current MLBlock is using.
