@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.2 - MLPipeline Load/Save
+----------------------------
+
+* Implement save and load methods for MLPipelines
+* Add more datasets
+
 0.2.1 - New Documentation
 -------------------------
 
