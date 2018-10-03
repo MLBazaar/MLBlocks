@@ -19,7 +19,7 @@ __author__ = 'MIT Data To AI Lab'
 __copyright__ = 'Copyright (c) 2018, MIT Data To AI Lab'
 __email__ = 'dailabmit@gmail.com'
 __license__ = 'MIT'
-__version__ = '0.2.2-dev'
+__version__ = '0.2.3-dev'
 
 __all__ = [
     'MLBlock', 'MLPipeline', 'add_primitives_path',
