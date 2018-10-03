@@ -68,7 +68,7 @@ In this case, we will also be passing some initialization parameters for the XGB
             'learning_rate': 0.1
         }
     }
-    pipeline = MLPipeline(primitives)
+    pipeline = MLPipeline(primitives, init_params)
 
     pipeline.fit(X_train, y_train)
 
