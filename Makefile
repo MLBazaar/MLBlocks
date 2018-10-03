@@ -92,7 +92,7 @@ viewdocs: docs ## view docs in browser
 	$(BROWSER) docs/_build/html/index.html
 
 servedocs: viewdocs ## compile the docs watching for changes
-	watchmedo shell-command -W -R -D -p '*.rst' -c '$(MAKE) docs' .
+	watchmedo shell-command -W -R -D -p '*.rst;*.md' -c '$(MAKE) -C docs html' .
 
 release: dist ## package and upload a release
 	twine upload dist/*
