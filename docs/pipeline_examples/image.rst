@@ -27,6 +27,9 @@ Gradients using the corresponding `scikit-image function`_ to later on use a sim
     from mlblocks.datasets import load_usps
 
     dataset = load_usps()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     primitives = [
         'cv2.GaussianBlur',
@@ -41,11 +44,11 @@ Gradients using the corresponding `scikit-image function`_ to later on use a sim
     }
     pipeline = MLPipeline(primitives, init_params)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
 
 
 OpenCV GaussianBlur + Keras Single Layer CNN
@@ -61,6 +64,9 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
     from mlblocks.datasets import load_usps
 
     dataset = load_usps()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     primitives = [
         'cv2.GaussianBlur',
@@ -74,11 +80,11 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
     }
     pipeline = MLPipeline(primitives, init_params)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
 
 
 Image Regression
@@ -104,6 +110,9 @@ to an `XGBRegressor`_ primitive.
     from mlblocks.datasets import load_handgeometry
 
     dataset = load_handgeometry()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     primitives = [
         'keras.applications.mobilenet.preprocess_input',
@@ -118,11 +127,12 @@ to an `XGBRegressor`_ primitive.
     }
     pipeline = MLPipeline(primitives, init_params)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
+
 
 .. _USPS Dataset: https://ieeexplore.ieee.org/document/291440/
 .. _OpenCV GaussianBlur function: https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur

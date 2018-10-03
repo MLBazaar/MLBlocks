@@ -101,16 +101,17 @@ labels.
 
     from mlblocks.datasets import load_iris
     dataset = load_iris()
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
+    pipeline.fit(X_train, y_train)
 
 Once we have fitted our model to our data, we can call the ``predict`` method passing new data
 to obtain predictions from the pipeline.
 
 .. ipython:: python
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
     predictions
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
 
 .. _you have already installed them: install.html#additional-dependencies
 .. _MLPipeline class: ../api_reference.html#mlblocks.MLPipeline

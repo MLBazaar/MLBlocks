@@ -33,6 +33,9 @@ additional information not found inside `X`.
     from mlblocks.datasets import load_umls
 
     dataset = load_umls()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     primitives = [
         'networkx.link_prediction_feature_extraction',
@@ -48,20 +51,22 @@ additional information not found inside `X`.
     }
     pipeline = MLPipeline(primitives)
 
+    node_columns = ['source', 'target']
     pipeline.fit(
-        dataset.train_data,
-        dataset.train_target,
-        graph=dataset.graph,               # These will be set in the pipeline Context
-        node_columns=dataset.node_columns  # and made available for the networkx primitive
+        X_train,
+        y_train,
+        graph=dataset.graph,       # These will be set in the pipeline Context
+        node_columns=node_columns  # and made available for the networkx primitive
     )
 
     predictions = pipeline.predict(
-        dataset.test_data,
-        graph=dataset.graph,               # These will be set in the pipeline Context
-        node_columns=dataset.node_columns  # and made available for the networkx primitive
+        X_test,
+        graph=dataset.graph,       # These will be set in the pipeline Context
+        node_columns=node_columns  # and made available for the networkx primitive
     )
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
+
 
 .. _NetworkX Link Prediction: https://networkx.github.io/documentation/networkx-1.10/reference/algorithms.link_prediction.html
 .. _CategoricalEncoder from MLPrimitives: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.feature_extraction.CategoricalEncoder.json

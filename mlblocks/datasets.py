@@ -2,6 +2,7 @@ import io
 import os
 import tarfile
 import urllib
+from functools import wraps
 
 import networkx as nx
 import numpy as np
@@ -9,7 +10,7 @@ import pandas as pd
 from keras.preprocessing.image import img_to_array, load_img
 from sklearn import datasets
 from sklearn.metrics import accuracy_score, normalized_mutual_info_score, r2_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold, StratifiedKFold
 
 INPUT_SHAPE = [224, 224, 3]
 
@@ -20,22 +21,68 @@ DATA_PATH = os.path.join(
 DATA_URL = 'http://dai-mlblocks.s3.amazonaws.com/{}.tar.gz'
 
 
+def _add_info(function):
+
+    description = []
+    for line in function.__doc__.splitlines():
+        if line.startswith('    '):
+            line = line[4:]
+
+        description.append(line)
+
+    description = '\n'.join(description)
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        return function(description, *args, **kwargs)
+
+    return wrapper
+
+
 class Dataset(object):
-    def __init__(self, name, X, y, score, **kwargs):
-        self.name = name
-        self.__dict__.update(kwargs)
+    def __init__(self, description, X, y, score, splitter=KFold, shuffle=True, **kwargs):
+        self.name = description.splitlines()[0]
+        self.description = description
 
         self.data = X
         self.target = y
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-        self.train_data = X_train
-        self.test_data = X_test
-        self.train_target = y_train
-        self.test_target = y_test
-
+        self._splitter = splitter
+        self._shuffle = shuffle
         self.score = score
+
+        self.__dict__.update(kwargs)
+
+    def __repr__(self):
+        return self.name
+
+    def describe(self):
+        print(self.description)
+
+    @staticmethod
+    def _get_split(data, index):
+        if hasattr(data, 'iloc'):
+            return data.iloc[index]
+        else:
+            return data[index]
+
+    def get_splits(self, n_splits=1, splitter=None):
+        if n_splits == 1:
+            return train_test_split(self.data, self.target)
+
+        else:
+            splitter = splitter or self._splitter
+            splitter = splitter(n_splits=n_splits, shuffle=self._shuffle)
+
+            splits = list()
+            for train, test in splitter.split(self.data, self.target):
+                X_train = self._get_split(self.data, train)
+                y_train = self._get_split(self.target, train)
+                X_test = self._get_split(self.data, test)
+                y_test = self._get_split(self.target, test)
+                splits.append((X_train, X_test, y_train, y_test))
+
+            return splits
 
 
 def _download(dataset_name, dataset_path):
@@ -72,50 +119,90 @@ def _load_images(image_dir, filenames):
     return np.array(images)
 
 
-def load_usps():
+@_add_info
+def load_usps(description):
+    """USPs Digits Dataset.
+
+    The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
+    containing 9298 224x224 RGB photos of handwritten digits, and the target is
+    a 1d numpy integer array containing the label of the digit represented in
+    the image.
+    """
     dataset_path = _load('usps')
 
     df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.label.values
 
-    return Dataset('usps', X, y, accuracy_score)
+    return Dataset(description, X, y, accuracy_score, StratifiedKFold)
 
 
-def load_handgeometry():
+@_add_info
+def load_handgeometry(description):
+    """Hand Geometry Dataset.
+
+    The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
+    containing 112 224x224 RGB photos of hands, and the target is a 1d numpy
+    float array containing the width of the wrist in centimeters.
+    """
     dataset_path = _load('handgeometry')
 
     df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.target.values
 
-    return Dataset('handgeometry', X, y, r2_score)
+    return Dataset(description, X, y, r2_score)
 
 
-def load_personae():
+@_add_info
+def load_personae(description):
+    """Personae Dataset.
+
+    The data of this dataset is a 2d numpy array vector containing 145 entries
+    that include texts written by Dutch users in Twitter, with some additional
+    information about the author, and the target is a 1d numpy binary integer
+    array indicating whether the author was extrovert or not.
+    """
     dataset_path = _load('personae')
 
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    return Dataset('personae', X, y, accuracy_score)
+    return Dataset(description, X, y, accuracy_score, StratifiedKFold)
 
 
-def load_umls():
+@_add_info
+def load_umls(description):
+    """UMLs Dataset.
+
+    The data consists of information about a 135 Graph and the relations between
+    their nodes given as a DataFrame with three columns, source, target and type,
+    indicating which nodes are related and with which type of link. The target is
+    a 1d numpy binary integer array indicating whether the indicated link exists
+    or not.
+    """
     dataset_path = _load('umls')
 
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    node_columns = ['source', 'target']
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset('umls', X, y, accuracy_score, graph=graph, node_columns=node_columns)
+    return Dataset(description, X, y, accuracy_score, StratifiedKFold, graph=graph)
 
 
-def load_dic28():
-    """
-    "datasetName": "DIC28 from Pajek",
+@_add_info
+def load_dic28(description):
+    """DIC28 Dataset from Pajek.
+
+    This network represents connections among English words in a dictionary.
+    It was generated from Knuth's dictionary. Two words are connected by an
+    edge if we can reach one from the other by
+    - changing a single character (e. g., work - word)
+    - adding / removing a single character (e. g., ever - fever).
+
+    There exist 52,652 words (vertices in a network) having 2 up to 8 characters
+    in the dictionary. The obtained network has 89038 edges.
     """
 
     dataset_path = _load('dic28')
@@ -123,16 +210,24 @@ def load_dic28():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    node_columns = ['graph1', 'graph2']
+    graph1 = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph1.gml')))
+    graph2 = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph2.gml')))
+
+    graph = graph1.copy()
+    graph.add_nodes_from(graph2.nodes(data=True))
+    graph.add_edges_from(graph2.edges)
+    graph.add_edges_from(X[['graph1', 'graph2']].values)
+
     graphs = {
-        'graph1': nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph1.gml'))),
-        'graph2': nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph2.gml')))
+        'graph1': graph1,
+        'graph2': graph2,
     }
 
-    return Dataset('dic28', X, y, accuracy_score, graphs=graphs, node_columns=node_columns)
+    return Dataset(description, X, y, accuracy_score, StratifiedKFold, graph=graph, graphs=graphs)
 
 
-def load_nomination():
+@_add_info
+def load_nomination(description):
     """Sample 1 of graph vertex nomination data from MII Lincoln Lab.
 
     Data consists of one graph whose nodes contain two attributes, attr1 and attr2.
@@ -144,14 +239,13 @@ def load_nomination():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    graphs = {
-        'node_id': nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
-    }
+    graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset('nomination', X, y, accuracy_score, graphs=graphs)
+    return Dataset(description, X, y, accuracy_score, StratifiedKFold, graph=graph)
 
 
-def load_amazon():
+@_add_info
+def load_amazon(description):
     """Amazon product co-purchasing network and ground-truth communities.
 
     Network was collected by crawling Amazon website. It is based on Customers Who Bought
@@ -167,10 +261,11 @@ def load_amazon():
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset('amazon', X, y, normalized_mutual_info_score, graph=graph)
+    return Dataset(description, X, y, normalized_mutual_info_score, graph=graph)
 
 
-def load_jester():
+@_add_info
+def load_jester(description):
     """Ratings from the Jester Online Joke Recommender System.
 
     This dataset consists of over 1.7 million instances of (user_id, item_id, rating)
@@ -185,34 +280,45 @@ def load_jester():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('rating').values
 
-    return Dataset('jester', X, y, r2_score)
+    return Dataset(description, X, y, r2_score)
 
 
-def load_newsgroups():
+@_add_info
+def load_newsgroups(description):
+    """20 News Groups Dataset.
+
+    The data of this dataset is a 1d numpy array vector containing the texts
+    from 11314 newsgroups posts, and the target is a 1d numpy integer array
+    containing the label of one of the 20 topics that they are about.
+    """
     dataset = datasets.fetch_20newsgroups()
-    return Dataset('newsgroups', dataset.data, dataset.target, accuracy_score)
+    return Dataset(description, dataset.data, dataset.target, accuracy_score, StratifiedKFold)
 
 
-def load_iris():
+@_add_info
+def load_iris(description):
+    """Iris Dataset."""
     dataset = datasets.load_iris()
-    return Dataset('iris', dataset.data, dataset.target, accuracy_score)
+    return Dataset(description, dataset.data, dataset.target, accuracy_score, StratifiedKFold)
 
 
-def load_boston():
+@_add_info
+def load_boston(description):
+    """Boston House Prices Dataset."""
     dataset = datasets.load_boston()
-    return Dataset('iris', dataset.data, dataset.target, r2_score)
+    return Dataset(description, dataset.data, dataset.target, r2_score)
 
 
 LOADERS = {
     'graph/community_detection': load_amazon,
     'graph/graph_matching': load_dic28,
-    'graph/linkPrediction': load_umls,
+    'graph/link_prediction': load_umls,
     'graph/vertex_nomination': load_nomination,
     'image/classification': load_usps,
     'image/regression': load_handgeometry,
-    'single_table/classification': load_iris,
-    'single_table/collaborative_filtering': load_jester,
-    'single_table/regression': load_boston,
+    'tabular/classification': load_iris,
+    'tabular/collaborative_filtering': load_jester,
+    'tabular/regression': load_boston,
     'text/classification': load_personae,
 }
 
