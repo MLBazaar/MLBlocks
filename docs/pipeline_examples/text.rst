@@ -27,6 +27,9 @@ using a `Keras LSTM Classifier from MLPrimitives`_
     from mlblocks.datasets import load_newsgroups
 
     dataset = load_newsgroups()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     # Make sure that we have the necessary data
     nltk.download('stopwords')
@@ -35,7 +38,7 @@ using a `Keras LSTM Classifier from MLPrimitives`_
     # This is required by the LSTM primitive
     vocabulary = set()
     pad_length = 0
-    for text in dataset.train_data:
+    for text in X_train:
         words = text.split()
         pad_length = max(pad_length, len(words))
         vocabulary.update(words)
@@ -58,11 +61,11 @@ using a `Keras LSTM Classifier from MLPrimitives`_
     }
     pipeline = MLPipeline(primitives, init_params)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
 
 
 Tabular Data with Text
@@ -90,6 +93,9 @@ to encode all the string features, and go directly into the
     from mlblocks.datasets import load_personae
 
     dataset = load_personae()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     # Make sure that we have the necessary data
     nltk.download('stopwords')
@@ -111,11 +117,12 @@ to encode all the string features, and go directly into the
     }
     pipeline = MLPipeline(primitives, init_params)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
+
 
 .. _Twenty Newsgroups Dataset: http://scikit-learn.org/stable/datasets/twenty_newsgroups.html
 .. _TextCleaner primitive: https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/text.py
