@@ -1,4 +1,4 @@
-Pipeline Examples
+Tabular Pipelines
 =================
 
 In this section we will go over a few pipeline examples to show **MLBlocks** working
@@ -24,17 +24,20 @@ the numeric data from `The Boston Dataset`_, which we will load using the
     from mlblocks.datasets import load_boston
 
     dataset = load_boston()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     primitives = [
         'sklearn.ensemble.RandomForestRegressor'
     ]
     pipeline = MLPipeline(primitives)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
 
 Classification Pipeline
 -----------------------
@@ -52,6 +55,9 @@ In this case, we will also be passing some initialization parameters for the XGB
     from mlblocks.datasets import load_iris
 
     dataset = load_iris()
+    dataset.describe()
+
+    X_train, X_test, y_train, y_test = dataset.get_splits(1)
 
     primitives = [
         'sklearn.preprocessing.StandardScaler',
@@ -64,11 +70,11 @@ In this case, we will also be passing some initialization parameters for the XGB
     }
     pipeline = MLPipeline(primitives, init_params)
 
-    pipeline.fit(dataset.train_data, dataset.train_target)
+    pipeline.fit(X_train, y_train)
 
-    predictions = pipeline.predict(dataset.test_data)
+    predictions = pipeline.predict(X_test)
 
-    dataset.score(dataset.test_target, predictions)
+    dataset.score(y_test, predictions)
 
 
 .. _The Boston Dataset: http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html

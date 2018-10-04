@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Reference" href="../api_reference.html" />
+    <link rel="next" title="mlblocks" href="../api/mlblocks.html" />
     <link rel="prev" title="Image Pipelines" href="image.html" /> 
 
   
@@ -131,9 +131,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="pipeline_examples.html">Pipeline Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples.html#regression-pipeline">Regression Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples.html#classification-pipeline">Classification Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tabular.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tabular.html#classification-pipeline">Classification Pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text Pipelines</a><ul>
@@ -167,9 +167,13 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">References</span></p>
+<p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -263,6 +267,9 @@ additional information not found inside <cite>X</cite>.</p>
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_umls</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_umls</span><span class="p">()</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;networkx.link_prediction_feature_extraction&#39;</span><span class="p">,</span>
@@ -278,20 +285,21 @@ additional information not found inside <cite>X</cite>.</p>
 <span class="p">}</span>
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
 
+<span class="n">node_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]</span>
 <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-    <span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span>
-    <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">,</span>
-    <span class="n">graph</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>               <span class="c1"># These will be set in the pipeline Context</span>
-    <span class="n">node_columns</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">node_columns</span>  <span class="c1"># and made available for the networkx primitive</span>
+    <span class="n">X_train</span><span class="p">,</span>
+    <span class="n">y_train</span><span class="p">,</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>       <span class="c1"># These will be set in the pipeline Context</span>
+    <span class="n">node_columns</span><span class="o">=</span><span class="n">node_columns</span>  <span class="c1"># and made available for the networkx primitive</span>
 <span class="p">)</span>
 
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-    <span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">,</span>
-    <span class="n">graph</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>               <span class="c1"># These will be set in the pipeline Context</span>
-    <span class="n">node_columns</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">node_columns</span>  <span class="c1"># and made available for the networkx primitive</span>
+    <span class="n">X_test</span><span class="p">,</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>       <span class="c1"># These will be set in the pipeline Context</span>
+    <span class="n">node_columns</span><span class="o">=</span><span class="n">node_columns</span>  <span class="c1"># and made available for the networkx primitive</span>
 <span class="p">)</span>
 
-<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -306,7 +314,7 @@ additional information not found inside <cite>X</cite>.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../api/mlblocks.html" class="btn btn-neutral float-right" title="mlblocks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="image.html" class="btn btn-neutral" title="Image Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

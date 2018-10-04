@@ -131,9 +131,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="pipeline_examples.html">Pipeline Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples.html#regression-pipeline">Regression Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples.html#classification-pipeline">Classification Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tabular.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tabular.html#classification-pipeline">Classification Pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text Pipelines</a><ul>
@@ -167,9 +167,13 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">References</span></p>
+<p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -259,6 +263,9 @@ Gradients using the corresponding <a class="reference external" href="http://sci
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_usps</span><span class="p">()</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;cv2.GaussianBlur&#39;</span><span class="p">,</span>
@@ -273,11 +280,11 @@ Gradients using the corresponding <a class="reference external" href="http://sci
 <span class="p">}</span>
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 
-<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -291,6 +298,9 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_usps</span><span class="p">()</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;cv2.GaussianBlur&#39;</span><span class="p">,</span>
@@ -304,11 +314,11 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
 <span class="p">}</span>
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 
-<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -328,6 +338,9 @@ to an <a class="reference external" href="https://xgboost.readthedocs.io/en/late
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_handgeometry</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_handgeometry</span><span class="p">()</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;keras.applications.mobilenet.preprocess_input&#39;</span><span class="p">,</span>
@@ -342,11 +355,11 @@ to an <a class="reference external" href="https://xgboost.readthedocs.io/en/late
 <span class="p">}</span>
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
 
-<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

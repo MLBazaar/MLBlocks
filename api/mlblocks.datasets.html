@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mlblocks.datasets &mdash; MLBlocks 0.2.3-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributing" href="../contributing.html" />
+    <link rel="prev" title="mlblocks" href="mlblocks.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#class-primitives">Class Primitives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#the-mlblock-class">The MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/hyperparameters.html">Hyperparameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_usage/hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_usage/hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#what-is-a-pipeline">What is a Pipeline?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#the-mlpipeline-class">The MLPipeline Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#block-names">Block Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#init-arguments">Init Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#context">Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/tabular.html">Tabular Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#classification-pipeline">Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/text.html">Text Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/text.html#text-classification">Text Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/text.html#mlprimitives-keras-preprocessing-keras-lstm">MLPrimitives + Keras Preprocessing + Keras LSTM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/text.html#tabular-data-with-text">Tabular Data with Text</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/text.html#mlprimitives-scikit-learn-randomforestclassifier">MLPrimitives + Scikit-learn RandomForestClassifier</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/image.html">Image Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#image-classification">Image Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/image.html#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#opencv-gaussianblur-keras-single-layer-cnn">OpenCV GaussianBlur + Keras Single Layer CNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#image-regression">Image Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/image.html#keras-mobilenet-xgbregressor">Keras MobileNet + XGBRegressor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/graph.html">Graph Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/graph.html#link-prediction">Link Prediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="mlblocks.html">mlblocks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">mlblocks.datasets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>mlblocks.datasets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/api/mlblocks.datasets.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-mlblocks.datasets">
+<span id="mlblocks-datasets"></span><h1>mlblocks.datasets<a class="headerlink" href="#module-mlblocks.datasets" title="Permalink to this headline">¶</a></h1>
+<p>Datasets module.</p>
+<p>This module contains functions that allow loading datasets for easy
+testing of pipelines and primitives over multiple data modalities
+and task types.</p>
+<p>The available datasets by data modality and task type are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="27%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Dataset</th>
+<th class="head">Data Modality</th>
+<th class="head">Task Type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Amazon</td>
+<td>Graph</td>
+<td>Community Detection</td>
+</tr>
+<tr class="row-odd"><td>DIC28</td>
+<td>Graph</td>
+<td>Graph Matching</td>
+</tr>
+<tr class="row-even"><td>UMLs</td>
+<td>Graph</td>
+<td>Link Prediction</td>
+</tr>
+<tr class="row-odd"><td>Nomination</td>
+<td>Graph</td>
+<td>Vertex Nomination</td>
+</tr>
+<tr class="row-even"><td>USPS</td>
+<td>Image</td>
+<td>Classification</td>
+</tr>
+<tr class="row-odd"><td>Hand Geometry</td>
+<td>Image</td>
+<td>Regression</td>
+</tr>
+<tr class="row-even"><td>Iris</td>
+<td>Tabular</td>
+<td>Classification</td>
+</tr>
+<tr class="row-odd"><td>Iester</td>
+<td>Tabular</td>
+<td>Collaborative Filtering</td>
+</tr>
+<tr class="row-even"><td>Ioston</td>
+<td>Tabular</td>
+<td>Regression</td>
+</tr>
+<tr class="row-odd"><td>Iersonae</td>
+<td>Text</td>
+<td>Classification</td>
+</tr>
+<tr class="row-even"><td>News Groups</td>
+<td>Text</td>
+<td>Classification</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="mlblocks.datasets.Dataset">
+<em class="property">class </em><code class="descclassname">mlblocks.datasets.</code><code class="descname">Dataset</code><span class="sig-paren">(</span><em>description</em>, <em>data</em>, <em>target</em>, <em>score</em>, <em>shuffle=True</em>, <em>stratify=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset class.</p>
+<p>This class represents the abstraction of a dataset and works as
+a container of all the things needed in order to use a dataset
+for testing.</p>
+<p>Among other things, it includes the actual dataset data, information
+about its origin, a score function that works for this dataset,
+and a method to split the data in multiple ways for goodnes-of-fit
+evaluation.</p>
+<dl class="attribute">
+<dt id="mlblocks.datasets.Dataset.name">
+<code class="descname">name</code><a class="headerlink" href="#mlblocks.datasets.Dataset.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of this dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mlblocks.datasets.Dataset.description">
+<code class="descname">description</code><a class="headerlink" href="#mlblocks.datasets.Dataset.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short description about the data that composes this dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mlblocks.datasets.Dataset.data">
+<code class="descname">data</code><a class="headerlink" href="#mlblocks.datasets.Dataset.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numpy array or pandas DataFrame containing all the data of
+this dataset, excluding the labels or target values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">array-like</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="mlblocks.datasets.Dataset.target">
+<code class="descname">target</code><a class="headerlink" href="#mlblocks.datasets.Dataset.target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numpy array or pandas Series containing the expected labels
+or values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">array-like</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">**kwargs</code></dt>
+<dd><p>Any additional keyword argument passed on initailization is also
+available as instance attributes.</p>
+</dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>description</strong> (<em>str</em>) – Short description about the data that composes this dataset.
+The first line of the description is expected to be a human friendly
+name for the dataset, and will be set as the <cite>name</cite> attribute.</li>
+<li><strong>data</strong> (<em>array-like</em>) – Numpy array or pandas DataFrame containing all the data of
+this dataset, excluding the labels or target values.</li>
+<li><strong>target</strong> (<em>array-like</em>) – Numpy array or pandas Series containing the expected labels
+or values</li>
+<li><strong>score</strong> (<em>callable</em>) – Function that will be used to compute the score of this dataset.</li>
+<li><strong>shuffle</strong> (<em>bool</em>) – Whether or not to shuffle the data before splitting.</li>
+<li><strong>stratify</strong> (<em>bool</em>) – Whther to use a stratified or regular KFold for splitting.</li>
+<li><strong>**kwargs</strong> – Any additional keyword argument passed on initialization will be made
+available as instance attributes.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="mlblocks.datasets.Dataset.describe">
+<code class="descname">describe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.Dataset.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the description of this Dataset on stdout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mlblocks.datasets.Dataset.get_splits">
+<code class="descname">get_splits</code><span class="sig-paren">(</span><em>n_splits=1</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.Dataset.get_splits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return splits of this dataset ready for Cross Validation.</p>
+<p>If n_splits is 1, a tuple containing the X for train and test
+and the y for train and test is returned.
+Otherwise, if n_splits is bigger than 1, a list of such tuples
+is returned, one for each split.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_splits</strong> (<em>int</em>) – Number of times that the data needs to be splitted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">if n_splits is 1, a tuple containing the X for train and test
+and the y for train and test is returned.
+Otherwise, if n_splits is bigger than 1, a list of such tuples
+is returned, one for each split.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple or list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mlblocks.datasets.Dataset.score">
+<code class="descname">score</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.Dataset.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scoring function for this dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>**kwargs</strong> (<em>*args</em><em>,</em>) – Any given arguments and keyword arguments will be</li>
+<li><strong>passed to the given scoring function.</strong> (<em>directly</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The computed score.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_amazon">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_amazon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_amazon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amazon product co-purchasing network and ground-truth communities.</p>
+<p>Network was collected by crawling Amazon website. It is based on Customers Who Bought
+This Item Also Bought feature of the Amazon website. If a product i is frequently
+co-purchased with product j, the graph contains an undirected edge from i to j.
+Each product category provided by Amazon defines each ground-truth community.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_boston">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_boston</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_boston" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boston House Prices Dataset.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_dic28">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_dic28</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_dic28" title="Permalink to this definition">¶</a></dt>
+<dd><p>DIC28 Dataset from Pajek.</p>
+<p>This network represents connections among English words in a dictionary.
+It was generated from Knuth’s dictionary. Two words are connected by an
+edge if we can reach one from the other by
+- changing a single character (e. g., work - word)
+- adding / removing a single character (e. g., ever - fever).</p>
+<p>There exist 52,652 words (vertices in a network) having 2 up to 8 characters
+in the dictionary. The obtained network has 89038 edges.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_handgeometry">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_handgeometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_handgeometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hand Geometry Dataset.</p>
+<p>The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
+containing 112 224x224 RGB photos of hands, and the target is a 1d numpy
+float array containing the width of the wrist in centimeters.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_iris">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_iris</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_iris" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iris Dataset.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_jester">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_jester</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_jester" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ratings from the Jester Online Joke Recommender System.</p>
+<p>This dataset consists of over 1.7 million instances of (user_id, item_id, rating)
+triples, which is split 50-50 into train and test data.</p>
+<p>source: “University of California Berkeley, CA”
+sourceURI: “<a class="reference external" href="http://eigentaste.berkeley.edu/dataset/">http://eigentaste.berkeley.edu/dataset/</a>”</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_newsgroups">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_newsgroups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_newsgroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>20 News Groups Dataset.</p>
+<p>The data of this dataset is a 1d numpy array vector containing the texts
+from 11314 newsgroups posts, and the target is a 1d numpy integer array
+containing the label of one of the 20 topics that they are about.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_nomination">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_nomination</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_nomination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample 1 of graph vertex nomination data from MII Lincoln Lab.</p>
+<p>Data consists of one graph whose nodes contain two attributes, attr1 and attr2.
+Associated with each node is a label that has to be learned and predicted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_personae">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_personae</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_personae" title="Permalink to this definition">¶</a></dt>
+<dd><p>Personae Dataset.</p>
+<p>The data of this dataset is a 2d numpy array vector containing 145 entries
+that include texts written by Dutch users in Twitter, with some additional
+information about the author, and the target is a 1d numpy binary integer
+array indicating whether the author was extrovert or not.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_umls">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_umls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_umls" title="Permalink to this definition">¶</a></dt>
+<dd><p>UMLs Dataset.</p>
+<p>The data consists of information about a 135 Graph and the relations between
+their nodes given as a DataFrame with three columns, source, target and type,
+indicating which nodes are related and with which type of link. The target is
+a 1d numpy binary integer array indicating whether the indicated link exists
+or not.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.datasets.load_usps">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_usps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_usps" title="Permalink to this definition">¶</a></dt>
+<dd><p>USPs Digits Dataset.</p>
+<p>The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
+containing 9298 224x224 RGB photos of handwritten digits, and the target is
+a 1d numpy integer array containing the label of the digit represented in
+the image.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mlblocks.html" class="btn btn-neutral" title="mlblocks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.3-dev',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

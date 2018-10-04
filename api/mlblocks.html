@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; MLBlocks 0.2.3-dev documentation</title>
+  <title>mlblocks &mdash; MLBlocks 0.2.3-dev documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
   
   
   
@@ -26,16 +26,16 @@
 
   
 
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
-    <link rel="prev" title="Graph Pipelines" href="pipeline_examples/graph.html" /> 
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mlblocks.datasets" href="mlblocks.datasets.html" />
+    <link rel="prev" title="Graph Pipelines" href="../pipeline_examples/graph.html" /> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MLBlocks
+            <a href="../index.html" class="icon icon-home"> MLBlocks
           
 
           
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -80,99 +80,103 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html">What is MLBlocks?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="advanced_usage/primitives.html">Primitives</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/primitives.html#json-annotations">JSON Annotations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/primitives.html#function-primitives">Function Primitives</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/primitives.html#class-primitives">Class Primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/primitives.html#class-primitives">Class Primitives</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/primitives.html#the-mlblock-class">The MLBlock Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#the-mlblock-class">The MLBlock Class</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_usage/hyperparameters.html">Hyperparameters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="advanced_usage/hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="advanced_usage/hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_usage/pipelines.html">Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/pipelines.html#what-is-a-pipeline">What is a Pipeline?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/pipelines.html#the-mlpipeline-class">The MLPipeline Class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/pipelines.html#block-names">Block Names</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/pipelines.html#init-arguments">Init Arguments</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/pipelines.html#context">Context</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/hyperparameters.html">Hyperparameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_usage/hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_usage/hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/adding_primitives.html#mlprimitives">MLPrimitives</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#what-is-a-pipeline">What is a Pipeline?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#the-mlpipeline-class">The MLPipeline Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#block-names">Block Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#init-arguments">Init Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#context">Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Pipeline Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="pipeline_examples/pipeline_examples.html">Pipeline Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/pipeline_examples.html#regression-pipeline">Regression Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/pipeline_examples.html#classification-pipeline">Classification Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/tabular.html">Tabular Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#classification-pipeline">Classification Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline_examples/text.html">Text Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/text.html#text-classification">Text Classification</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipeline_examples/text.html#mlprimitives-keras-preprocessing-keras-lstm">MLPrimitives + Keras Preprocessing + Keras LSTM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/text.html">Text Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/text.html#text-classification">Text Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/text.html#mlprimitives-keras-preprocessing-keras-lstm">MLPrimitives + Keras Preprocessing + Keras LSTM</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/text.html#tabular-data-with-text">Tabular Data with Text</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipeline_examples/text.html#mlprimitives-scikit-learn-randomforestclassifier">MLPrimitives + Scikit-learn RandomForestClassifier</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline_examples/image.html">Image Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/image.html#image-classification">Image Classification</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipeline_examples/image.html#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/image.html#opencv-gaussianblur-keras-single-layer-cnn">OpenCV GaussianBlur + Keras Single Layer CNN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/image.html#image-regression">Image Regression</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipeline_examples/image.html#keras-mobilenet-xgbregressor">Keras MobileNet + XGBRegressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/text.html#tabular-data-with-text">Tabular Data with Text</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/text.html#mlprimitives-scikit-learn-randomforestclassifier">MLPrimitives + Scikit-learn RandomForestClassifier</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline_examples/graph.html">Graph Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_examples/graph.html#link-prediction">Link Prediction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pipeline_examples/graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/image.html">Image Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#image-classification">Image Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/image.html#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#opencv-gaussianblur-keras-single-layer-cnn">OpenCV GaussianBlur + Keras Single Layer CNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/image.html#image-regression">Image Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/image.html#keras-mobilenet-xgbregressor">Keras MobileNet + XGBRegressor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/graph.html">Graph Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/graph.html#link-prediction">Link Prediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pipeline_examples/graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">References</span></p>
+<p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">mlblocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlblocks.datasets.html">mlblocks.datasets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
             
@@ -187,7 +191,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MLBlocks</a>
+          <a href="../index.html">MLBlocks</a>
         
       </nav>
 
@@ -216,16 +220,16 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>API Reference</li>
+      <li>mlblocks</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/api_reference.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/api/mlblocks.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -240,7 +244,8 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-mlblocks">
-<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-mlblocks" title="Permalink to this headline">¶</a></h1>
+<span id="mlblocks"></span><h1>mlblocks<a class="headerlink" href="#module-mlblocks" title="Permalink to this headline">¶</a></h1>
+<p>MLBlocks top module.</p>
 <p>MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
 seamlessly combining tools from any python library with a simple, common and uniform interface.</p>
 <ul class="simple">
@@ -409,11 +414,8 @@ expected by the primitive fit method is given.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>the dictionary containing the hyperparameter values that the</dt>
-<dd>MLBlock is currently using.</dd>
-</dl>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the dictionary containing the hyperparameter values that the
+MLBlock is currently using.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -432,12 +434,9 @@ during the initalization.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>the dictionary containing the hyperparameters that can be</dt>
-<dd>tuned, their types and, if applicable, the accepted
-ranges or values.</dd>
-</dl>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the dictionary containing the hyperparameters that can be
+tuned, their types and, if applicable, the accepted
+ranges or values.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -642,18 +641,15 @@ to the context dictionary and available for the blocks.</li>
 <dt id="mlblocks.MLPipeline.from_dict">
 <em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new MLPipeline from a dict specification.</p>
-<p>The dict structure is the same as the one created by the to_dict method.</p>
+<p>The dict structure is the same as the one created by the <cite>to_dict</cite> method.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metadata</strong> (<em>dict</em>) – Dictionary containing the pipeline specification.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A new MLPipeline instance with the details found in the</dt>
-<dd>given specification dictionary.</dd>
-</dl>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new MLPipeline instance with the details found in the
+given specification dictionary.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline">MLPipeline</a></td>
 </tr>
@@ -669,11 +665,8 @@ to the context dictionary and available for the blocks.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A dictionary containing the block names as keys and</dt>
-<dd>the current block hyperparameters dictionary as values.</dd>
-</dl>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary containing the block names as keys and
+the current block hyperparameters dictionary as values.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -689,11 +682,8 @@ to the context dictionary and available for the blocks.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A dictionary containing the block names as keys and</dt>
-<dd>the block tunable hyperparameters dictionary as values.</dd>
-</dl>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary containing the block names as keys and
+the block tunable hyperparameters dictionary as values.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -705,18 +695,15 @@ to the context dictionary and available for the blocks.</li>
 <dt id="mlblocks.MLPipeline.load">
 <em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.MLPipeline.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new MLPipeline from a JSON specification.</p>
-<p>The JSON file format is the same as the one created by the save method.</p>
+<p>The JSON file format is the same as the one created by the <cite>to_dict</cite> method.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) – Path of the JSON file to load.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A new MLPipeline instance with the specification found</dt>
-<dd>in the JSON file.</dd>
-</dl>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new MLPipeline instance with the specification found
+in the JSON file.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline">MLPipeline</a></td>
 </tr>
@@ -897,10 +884,10 @@ found.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="mlblocks.datasets.html" class="btn btn-neutral float-right" title="mlblocks.datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pipeline_examples/graph.html" class="btn btn-neutral" title="Graph Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../pipeline_examples/graph.html" class="btn btn-neutral" title="Graph Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -930,7 +917,7 @@ found.</td>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
+            URL_ROOT:'../',
             VERSION:'0.2.3-dev',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
@@ -939,14 +926,14 @@ found.</td>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
-  <script type="text/javascript" src="_static/js/theme.js"></script>
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

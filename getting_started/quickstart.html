@@ -131,9 +131,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Pipeline Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/pipeline_examples.html">Pipeline Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/pipeline_examples.html#regression-pipeline">Regression Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/pipeline_examples.html#classification-pipeline">Classification Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/tabular.html">Tabular Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#classification-pipeline">Classification Pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/text.html">Text Pipelines</a><ul>
@@ -167,9 +167,13 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">References</span></p>
+<p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -354,20 +358,22 @@ labels.</p>
 
 <span class="gp">In [13]: </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
 
-<span class="gp">In [14]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">train_data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">train_target</span><span class="p">)</span>
+<span class="gp">In [14]: </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="gp">In [15]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once we have fitted our model to our data, we can call the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method passing new data
 to obtain predictions from the pipeline.</p>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_data</span><span class="p">)</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="gp">In [16]: </span><span class="n">predictions</span>
-<span class="gh">Out[16]: </span><span class="go"></span>
-<span class="go">array([2, 0, 1, 2, 1, 2, 1, 1, 1, 1, 2, 0, 0, 0, 0, 2, 1, 0, 2, 2, 1, 2,</span>
-<span class="go">       0, 1, 2, 2, 0, 1, 1, 1, 0, 0, 1, 1, 2, 1, 0, 0])</span>
+<span class="gp">In [17]: </span><span class="n">predictions</span>
+<span class="gh">Out[17]: </span><span class="go"></span>
+<span class="go">array([1, 2, 2, 2, 0, 0, 1, 1, 2, 0, 0, 0, 1, 2, 1, 2, 1, 2, 2, 0, 0, 1,</span>
+<span class="go">       0, 1, 2, 2, 1, 2, 2, 0, 2, 2, 2, 0, 2, 0, 0, 0])</span>
 
-<span class="gp">In [17]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">test_target</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
-<span class="go">                                                                                                                                           Out[17]: 0.9473684210526315</span>
+<span class="gp">In [18]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="go">                                                                                                                                           Out[18]: 0.8947368421052632</span>
 </pre></div>
 </div>
 </div>
