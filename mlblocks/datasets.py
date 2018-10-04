@@ -10,7 +10,7 @@ import pandas as pd
 from keras.preprocessing.image import img_to_array, load_img
 from sklearn import datasets
 from sklearn.metrics import accuracy_score, normalized_mutual_info_score, r2_score
-from sklearn.model_selection import train_test_split, KFold, StratifiedKFold
+from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
 
 INPUT_SHAPE = [224, 224, 3]
 
@@ -119,8 +119,7 @@ def _load_images(image_dir, filenames):
     return np.array(images)
 
 
-@_add_info
-def load_usps(description):
+def load_usps():
     """USPs Digits Dataset.
 
     The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
@@ -134,11 +133,10 @@ def load_usps(description):
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.label.values
 
-    return Dataset(description, X, y, accuracy_score, StratifiedKFold)
+    return Dataset(load_usps.__doc__, X, y, accuracy_score, StratifiedKFold)
 
 
-@_add_info
-def load_handgeometry(description):
+def load_handgeometry():
     """Hand Geometry Dataset.
 
     The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
@@ -151,11 +149,10 @@ def load_handgeometry(description):
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.target.values
 
-    return Dataset(description, X, y, r2_score)
+    return Dataset(load_handgeometry.__doc__, X, y, r2_score)
 
 
-@_add_info
-def load_personae(description):
+def load_personae():
     """Personae Dataset.
 
     The data of this dataset is a 2d numpy array vector containing 145 entries
@@ -168,11 +165,10 @@ def load_personae(description):
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    return Dataset(description, X, y, accuracy_score, StratifiedKFold)
+    return Dataset(load_personae.__doc__, X, y, accuracy_score, StratifiedKFold)
 
 
-@_add_info
-def load_umls(description):
+def load_umls():
     """UMLs Dataset.
 
     The data consists of information about a 135 Graph and the relations between
@@ -188,11 +184,10 @@ def load_umls(description):
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset(description, X, y, accuracy_score, StratifiedKFold, graph=graph)
+    return Dataset(load_umls.__doc__, X, y, accuracy_score, StratifiedKFold, graph=graph)
 
 
-@_add_info
-def load_dic28(description):
+def load_dic28():
     """DIC28 Dataset from Pajek.
 
     This network represents connections among English words in a dictionary.
@@ -223,11 +218,11 @@ def load_dic28(description):
         'graph2': graph2,
     }
 
-    return Dataset(description, X, y, accuracy_score, StratifiedKFold, graph=graph, graphs=graphs)
+    return Dataset(load_dic28.__doc__, X, y, accuracy_score,
+                   StratifiedKFold, graph=graph, graphs=graphs)
 
 
-@_add_info
-def load_nomination(description):
+def load_nomination():
     """Sample 1 of graph vertex nomination data from MII Lincoln Lab.
 
     Data consists of one graph whose nodes contain two attributes, attr1 and attr2.
@@ -241,11 +236,10 @@ def load_nomination(description):
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset(description, X, y, accuracy_score, StratifiedKFold, graph=graph)
+    return Dataset(load_nomination.__doc__, X, y, accuracy_score, StratifiedKFold, graph=graph)
 
 
-@_add_info
-def load_amazon(description):
+def load_amazon():
     """Amazon product co-purchasing network and ground-truth communities.
 
     Network was collected by crawling Amazon website. It is based on Customers Who Bought
@@ -261,11 +255,10 @@ def load_amazon(description):
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset(description, X, y, normalized_mutual_info_score, graph=graph)
+    return Dataset(load_amazon.__doc__, X, y, normalized_mutual_info_score, graph=graph)
 
 
-@_add_info
-def load_jester(description):
+def load_jester():
     """Ratings from the Jester Online Joke Recommender System.
 
     This dataset consists of over 1.7 million instances of (user_id, item_id, rating)
@@ -280,11 +273,10 @@ def load_jester(description):
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('rating').values
 
-    return Dataset(description, X, y, r2_score)
+    return Dataset(load_jester.__doc__, X, y, r2_score)
 
 
-@_add_info
-def load_newsgroups(description):
+def load_newsgroups():
     """20 News Groups Dataset.
 
     The data of this dataset is a 1d numpy array vector containing the texts
@@ -292,21 +284,21 @@ def load_newsgroups(description):
     containing the label of one of the 20 topics that they are about.
     """
     dataset = datasets.fetch_20newsgroups()
-    return Dataset(description, dataset.data, dataset.target, accuracy_score, StratifiedKFold)
+    return Dataset(load_newsgroups.__doc__, dataset.data, dataset.target,
+                   accuracy_score, StratifiedKFold)
 
 
-@_add_info
-def load_iris(description):
+def load_iris():
     """Iris Dataset."""
     dataset = datasets.load_iris()
-    return Dataset(description, dataset.data, dataset.target, accuracy_score, StratifiedKFold)
+    return Dataset(load_iris.__doc__, dataset.data, dataset.target,
+                   accuracy_score, StratifiedKFold)
 
 
-@_add_info
-def load_boston(description):
+def load_boston():
     """Boston House Prices Dataset."""
     dataset = datasets.load_boston()
-    return Dataset(description, dataset.data, dataset.target, r2_score)
+    return Dataset(load_boston.__doc__, dataset.data, dataset.target, r2_score)
 
 
 LOADERS = {
