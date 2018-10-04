@@ -71,7 +71,7 @@ integrate with deep learning libraries.
    :caption: References
    :titlesonly:
 
-   api_reference
+   API Reference <api/mlblocks>
    contributing
    authors
    changelog
