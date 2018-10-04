@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.3 - Demo Datasets
+---------------------
+
+* Add new methods to Dataset class.
+* Add documentation for the datasets module.
+
 0.2.2 - MLPipeline Load/Save
 ----------------------------
 
