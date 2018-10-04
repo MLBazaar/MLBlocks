@@ -40,8 +40,6 @@ mlblocks.add_primitives_path('../mlblocks_primitives')
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.githubpages',
     'sphinx.ext.graphviz',
@@ -53,9 +51,6 @@ ipython_execlines = ["import pandas as pd", "pd.set_option('display.width', 1000
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
-
-# autosummary_generate=True
-# autosummary_generate = ["api_reference.rst"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:

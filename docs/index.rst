@@ -68,10 +68,16 @@ integrate with deep learning libraries.
    pipeline_examples/graph
 
 .. toctree::
-   :caption: References
+   :caption: API Reference
    :titlesonly:
 
-   API Reference <api/mlblocks>
+   api/mlblocks
+   api/mlblocks.datasets
+
+.. toctree::
+   :caption: Resources
+   :titlesonly:
+
    contributing
    authors
    changelog

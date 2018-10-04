@@ -1,3 +1,42 @@
+# -*- coding: utf-8 -*-
+
+"""
+Datasets module.
+
+This module contains functions that allow loading datasets for easy
+testing of pipelines and primitives over multiple data modalities
+and task types.
+
+The available datasets by data modality and task type are:
+
++---------------+---------------+-------------------------+
+| Dataset       | Data Modality | Task Type               |
++===============+===============+=========================+
+| Amazon        | Graph         | Community Detection     |
++---------------+---------------+-------------------------+
+| DIC28         | Graph         | Graph Matching          |
++---------------+---------------+-------------------------+
+| UMLs          | Graph         | Link Prediction         |
++---------------+---------------+-------------------------+
+| Nomination    | Graph         | Vertex Nomination       |
++---------------+---------------+-------------------------+
+| USPS          | Image         | Classification          |
++---------------+---------------+-------------------------+
+| Hand Geometry | Image         | Regression              |
++---------------+---------------+-------------------------+
+| Iris          | Tabular       | Classification          |
++---------------+---------------+-------------------------+
+| Iester        | Tabular       | Collaborative Filtering |
++---------------+---------------+-------------------------+
+| Ioston        | Tabular       | Regression              |
++---------------+---------------+-------------------------+
+| Iersonae      | Text          | Classification          |
++---------------+---------------+-------------------------+
+| News Groups   | Text          | Classification          |
++---------------+---------------+-------------------------+
+
+"""
+
 import io
 import os
 import tarfile
@@ -21,42 +60,74 @@ DATA_PATH = os.path.join(
 DATA_URL = 'http://dai-mlblocks.s3.amazonaws.com/{}.tar.gz'
 
 
-def _add_info(function):
+class Dataset():
+    """Dataset class.
 
-    description = []
-    for line in function.__doc__.splitlines():
-        if line.startswith('    '):
-            line = line[4:]
+    This class represents the abstraction of a dataset and works as
+    a container of all the things needed in order to use a dataset
+    for testing.
 
-        description.append(line)
+    Among other things, it includes the actual dataset data, information
+    about its origin, a score function that works for this dataset,
+    and a method to split the data in multiple ways for goodnes-of-fit
+    evaluation.
 
-    description = '\n'.join(description)
+    Attributes:
+        name (str): Name of this dataset.
+        description (str): Short description about the data that composes this dataset.
+        data (array-like): Numpy array or pandas DataFrame containing all the data of
+            this dataset, excluding the labels or target values.
+        target (array-like): Numpy array or pandas Series containing the expected labels
+            or values
+        **kwargs: Any additional keyword argument passed on initailization is also
+            available as instance attributes.
 
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-        return function(description, *args, **kwargs)
+    Args:
+        description (str): Short description about the data that composes this dataset.
+            The first line of the description is expected to be a human friendly
+            name for the dataset, and will be set as the `name` attribute.
+        data (array-like): Numpy array or pandas DataFrame containing all the data of
+            this dataset, excluding the labels or target values.
+        target (array-like): Numpy array or pandas Series containing the expected labels
+            or values
+        score (callable): Function that will be used to compute the score of this dataset.
+        shuffle (bool): Whether or not to shuffle the data before splitting.
+        stratify (bool): Whther to use a stratified or regular KFold for splitting.
+        **kwargs: Any additional keyword argument passed on initialization will be made
+            available as instance attributes.
+    """
+    def __init__(self, description, data, target, score, shuffle=True, stratify=False, **kwargs):
 
-    return wrapper
-
-
-class Dataset(object):
-    def __init__(self, description, X, y, score, splitter=KFold, shuffle=True, **kwargs):
         self.name = description.splitlines()[0]
         self.description = description
 
-        self.data = X
-        self.target = y
+        self.data = data
+        self.target = target
 
-        self._splitter = splitter
+        self._stratify = stratify
         self._shuffle = shuffle
-        self.score = score
+        self._score = score
 
         self.__dict__.update(kwargs)
+
+    def score(self, *args, **kwargs):
+        """Scoring function for this dataset.
+
+        Args:
+            \*args, \*\*kwargs: Any given arguments and keyword arguments will be
+            directly passed to the given scoring function.
+
+        Returns:
+            float:
+                The computed score.
+        """
+        return self._score(*args, **kwargs)
 
     def __repr__(self):
         return self.name
 
     def describe(self):
+        """Print the description of this Dataset on stdout."""
         print(self.description)
 
     @staticmethod
@@ -66,16 +137,40 @@ class Dataset(object):
         else:
             return data[index]
 
-    def get_splits(self, n_splits=1, splitter=None):
+    def get_splits(self, n_splits=1):
+        """Return splits of this dataset ready for Cross Validation.
+
+        If n_splits is 1, a tuple containing the X for train and test
+        and the y for train and test is returned.
+        Otherwise, if n_splits is bigger than 1, a list of such tuples
+        is returned, one for each split.
+
+        Args:
+            n_splits (int): Number of times that the data needs to be splitted.
+
+        Returns:
+            tuple or list:
+                if n_splits is 1, a tuple containing the X for train and test
+                and the y for train and test is returned.
+                Otherwise, if n_splits is bigger than 1, a list of such tuples
+                is returned, one for each split.
+        """
         if n_splits == 1:
-            return train_test_split(self.data, self.target)
+            stratify = self.target if self._stratify else None
+
+            return train_test_split(
+                self.data,
+                self.target,
+                shuffle=self._shuffle,
+                stratify=stratify
+            )
 
         else:
-            splitter = splitter or self._splitter
-            splitter = splitter(n_splits=n_splits, shuffle=self._shuffle)
+            cv_class = StratifiedKFold if self._stratify else KFold
+            cv = cv_class(n_splits=n_splits, shuffle=self._shuffle)
 
             splits = list()
-            for train, test in splitter.split(self.data, self.target):
+            for train, test in cv.split(self.data, self.target):
                 X_train = self._get_split(self.data, train)
                 y_train = self._get_split(self.target, train)
                 X_test = self._get_split(self.data, test)
@@ -133,7 +228,7 @@ def load_usps():
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.label.values
 
-    return Dataset(load_usps.__doc__, X, y, accuracy_score, StratifiedKFold)
+    return Dataset(load_usps.__doc__, X, y, accuracy_score, stratify=True)
 
 
 def load_handgeometry():
@@ -165,7 +260,7 @@ def load_personae():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    return Dataset(load_personae.__doc__, X, y, accuracy_score, StratifiedKFold)
+    return Dataset(load_personae.__doc__, X, y, accuracy_score, stratify=True)
 
 
 def load_umls():
@@ -184,7 +279,7 @@ def load_umls():
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset(load_umls.__doc__, X, y, accuracy_score, StratifiedKFold, graph=graph)
+    return Dataset(load_umls.__doc__, X, y, accuracy_score, stratify=True, graph=graph)
 
 
 def load_dic28():
@@ -219,7 +314,7 @@ def load_dic28():
     }
 
     return Dataset(load_dic28.__doc__, X, y, accuracy_score,
-                   StratifiedKFold, graph=graph, graphs=graphs)
+                   stratify=True, graph=graph, graphs=graphs)
 
 
 def load_nomination():
@@ -236,7 +331,7 @@ def load_nomination():
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset(load_nomination.__doc__, X, y, accuracy_score, StratifiedKFold, graph=graph)
+    return Dataset(load_nomination.__doc__, X, y, accuracy_score, stratify=True, graph=graph)
 
 
 def load_amazon():
@@ -285,41 +380,17 @@ def load_newsgroups():
     """
     dataset = datasets.fetch_20newsgroups()
     return Dataset(load_newsgroups.__doc__, dataset.data, dataset.target,
-                   accuracy_score, StratifiedKFold)
+                   accuracy_score, stratify=True)
 
 
 def load_iris():
     """Iris Dataset."""
     dataset = datasets.load_iris()
     return Dataset(load_iris.__doc__, dataset.data, dataset.target,
-                   accuracy_score, StratifiedKFold)
+                   accuracy_score, stratify=True)
 
 
 def load_boston():
     """Boston House Prices Dataset."""
     dataset = datasets.load_boston()
     return Dataset(load_boston.__doc__, dataset.data, dataset.target, r2_score)
-
-
-LOADERS = {
-    'graph/community_detection': load_amazon,
-    'graph/graph_matching': load_dic28,
-    'graph/link_prediction': load_umls,
-    'graph/vertex_nomination': load_nomination,
-    'image/classification': load_usps,
-    'image/regression': load_handgeometry,
-    'tabular/classification': load_iris,
-    'tabular/collaborative_filtering': load_jester,
-    'tabular/regression': load_boston,
-    'text/classification': load_personae,
-}
-
-
-def load_dataset(data_modality, task_type):
-    problem_type = data_modality + '/' + task_type
-    loader = LOADERS.get(problem_type)
-
-    if not loader:
-        raise ValueError('Unknown problem type: {}'.format(problem_type))
-
-    return loader()
