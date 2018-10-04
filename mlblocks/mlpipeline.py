@@ -108,8 +108,9 @@ class MLPipeline():
         """Get the tunable hyperparamters of each block.
 
         Returns:
-            dict: A dictionary containing the block names as keys and
-                  the block tunable hyperparameters dictionary as values.
+            dict:
+                A dictionary containing the block names as keys and
+                the block tunable hyperparameters dictionary as values.
         """
         return self._tunable_hyperparameters.copy()
 
@@ -117,8 +118,9 @@ class MLPipeline():
         """Get the current hyperparamters of each block.
 
         Returns:
-            dict: A dictionary containing the block names as keys and
-                  the current block hyperparameters dictionary as values.
+            dict:
+                A dictionary containing the block names as keys and
+                the current block hyperparameters dictionary as values.
         """
         hyperparameters = {}
         for block_name, block in self.blocks.items():
@@ -325,14 +327,15 @@ class MLPipeline():
     def from_dict(cls, metadata):
         """Create a new MLPipeline from a dict specification.
 
-        The dict structure is the same as the one created by the to_dict method.
+        The dict structure is the same as the one created by the `to_dict` method.
 
         Args:
             metadata (dict): Dictionary containing the pipeline specification.
 
         Returns:
-            MLPipeline: A new MLPipeline instance with the details found in the
-                        given specification dictionary.
+            MLPipeline:
+                A new MLPipeline instance with the details found in the
+                given specification dictionary.
         """
         hyperparameters = metadata.get('hyperparameters')
         tunable = metadata.get('tunable_hyperparameters')
@@ -356,14 +359,15 @@ class MLPipeline():
     def load(cls, path):
         """Create a new MLPipeline from a JSON specification.
 
-        The JSON file format is the same as the one created by the save method.
+        The JSON file format is the same as the one created by the `to_dict` method.
 
         Args:
             path (str): Path of the JSON file to load.
 
         Returns:
-            MLPipeline: A new MLPipeline instance with the specification found
-                        in the JSON file.
+            MLPipeline:
+                A new MLPipeline instance with the specification found
+                in the JSON file.
         """
         with open(path, 'r') as in_file:
             metadata = json.load(in_file)

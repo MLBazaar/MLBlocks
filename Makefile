@@ -49,7 +49,6 @@ clean-pyc: ## remove Python file artifacts
 
 .PHONY: clean-docs
 clean-docs: ## remove previously built docs
-	rm -f docs/api/*.rst
 	-$(MAKE) -C docs clean 2>/dev/null  # this fails if sphinx is not yet installed
 
 .PHONY: clean-coverage
@@ -132,6 +131,7 @@ view-docs: docs ## view docs in browser
 .PHONY: serve-docs
 serve-docs: view-docs ## compile the docs watching for changes
 	watchmedo shell-command -W -R -D -p '*.rst;*.md' -c '$(MAKE) -C docs html' .
+
 
 # RELEASE TARGETS
 

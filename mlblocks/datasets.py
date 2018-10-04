@@ -1,3 +1,42 @@
+# -*- coding: utf-8 -*-
+
+"""
+Datasets module.
+
+This module contains functions that allow loading datasets for easy
+testing of pipelines and primitives over multiple data modalities
+and task types.
+
+The available datasets by data modality and task type are:
+
++---------------+---------------+-------------------------+
+| Dataset       | Data Modality | Task Type               |
++===============+===============+=========================+
+| Amazon        | Graph         | Community Detection     |
++---------------+---------------+-------------------------+
+| DIC28         | Graph         | Graph Matching          |
++---------------+---------------+-------------------------+
+| UMLs          | Graph         | Link Prediction         |
++---------------+---------------+-------------------------+
+| Nomination    | Graph         | Vertex Nomination       |
++---------------+---------------+-------------------------+
+| USPS          | Image         | Classification          |
++---------------+---------------+-------------------------+
+| Hand Geometry | Image         | Regression              |
++---------------+---------------+-------------------------+
+| Iris          | Tabular       | Classification          |
++---------------+---------------+-------------------------+
+| Iester        | Tabular       | Collaborative Filtering |
++---------------+---------------+-------------------------+
+| Ioston        | Tabular       | Regression              |
++---------------+---------------+-------------------------+
+| Iersonae      | Text          | Classification          |
++---------------+---------------+-------------------------+
+| News Groups   | Text          | Classification          |
++---------------+---------------+-------------------------+
+
+"""
+
 import io
 import os
 import tarfile
@@ -9,7 +48,7 @@ import pandas as pd
 from keras.preprocessing.image import img_to_array, load_img
 from sklearn import datasets
 from sklearn.metrics import accuracy_score, normalized_mutual_info_score, r2_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
 
 INPUT_SHAPE = [224, 224, 3]
 
@@ -20,22 +59,124 @@ DATA_PATH = os.path.join(
 DATA_URL = 'http://dai-mlblocks.s3.amazonaws.com/{}.tar.gz'
 
 
-class Dataset(object):
-    def __init__(self, name, X, y, score, **kwargs):
-        self.name = name
+class Dataset():
+    """Dataset class.
+
+    This class represents the abstraction of a dataset and works as
+    a container of all the things needed in order to use a dataset
+    for testing.
+
+    Among other things, it includes the actual dataset data, information
+    about its origin, a score function that works for this dataset,
+    and a method to split the data in multiple ways for goodnes-of-fit
+    evaluation.
+
+    Attributes:
+        name (str): Name of this dataset.
+        description (str): Short description about the data that composes this dataset.
+        data (array-like): Numpy array or pandas DataFrame containing all the data of
+            this dataset, excluding the labels or target values.
+        target (array-like): Numpy array or pandas Series containing the expected labels
+            or values
+        **kwargs: Any additional keyword argument passed on initailization is also
+            available as instance attributes.
+
+    Args:
+        description (str): Short description about the data that composes this dataset.
+            The first line of the description is expected to be a human friendly
+            name for the dataset, and will be set as the `name` attribute.
+        data (array-like): Numpy array or pandas DataFrame containing all the data of
+            this dataset, excluding the labels or target values.
+        target (array-like): Numpy array or pandas Series containing the expected labels
+            or values
+        score (callable): Function that will be used to compute the score of this dataset.
+        shuffle (bool): Whether or not to shuffle the data before splitting.
+        stratify (bool): Whther to use a stratified or regular KFold for splitting.
+        **kwargs: Any additional keyword argument passed on initialization will be made
+            available as instance attributes.
+    """
+    def __init__(self, description, data, target, score, shuffle=True, stratify=False, **kwargs):
+
+        self.name = description.splitlines()[0]
+        self.description = description
+
+        self.data = data
+        self.target = target
+
+        self._stratify = stratify
+        self._shuffle = shuffle
+        self._score = score
+
         self.__dict__.update(kwargs)
 
-        self.data = X
-        self.target = y
+    def score(self, *args, **kwargs):
+        """Scoring function for this dataset.
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y)
+        Args:
+            \*args, \*\*kwargs: Any given arguments and keyword arguments will be
+            directly passed to the given scoring function.
 
-        self.train_data = X_train
-        self.test_data = X_test
-        self.train_target = y_train
-        self.test_target = y_test
+        Returns:
+            float:
+                The computed score.
+        """
+        return self._score(*args, **kwargs)
 
-        self.score = score
+    def __repr__(self):
+        return self.name
+
+    def describe(self):
+        """Print the description of this Dataset on stdout."""
+        print(self.description)
+
+    @staticmethod
+    def _get_split(data, index):
+        if hasattr(data, 'iloc'):
+            return data.iloc[index]
+        else:
+            return data[index]
+
+    def get_splits(self, n_splits=1):
+        """Return splits of this dataset ready for Cross Validation.
+
+        If n_splits is 1, a tuple containing the X for train and test
+        and the y for train and test is returned.
+        Otherwise, if n_splits is bigger than 1, a list of such tuples
+        is returned, one for each split.
+
+        Args:
+            n_splits (int): Number of times that the data needs to be splitted.
+
+        Returns:
+            tuple or list:
+                if n_splits is 1, a tuple containing the X for train and test
+                and the y for train and test is returned.
+                Otherwise, if n_splits is bigger than 1, a list of such tuples
+                is returned, one for each split.
+        """
+        if n_splits == 1:
+            stratify = self.target if self._stratify else None
+
+            return train_test_split(
+                self.data,
+                self.target,
+                shuffle=self._shuffle,
+                stratify=stratify
+            )
+
+        else:
+            cv_class = StratifiedKFold if self._stratify else KFold
+            cv = cv_class(n_splits=n_splits, shuffle=self._shuffle)
+
+            splits = list()
+            for train, test in cv.split(self.data, self.target):
+                X_train = self._get_split(self.data, train)
+                y_train = self._get_split(self.target, train)
+                X_test = self._get_split(self.data, test)
+                y_test = self._get_split(self.target, test)
+                splits.append((X_train, X_test, y_train, y_test))
+
+            return splits
 
 
 def _download(dataset_name, dataset_path):
@@ -73,49 +214,84 @@ def _load_images(image_dir, filenames):
 
 
 def load_usps():
+    """USPs Digits Dataset.
+
+    The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
+    containing 9298 224x224 RGB photos of handwritten digits, and the target is
+    a 1d numpy integer array containing the label of the digit represented in
+    the image.
+    """
     dataset_path = _load('usps')
 
     df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.label.values
 
-    return Dataset('usps', X, y, accuracy_score)
+    return Dataset(load_usps.__doc__, X, y, accuracy_score, stratify=True)
 
 
 def load_handgeometry():
+    """Hand Geometry Dataset.
+
+    The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
+    containing 112 224x224 RGB photos of hands, and the target is a 1d numpy
+    float array containing the width of the wrist in centimeters.
+    """
     dataset_path = _load('handgeometry')
 
     df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.target.values
 
-    return Dataset('handgeometry', X, y, r2_score)
+    return Dataset(load_handgeometry.__doc__, X, y, r2_score)
 
 
 def load_personae():
+    """Personae Dataset.
+
+    The data of this dataset is a 2d numpy array vector containing 145 entries
+    that include texts written by Dutch users in Twitter, with some additional
+    information about the author, and the target is a 1d numpy binary integer
+    array indicating whether the author was extrovert or not.
+    """
     dataset_path = _load('personae')
 
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    return Dataset('personae', X, y, accuracy_score)
+    return Dataset(load_personae.__doc__, X, y, accuracy_score, stratify=True)
 
 
 def load_umls():
+    """UMLs Dataset.
+
+    The data consists of information about a 135 Graph and the relations between
+    their nodes given as a DataFrame with three columns, source, target and type,
+    indicating which nodes are related and with which type of link. The target is
+    a 1d numpy binary integer array indicating whether the indicated link exists
+    or not.
+    """
     dataset_path = _load('umls')
 
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    node_columns = ['source', 'target']
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset('umls', X, y, accuracy_score, graph=graph, node_columns=node_columns)
+    return Dataset(load_umls.__doc__, X, y, accuracy_score, stratify=True, graph=graph)
 
 
 def load_dic28():
-    """
-    "datasetName": "DIC28 from Pajek",
+    """DIC28 Dataset from Pajek.
+
+    This network represents connections among English words in a dictionary.
+    It was generated from Knuth's dictionary. Two words are connected by an
+    edge if we can reach one from the other by
+    - changing a single character (e. g., work - word)
+    - adding / removing a single character (e. g., ever - fever).
+
+    There exist 52,652 words (vertices in a network) having 2 up to 8 characters
+    in the dictionary. The obtained network has 89038 edges.
     """
 
     dataset_path = _load('dic28')
@@ -123,13 +299,21 @@ def load_dic28():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    node_columns = ['graph1', 'graph2']
+    graph1 = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph1.gml')))
+    graph2 = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph2.gml')))
+
+    graph = graph1.copy()
+    graph.add_nodes_from(graph2.nodes(data=True))
+    graph.add_edges_from(graph2.edges)
+    graph.add_edges_from(X[['graph1', 'graph2']].values)
+
     graphs = {
-        'graph1': nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph1.gml'))),
-        'graph2': nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph2.gml')))
+        'graph1': graph1,
+        'graph2': graph2,
     }
 
-    return Dataset('dic28', X, y, accuracy_score, graphs=graphs, node_columns=node_columns)
+    return Dataset(load_dic28.__doc__, X, y, accuracy_score,
+                   stratify=True, graph=graph, graphs=graphs)
 
 
 def load_nomination():
@@ -144,11 +328,9 @@ def load_nomination():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('label').values
 
-    graphs = {
-        'node_id': nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
-    }
+    graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset('nomination', X, y, accuracy_score, graphs=graphs)
+    return Dataset(load_nomination.__doc__, X, y, accuracy_score, stratify=True, graph=graph)
 
 
 def load_amazon():
@@ -167,7 +349,7 @@ def load_amazon():
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
 
-    return Dataset('amazon', X, y, normalized_mutual_info_score, graph=graph)
+    return Dataset(load_amazon.__doc__, X, y, normalized_mutual_info_score, graph=graph)
 
 
 def load_jester():
@@ -185,43 +367,29 @@ def load_jester():
     X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
     y = X.pop('rating').values
 
-    return Dataset('jester', X, y, r2_score)
+    return Dataset(load_jester.__doc__, X, y, r2_score)
 
 
 def load_newsgroups():
+    """20 News Groups Dataset.
+
+    The data of this dataset is a 1d numpy array vector containing the texts
+    from 11314 newsgroups posts, and the target is a 1d numpy integer array
+    containing the label of one of the 20 topics that they are about.
+    """
     dataset = datasets.fetch_20newsgroups()
-    return Dataset('newsgroups', dataset.data, dataset.target, accuracy_score)
+    return Dataset(load_newsgroups.__doc__, dataset.data, dataset.target,
+                   accuracy_score, stratify=True)
 
 
 def load_iris():
+    """Iris Dataset."""
     dataset = datasets.load_iris()
-    return Dataset('iris', dataset.data, dataset.target, accuracy_score)
+    return Dataset(load_iris.__doc__, dataset.data, dataset.target,
+                   accuracy_score, stratify=True)
 
 
 def load_boston():
+    """Boston House Prices Dataset."""
     dataset = datasets.load_boston()
-    return Dataset('iris', dataset.data, dataset.target, r2_score)
-
-
-LOADERS = {
-    'graph/community_detection': load_amazon,
-    'graph/graph_matching': load_dic28,
-    'graph/linkPrediction': load_umls,
-    'graph/vertex_nomination': load_nomination,
-    'image/classification': load_usps,
-    'image/regression': load_handgeometry,
-    'single_table/classification': load_iris,
-    'single_table/collaborative_filtering': load_jester,
-    'single_table/regression': load_boston,
-    'text/classification': load_personae,
-}
-
-
-def load_dataset(data_modality, task_type):
-    problem_type = data_modality + '/' + task_type
-    loader = LOADERS.get(problem_type)
-
-    if not loader:
-        raise ValueError('Unknown problem type: {}'.format(problem_type))
-
-    return loader()
+    return Dataset(load_boston.__doc__, dataset.data, dataset.target, r2_score)

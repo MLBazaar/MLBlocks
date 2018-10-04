@@ -30,21 +30,35 @@ setup_requires = [
 
 
 development_requires = [
-    'Sphinx>=1.7.1',
+    # general
     'bumpversion>=0.5.3',
-    'coverage>=4.5.1',
-    'flake8>=3.5.0',
+    'pip>=9.0.1',
+    'watchdog>=0.8.3',
+
+    # docs
+    'm2r>=0.2.0',
+    'Sphinx>=1.7.1',
+    'sphinx_rtd_theme>=0.2.4',
     'graphviz==0.9',
     'ipython==6.5.0',
-    'isort>=4.3.4',
     'matplotlib==2.2.3',
     'recommonmark>=0.4.0',
-    'sphinx_rtd_theme>=0.2.4',
-    'tox>=2.9.1',
+
+    # style check
+    'flake8>=3.5.0',
+    'isort>=4.3.4',
+
+    # fix style issues
+    'autoflake>=1.2',  # keep this after flake8 to avoid
+    'autopep8>=1.3.5', # version incompatibilities with flake8
+
+    # distribute on PyPI
     'twine>=1.10.0',
     'wheel>=0.30.0',
-    'autoflake>=1.2',  # keep this at the end to avoid
-    'autopep8>=1.3.5', # version incompatibilities with flake8
+
+    # Advanced testing
+    'tox>=2.9.1',
+    'coverage>=4.5.1',
 ]
 
 
@@ -83,6 +97,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.2.2',
+    version='0.2.3-dev',
     zip_safe=False,
 )

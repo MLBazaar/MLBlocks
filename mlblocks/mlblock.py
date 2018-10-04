@@ -4,7 +4,7 @@
 
 import importlib
 
-import mlblocks
+from mlblocks.primitives import load_primitive
 
 
 def import_object(object_name):
@@ -111,7 +111,7 @@ class MLBlock():
 
         self.name = name
 
-        metadata = mlblocks.load_primitive(name)
+        metadata = load_primitive(name)
 
         self.primitive = import_object(metadata['primitive'])
 
@@ -160,9 +160,10 @@ class MLBlock():
         during the initalization.
 
         Returns:
-            dict: the dictionary containing the hyperparameters that can be
-                  tuned, their types and, if applicable, the accepted
-                  ranges or values.
+            dict:
+                the dictionary containing the hyperparameters that can be
+                tuned, their types and, if applicable, the accepted
+                ranges or values.
         """
         return self._tunable.copy()
 
@@ -170,8 +171,9 @@ class MLBlock():
         """Get hyperparameters values that the current MLBlock is using.
 
         Returns:
-            dict: the dictionary containing the hyperparameter values that the
-                  MLBlock is currently using.
+            dict:
+                the dictionary containing the hyperparameter values that the
+                MLBlock is currently using.
         """
         return self._hyperparamters
 
