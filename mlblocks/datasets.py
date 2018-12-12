@@ -24,13 +24,15 @@ The available datasets by data modality and task type are:
 +---------------+---------------+-------------------------+
 | Hand Geometry | Image         | Regression              |
 +---------------+---------------+-------------------------+
-| Iris          | Tabular       | Classification          |
+| Iris          | Single Table  | Classification          |
 +---------------+---------------+-------------------------+
-| Iester        | Tabular       | Collaborative Filtering |
+| Jester        | Single Table  | Collaborative Filtering |
 +---------------+---------------+-------------------------+
-| Ioston        | Tabular       | Regression              |
+| Boston        | Single Table  | Regression              |
 +---------------+---------------+-------------------------+
-| Iersonae      | Text          | Classification          |
+| Wiki QA       | Multi Table   | Classification          |
++---------------+---------------+-------------------------+
+| Personae      | Text          | Classification          |
 +---------------+---------------+-------------------------+
 | News Groups   | Text          | Classification          |
 +---------------+---------------+-------------------------+
@@ -213,6 +215,16 @@ def _load_images(image_dir, filenames):
     return np.array(images)
 
 
+def _load_csv(dataset_path, name, set_index=False):
+    csv_path = os.path.join(dataset_path, name + '.csv')
+    df = pd.read_csv(csv_path)
+
+    if set_index:
+        df = df.set_index(df.columns[0], drop=False)
+
+    return df
+
+
 def load_usps():
     """USPs Digits Dataset.
 
@@ -223,7 +235,7 @@ def load_usps():
     """
     dataset_path = _load('usps')
 
-    df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    df = _load_csv(dataset_path, 'data')
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.label.values
 
@@ -239,7 +251,7 @@ def load_handgeometry():
     """
     dataset_path = _load('handgeometry')
 
-    df = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    df = _load_csv(dataset_path, 'data')
     X = _load_images(os.path.join(dataset_path, 'images'), df.image)
     y = df.target.values
 
@@ -256,7 +268,7 @@ def load_personae():
     """
     dataset_path = _load('personae')
 
-    X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    X = _load_csv(dataset_path, 'data')
     y = X.pop('label').values
 
     return Dataset(load_personae.__doc__, X, y, accuracy_score, stratify=True)
@@ -273,7 +285,7 @@ def load_umls():
     """
     dataset_path = _load('umls')
 
-    X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    X = _load_csv(dataset_path, 'data')
     y = X.pop('label').values
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
@@ -296,7 +308,7 @@ def load_dic28():
 
     dataset_path = _load('dic28')
 
-    X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    X = _load_csv(dataset_path, 'data')
     y = X.pop('label').values
 
     graph1 = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph1.gml')))
@@ -325,7 +337,7 @@ def load_nomination():
 
     dataset_path = _load('nomination')
 
-    X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    X = _load_csv(dataset_path, 'data')
     y = X.pop('label').values
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
@@ -344,7 +356,7 @@ def load_amazon():
 
     dataset_path = _load('amazon')
 
-    X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    X = _load_csv(dataset_path, 'data')
     y = X.pop('label').values
 
     graph = nx.Graph(nx.read_gml(os.path.join(dataset_path, 'graph.gml')))
@@ -364,10 +376,44 @@ def load_jester():
 
     dataset_path = _load('jester')
 
-    X = pd.read_csv(os.path.join(dataset_path, 'data.csv'))
+    X = _load_csv(dataset_path, 'data')
     y = X.pop('rating').values
 
     return Dataset(load_jester.__doc__, X, y, r2_score)
+
+
+def load_wikiqa():
+    """A Challenge Dataset for Open-Domain Question Answering.
+
+    WikiQA dataset is a publicly available set of question and sentence (QS) pairs,
+    collected and annotated for research on open-domain question answering.
+
+    source: "Microsoft"
+    sourceURI: "https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/#"
+    """  # noqa
+
+    dataset_path = _load('wikiqa')
+
+    data = _load_csv(dataset_path, 'data', set_index=True)
+    questions = _load_csv(dataset_path, 'questions', set_index=True)
+    sentences = _load_csv(dataset_path, 'sentences', set_index=True)
+    vocabulary = _load_csv(dataset_path, 'vocabulary', set_index=True)
+
+    entities = {
+        'data': (data, 'd3mIndex', None),
+        'questions': (questions, 'qIndex', None),
+        'sentences': (sentences, 'sIndex', None),
+        'vocabulary': (vocabulary, 'index', None)
+    }
+    relationships = [
+        ('questions', 'qIndex', 'data', 'qIndex'),
+        ('sentences', 'sIndex', 'data', 'sIndex')
+    ]
+
+    target = data.pop('isAnswer').values
+
+    return Dataset(load_wikiqa.__doc__, data, target, accuracy_score, startify=True,
+                   entities=entities, relationships=relationships)
 
 
 def load_newsgroups():
