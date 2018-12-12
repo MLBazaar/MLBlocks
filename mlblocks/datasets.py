@@ -115,7 +115,7 @@ class Dataset():
         """Scoring function for this dataset.
 
         Args:
-            \*args, \*\*kwargs: Any given arguments and keyword arguments will be
+            \\*args, \\*\\*kwargs: Any given arguments and keyword arguments will be
             directly passed to the given scoring function.
 
         Returns:
