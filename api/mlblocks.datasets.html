@@ -288,22 +288,26 @@ and task types.</p>
 <td>Regression</td>
 </tr>
 <tr class="row-even"><td>Iris</td>
-<td>Tabular</td>
+<td>Single Table</td>
 <td>Classification</td>
 </tr>
-<tr class="row-odd"><td>Iester</td>
-<td>Tabular</td>
+<tr class="row-odd"><td>Jester</td>
+<td>Single Table</td>
 <td>Collaborative Filtering</td>
 </tr>
-<tr class="row-even"><td>Ioston</td>
-<td>Tabular</td>
+<tr class="row-even"><td>Boston</td>
+<td>Single Table</td>
 <td>Regression</td>
 </tr>
-<tr class="row-odd"><td>Iersonae</td>
+<tr class="row-odd"><td>Wiki QA</td>
+<td>Multi Table</td>
+<td>Classification</td>
+</tr>
+<tr class="row-even"><td>Personae</td>
 <td>Text</td>
 <td>Classification</td>
 </tr>
-<tr class="row-even"><td>News Groups</td>
+<tr class="row-odd"><td>News Groups</td>
 <td>Text</td>
 <td>Classification</td>
 </tr>
@@ -566,6 +570,16 @@ a 1d numpy integer array containing the label of the digit represented in
 the image.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="mlblocks.datasets.load_wikiqa">
+<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_wikiqa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.datasets.load_wikiqa" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Challenge Dataset for Open-Domain Question Answering.</p>
+<p>WikiQA dataset is a publicly available set of question and sentence (QS) pairs,
+collected and annotated for research on open-domain question answering.</p>
+<p>source: “Microsoft”
+sourceURI: “<a class="reference external" href="https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering">https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering</a>/#”</p>
+</dd></dl>
+
 </div>
 
 
@@ -588,7 +602,7 @@ the image.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, MIT Data To AI Lab.
+        &copy; Copyright 2018, MIT Data To AI Lab
 
     </p>
   </div>
@@ -607,21 +621,13 @@ the image.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.2.4-dev',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 
