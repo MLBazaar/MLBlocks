@@ -15,6 +15,7 @@ with open('HISTORY.md') as history_file:
 
 
 install_requires = [
+    'mlprimitives>=0.1.3',
 ]
 
 
@@ -62,11 +63,6 @@ development_requires = [
 ]
 
 
-demo_requires = [
-    'mlprimitives==0.1.1',
-]
-
-
 setup(
     author='MIT Data To AI Lab',
     author_email='dailabmit@gmail.com',
@@ -81,8 +77,7 @@ setup(
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
-        'demo': demo_requires,
-        'dev': demo_requires + development_requires + tests_require,
+        'dev': development_requires + tests_require,
         'test': tests_require,
     },
     include_package_data=True,
