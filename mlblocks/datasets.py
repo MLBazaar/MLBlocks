@@ -424,7 +424,7 @@ def load_newsgroups():
     containing the label of one of the 20 topics that they are about.
     """
     dataset = datasets.fetch_20newsgroups()
-    return Dataset(load_newsgroups.__doc__, dataset.data, dataset.target,
+    return Dataset(load_newsgroups.__doc__, np.array(dataset.data), dataset.target,
                    accuracy_score, stratify=True)
 
 
