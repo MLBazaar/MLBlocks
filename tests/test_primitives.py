@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import json
 import os
+import tempfile
 import uuid
 from unittest.mock import patch
 
@@ -38,3 +40,26 @@ def test_get_primitives_paths():
     paths = primitives.get_primitives_paths()
 
     assert paths == ['a', 'b']
+
+
+@patch('mlblocks.primitives._PRIMITIVES_PATHS', new=['a', 'b'])
+def test_load_primitive_value_error():
+    with pytest.raises(ValueError):
+        primitives.load_primitive('invalid.primitive')
+
+
+def test_load_primitive_success():
+    primitive = {
+        'name': 'temp.primitive',
+        'primitive': 'temp.primitive'
+    }
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        primitives.add_primitives_path(tempdir)
+        primitive_path = os.path.join(tempdir, 'temp.primitive.json')
+        with open(primitive_path, 'w') as primitive_file:
+            json.dump(primitive, primitive_file, indent=4)
+
+        loaded = primitives.load_primitive('temp.primitive')
+
+        assert primitive == loaded
