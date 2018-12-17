@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from unittest import TestCase
-# from unittest.mock import patch
-
-# from mlblocks.mlpipeline import MLPipeline
 
 
 class TestMLPipline(TestCase):
