@@ -295,7 +295,7 @@ a dictionary with the <a class="reference external" href="../advanced_usage/hype
 <span class="go">  &#39;with_std&#39;: True},</span>
 <span class="go"> &#39;xgboost.XGBClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
 <span class="go">  &#39;learning_rate&#39;: 0.1,</span>
-<span class="go">  &#39;n_estimators&#39;: 10,</span>
+<span class="go">  &#39;n_estimators&#39;: 100,</span>
 <span class="go">  &#39;max_depth&#39;: 3,</span>
 <span class="go">  &#39;gamma&#39;: 0,</span>
 <span class="go">  &#39;min_child_weight&#39;: 1}}</span>
@@ -317,8 +317,8 @@ as <a class="reference external" href="https://github.com/HDI-Project/BTB">BTB</
 <span class="go">   &#39;default&#39;: True},</span>
 <span class="go">  &#39;with_std&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True}},</span>
 <span class="go"> &#39;xgboost.XGBClassifier#1&#39;: {&#39;n_estimators&#39;: {&#39;type&#39;: &#39;int&#39;,</span>
-<span class="go">   &#39;default&#39;: 10,</span>
-<span class="go">   &#39;range&#39;: [10, 500]},</span>
+<span class="go">   &#39;default&#39;: 100,</span>
+<span class="go">   &#39;range&#39;: [10, 1000]},</span>
 <span class="go">  &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 3, &#39;range&#39;: [3, 10]},</span>
 <span class="go">  &#39;gamma&#39;: {&#39;type&#39;: &#39;float&#39;, &#39;default&#39;: 0, &#39;range&#39;: [0, 1]},</span>
 <span class="go">  &#39;min_child_weight&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 1, &#39;range&#39;: [1, 10]}}}</span>
@@ -369,8 +369,8 @@ to obtain predictions from the pipeline.</p>
 
 <span class="gp">In [17]: </span><span class="n">predictions</span>
 <span class="gh">Out[17]: </span><span class="go"></span>
-<span class="go">array([0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 0, 1, 0, 2, 2, 1, 1, 0, 1,</span>
-<span class="go">       0, 1, 1, 1, 0, 1, 0, 0, 2, 0, 1, 2, 2, 1, 0, 2])</span>
+<span class="go">array([0, 0, 2, 1, 2, 2, 1, 1, 0, 2, 2, 2, 1, 1, 0, 2, 2, 0, 2, 2, 1, 1,</span>
+<span class="go">       1, 1, 0, 2, 1, 1, 0, 0, 0, 0, 1, 2, 0, 1, 1, 0])</span>
 
 <span class="gp">In [18]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 <span class="go">                                                                                                                                           Out[18]: 0.9736842105263158</span>
