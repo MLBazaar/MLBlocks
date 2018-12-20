@@ -62,7 +62,8 @@ integrate with deep learning libraries.
    :caption: Pipeline Examples
    :maxdepth: 1
 
-   pipeline_examples/tabular
+   pipeline_examples/single_table
+   pipeline_examples/multi_table
    pipeline_examples/text
    pipeline_examples/image
    pipeline_examples/graph

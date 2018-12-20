@@ -20,6 +20,10 @@ In this example we will start by applying some text cleanup using the `TextClean
 from MLPrimitives, to then go into some `keras preprocessing` primitives and end
 using a `Keras LSTM Classifier from MLPrimitives`_
 
+Note how in this case we are using the ``input_names`` and ``output_names`` to properly
+setup the pipeline and allow using the outputs from some primitives as additional inputs
+for later ones.
+
 .. code-block:: python
 
     import nltk
@@ -34,32 +38,43 @@ using a `Keras LSTM Classifier from MLPrimitives`_
     # Make sure that we have the necessary data
     nltk.download('stopwords')
 
-    # Compute the vocabulary length.
-    # This is required by the LSTM primitive
-    vocabulary = set()
-    pad_length = 0
-    for text in X_train:
-        words = text.split()
-        pad_length = max(pad_length, len(words))
-        vocabulary.update(words)
-
+    # set up the pipeline
     primitives = [
-        'mlprimitives.text.TextCleaner',
-        'keras.preprocessing.text.Tokenizer',
-        'keras.preprocessing.sequence.pad_sequences',
-        'keras.Sequential.LSTMTextClassifier'
+        "mlprimitives.counters.UniqueCounter",
+        "mlprimitives.text.TextCleaner",
+        "mlprimitives.counters.VocabularyCounter",
+        "keras.preprocessing.text.Tokenizer",
+        "keras.preprocessing.sequence.pad_sequences",
+        "keras.Sequential.LSTMTextClassifier"
     ]
-    init_params = {
-        'mlprimitives.text.TextCleaner': {
-            'language': 'en'
-        },
-        'keras.Sequential.LSTMTextClassifier': {
-            'dense_units': 20,
-            'pad_length': 100,
-            'embedding_input_dim': len(vocabulary) + 1
+    input_names = {
+        "mlprimitives.counters.UniqueCounter#1": {
+            "X": "y"
         }
     }
-    pipeline = MLPipeline(primitives, init_params)
+    output_names = {
+        "mlprimitives.counters.UniqueCounter#1": {
+            "counts": "classes"
+        },
+        "mlprimitives.counters.VocabularyCounter#1": {
+            "counts": "vocabulary_size"
+        }
+    }
+    init_params = {
+        "mlprimitives.counters.VocabularyCounter#1": {
+            "add": 1
+        },
+        "mlprimitives.text.TextCleaner#1": {
+            "language": "en"
+        },
+        "keras.preprocessing.sequence.pad_sequences#1": {
+            "maxlen": 100
+        },
+        "keras.Sequential.LSTMTextClassifier#1": {
+            "input_length": 100
+        }
+    }
+    pipeline = MLPipeline(primitives, init_params, input_names, output_names)
 
     pipeline.fit(X_train, y_train)
 

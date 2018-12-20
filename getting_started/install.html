@@ -119,6 +119,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#representing-a-pipeline-as-a-dict">Representing a  Pipeline as a dict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#loading-a-pipeline-from-a-dict">Loading a Pipeline from a dict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
@@ -131,9 +136,13 @@
 </ul>
 <p class="caption"><span class="caption-text">Pipeline Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/tabular.html">Tabular Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#regression-pipeline">Regression Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/tabular.html#classification-pipeline">Classification Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/single_table.html#classification-pipeline">Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/multi_table.html">Multi Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/multi_table.html#multi-table-classification-pipeline">Multi Table Classification Pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/text.html">Text Pipelines</a><ul>
@@ -256,44 +265,27 @@ you through the process.</p>
 </div>
 <div class="section" id="from-sources">
 <h2>From sources<a class="headerlink" href="#from-sources" title="Permalink to this headline">¶</a></h2>
-<p>The sources for MLBlocks can be downloaded from the <a class="reference external" href="https://github.com/HDI-Project/mlblocks">Github repo</a>.</p>
+<p>The sources for MLBlocks can be downloaded from the <a class="reference external" href="https://github.com/HDI-Project/MLBlocks">Github repo</a>.</p>
 <p>You can either clone the public repository:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone git://github.com/HDI-Project/mlblocks</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone git://github.com/HDI-Project/MLBlocks</span>
 </pre></div>
 </div>
-<p>Or download the <a class="reference external" href="https://github.com/HDI-Project/mlblocks/tarball/master">tarball</a>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl  -OL https://github.com/HDI-Project/mlblocks/tarball/master</span>
+<p>Or download the <a class="reference external" href="https://github.com/HDI-Project/MLBlocks/tarball/master">tarball</a>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">curl  -OL https://github.com/HDI-Project/MLBlocks/tarball/master</span>
 </pre></div>
 </div>
 <p>Once you have a copy of the source, you can install it running the next command inside the
 project folder:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> pip install .
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make install
 </pre></div>
 </div>
-</div>
-<div class="section" id="additional-dependencies">
-<h2>Additional Dependencies<a class="headerlink" href="#additional-dependencies" title="Permalink to this headline">¶</a></h2>
-<p>The previous commands install the bare minimum requirements to make MLBlocks work, but
-additional dependencies should be installed in order to run the <a class="reference external" href="quickstart.html">quickstart</a> and various
-examples found in the documentation.</p>
-<p>The most important of these dependencies is the related project <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which
-includes a huge list of primitives ready to be used by <strong>MLBlocks</strong>.</p>
-<p>Installing these additional dependencies can be achieved by running the command:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install mlblocks[demo]</span>
-</pre></div>
-</div>
-<p>if <strong>MLBlocks</strong> was installed from PyPi, or:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install .[demo]</span>
-</pre></div>
-</div>
-<p>if you installed <strong>MLBlocks</strong> from sources.</p>
 </div>
 <div class="section" id="development">
 <h2>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h2>
 <p>If you are installing <strong>MLBlocks</strong> in order to modify its code, the installation must be done
 from its sources, in the editable mode, and also including some additional dependencies in
 order to be able to run the tests and build the documentation:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e .[dev]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make install-develop</span>
 </pre></div>
 </div>
 </div>

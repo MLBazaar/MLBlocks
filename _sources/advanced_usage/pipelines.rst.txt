@@ -154,11 +154,11 @@ call is issued would be:
 
         X -> X1;
         X1 -> b1 [constraint=false];
-        b1 -> X2 [label=modified];
-        X2 -> b2 [constraint=false]
-        b2 -> X3 [label=modified];
-        X3 -> b3 [constraint=false]
-        b3 -> y
+        b1 -> X2;
+        X2 -> b2 [constraint=false];
+        b2 -> X3;
+        X3 -> b3 [constraint=false];
+        b3 -> y;
     }
 
 Another schema with some more complexity would be one where there is one primitive that
@@ -191,9 +191,10 @@ of actions would be:
             b1 -> b2 [style=invis];
 
             subgraph cluster_1 {
-                X1 [label=X];
-                f1 [label=features];
-                X2 [label=X];
+                {rank=same X1 f1}
+                X1 [label=X group=c];
+                f1 [label=features group=c];
+                X2 [label=X group=c];
                 f1 -> X1 [style=invis];
                 X1 -> X2 [style=dashed];
                 label = "Context";
@@ -204,8 +205,9 @@ of actions would be:
         {rank=same X features}
         features -> f1;
         X -> X1;
-        {X1 f1} -> b1 [constraint=false];
-        b1 -> X2 [label=encoded];
+        X1 -> b1 [constraint=false];
+        f1 -> b1 [constraint=false];
+        b1 -> X2;
         X2 -> b2 [constraint=false]
         b2 -> y
     }
@@ -242,9 +244,9 @@ do its job:
             b0 -> b1 -> b2 [style=invis];
 
             subgraph cluster_1 {
-                X1 [label=X];
-                f1 [label=features];
-                X2 [label=X];
+                X1 [label=X group=c];
+                f1 [label=features group=c];
+                X2 [label=X group=c];
                 X1 -> f1 -> X2 [style=invis];
                 X1 -> X2 [style=dashed];
                 label = "Context";
@@ -256,11 +258,91 @@ do its job:
         X1 -> b0 [constraint=false];
         b0 -> f1;
         {X1 f1} -> b1 [constraint=false];
-        b1 -> X2 [label=encoded];
+        b1 -> X2;
         X2 -> b2 [constraint=false]
         b2 -> y
     }
 
+
+JSON Annotations
+----------------
+
+Like primitives, Pipelines can also be annotated and stored as dicts or JSON files that contain
+the different arguments expected by the ``MLPipeline`` class, as well as the set hyperparameters
+and tunable hyperparameters.
+
+Representing a  Pipeline as a dict
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The dict representation of an Pipeline can be obtained directly from an ``MLPipeline`` instance,
+by calling its ``to_dict`` method.
+
+.. ipython:: python
+
+    pipeline.to_dict()
+
+Notice how the dict includes all the arguments that used when we created the ``MLPipeline``,
+as well as the hyperparameters that the pipeline is currently using and the complete specification
+of the tunable hypeparameters.
+
+If we want to directly store the dict as a JSON we can do so by calling the ``save`` method
+with the path of the JSON file to create.
+
+.. ipython:: python
+
+    pipeline.save('pipeline.json')
+
+Loading a Pipeline from a dict
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Similarly, once the we have a dict specification, we can load the Pipeline directly from it
+by calling the ``MLPipeline.from_dict`` method.
+
+Bear in mind that the hyperparameter values and tunable ranges will be taken from the dict.
+This means that if we want to tweak the tunable hyperparameters to adjust it to a specific
+problem or dataset, we can do that directly on our dict representation.
+
+.. ipython:: python
+
+    pipeline_dict = {
+        "primitives": [
+            "sklearn.preprocessing.StandardScaler",
+            "sklearn.ensemble.RandomForestClassifier"
+        ],
+        "hyperparameters": {
+            "sklearn.ensemble.RandomForestClassifier#1": {
+                "n_jobs": -1,
+                "n_estimators": 100,
+                "max_depth": 5,
+            }
+        },
+        "tunable_hyperparameters": {
+            "sklearn.ensemble.RandomForestClassifier#1": {
+                "max_depth": {
+                    "type": "int",
+                    "default": 10,
+                    "range": [
+                        1,
+                        30
+                    ]
+                }
+            }
+        }
+    }
+    pipeline = MLPipeline.from_dict(pipeline_dict)
+    pipeline.get_hyperparameters()
+    pipeline.get_tunable_hyperparameters()
+
+.. note:: Notice how we skipped many items in this last dict representation and only included
+    the parts that we want to be different than the default values. MLBlocks will figure out
+    the rest of the elements directly from the primitive annotations on its own!
+
+Like with the ``save`` method, the **MLPipeline** class offers a convenience ``load`` method
+that allows loading the pipeline directly from a JSON file:
+
+.. ipython:: python
+
+    pipeline = MLPipeline.load('pipeline.json')
 
 .. _API Reference: ../api_reference.html
 .. _primitives: ../primitives.html

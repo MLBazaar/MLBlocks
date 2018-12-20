@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Image Pipelines" href="image.html" />
-    <link rel="prev" title="Tabular Pipelines" href="tabular.html" /> 
+    <link rel="prev" title="Multi Table Pipelines" href="multi_table.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -119,6 +119,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#representing-a-pipeline-as-a-dict">Representing a  Pipeline as a dict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#loading-a-pipeline-from-a-dict">Loading a Pipeline from a dict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
@@ -131,9 +136,13 @@
 </ul>
 <p class="caption"><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tabular.html#regression-pipeline">Regression Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tabular.html#classification-pipeline">Classification Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_table.html">Single Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="single_table.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="single_table.html#classification-pipeline">Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multi_table.html">Multi Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multi_table.html#multi-table-classification-pipeline">Multi Table Classification Pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Text Pipelines</a><ul>
@@ -258,6 +267,9 @@ that they are about.</p>
 <p>In this example we will start by applying some text cleanup using the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/text.py">TextCleaner primitive</a>
 from MLPrimitives, to then go into some <cite>keras preprocessing</cite> primitives and end
 using a <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.LSTMTextClassifier.json">Keras LSTM Classifier from MLPrimitives</a></p>
+<p>Note how in this case we are using the <code class="docutils literal notranslate"><span class="pre">input_names</span></code> and <code class="docutils literal notranslate"><span class="pre">output_names</span></code> to properly
+setup the pipeline and allow using the outputs from some primitives as additional inputs
+for later ones.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
 <span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
 <span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_newsgroups</span>
@@ -270,32 +282,43 @@ using a <a class="reference external" href="https://github.com/HDI-Project/MLPri
 <span class="c1"># Make sure that we have the necessary data</span>
 <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;stopwords&#39;</span><span class="p">)</span>
 
-<span class="c1"># Compute the vocabulary length.</span>
-<span class="c1"># This is required by the LSTM primitive</span>
-<span class="n">vocabulary</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-<span class="n">pad_length</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">X_train</span><span class="p">:</span>
-    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="n">pad_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pad_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">))</span>
-    <span class="n">vocabulary</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
-
+<span class="c1"># set up the pipeline</span>
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;mlprimitives.text.TextCleaner&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;keras.preprocessing.text.Tokenizer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;keras.preprocessing.sequence.pad_sequences&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;keras.Sequential.LSTMTextClassifier&#39;</span>
+    <span class="s2">&quot;mlprimitives.counters.UniqueCounter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mlprimitives.text.TextCleaner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mlprimitives.counters.VocabularyCounter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;keras.preprocessing.text.Tokenizer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;keras.preprocessing.sequence.pad_sequences&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;keras.Sequential.LSTMTextClassifier&quot;</span>
 <span class="p">]</span>
-<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;mlprimitives.text.TextCleaner&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;en&#39;</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;keras.Sequential.LSTMTextClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;dense_units&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s1">&#39;pad_length&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-        <span class="s1">&#39;embedding_input_dim&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">input_names</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.counters.UniqueCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span>
     <span class="p">}</span>
 <span class="p">}</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+<span class="n">output_names</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.counters.UniqueCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;counts&quot;</span><span class="p">:</span> <span class="s2">&quot;classes&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;mlprimitives.counters.VocabularyCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;counts&quot;</span><span class="p">:</span> <span class="s2">&quot;vocabulary_size&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.counters.VocabularyCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;add&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;mlprimitives.text.TextCleaner#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;keras.preprocessing.sequence.pad_sequences#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;maxlen&quot;</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;keras.Sequential.LSTMTextClassifier#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;input_length&quot;</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">output_names</span><span class="p">)</span>
 
 <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
@@ -370,7 +393,7 @@ to encode all the string features, and go directly into the
         <a href="image.html" class="btn btn-neutral float-right" title="Image Pipelines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tabular.html" class="btn btn-neutral" title="Tabular Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="multi_table.html" class="btn btn-neutral" title="Multi Table Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

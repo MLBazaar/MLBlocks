@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Graph Pipelines &mdash; MLBlocks 0.2.4-dev documentation</title>
+  <title>Multi Table Pipelines &mdash; MLBlocks 0.2.4-dev documentation</title>
   
 
   
@@ -31,8 +31,8 @@
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="mlblocks" href="../api/mlblocks.html" />
-    <link rel="prev" title="Image Pipelines" href="image.html" /> 
+    <link rel="next" title="Text Pipelines" href="text.html" />
+    <link rel="prev" title="Single Table Pipelines" href="single_table.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -141,8 +141,8 @@
 <li class="toctree-l2"><a class="reference internal" href="single_table.html#classification-pipeline">Classification Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="multi_table.html">Multi Table Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="multi_table.html#multi-table-classification-pipeline">Multi Table Classification Pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Multi Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#multi-table-classification-pipeline">Multi Table Classification Pipeline</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text Pipelines</a><ul>
@@ -168,9 +168,9 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Graph Pipelines</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#link-prediction">Link Prediction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graph.html">Graph Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graph.html#link-prediction">Link Prediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
 </ul>
 </li>
 </ul>
@@ -231,14 +231,14 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Graph Pipelines</li>
+      <li>Multi Table Pipelines</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/pipeline_examples/graph.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/pipeline_examples/multi_table.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -252,65 +252,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="graph-pipelines">
-<h1>Graph Pipelines<a class="headerlink" href="#graph-pipelines" title="Permalink to this headline">¶</a></h1>
-<p>Here we will be showing some examples using <strong>MLBlocks</strong> to resolve graph problems.</p>
-<div class="section" id="link-prediction">
-<h2>Link Prediction<a class="headerlink" href="#link-prediction" title="Permalink to this headline">¶</a></h2>
-<p>For the Graph Link Prediction  examples we will be using the UMLS biomedical ontology dataset,
-which we will load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_umls</span></code> function.</p>
-<p>The data consists of information about a 135 Graph and the relations between their nodes given
-as a DataFrame with three columns, <cite>source</cite>, <cite>target</cite> and <cite>type</cite>, indicating which nodes are
-related and with which type of link.
-The target is a 1d numpy binary integer array indicating whether the indicated link exists or not.</p>
-<div class="section" id="networkx-mlprimitives-scikit-learn-xgboost">
-<h3>NetworkX + MLPrimitives + Scikit-learn + XGBoost<a class="headerlink" href="#networkx-mlprimitives-scikit-learn-xgboost" title="Permalink to this headline">¶</a></h3>
-<p>In this example, we will go use some <cite>NetworkX Link Prediction</cite> functions to extract attributes
-from the Graph, to later on encode the categorical features with the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.feature_extraction.CategoricalEncoder.json">CategoricalEncoder from
-MLPrimitives</a>, scale the data using the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html">StandardScaler from scikit-learn</a> and finally go into
-an <cite>XGBClassifier</cite>.</p>
-<p>Note how in this example, the Graph objects and the names of the node columns are passed as
-additional variables to be added to the context, as the NetworkX primitive will need some
-additional information not found inside <cite>X</cite>.</p>
+  <div class="section" id="multi-table-pipelines">
+<h1>Multi Table Pipelines<a class="headerlink" href="#multi-table-pipelines" title="Permalink to this headline">¶</a></h1>
+<p>In the previous section we explored the most simple use cases, where the datasets
+consisted in a single table.</p>
+<p>In this section we will cover cases where the dataset consist on multiple tables
+related by foreign keys.</p>
+<div class="section" id="multi-table-classification-pipeline">
+<h2>Multi Table Classification Pipeline<a class="headerlink" href="#multi-table-classification-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will be using the <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/">WikiQA dataset</a>, which contains 4 different tables
+with simple parent/child relationships, and which we will load using the
+<code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_wikiqa</span></code> function.</p>
+<p>In our pipeline, we will be using the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/featuretools.dfs.json">DeepFeatureSynthesis</a> primitive from <a class="reference external" href="https://www.featuretools.com/">featuretools</a>
+for feature extraction over the various tables that we have and later on apply an
+<a class="reference external" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn">XGBClassifier</a> on the resulting feature matrix.</p>
+<p>Note how in this example we need to pass some additional information to the pipeline
+for the DFS primitive for it to know what the relationships between the multiple
+tables are.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_umls</span>
+<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_wikiqa</span>
 
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_umls</span><span class="p">()</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_wikiqa</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;networkx.link_prediction_feature_extraction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mlprimitives.feature_extraction.CategoricalEncoder&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;featuretools.dfs&#39;</span><span class="p">,</span>
     <span class="s1">&#39;xgboost.XGBClassifier&#39;</span>
 <span class="p">]</span>
-<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;xgboost.XGBClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.1</span>
-    <span class="p">}</span>
-<span class="p">}</span>
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
 
-<span class="n">node_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]</span>
-<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-    <span class="n">X_train</span><span class="p">,</span>
-    <span class="n">y_train</span><span class="p">,</span>
-    <span class="n">graph</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>       <span class="c1"># These will be set in the pipeline Context</span>
-    <span class="n">node_columns</span><span class="o">=</span><span class="n">node_columns</span>  <span class="c1"># and made available for the networkx primitive</span>
-<span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">entities</span><span class="p">,</span>
+             <span class="n">relationships</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">relationships</span><span class="p">,</span> <span class="n">target_entity</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-    <span class="n">X_test</span><span class="p">,</span>
-    <span class="n">graph</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>       <span class="c1"># These will be set in the pipeline Context</span>
-    <span class="n">node_columns</span><span class="o">=</span><span class="n">node_columns</span>  <span class="c1"># and made available for the networkx primitive</span>
-<span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">entities</span><span class="p">,</span>
+              <span class="n">relationships</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">relationships</span><span class="p">,</span> <span class="n">target_entity</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
-</div>
 </div>
 </div>
 </div>
@@ -323,10 +303,10 @@ additional information not found inside <cite>X</cite>.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../api/mlblocks.html" class="btn btn-neutral float-right" title="mlblocks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="text.html" class="btn btn-neutral float-right" title="Text Pipelines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="image.html" class="btn btn-neutral" title="Image Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="single_table.html" class="btn btn-neutral" title="Single Table Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
