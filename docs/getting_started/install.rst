@@ -27,50 +27,23 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    git clone git://github.com/HDI-Project/mlblocks
+    git clone git://github.com/HDI-Project/MLBlocks
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    curl  -OL https://github.com/HDI-Project/mlblocks/tarball/master
+    curl  -OL https://github.com/HDI-Project/MLBlocks/tarball/master
 
 Once you have a copy of the source, you can install it running the next command inside the
 project folder:
 
 .. code-block:: console
 
-    $ pip install .
+    $ make install
 
-.. _Github repo: https://github.com/HDI-Project/mlblocks
-.. _tarball: https://github.com/HDI-Project/mlblocks/tarball/master
-
-Additional Dependencies
------------------------
-
-The previous commands install the bare minimum requirements to make MLBlocks work, but
-additional dependencies should be installed in order to run the `quickstart`_ and various
-examples found in the documentation.
-
-The most important of these dependencies is the related project `MLPrimitives`_, which
-includes a huge list of primitives ready to be used by **MLBlocks**.
-
-Installing these additional dependencies can be achieved by running the command:
-
-.. code-block:: console
-
-    pip install mlblocks[demo]
-
-if **MLBlocks** was installed from PyPi, or:
-
-.. code-block:: console
-
-    pip install .[demo]
-
-if you installed **MLBlocks** from sources.
-
-.. _quickstart: quickstart.html
-.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
+.. _Github repo: https://github.com/HDI-Project/MLBlocks
+.. _tarball: https://github.com/HDI-Project/MLBlocks/tarball/master
 
 Development
 -----------
@@ -81,4 +54,4 @@ order to be able to run the tests and build the documentation:
 
 .. code-block:: console
 
-    pip install -e .[dev]
+    make install-develop

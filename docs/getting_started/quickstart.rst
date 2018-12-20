@@ -24,8 +24,8 @@ them to the `MLPipeline class`_:
 
     from mlblocks import MLPipeline
     primitives = [
-        'sklearn.preprocessing.StandardScaler',
-        'xgboost.XGBClassifier'
+        'mlprimitives.feature_extraction.StringVectorizer',
+        'sklearn.ensemble.RandomForestClassifier',
     ]
     pipeline = MLPipeline(primitives)
 
@@ -34,8 +34,8 @@ Optionally, specific `hyperparameters`_ can be also set by specifying them in a 
 .. ipython:: python
 
     hyperparameters = {
-        'xgboost.XGBClassifier': {
-            'learning_rate': 0.1
+        'sklearn.ensemble.RandomForestClassifier': {
+            'n_estimators': 100
         }
     }
     pipeline = MLPipeline(primitives, hyperparameters)
@@ -80,13 +80,13 @@ other ones will remain unmodified.
 .. ipython:: python
 
     new_hyperparameters = {
-        'xgboost.XGBClassifier#1': {
-            'max_depth': 10
+        'sklearn.ensemble.RandomForestClassifier#1': {
+            'max_depth': 15
         }
     }
     pipeline.set_hyperparameters(new_hyperparameters)
     hyperparameters = pipeline.get_hyperparameters()
-    hyperparameters['xgboost.XGBClassifier#1']['max_depth']
+    hyperparameters['sklearn.ensemble.RandomForestClassifier#1']['max_depth']
 
 Making predictions
 ------------------
@@ -99,8 +99,8 @@ labels.
 
 .. ipython:: python
 
-    from mlblocks.datasets import load_iris
-    dataset = load_iris()
+    from mlblocks.datasets import load_personae
+    dataset = load_personae()
     X_train, X_test, y_train, y_test = dataset.get_splits(1)
     pipeline.fit(X_train, y_train)
 
