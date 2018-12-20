@@ -1,5 +1,5 @@
-Tabular Pipelines
-=================
+Single Table Pipelines
+======================
 
 In this section we will go over a few pipeline examples to show **MLBlocks** working
 in different scenarios and with different types of data.
@@ -83,4 +83,3 @@ In this case, we will also be passing some initialization parameters for the XGB
 .. _The Iris Dataset: https://en.wikipedia.org/wiki/Iris_flower_data_set
 .. _StandardScaler from scikit-learn: http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html
 .. _XGBClassifier primitive: https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn
-
