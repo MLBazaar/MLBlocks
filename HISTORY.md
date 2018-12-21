@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.2.4 - New Datasets and Unit Tests
+-----------------------------------
+
+* Add a new multi-table dataset.
+* Add Unit Tests up to 50% coverage.
+* Improve documentation.
+* Fix minor bug in newsgroups dataset.
+
 0.2.3 - Demo Datasets
 ---------------------
 
