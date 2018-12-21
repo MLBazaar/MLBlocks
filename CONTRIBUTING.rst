@@ -69,8 +69,7 @@ Ready to contribute? Here's how to set up `MLBlocks` for local development.
 
     $ mkvirtualenv MLBlocks
     $ cd MLBlocks/
-    $ pip install -e .
-    $ pip install -r requirements_dev.txt
+    $ make install-develop
 
 4. Create a branch for local development::
 
@@ -88,7 +87,8 @@ Ready to contribute? Here's how to set up `MLBlocks` for local development.
 6. When you're done making changes, check that your changes pass flake8 and the
    tests, including testing other Python versions with tox::
 
-    $ make test-all
+    $ make lint       # Check code styling
+    $ make test-all   # Execute tests on all python versions
 
 7. Make also sure to include the necessary documentation in the code as docstrings following
    the `google docstring`_ style.

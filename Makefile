@@ -103,7 +103,7 @@ fix-lint: ## fix lint issues using autoflake, autopep8, and isort
 
 .PHONY: test
 test: ## run tests quickly with the default Python
-	python -m pytest
+	python -m pytest --cov=mlblocks
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
@@ -130,7 +130,7 @@ view-docs: docs ## view docs in browser
 
 .PHONY: serve-docs
 serve-docs: view-docs ## compile the docs watching for changes
-	watchmedo shell-command -W -R -D -p '*.rst;*.md' -c '$(MAKE) -C docs html' .
+	watchmedo shell-command -W -R -D -p '*.rst;*.md' -c '$(MAKE) -C docs html' docs
 
 
 # RELEASE TARGETS

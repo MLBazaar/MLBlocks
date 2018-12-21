@@ -6,11 +6,13 @@ python:
 
 # Command to install dependencies
 install:
-   - pip install -U tox-travis
+   - pip install -U tox-travis codecov
    - sudo apt-get install graphviz
 
 # Command to run tests
 script: tox
+
+after_success: codecov
 
 deploy:
 

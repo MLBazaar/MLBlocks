@@ -94,7 +94,7 @@ class MLBlock():
         fit_args = [arg['name'] for arg in self.fit_args]
         produce_args = [arg['name'] for arg in self.produce_args]
 
-        for name in kwargs.keys():
+        for name in list(kwargs.keys()):
             if name in fit_args:
                 fit_params[name] = kwargs.pop(name)
 
@@ -127,9 +127,9 @@ class MLBlock():
         self._class = bool(self.produce_method)
 
         hyperparameters = metadata.get('hyperparameters', dict())
-        init_params, fit_params, produce_params = self._extract_params(
-            kwargs, hyperparameters)
-        self._hyperparamters = init_params
+        init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
+
+        self._hyperparameters = init_params
         self._fit_params = fit_params
         self._produce_params = produce_params
 
@@ -175,7 +175,7 @@ class MLBlock():
                 the dictionary containing the hyperparameter values that the
                 MLBlock is currently using.
         """
-        return self._hyperparamters
+        return self._hyperparameters.copy()
 
     def set_hyperparameters(self, hyperparameters):
         """Set new hyperparameters.
@@ -190,10 +190,10 @@ class MLBlock():
                                     of the hyperparameters and as values
                                     the values to be used.
         """
-        self._hyperparamters.update(hyperparameters)
+        self._hyperparameters.update(hyperparameters)
 
         if self._class:
-            self.instance = self.primitive(**self._hyperparamters)
+            self.instance = self.primitive(**self._hyperparameters)
 
     def fit(self, **kwargs):
         """Call the fit method of the primitive.
@@ -239,5 +239,5 @@ class MLBlock():
         if self._class:
             return getattr(self.instance, self.produce_method)(**produce_args)
 
-        produce_args.update(self._hyperparamters)
+        produce_args.update(self._hyperparameters)
         return self.primitive(**produce_args)
