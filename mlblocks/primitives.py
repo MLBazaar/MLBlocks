@@ -9,11 +9,15 @@ as well as to configure how MLBlocks finds the primitives.
 
 import json
 import os
+import pkg_resources
 import sys
 
+_PRIMITIVES_FOLDER_NAME = 'mlprimitives'
+_OLD_PRIMITIVES_FOLDER_NAME = 'mlblocks_primitives'
 _PRIMITIVES_PATHS = [
-    os.path.join(os.getcwd(), 'mlblocks_primitives'),
-    os.path.join(sys.prefix, 'mlblocks_primitives'),
+    os.path.join(os.getcwd(), _PRIMITIVES_FOLDER_NAME),
+    os.path.join(os.getcwd(), _OLD_PRIMITIVES_FOLDER_NAME),    # legacy
+    os.path.join(sys.prefix, _OLD_PRIMITIVES_FOLDER_NAME),    # legacy
 ]
 
 
@@ -45,7 +49,13 @@ def get_primitives_paths():
         list:
             The list of folders.
     """
-    return _PRIMITIVES_PATHS
+
+    primitives_paths = list()
+    for entry_point in pkg_resources.iter_entry_points(_PRIMITIVES_FOLDER_NAME):
+        path = pkg_resources.resource_filename(entry_point.name, entry_point.module_name)
+        primitives_paths.append(path)
+
+    return _PRIMITIVES_PATHS + primitives_paths
 
 
 def load_primitive(name):
@@ -69,10 +79,17 @@ def load_primitive(name):
                     found.
     """
 
-    for base_path in _PRIMITIVES_PATHS:
-        json_path = os.path.join(base_path, name + '.json')
-        if os.path.isfile(json_path):
-            with open(json_path, 'r') as json_file:
-                return json.load(json_file)
+    for base_path in get_primitives_paths():
+        parts = name.split('.')
+        number_of_parts = len(parts)
+
+        for folder_parts in range(number_of_parts):
+            folder = os.path.join(base_path, *parts[:folder_parts])
+            filename = '.'.join(parts[folder_parts:]) + '.json'
+            json_path = os.path.join(folder, filename)
+
+            if os.path.isfile(json_path):
+                with open(json_path, 'r') as json_file:
+                    return json.load(json_file)
 
     raise ValueError("Unknown primitive: {}".format(name))
