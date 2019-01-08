@@ -9,8 +9,9 @@ as well as to configure how MLBlocks finds the primitives.
 
 import json
 import os
-import pkg_resources
 import sys
+
+import pkg_resources
 
 _PRIMITIVES_FOLDER_NAME = 'mlprimitives'
 _OLD_PRIMITIVES_FOLDER_NAME = 'mlblocks_primitives'
@@ -52,7 +53,8 @@ def get_primitives_paths():
 
     primitives_paths = list()
     for entry_point in pkg_resources.iter_entry_points(_PRIMITIVES_FOLDER_NAME):
-        path = pkg_resources.resource_filename(entry_point.name, entry_point.module_name)
+        module_path = os.path.join(*entry_point.module_name.split('.'))
+        path = pkg_resources.resource_filename(entry_point.name, module_path)
         primitives_paths.append(path)
 
     return _PRIMITIVES_PATHS + primitives_paths
