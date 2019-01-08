@@ -13,12 +13,11 @@ import sys
 
 import pkg_resources
 
-_PRIMITIVES_FOLDER_NAME = 'mlprimitives'
-_OLD_PRIMITIVES_FOLDER_NAME = 'mlblocks_primitives'
 _PRIMITIVES_PATHS = [
-    os.path.join(os.getcwd(), _PRIMITIVES_FOLDER_NAME),
-    os.path.join(os.getcwd(), _OLD_PRIMITIVES_FOLDER_NAME),    # legacy
-    os.path.join(sys.prefix, _OLD_PRIMITIVES_FOLDER_NAME),    # legacy
+    os.path.join(os.getcwd(), 'mlprimitives'),
+    os.path.join(sys.prefix, 'mlprimitives'),
+    os.path.join(os.getcwd(), 'mlblocks_primitives'),    # legacy
+    os.path.join(sys.prefix, 'mlblocks_primitives'),    # legacy
 ]
 
 
@@ -46,16 +45,32 @@ def add_primitives_path(path):
 def get_primitives_paths():
     """Get the list of folders where the primitives will be looked for.
 
+    This list will include the value of any `entry_point` named `jsons_path` published under
+    the name `mlprimitives`.
+
+    An example of such an entry point would be::
+
+        entry_points = {
+            'mlprimitives': [
+                'jsons_path=some_module:SOME_VARIABLE'
+            ]
+        }
+
+    where the module `some_module` contains a variable such as::
+
+        SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
+
     Returns:
         list:
             The list of folders.
     """
 
     primitives_paths = list()
-    for entry_point in pkg_resources.iter_entry_points(_PRIMITIVES_FOLDER_NAME):
-        module_path = os.path.join(*entry_point.module_name.split('.'))
-        path = pkg_resources.resource_filename(entry_point.name, module_path)
-        primitives_paths.append(path)
+    entry_points = pkg_resources.iter_entry_points('mlprimitives')
+    for entry_point in entry_points:
+        if entry_point.name == 'jsons_path':
+            path = entry_point.load()
+            primitives_paths.append(path)
 
     return _PRIMITIVES_PATHS + primitives_paths
 

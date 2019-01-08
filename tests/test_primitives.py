@@ -7,9 +7,11 @@ import uuid
 from unittest.mock import patch
 
 import pytest
-from pkg_resources import EntryPoint
+from pkg_resources import Distribution, EntryPoint
 
 from mlblocks import primitives
+
+FAKE_MLPRIMITIVES_PATH = 'this/is/a/fake'
 
 
 @patch('mlblocks.primitives._PRIMITIVES_PATHS', new=['a', 'b'])
@@ -37,19 +39,33 @@ def test_add_primitives_path():
 
 
 @patch('mlblocks.primitives._PRIMITIVES_PATHS', new=['a', 'b'])
-@patch('mlblocks.primitives._PRIMITIVES_FOLDER_NAME', new='fake_name')
-def test_get_primitives_paths_no_entry_points():
+@patch('mlblocks.primitives.pkg_resources.iter_entry_points')
+def test_get_primitives_paths_no_entry_points(iep_mock):
+    # setup
+    iep_mock.return_value == []
+
+    # run
     paths = primitives.get_primitives_paths()
 
+    # assert
     assert paths == ['a', 'b']
+    iep_mock.assert_called_once_with('mlprimitives')
 
 
 @patch('mlblocks.primitives._PRIMITIVES_PATHS', new=['a', 'b'])
 @patch('mlblocks.primitives.pkg_resources.iter_entry_points')
 def test_get_primitives_paths_entry_points(iep_mock):
     # setup
+    something_else_ep = EntryPoint('something_else', 'mlblocks.__version__')
+    jsons_path_ep = EntryPoint(
+        'jsons_path',
+        'tests.test_primitives',
+        attrs=['FAKE_MLPRIMITIVES_PATH'],
+        dist=Distribution()
+    )
     iep_mock.return_value = [
-        EntryPoint('mlblocks', 'primitives.jsons')
+        something_else_ep,
+        jsons_path_ep
     ]
 
     # run
@@ -59,11 +75,7 @@ def test_get_primitives_paths_entry_points(iep_mock):
     expected = [
         'a',
         'b',
-        os.path.join(
-            os.path.dirname(primitives.__file__),
-            'primitives',
-            'jsons'
-        )
+        'this/is/a/fake'
     ]
     assert paths == expected
 
