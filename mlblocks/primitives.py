@@ -8,10 +8,13 @@ as well as to configure how MLBlocks finds the primitives.
 """
 
 import json
+import logging
 import os
 import sys
 
 import pkg_resources
+
+LOGGER = logging.getLogger(__name__)
 
 _PRIMITIVES_PATHS = [
     os.path.join(os.getcwd(), 'mlprimitives'),
@@ -39,6 +42,7 @@ def add_primitives_path(path):
         if not os.path.isdir(path):
             raise ValueError('Invalid path: {}'.format(path))
 
+        LOGGER.debug('Adding new primitives path %s', path)
         _PRIMITIVES_PATHS.insert(0, os.path.abspath(path))
 
 
@@ -107,6 +111,7 @@ def load_primitive(name):
 
             if os.path.isfile(json_path):
                 with open(json_path, 'r') as json_file:
+                    LOGGER.debug('Loading primitive %s from %s', name, json_path)
                     return json.load(json_file)
 
     raise ValueError("Unknown primitive: {}".format(name))
