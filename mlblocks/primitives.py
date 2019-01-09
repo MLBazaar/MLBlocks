@@ -11,9 +11,13 @@ import json
 import os
 import sys
 
+import pkg_resources
+
 _PRIMITIVES_PATHS = [
-    os.path.join(os.getcwd(), 'mlblocks_primitives'),
-    os.path.join(sys.prefix, 'mlblocks_primitives'),
+    os.path.join(os.getcwd(), 'mlprimitives'),
+    os.path.join(sys.prefix, 'mlprimitives'),
+    os.path.join(os.getcwd(), 'mlblocks_primitives'),    # legacy
+    os.path.join(sys.prefix, 'mlblocks_primitives'),    # legacy
 ]
 
 
@@ -41,11 +45,34 @@ def add_primitives_path(path):
 def get_primitives_paths():
     """Get the list of folders where the primitives will be looked for.
 
+    This list will include the value of any `entry_point` named `jsons_path` published under
+    the name `mlprimitives`.
+
+    An example of such an entry point would be::
+
+        entry_points = {
+            'mlprimitives': [
+                'jsons_path=some_module:SOME_VARIABLE'
+            ]
+        }
+
+    where the module `some_module` contains a variable such as::
+
+        SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
+
     Returns:
         list:
             The list of folders.
     """
-    return _PRIMITIVES_PATHS
+
+    primitives_paths = list()
+    entry_points = pkg_resources.iter_entry_points('mlprimitives')
+    for entry_point in entry_points:
+        if entry_point.name == 'jsons_path':
+            path = entry_point.load()
+            primitives_paths.append(path)
+
+    return _PRIMITIVES_PATHS + primitives_paths
 
 
 def load_primitive(name):
@@ -69,10 +96,17 @@ def load_primitive(name):
                     found.
     """
 
-    for base_path in _PRIMITIVES_PATHS:
-        json_path = os.path.join(base_path, name + '.json')
-        if os.path.isfile(json_path):
-            with open(json_path, 'r') as json_file:
-                return json.load(json_file)
+    for base_path in get_primitives_paths():
+        parts = name.split('.')
+        number_of_parts = len(parts)
+
+        for folder_parts in range(number_of_parts):
+            folder = os.path.join(base_path, *parts[:folder_parts])
+            filename = '.'.join(parts[folder_parts:]) + '.json'
+            json_path = os.path.join(folder, filename)
+
+            if os.path.isfile(json_path):
+                with open(json_path, 'r') as json_file:
+                    return json.load(json_file)
 
     raise ValueError("Unknown primitive: {}".format(name))
