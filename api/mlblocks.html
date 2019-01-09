@@ -131,6 +131,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#developing-a-primitives-library">Developing a Primitives Library</a></li>
 </ul>
 </li>
 </ul>
@@ -180,6 +181,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mlblocks.datasets.html">mlblocks.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlblocks.primitives.html">mlblocks.primitives</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -845,6 +847,20 @@ system before.</p>
 <dt id="mlblocks.get_primitives_paths">
 <code class="descclassname">mlblocks.</code><code class="descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of folders where the primitives will be looked for.</p>
+<p>This list will include the value of any <cite>entry_point</cite> named <cite>jsons_path</cite> published under
+the name <cite>mlprimitives</cite>.</p>
+<p>An example of such an entry point would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;mlprimitives&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;jsons_path=some_module:SOME_VARIABLE&#39;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where the module <cite>some_module</cite> contains a variable such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SOME_VARIABLE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;jsons&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -930,6 +946,7 @@ found.</td>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
 
   

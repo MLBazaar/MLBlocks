@@ -29,7 +29,7 @@ by writing the corresponding `JSON annotation <primitives.html#json-annotations>
 
 .. _MLPrimitives integrated primitives: https://github.com/HDI-Project/MLPrimitives/tree/master/mlblocks_primitives
 
-.. note:: If you integrate new primitives for MLBlocks, please consider contributing them to the
+.. note:: If you create new primitives for MLBlocks, please consider contributing them to the
           **MLPrimitives** project!
 
 The first thing to do when adding a new primitive is making sure that it complies with the
@@ -58,8 +58,8 @@ place known to **MLBlocks**.
 **MLBlocks** looks for primitives in the following folders, in this order:
 
 1. Any folder specified by the user, starting by the latest one.
-2. A folder named `mlblocks_primitives` in the current working directory.
-3. A folder named `mlblocks_primitives` in the `system prefix`_.
+2. A folder named ``mlblocks_primitives`` or ``mlprimitives`` in the current working directory.
+3. A folder named ``mlblocks_primitives`` or ``mlprimitives`` in the `system prefix`_.
 
 .. _system prefix: https://docs.python.org/3/library/sys.html#sys.prefix
 
@@ -80,3 +80,31 @@ However, sometimes you will want to add a custom directory.
 This can be easily done by using the `mlblocks.add_primitives_path`_ method.
 
 .. _mlblocks.add_primitives_path: ../api_reference.html#mlblocks.add_primitives_path
+
+Developing a Primitives Library
+-------------------------------
+
+Another option to add multiple libraries is creating a primitives library, such as
+`MLPrimitives`_.
+
+In order to make **MLBLocks** able to find the primitives defined in such a library,
+all you need to do is setting up an `Entry Point`_ in your `setup.py` script with the
+following specification:
+
+1. It has to be published under the name ``mlprimitives``.
+2. It has to be named exactly ``jsons_path``.
+3. It has to point at a variable that contains the path to the JSONS folder.
+
+An example of such an entry point would be::
+
+    entry_points = {
+        'mlprimitives': [
+            'jsons_path=some_module:SOME_VARIABLE'
+        ]
+    }
+
+where the module `some_module` contains a variable such as::
+
+    SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
+
+.. _Entry Point: https://packaging.python.org/specifications/entry-points/

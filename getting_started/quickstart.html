@@ -131,6 +131,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/adding_primitives.html#developing-a-primitives-library">Developing a Primitives Library</a></li>
 </ul>
 </li>
 </ul>
@@ -180,6 +181,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -307,14 +309,21 @@ a dictionary with the <a class="reference external" href="../advanced_usage/hype
 <span class="go">  &#39;lowercase&#39;: True,</span>
 <span class="go">  &#39;binary&#39;: True,</span>
 <span class="go">  &#39;max_features&#39;: 1},</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: None,</span>
+<span class="go">  &#39;verbose&#39;: 0,</span>
+<span class="go">  &#39;warm_start&#39;: False,</span>
+<span class="go">  &#39;class_weight&#39;: None,</span>
 <span class="go">  &#39;n_estimators&#39;: 100,</span>
-<span class="go">  &#39;criterion&#39;: &#39;entropy&#39;,</span>
+<span class="go">  &#39;criterion&#39;: &#39;gini&#39;,</span>
 <span class="go">  &#39;max_features&#39;: None,</span>
-<span class="go">  &#39;max_depth&#39;: 10,</span>
-<span class="go">  &#39;min_samples_split&#39;: 0.1,</span>
-<span class="go">  &#39;min_samples_leaf&#39;: 0.1,</span>
-<span class="go">  &#39;class_weight&#39;: None}}</span>
+<span class="go">  &#39;max_depth&#39;: None,</span>
+<span class="go">  &#39;min_samples_split&#39;: 2,</span>
+<span class="go">  &#39;min_samples_leaf&#39;: 1,</span>
+<span class="go">  &#39;min_weight_fraction_leaf&#39;: 0.0,</span>
+<span class="go">  &#39;max_leaf_nodes&#39;: None,</span>
+<span class="go">  &#39;min_impurity_decrease&#39;: 0.0,</span>
+<span class="go">  &#39;bootstrap&#39;: True,</span>
+<span class="go">  &#39;oob_score&#39;: False}}</span>
 </pre></div>
 </div>
 </div>
@@ -334,21 +343,23 @@ as <a class="reference external" href="https://github.com/HDI-Project/BTB">BTB</
 <span class="go">  &#39;binary&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True},</span>
 <span class="go">  &#39;max_features&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 1, &#39;range&#39;: [1, 1000]}},</span>
 <span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;criterion&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">   &#39;default&#39;: &#39;entropy&#39;,</span>
+<span class="go">   &#39;default&#39;: &#39;gini&#39;,</span>
 <span class="go">   &#39;values&#39;: [&#39;entropy&#39;, &#39;gini&#39;]},</span>
 <span class="go">  &#39;max_features&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
 <span class="go">   &#39;default&#39;: None,</span>
-<span class="go">   &#39;range&#39;: [None, &#39;auto&#39;, &#39;log2&#39;]},</span>
-<span class="go">  &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 10, &#39;range&#39;: [1, 30]},</span>
-<span class="go">  &#39;min_samples_split&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
-<span class="go">   &#39;default&#39;: 0.1,</span>
-<span class="go">   &#39;range&#39;: [0.0001, 0.5]},</span>
-<span class="go">  &#39;min_samples_leaf&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
-<span class="go">   &#39;default&#39;: 0.1,</span>
-<span class="go">   &#39;range&#39;: [0.0001, 0.5]},</span>
-<span class="go">  &#39;class_weight&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">   &#39;default&#39;: None,</span>
-<span class="go">   &#39;range&#39;: [None, &#39;balanced&#39;]}}}</span>
+<span class="go">   &#39;values&#39;: [None, &#39;auto&#39;, &#39;log2&#39;, &#39;sqrt&#39;]},</span>
+<span class="go">  &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: None, &#39;range&#39;: [1, 30]},</span>
+<span class="go">  &#39;min_samples_split&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 2, &#39;range&#39;: [2, 100]},</span>
+<span class="go">  &#39;min_samples_leaf&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 1, &#39;range&#39;: [1, 100]},</span>
+<span class="go">  &#39;min_weight_fraction_leaf&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
+<span class="go">   &#39;default&#39;: 0.0,</span>
+<span class="go">   &#39;range&#39;: [0.0, 0.5]},</span>
+<span class="go">  &#39;max_leaf_nodes&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: None, &#39;range&#39;: [2, 1000]},</span>
+<span class="go">  &#39;min_impurity_decrease&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
+<span class="go">   &#39;default&#39;: 0.0,</span>
+<span class="go">   &#39;range&#39;: [0.0, 1000.0]},</span>
+<span class="go">  &#39;bootstrap&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True},</span>
+<span class="go">  &#39;oob_score&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: False}}}</span>
 </pre></div>
 </div>
 </div>
@@ -396,11 +407,11 @@ to obtain predictions from the pipeline.</p>
 
 <span class="gp">In [17]: </span><span class="n">predictions</span>
 <span class="gh">Out[17]: </span><span class="go"></span>
-<span class="go">array([1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1,</span>
-<span class="go">       0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1])</span>
+<span class="go">array([1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0,</span>
+<span class="go">       1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1])</span>
 
 <span class="gp">In [18]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
-<span class="go">                                                                                                                                        Out[18]: 0.6756756756756757</span>
+<span class="go">                                                                                                                                        Out[18]: 0.4594594594594595</span>
 </pre></div>
 </div>
 </div>
@@ -451,6 +462,7 @@ to obtain predictions from the pipeline.</p>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
 
   

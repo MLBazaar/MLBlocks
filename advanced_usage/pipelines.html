@@ -131,6 +131,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#writing-primitives">Writing Primitives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_primitives.html#developing-a-primitives-library">Developing a Primitives Library</a></li>
 </ul>
 </li>
 </ul>
@@ -180,6 +181,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -305,8 +307,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2b26d6de69e8&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2b26cfc9cc50&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2aad014a1cf8&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2aad014da1d0&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -505,32 +507,41 @@ by calling its <code class="docutils literal notranslate"><span class="pre">to_d
 <span class="go"> &#39;output_names&#39;: {},</span>
 <span class="go"> &#39;hyperparameters&#39;: {&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_mean&#39;: False,</span>
 <span class="go">   &#39;with_std&#39;: True},</span>
-<span class="go">  &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
+<span class="go">  &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: None,</span>
+<span class="go">   &#39;verbose&#39;: 0,</span>
+<span class="go">   &#39;warm_start&#39;: False,</span>
+<span class="go">   &#39;class_weight&#39;: None,</span>
 <span class="go">   &#39;n_estimators&#39;: 100,</span>
-<span class="go">   &#39;criterion&#39;: &#39;entropy&#39;,</span>
+<span class="go">   &#39;criterion&#39;: &#39;gini&#39;,</span>
 <span class="go">   &#39;max_features&#39;: None,</span>
-<span class="go">   &#39;max_depth&#39;: 10,</span>
-<span class="go">   &#39;min_samples_split&#39;: 0.1,</span>
-<span class="go">   &#39;min_samples_leaf&#39;: 0.1,</span>
-<span class="go">   &#39;class_weight&#39;: None}},</span>
+<span class="go">   &#39;max_depth&#39;: None,</span>
+<span class="go">   &#39;min_samples_split&#39;: 2,</span>
+<span class="go">   &#39;min_samples_leaf&#39;: 1,</span>
+<span class="go">   &#39;min_weight_fraction_leaf&#39;: 0.0,</span>
+<span class="go">   &#39;max_leaf_nodes&#39;: None,</span>
+<span class="go">   &#39;min_impurity_decrease&#39;: 0.0,</span>
+<span class="go">   &#39;bootstrap&#39;: True,</span>
+<span class="go">   &#39;oob_score&#39;: False}},</span>
 <span class="go"> &#39;tunable_hyperparameters&#39;: {&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_std&#39;: {&#39;type&#39;: &#39;bool&#39;,</span>
 <span class="go">    &#39;default&#39;: True}},</span>
 <span class="go">  &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;criterion&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">    &#39;default&#39;: &#39;entropy&#39;,</span>
+<span class="go">    &#39;default&#39;: &#39;gini&#39;,</span>
 <span class="go">    &#39;values&#39;: [&#39;entropy&#39;, &#39;gini&#39;]},</span>
 <span class="go">   &#39;max_features&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
 <span class="go">    &#39;default&#39;: None,</span>
-<span class="go">    &#39;range&#39;: [None, &#39;auto&#39;, &#39;log2&#39;]},</span>
-<span class="go">   &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 10, &#39;range&#39;: [1, 30]},</span>
-<span class="go">   &#39;min_samples_split&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
-<span class="go">    &#39;default&#39;: 0.1,</span>
-<span class="go">    &#39;range&#39;: [0.0001, 0.5]},</span>
-<span class="go">   &#39;min_samples_leaf&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
-<span class="go">    &#39;default&#39;: 0.1,</span>
-<span class="go">    &#39;range&#39;: [0.0001, 0.5]},</span>
-<span class="go">   &#39;class_weight&#39;: {&#39;type&#39;: &#39;str&#39;,</span>
-<span class="go">    &#39;default&#39;: None,</span>
-<span class="go">    &#39;range&#39;: [None, &#39;balanced&#39;]}}}}</span>
+<span class="go">    &#39;values&#39;: [None, &#39;auto&#39;, &#39;log2&#39;, &#39;sqrt&#39;]},</span>
+<span class="go">   &#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: None, &#39;range&#39;: [1, 30]},</span>
+<span class="go">   &#39;min_samples_split&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 2, &#39;range&#39;: [2, 100]},</span>
+<span class="go">   &#39;min_samples_leaf&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 1, &#39;range&#39;: [1, 100]},</span>
+<span class="go">   &#39;min_weight_fraction_leaf&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
+<span class="go">    &#39;default&#39;: 0.0,</span>
+<span class="go">    &#39;range&#39;: [0.0, 0.5]},</span>
+<span class="go">   &#39;max_leaf_nodes&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: None, &#39;range&#39;: [2, 1000]},</span>
+<span class="go">   &#39;min_impurity_decrease&#39;: {&#39;type&#39;: &#39;float&#39;,</span>
+<span class="go">    &#39;default&#39;: 0.0,</span>
+<span class="go">    &#39;range&#39;: [0.0, 1000.0]},</span>
+<span class="go">   &#39;bootstrap&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True},</span>
+<span class="go">   &#39;oob_score&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: False}}}}</span>
 </pre></div>
 </div>
 <p>Notice how the dict includes all the arguments that used when we created the <code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code>,
@@ -583,16 +594,23 @@ problem or dataset, we can do that directly on our dict representation.</p>
 <span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_mean&#39;: True,</span>
 <span class="go">  &#39;with_std&#39;: True},</span>
 <span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
-<span class="go">  &#39;criterion&#39;: &#39;entropy&#39;,</span>
+<span class="go">  &#39;verbose&#39;: 0,</span>
+<span class="go">  &#39;warm_start&#39;: False,</span>
+<span class="go">  &#39;class_weight&#39;: None,</span>
+<span class="go">  &#39;n_estimators&#39;: 100,</span>
+<span class="go">  &#39;criterion&#39;: &#39;gini&#39;,</span>
 <span class="go">  &#39;max_features&#39;: None,</span>
 <span class="go">  &#39;max_depth&#39;: 5,</span>
-<span class="go">  &#39;min_samples_split&#39;: 0.1,</span>
-<span class="go">  &#39;min_samples_leaf&#39;: 0.1,</span>
-<span class="go">  &#39;n_estimators&#39;: 100,</span>
-<span class="go">  &#39;class_weight&#39;: None}}</span>
+<span class="go">  &#39;min_samples_split&#39;: 2,</span>
+<span class="go">  &#39;min_samples_leaf&#39;: 1,</span>
+<span class="go">  &#39;min_weight_fraction_leaf&#39;: 0.0,</span>
+<span class="go">  &#39;max_leaf_nodes&#39;: None,</span>
+<span class="go">  &#39;min_impurity_decrease&#39;: 0.0,</span>
+<span class="go">  &#39;bootstrap&#39;: True,</span>
+<span class="go">  &#39;oob_score&#39;: False}}</span>
 
 <span class="gp">In [12]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
-<span class="go">                                                                                                                                                                                                                                                                                                                                      Out[12]: </span>
+<span class="go">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Out[12]: </span>
 <span class="go">{&#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;,</span>
 <span class="go">   &#39;default&#39;: 10,</span>
 <span class="go">   &#39;range&#39;: [1, 30]}}}</span>
@@ -658,6 +676,7 @@ that allows loading the pipeline directly from a JSON file:</p>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
     
 
   
