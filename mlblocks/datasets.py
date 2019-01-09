@@ -40,6 +40,7 @@ The available datasets by data modality and task type are:
 """
 
 import io
+import logging
 import os
 import tarfile
 import urllib
@@ -51,6 +52,8 @@ from keras.preprocessing.image import img_to_array, load_img
 from sklearn import datasets
 from sklearn.metrics import accuracy_score, normalized_mutual_info_score, r2_score
 from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
+
+LOGGER = logging.getLogger(__name__)
 
 INPUT_SHAPE = [224, 224, 3]
 
@@ -183,9 +186,12 @@ class Dataset():
 
 def _download(dataset_name, dataset_path):
     url = DATA_URL.format(dataset_name)
+
+    LOGGER.debug('Downloading dataset %s from %s', dataset_name, url)
     response = urllib.request.urlopen(url)
     bytes_io = io.BytesIO(response.read())
 
+    LOGGER.debug('Extracting dataset into %s', DATA_PATH)
     with tarfile.open(fileobj=bytes_io, mode='r:gz') as tf:
         tf.extractall(DATA_PATH)
 
@@ -202,6 +208,7 @@ def _load(dataset_name):
 
 
 def _load_images(image_dir, filenames):
+    LOGGER.debug('Loading %s images from %s', len(filenames), image_dir)
     images = []
     for filename in filenames:
         filename = os.path.join(image_dir, filename)
@@ -217,6 +224,8 @@ def _load_images(image_dir, filenames):
 
 def _load_csv(dataset_path, name, set_index=False):
     csv_path = os.path.join(dataset_path, name + '.csv')
+
+    LOGGER.debug('Loading csv %s', csv_path)
     df = pd.read_csv(csv_path)
 
     if set_index:
