@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.0 - New Primitives Discovery
+--------------------------------
+
+* New primitives discovery system based on `entry_points`.
+* Conditional Hyperparameters filtering in MLBlock initialization.
+* Improved logging and exception reporting.
+
 0.2.4 - New Datasets and Unit Tests
 -----------------------------------
 
