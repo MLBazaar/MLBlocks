@@ -165,6 +165,19 @@ Conditional Hyperparameters
 
 In some other cases, the values that a hyperparameter can take depend on the value of another
 one.
+For example, sometimes a primitive has a hyperparameter that specifies a kernel, and depending
+on the kernel used some other hyperparameters may be or not be used, or they might be able
+to take only some specific values.
+
+In this case, the ``type`` of the hyperparameter whose values depend on the other is specified
+as ``conditional``.
+In this case, two additional entries are required:
+
+* an entry called ``condition``, which specifies the name of the other hyperparameter, the value
+  of which is evaluated to decide which values this hyperparameter can take.
+* an additional subdictionary called ``values``, which relates the  possible values that the
+  `condition` hyperparameter can have with the full specifications of the type and values that
+  this hyperparameter can take in each case.
 
 Suppose, for example, that the primitive explained in the previous point does not expect
 the ``mean``, ``min`` or ``max`` strings as values for the ``max_features`` hyperparameter,
@@ -190,7 +203,7 @@ In this case, the hyperparameters would be annotated like this::
     }
     "max_features_aggregation": {
         "type": "conditional",
-        "condition": "mas_features",
+        "condition": "max_features",
         "default": null,
         "values": {
             "auto": {
@@ -202,6 +215,10 @@ In this case, the hyperparameters would be annotated like this::
         }
     }
 
+.. note:: Just like a regular hyperparameter, if there is no match the default entry is used.
+          In this example, the ``null`` value indicates that the hyperparameter needs to be
+          disabled if there is no match, but instead of it we could add there a full specification
+          of type, range and default value as a nested dictionary to be used by default.
 
 .. _JSON Annotations: primitives.html#json-annotations
 .. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives

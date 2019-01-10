@@ -110,6 +110,33 @@ class MLBlock():
 
         return init_params, fit_params, produce_params
 
+    @staticmethod
+    def _filter_conditional(conditional, init_params):
+        condition = conditional['condition']
+        default = conditional.get('default')
+
+        if condition not in init_params:
+            return default
+
+        condition_value = init_params[condition]
+        values = conditional['values']
+        return values.get(condition_value, default)
+
+    @classmethod
+    def _get_tunable(cls, hyperparameters, init_params):
+        tunable = dict()
+        for name, param in hyperparameters.get('tunable', dict()).items():
+            if name not in init_params:
+                if param['type'] == 'conditional':
+                    param = cls._filter_conditional(param, init_params)
+                    if param is not None:
+                        tunable[name] = param
+
+                else:
+                    tunable[name] = param
+
+        return tunable
+
     def __init__(self, name, **kwargs):
 
         self.name = name
@@ -136,13 +163,7 @@ class MLBlock():
         self._fit_params = fit_params
         self._produce_params = produce_params
 
-        tunable = hyperparameters.get('tunable', dict())
-        self._tunable = {
-            name: param
-            for name, param in tunable.items()
-            if name not in init_params
-            # TODO: filter conditionals
-        }
+        self._tunable = self._get_tunable(hyperparameters, init_params)
 
         default = {
             name: param['default']
