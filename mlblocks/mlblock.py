@@ -113,14 +113,14 @@ class MLBlock():
     @staticmethod
     def _filter_conditional(conditional, init_params):
         condition = conditional['condition']
+        default = conditional.get('default')
+
         if condition not in init_params:
-            return conditional
+            return default
 
         condition_value = init_params[condition]
         values = conditional['values']
-        conditioned = values.get(condition_value) or values.get('*')
-        if conditioned:
-            return conditioned
+        return values.get(condition_value, default)
 
     @classmethod
     def _get_tunable(cls, hyperparameters, init_params):

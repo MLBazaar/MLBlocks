@@ -34,7 +34,8 @@ class TestMLBlock(TestCase):
             'tunable': {
                 'this_is_not_conditional': {
                     'type': 'int',
-                    'default': 1
+                    'default': 1,
+                    'range': [1, 10]
                 }
             }
         }
@@ -46,13 +47,14 @@ class TestMLBlock(TestCase):
         expected = {
             'this_is_not_conditional': {
                 'type': 'int',
-                'default': 1
+                'default': 1,
+                'range': [1, 10]
             }
         }
         assert tunable == expected
 
     def test__get_tunable_no_condition(self):
-        """If there is a conditiona but no condition, conditional is returned unmodified."""
+        """If there is a conditional but no condition, the default is used."""
 
         # setup
         init_params = {
@@ -62,20 +64,27 @@ class TestMLBlock(TestCase):
             'tunable': {
                 'this_is_not_conditional': {
                     'type': 'int',
-                    'default': 1
+                    'default': 1,
+                    'range': [1, 10]
                 },
                 'this_is_conditional': {
                     'type': 'conditional',
                     'condition': 'a_condition',
-                    'default': 1,
+                    'default': {
+                        'type': 'float',
+                        'default': 0.1,
+                        'values': [0, 1]
+                    },
                     'values': {
-                        1: {
-                            'type': 'int',
-                            'default': 0
-                        },
-                        '*': {
+                        'not_a_match': {
                             'type': 'str',
-                            'default': 'whatever'
+                            'default': 'a',
+                            'values': ['a', 'b']
+                        },
+                        'neither_a_match': {
+                            'type': 'int',
+                            'default': 0,
+                            'range': [1, 10]
                         }
                     }
                 }
@@ -89,22 +98,13 @@ class TestMLBlock(TestCase):
         expected = {
             'this_is_not_conditional': {
                 'type': 'int',
-                'default': 1
+                'default': 1,
+                'range': [1, 10]
             },
             'this_is_conditional': {
-                'type': 'conditional',
-                'condition': 'a_condition',
-                'default': 1,
-                'values': {
-                    1: {
-                        'type': 'int',
-                        'default': 0
-                    },
-                    '*': {
-                        'type': 'str',
-                        'default': 'whatever'
-                    }
-                }
+                'type': 'float',
+                'default': 0.1,
+                'values': [0, 1]
             }
         }
         assert tunable == expected
@@ -114,26 +114,33 @@ class TestMLBlock(TestCase):
 
         # setup
         init_params = {
-            'a_condition': 'match'
+            'a_condition': 'a_match'
         }
         hyperparameters = {
             'tunable': {
                 'this_is_not_conditional': {
                     'type': 'int',
-                    'default': 1
+                    'default': 1,
+                    'range': [1, 10]
                 },
                 'this_is_conditional': {
                     'type': 'conditional',
                     'condition': 'a_condition',
-                    'default': 1,
+                    'default': {
+                        'type': 'float',
+                        'default': 0.1,
+                        'values': [0, 1]
+                    },
                     'values': {
-                        'match': {
-                            'type': 'int',
-                            'default': 0
-                        },
-                        '*': {
+                        'not_a_match': {
                             'type': 'str',
-                            'default': 'whatever'
+                            'default': 'a',
+                            'values': ['a', 'b']
+                        },
+                        'a_match': {
+                            'type': 'int',
+                            'default': 0,
+                            'range': [1, 10]
                         }
                     }
                 }
@@ -147,83 +154,49 @@ class TestMLBlock(TestCase):
         expected = {
             'this_is_not_conditional': {
                 'type': 'int',
-                'default': 1
+                'default': 1,
+                'range': [1, 10]
             },
             'this_is_conditional': {
                 'type': 'int',
-                'default': 0
-            }
-        }
-        assert tunable == expected
-
-    def test__get_tunable_condition_wildcard_match(self):
-        """If there is a conditional and it matches the wildcard, only that part is returned."""
-
-        # setup
-        init_params = {
-            'a_condition': 'no_match'
-        }
-        hyperparameters = {
-            'tunable': {
-                'this_is_not_conditional': {
-                    'type': 'int',
-                    'default': 1
-                },
-                'this_is_conditional': {
-                    'type': 'conditional',
-                    'condition': 'a_condition',
-                    'default': 1,
-                    'values': {
-                        'match': {
-                            'type': 'int',
-                            'default': 0
-                        },
-                        '*': {
-                            'type': 'str',
-                            'default': 'whatever'
-                        }
-                    }
-                }
-            }
-        }
-
-        # run
-        tunable = MLBlock._get_tunable(hyperparameters, init_params)
-
-        # assert
-        expected = {
-            'this_is_not_conditional': {
-                'type': 'int',
-                'default': 1
-            },
-            'this_is_conditional': {
-                'type': 'str',
-                'default': 'whatever'
+                'default': 0,
+                'range': [1, 10]
             }
         }
         assert tunable == expected
 
     def test__get_tunable_condition_no_match(self):
-        """If there is a conditional without match or wildcard, it is not returned."""
+        """If there is a conditional and it does not match, the default is used."""
 
         # setup
         init_params = {
-            'a_condition': 'no_match'
+            'a_condition': 'not_a_match'
         }
         hyperparameters = {
             'tunable': {
                 'this_is_not_conditional': {
                     'type': 'int',
-                    'default': 1
+                    'default': 1,
+                    'range': [1, 10]
                 },
                 'this_is_conditional': {
                     'type': 'conditional',
                     'condition': 'a_condition',
-                    'default': 1,
+                    'default': {
+                        'type': 'float',
+                        'default': 0.1,
+                        'values': [0, 1]
+                    },
                     'values': {
-                        'match': {
+                        'also_not_a_match': {
+                            'type': 'str',
+                            'default': 'a',
+                            'values': ['a', 'b']
+                        },
+                        'neither_a_match': {
                             'type': 'int',
-                            'default': 0
+                            'default': 0,
+                            'range': [1, 10]
                         }
                     }
                 }
@@ -237,7 +210,110 @@ class TestMLBlock(TestCase):
         expected = {
             'this_is_not_conditional': {
                 'type': 'int',
-                'default': 1
+                'default': 1,
+                'range': [1, 10]
+            },
+            'this_is_conditional': {
+                'type': 'float',
+                'default': 0.1,
+                'values': [0, 1]
+            }
+        }
+        assert tunable == expected
+
+    def test__get_tunable_condition_default_null(self):
+        """If there is no match and default is null (None), this param is not included."""
+
+        # setup
+        init_params = {
+            'a_condition': 'not_a_match'
+        }
+        hyperparameters = {
+            'tunable': {
+                'this_is_not_conditional': {
+                    'type': 'int',
+                    'default': 1,
+                    'range': [1, 10]
+                },
+                'this_is_conditional': {
+                    'type': 'conditional',
+                    'condition': 'a_condition',
+                    'default': None,
+                    'values': {
+                        'also_not_a_match': {
+                            'type': 'str',
+                            'default': 'a',
+                            'values': ['a', 'b']
+                        },
+                        'neither_a_match': {
+                            'type': 'int',
+                            'default': 0,
+                            'range': [1, 10]
+                        }
+                    }
+                }
+            }
+        }
+
+        # run
+        tunable = MLBlock._get_tunable(hyperparameters, init_params)
+
+        # assert
+        expected = {
+            'this_is_not_conditional': {
+                'type': 'int',
+                'default': 1,
+                'range': [1, 10]
+            }
+        }
+        assert tunable == expected
+
+    def test__get_tunable_condition_match_null(self):
+        """If there is a match and it is null (None), this param is not included.
+
+        This stands even if the default is not null.
+        """
+
+        # setup
+        init_params = {
+            'a_condition': 'a_match'
+        }
+        hyperparameters = {
+            'tunable': {
+                'this_is_not_conditional': {
+                    'type': 'int',
+                    'default': 1,
+                    'range': [1, 10]
+                },
+                'this_is_conditional': {
+                    'type': 'conditional',
+                    'condition': 'a_condition',
+                    'default': {
+                        'type': 'float',
+                        'default': 0.1,
+                        'values': [0, 1]
+                    },
+                    'values': {
+                        'not_a_match': {
+                            'type': 'str',
+                            'default': 'a',
+                            'values': ['a', 'b']
+                        },
+                        'a_match': None
+                    }
+                }
+            }
+        }
+
+        # run
+        tunable = MLBlock._get_tunable(hyperparameters, init_params)
+
+        # assert
+        expected = {
+            'this_is_not_conditional': {
+                'type': 'int',
+                'default': 1,
+                'range': [1, 10]
             }
         }
         assert tunable == expected
