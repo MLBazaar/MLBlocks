@@ -215,19 +215,25 @@ class MLPipeline():
 
         last_block_name = list(self.blocks.keys())[-1]
         for block_name, block in self.blocks.items():
-            fit_args = self._get_block_args(block_name, block.fit_args, context)
-
             LOGGER.debug("Fitting block %s", block_name)
-            block.fit(**fit_args)
+            try:
+                fit_args = self._get_block_args(block_name, block.fit_args, context)
+                block.fit(**fit_args)
+            except Exception:
+                LOGGER.exception("Exception caught fitting MLBlock %s", block_name)
+                raise
 
             if block_name != last_block_name:
-                produce_args = self._get_block_args(block_name, block.produce_args, context)
-
                 LOGGER.debug("Producing block %s", block_name)
-                outputs = block.produce(**produce_args)
+                try:
+                    produce_args = self._get_block_args(block_name, block.produce_args, context)
+                    outputs = block.produce(**produce_args)
 
-                output_dict = self._get_outputs(block_name, outputs, block.produce_output)
-                context.update(output_dict)
+                    output_dict = self._get_outputs(block_name, outputs, block.produce_output)
+                    context.update(output_dict)
+                except Exception:
+                    LOGGER.exception("Exception caught producing MLBlock %s", block_name)
+                    raise
 
     def predict(self, X=None, **kwargs):
         """Produce predictions using the blocks of this pipeline.
@@ -252,14 +258,18 @@ class MLPipeline():
 
         last_block_name = list(self.blocks.keys())[-1]
         for block_name, block in self.blocks.items():
-            produce_args = self._get_block_args(block_name, block.produce_args, context)
-
             LOGGER.debug("Producing block %s", block_name)
-            outputs = block.produce(**produce_args)
+            try:
+                produce_args = self._get_block_args(block_name, block.produce_args, context)
+                outputs = block.produce(**produce_args)
 
-            if block_name != last_block_name:
-                output_dict = self._get_outputs(block_name, outputs, block.produce_output)
-                context.update(output_dict)
+                if block_name != last_block_name:
+                    output_dict = self._get_outputs(block_name, outputs, block.produce_output)
+                    context.update(output_dict)
+
+            except Exception:
+                LOGGER.exception("Exception caught producing MLBlock %s", block_name)
+                raise
 
         return outputs
 

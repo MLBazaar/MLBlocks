@@ -10,15 +10,15 @@ seamlessly combining tools from any python library with a simple, common and uni
 * Documentation: https://HDI-Project.github.io/MLBlocks
 """
 
-from mlblocks.mlblock import MLBlock  # noqa
-from mlblocks.mlpipeline import MLPipeline  # noqa
-from mlblocks.primitives import add_primitives_path, get_primitives_paths, load_primitive  # noqa
+from mlblocks.mlblock import MLBlock
+from mlblocks.mlpipeline import MLPipeline
+from mlblocks.primitives import add_primitives_path, get_primitives_paths, load_primitive
 
 __author__ = 'MIT Data To AI Lab'
 __copyright__ = 'Copyright (c) 2018, MIT Data To AI Lab'
 __email__ = 'dailabmit@gmail.com'
 __license__ = 'MIT'
-__version__ = '0.2.4'
+__version__ = '0.3.0-dev'
 
 __all__ = [
     'MLBlock', 'MLPipeline', 'add_primitives_path',

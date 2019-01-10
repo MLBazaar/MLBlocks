@@ -3,8 +3,11 @@
 """Package where the MLBlock class is defined."""
 
 import importlib
+import logging
 
 from mlblocks.primitives import load_primitive
+
+LOGGER = logging.getLogger(__name__)
 
 
 def import_object(object_name):
@@ -83,7 +86,7 @@ class MLBlock():
                 value = param['default']
 
             else:
-                raise TypeError("Required argument '{}' not found".format(name))
+                raise TypeError("{} required argument '{}' not found".format(self.name, name))
 
             init_params[name] = value
 
@@ -106,6 +109,33 @@ class MLBlock():
             raise TypeError(error)
 
         return init_params, fit_params, produce_params
+
+    @staticmethod
+    def _filter_conditional(conditional, init_params):
+        condition = conditional['condition']
+        default = conditional.get('default')
+
+        if condition not in init_params:
+            return default
+
+        condition_value = init_params[condition]
+        values = conditional['values']
+        return values.get(condition_value, default)
+
+    @classmethod
+    def _get_tunable(cls, hyperparameters, init_params):
+        tunable = dict()
+        for name, param in hyperparameters.get('tunable', dict()).items():
+            if name not in init_params:
+                if param['type'] == 'conditional':
+                    param = cls._filter_conditional(param, init_params)
+                    if param is not None:
+                        tunable[name] = param
+
+                else:
+                    tunable[name] = param
+
+        return tunable
 
     def __init__(self, name, **kwargs):
 
@@ -133,13 +163,7 @@ class MLBlock():
         self._fit_params = fit_params
         self._produce_params = produce_params
 
-        tunable = hyperparameters.get('tunable', dict())
-        self._tunable = {
-            name: param
-            for name, param in tunable.items()
-            if name not in init_params
-            # TODO: filter conditionals
-        }
+        self._tunable = self._get_tunable(hyperparameters, init_params)
 
         default = {
             name: param['default']
@@ -193,6 +217,7 @@ class MLBlock():
         self._hyperparameters.update(hyperparameters)
 
         if self._class:
+            LOGGER.debug('Creating a new primitive instance for %s', self.name)
             self.instance = self.primitive(**self._hyperparameters)
 
     def fit(self, **kwargs):
