@@ -407,7 +407,20 @@ possible types that this hyperparameter can have.</p>
 <div class="section" id="conditional-hyperparameters">
 <h4>Conditional Hyperparameters<a class="headerlink" href="#conditional-hyperparameters" title="Permalink to this headline">¶</a></h4>
 <p>In some other cases, the values that a hyperparameter can take depend on the value of another
-one.</p>
+one.
+For example, sometimes a primitive has a hyperparameter that specifies a kernel, and depending
+on the kernel used some other hyperparameters may be or not be used, or they might be able
+to take only some specific values.</p>
+<p>In this case, the <code class="docutils literal notranslate"><span class="pre">type</span></code> of the hyperparameter whose values depend on the other is specified
+as <code class="docutils literal notranslate"><span class="pre">conditional</span></code>.
+In this case, two additional entries are required:</p>
+<ul class="simple">
+<li>an entry called <code class="docutils literal notranslate"><span class="pre">condition</span></code>, which specifies the name of the other hyperparameter, the value
+of which is evaluated to decide which values this hyperparameter can take.</li>
+<li>an additional subdictionary called <code class="docutils literal notranslate"><span class="pre">values</span></code>, which relates the  possible values that the
+<cite>condition</cite> hyperparameter can have with the full specifications of the type and values that
+this hyperparameter can take in each case.</li>
+</ul>
 <p>Suppose, for example, that the primitive explained in the previous point does not expect
 the <code class="docutils literal notranslate"><span class="pre">mean</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code> or <code class="docutils literal notranslate"><span class="pre">max</span></code> strings as values for the <code class="docutils literal notranslate"><span class="pre">max_features</span></code> hyperparameter,
 but as a separated one called <code class="docutils literal notranslate"><span class="pre">max_feature_aggregation</span></code>, which is only used then the
@@ -430,7 +443,7 @@ but as a separated one called <code class="docutils literal notranslate"><span c
 <span class="p">}</span>
 <span class="s2">&quot;max_features_aggregation&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;conditional&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="s2">&quot;mas_features&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="s2">&quot;max_features&quot;</span><span class="p">,</span>
     <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
     <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;auto&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -442,6 +455,13 @@ but as a separated one called <code class="docutils literal notranslate"><span c
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Just like a regular hyperparameter, if there is no match the default entry is used.
+In this example, the <code class="docutils literal notranslate"><span class="pre">null</span></code> value indicates that the hyperparameter needs to be
+disabled if there is no match, but instead of it we could add there a full specification
+of type, range and default value as a nested dictionary to be used by default.</p>
 </div>
 </div>
 </div>
