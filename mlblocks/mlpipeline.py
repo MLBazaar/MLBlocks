@@ -166,7 +166,7 @@ class MLPipeline():
 
         return kwargs
 
-    def _get_outputs(self, block_name, outputs, block_outputs):
+    def _extract_outputs(self, block_name, outputs, block_outputs):
         # TODO: type validation and/or transformation should be done here
 
         if not isinstance(outputs, tuple):
@@ -188,7 +188,40 @@ class MLPipeline():
 
         return output_dict
 
-    def fit(self, X=None, y=None, **kwargs):
+    def _get_block_name(self, index):
+        return list(self.blocks.keys())[index]
+
+    def _get_output_spec(self, output):
+        if output is None:
+            return None, None
+
+        if isinstance(output, int):
+            output = self._get_block_name(output)
+
+        if output in self.blocks:
+            return output, None
+
+        if '.' in output:
+            output_block, output_variable = output.rsplit('.', 1)
+            if output_block not in self.blocks:
+                raise ValueError('Unknown block name: {}'.format(output_block))
+
+            return output_block, output_variable
+
+        last_block_name = self._get_block_name(-1)
+        return last_block_name, output
+
+    def _get_output(self, output_variable, context):
+        if output_variable:
+            if output_variable not in context:
+                raise ValueError('Output variable {} not found in context'
+                                 .format(output_variable))
+
+            return context[output_variable]
+        else:
+            return context
+
+    def fit(self, X=None, y=None, output=None, skip_to=None, **kwargs):
         """Fit the blocks of this pipeline.
 
         Sequentially call the `fit` and the `produce` methods of each block,
@@ -213,8 +246,19 @@ class MLPipeline():
         }
         context.update(kwargs)
 
-        last_block_name = list(self.blocks.keys())[-1]
+        output_block, output_variable = self._get_output_spec(output)
+        last_block_name = self._get_block_name(-1)
+
+        if isinstance(skip_to, int):
+            skip_to = self._get_block_name(skip_to)
+
         for block_name, block in self.blocks.items():
+            if block_name == skip_to:
+                skip_to = False
+            elif skip_to:
+                LOGGER.debug("Skipping block %s fit", block_name)
+                continue
+
             LOGGER.debug("Fitting block %s", block_name)
             try:
                 fit_args = self._get_block_args(block_name, block.fit_args, context)
@@ -223,19 +267,22 @@ class MLPipeline():
                 LOGGER.exception("Exception caught fitting MLBlock %s", block_name)
                 raise
 
-            if block_name != last_block_name:
+            if (block_name != last_block_name) or (block_name == output_block):
                 LOGGER.debug("Producing block %s", block_name)
                 try:
                     produce_args = self._get_block_args(block_name, block.produce_args, context)
                     outputs = block.produce(**produce_args)
 
-                    output_dict = self._get_outputs(block_name, outputs, block.produce_output)
+                    output_dict = self._extract_outputs(block_name, outputs, block.produce_output)
                     context.update(output_dict)
                 except Exception:
                     LOGGER.exception("Exception caught producing MLBlock %s", block_name)
                     raise
 
-    def predict(self, X=None, **kwargs):
+            if block_name == output_block:
+                return self._get_output(output_variable, context)
+
+    def predict(self, X=None, output='y', skip_to=None, **kwargs):
         """Produce predictions using the blocks of this pipeline.
 
         Sequentially call the `produce` method of each block, capturing the
@@ -256,22 +303,35 @@ class MLPipeline():
         }
         context.update(kwargs)
 
-        last_block_name = list(self.blocks.keys())[-1]
+        output_block, output_variable = self._get_output_spec(output)
+
+        if isinstance(skip_to, int):
+            skip_to = self._get_block_name(skip_to)
+
         for block_name, block in self.blocks.items():
+            if block_name == skip_to:
+                skip_to = False
+            elif skip_to:
+                LOGGER.debug("Skipping block %s produce", block_name)
+                continue
+
             LOGGER.debug("Producing block %s", block_name)
             try:
                 produce_args = self._get_block_args(block_name, block.produce_args, context)
                 outputs = block.produce(**produce_args)
+                output_dict = self._extract_outputs(block_name, outputs, block.produce_output)
+                context.update(output_dict)
 
-                if block_name != last_block_name:
-                    output_dict = self._get_outputs(block_name, outputs, block.produce_output)
-                    context.update(output_dict)
+                if block_name == output_block:
+                    return self._get_output(output_variable, context)
 
             except Exception:
                 LOGGER.exception("Exception caught producing MLBlock %s", block_name)
                 raise
 
-        return outputs
+        if skip_to:
+            # We skipped all the blocks up to the end
+            raise ValueError('Unknown block name: {}'.format(skip_to))
 
     def to_dict(self):
         """Return all the details of this MLPipeline in a dict.
