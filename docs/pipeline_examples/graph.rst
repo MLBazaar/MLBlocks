@@ -39,7 +39,7 @@ additional information not found inside `X`.
 
     primitives = [
         'networkx.link_prediction_feature_extraction',
-        'mlprimitives.feature_extraction.CategoricalEncoder',
+        'mlprimitives.custom.feature_extraction.CategoricalEncoder',
         'sklearn.preprocessing.StandardScaler',
         'xgboost.XGBClassifier'
     ]
@@ -69,6 +69,6 @@ additional information not found inside `X`.
 
 
 .. _NetworkX Link Prediction: https://networkx.github.io/documentation/networkx-1.10/reference/algorithms.link_prediction.html
-.. _CategoricalEncoder from MLPrimitives: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.feature_extraction.CategoricalEncoder.json
+.. _CategoricalEncoder from MLPrimitives: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.custom.feature_extraction.CategoricalEncoder.json
 .. _StandardScaler from scikit-learn: http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html
 .. _XGBClassifier: https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn
