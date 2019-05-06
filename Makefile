@@ -122,7 +122,6 @@ coverage: ## check code coverage quickly with the default Python
 .PHONY: docs
 docs: clean-docs ## generate Sphinx HTML documentation, including API docs
 	$(MAKE) -C docs html
-	touch docs/_build/html/.nojekyll
 
 .PHONY: view-docs
 view-docs: docs ## view docs in browser

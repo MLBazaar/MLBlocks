@@ -18,18 +18,9 @@
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 
-import os
-import sys
-
 import sphinx_rtd_theme # For read the docs theme
-from recommonmark.parser import CommonMarkParser
-# from recommonmark.transform import AutoStructify
-
-# sys.path.insert(0, os.path.abspath('..'))
 
 import mlblocks
-# 
-# mlblocks.add_primitives_path('../mlblocks_primitives')
 
 # -- General configuration ---------------------------------------------
 
@@ -40,8 +31,11 @@ import mlblocks
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
-    'sphinx.ext.napoleon',
+    'm2r',
+    'sphinx.ext.autodoc',
     'sphinx.ext.githubpages',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
     'sphinx.ext.graphviz',
     'IPython.sphinxext.ipython_console_highlighting',
     'IPython.sphinxext.ipython_directive',
@@ -56,9 +50,9 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 source_suffix = ['.rst', '.md', '.ipynb']
 
-source_parsers = {
-    '.md': CommonMarkParser,
-}
+# source_parsers = {
+#     '.md': CommonMarkParser,
+# }
 
 # The master toctree document.
 master_doc = 'index'

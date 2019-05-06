@@ -43,7 +43,6 @@ development_requires = [
     'graphviz==0.9',
     'ipython==6.5.0',
     'matplotlib==2.2.3',
-    'recommonmark>=0.4.0',
 
     # style check
     'flake8>=3.5.0',
