@@ -141,7 +141,7 @@ class Dataset():
         else:
             return data[index]
 
-    def get_splits(self, n_splits=1):
+    def get_splits(self, n_splits=1, random_state=0):
         """Return splits of this dataset ready for Cross Validation.
 
         If n_splits is 1, a tuple containing the X for train and test
@@ -166,12 +166,13 @@ class Dataset():
                 self.data,
                 self.target,
                 shuffle=self._shuffle,
-                stratify=stratify
+                stratify=stratify,
+                random_state=random_state
             )
 
         else:
             cv_class = StratifiedKFold if self._stratify else KFold
-            cv = cv_class(n_splits=n_splits, shuffle=self._shuffle)
+            cv = cv_class(n_splits=n_splits, shuffle=self._shuffle, random_state=random_state)
 
             splits = list()
             for train, test in cv.split(self.data, self.target):
