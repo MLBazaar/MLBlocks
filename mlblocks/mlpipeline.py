@@ -272,7 +272,7 @@ class MLPipeline():
         else:
             return context
 
-    def fit(self, X=None, y=None, output=None, start_on=None, **kwargs):
+    def fit(self, X=None, y=None, output_=None, start_=None, **kwargs):
         """Fit the blocks of this pipeline.
 
         Sequentially call the `fit` and the `produce` methods of each block,
@@ -288,7 +288,7 @@ class MLPipeline():
             X: Fit Data, which the pipeline will learn from.
             y: Fit Data labels, which the pipeline will use to learn how to
                behave.
-            output (str or int): Output specification, which can be a string or an integer.
+            output_ (str or int): Output specification, which can be a string or an integer.
                 If an integer is given, it is interpreted as the block number, and the whole
                 context after running the specified block will be returned.
                 If a string is given, it is expected to be the name of one block, including
@@ -297,7 +297,7 @@ class MLPipeline():
                 block name and the variable name. If the variable name is given, this will be
                 extracted from the context and returned. Otherwise, the whole context will
                 be returned.
-            start_on (str or int): Block index or block name to start processing from. The
+            start_ (str or int): Block index or block name to start processing from. The
                 value can either be an integer, which will be interpreted as a block index,
                 or the name of a block, including the conter number at the end.
                 If given, the execution of the pipeline will start on the specified block,
@@ -321,16 +321,16 @@ class MLPipeline():
         }
         context.update(kwargs)
 
-        output_block, output_variable = self._get_output_spec(output)
+        output_block, output_variable = self._get_output_spec(output_)
         last_block_name = self._get_block_name(-1)
 
-        if isinstance(start_on, int):
-            start_on = self._get_block_name(start_on)
+        if isinstance(start_, int):
+            start_ = self._get_block_name(start_)
 
         for block_name, block in self.blocks.items():
-            if block_name == start_on:
-                start_on = False
-            elif start_on:
+            if block_name == start_:
+                start_ = False
+            elif start_:
                 LOGGER.debug("Skipping block %s fit", block_name)
                 continue
 
@@ -357,7 +357,7 @@ class MLPipeline():
             if block_name == output_block:
                 return self._get_output(output_variable, context)
 
-    def predict(self, X=None, output='y', start_on=None, **kwargs):
+    def predict(self, X=None, output_='y', start_=None, **kwargs):
         """Produce predictions using the blocks of this pipeline.
 
         Sequentially call the `produce` method of each block, capturing the
@@ -370,7 +370,7 @@ class MLPipeline():
 
         Args:
             X: Data which the pipeline will use to make predictions.
-            output (str or int): Output specification, which can be a string or an integer.
+            output_ (str or int): Output specification, which can be a string or an integer.
                 If an integer is given, it is interpreted as the block number, and the whole
                 context after running the specified block will be returned.
                 If a string is given, it is expected to be the name of one block, including
@@ -379,7 +379,7 @@ class MLPipeline():
                 block name and the variable name. If the variable name is given, this will be
                 extracted from the context and returned. Otherwise, the whole context will
                 be returned.
-            start_on (str or int): Block index or block name to start processing from. The
+            start_ (str or int): Block index or block name to start processing from. The
                 value can either be an integer, which will be interpreted as a block index,
                 or the name of a block, including the conter number at the end.
                 If given, the execution of the pipeline will start on the specified block,
@@ -402,15 +402,15 @@ class MLPipeline():
         }
         context.update(kwargs)
 
-        output_block, output_variable = self._get_output_spec(output)
+        output_block, output_variable = self._get_output_spec(output_)
 
-        if isinstance(start_on, int):
-            start_on = self._get_block_name(start_on)
+        if isinstance(start_, int):
+            start_ = self._get_block_name(start_)
 
         for block_name, block in self.blocks.items():
-            if block_name == start_on:
-                start_on = False
-            elif start_on:
+            if block_name == start_:
+                start_ = False
+            elif start_:
                 LOGGER.debug("Skipping block %s produce", block_name)
                 continue
 
@@ -428,9 +428,9 @@ class MLPipeline():
                 LOGGER.exception("Exception caught producing MLBlock %s", block_name)
                 raise
 
-        if start_on:
+        if start_:
             # We skipped all the blocks up to the end
-            raise ValueError('Unknown block name: {}'.format(start_on))
+            raise ValueError('Unknown block name: {}'.format(start_))
 
     def to_dict(self):
         """Return all the details of this MLPipeline in a dict.
