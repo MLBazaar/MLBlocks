@@ -34,38 +34,35 @@ class MLPipeline():
     results, which will be returned as the prediction of the pipeline.
 
     Attributes:
-        primitives (list): List of the names of the primitives that compose
-                           this pipeline.
-        blocks (list): OrderedDict of the block names and the corresponding
-                       MLBlock instances.
-        init_params (dict): init_params dictionary, as given when the instance
-                            was created.
-        input_names (dict): input_names dictionary, as given when the instance
-                            was created.
-        output_names (dict): output_names dictionary, as given when the instance
-                             was created.
+        primitives (list):
+            List of the names of the primitives that compose this pipeline.
+        blocks (list):
+            OrderedDict of the block names and the corresponding MLBlock instances.
+        init_params (dict):
+            init_params dictionary, as given when the instance was created.
+        input_names (dict):
+            input_names dictionary, as given when the instance was created.
+        output_names (dict):
+            output_names dictionary, as given when the instance was created.
 
     Args:
-        primitives (list): List with the names of the primitives that will
-                           compose this pipeline.
-        init_params (dict): dictionary containing initialization arguments to
-                            be passed when creating the MLBlocks instances.
-                            The dictionary keys must be the corresponding
-                            primitive names and the values must be another
-                            dictionary that will be passed as `**kargs` to the
-                            MLBlock instance.
-        input_names (dict): dictionary that maps input variable names with the
-                            actual names expected by each primitive. This
-                            allows reusing the same input argument for multiple
-                            primitives that name it differently, as well as
-                            passing different values to primitives that expect
-                            arguments named similary.
-        output_names (dict): dictionary that maps output variable names with
-                             the name these variables will be given when stored
-                             in the context dictionary. This allows storing
-                             the output of different primitives in different
-                             variables, even if the primitive output name is
-                             the same one.
+        primitives (list):
+            List with the names of the primitives that will compose this pipeline.
+        init_params (dict):
+            dictionary containing initialization arguments to be passed when creating the
+            MLBlocks instances. The dictionary keys must be the corresponding primitive names
+            and the values must be another dictionary that will be passed as `**kargs` to the
+            MLBlock instance.
+        input_names (dict):
+            dictionary that maps input variable names with the actual names expected by each
+            primitive. This allows reusing the same input argument for multiple primitives that
+            name it differently, as well as passing different values to primitives that expect
+            arguments named similary.
+        output_names (dict):
+            dictionary that maps output variable names with the name these variables will be
+            given when stored in the context dictionary. This allows storing the output of
+            different primitives in different variables, even if the primitive output name is
+            the same one.
     """
 
     def _get_tunable_hyperparameters(self):
@@ -133,9 +130,9 @@ class MLPipeline():
         """Set new hyperparameter values for some blocks.
 
         Args:
-            hyperparameters (dict): A dictionary containing the block names as
-                                    keys and the new hyperparameters dictionary
-                                    as values.
+            hyperparameters (dict):
+                A dictionary containing the block names as keys and the new hyperparameters
+                dictionary as values.
         """
         for block_name, block_hyperparams in hyperparameters.items():
             self.blocks[block_name].set_hyperparameters(block_hyperparams)
@@ -148,11 +145,12 @@ class MLPipeline():
         was created.
 
         Args:
-            block_name (str): Name of this block. Used to find the corresponding
-                              input_names.
-            block_args (list): list of method argument specifications from the
-                               primitive.
-            context (dict): current context dictionary.
+            block_name (str):
+                Name of this block. Used to find the corresponding input_names.
+            block_args (list):
+                list of method argument specifications from the primitive.
+            context (dict):
+                current context dictionary.
 
         Returns:
             dict:
@@ -213,22 +211,40 @@ class MLPipeline():
         return list(self.blocks.keys())[index]
 
     def _get_output_spec(self, output):
-        """Parsre the output specification and get a block name and a variable name.
+        """Parse the output specification and get a block name and a variable name.
 
         The output specification can be of two types: int and str.
 
         If it is an integer, it is interpreted as a block index, and the variable name
         is considered to be ``None``, which means that the whole context will be returned.
 
-        If it is a string, it is interpreted as the block name, and it has to match a block
-        name exactly, including its hash and counter number ``#n``. Optionally, a variable
-        name can be passed at the end using a ``'.'`` as a separator.
-        In this case, the format of the string is `{block_name}.{variable_name}`. Note
-        that the block name can also contain dots, so only the leftmost dot will be
-        considered, and only if the complete string does not match exactly a block name.
+        If it is a string, it can be interpreted in three ways:
+
+            * **block name**: If the string matches a block name exactly, including
+            its hash and counter number ``#n`` at the end, the whole context will be
+            returned after that block is produced.
+            * **variable_name**: If the string does not match any block name and does
+            not contain any dot characted, ``'.'``, it will be considered a variable
+            name. In this case, the indicated variable will be extracted from the
+            context and returned after the last block has been produced.
+            * **block_name + variable_name**: If the complete string does not match a
+            block name but it contains at least one dot, ``'.'``, it will be split
+            in two parts on the last dot. If the first part of the string matches a
+            block name exactly, the second part of the string will be considered a
+            variable name, assuming the format ``{block_name}.{variable_name}``, and
+            the indicated variable will be extracted from the context and returned
+            after the block has been produced. Otherwise, if the extracted
+            ``block_name`` does not match a block name exactly, a ``ValueError``
+            will be raised.
 
         Args:
-            output (str or int): Output specification as either a string or an integer.
+            output (str or int):
+                Output specification as either a string or an integer.
+
+        Raises:
+            ValueError:
+                If the output string contains dots but it does not match a block
+                name exactly
 
         Returns:
             tuple:
@@ -239,15 +255,21 @@ class MLPipeline():
                         It can be ``None``, which means that the whole context is to be
                         returned.
         """
+        # If None is given, both block and varialbe are None
         if output is None:
             return None, None
 
+        # If an int is given, it is a block index and there is no variable
         if isinstance(output, int):
             output = self._get_block_name(output)
+            return output, None
 
+        # If the string matches a block name, there is no variable
         if output in self.blocks:
             return output, None
 
+        # If there is at least one dot in the output, but it did not match
+        # a block name, it is considered to be {block_name}.{variable_name}
         if '.' in output:
             output_block, output_variable = output.rsplit('.', 1)
             if output_block not in self.blocks:
@@ -255,6 +277,9 @@ class MLPipeline():
 
             return output_block, output_variable
 
+        # If the given string is not a block name and it has no dots,
+        # it is considered to be a variable name to be extracted
+        # from the context after the last block has been produced
         last_block_name = self._get_block_name(-1)
         return last_block_name, output
 
@@ -285,25 +310,48 @@ class MLPipeline():
         `produce` calls will be taken.
 
         Args:
-            X: Fit Data, which the pipeline will learn from.
-            y: Fit Data labels, which the pipeline will use to learn how to
-               behave.
-            output_ (str or int): Output specification, which can be a string or an integer.
-                If an integer is given, it is interpreted as the block number, and the whole
-                context after running the specified block will be returned.
-                If a string is given, it is expected to be the name of one block, including
-                its counter number at the end. Optionally, a variable name can be included
-                at the end after the counter number using a ``'.'`` as a separator between the
-                block name and the variable name. If the variable name is given, this will be
-                extracted from the context and returned. Otherwise, the whole context will
-                be returned.
-            start_ (str or int): Block index or block name to start processing from. The
+            X:
+                Fit Data, which the pipeline will learn from.
+
+            y:
+                Fit Data labels, which the pipeline will use to learn how to
+                behave.
+
+            output_ (str or int or None):
+                Output specification, which can be a string or an integer or None.
+
+                    * If it is None (default), nothing will be returned
+                    * If an integer is given, it is interpreted as the block number, and the whole
+                      context after running the specified block will be returned.
+                    * If it is a string, it can be interpreted in three ways:
+
+                        * **block name**: If the string matches a block name exactly, including
+                          its hash and counter number ``#n`` at the end, the whole context will be
+                          returned after that block is produced.
+                        * **variable_name**: If the string does not match any block name and does
+                          not contain any dot characted, ``'.'``, it will be considered a variable
+                          name. In this case, the indicated variable will be extracted from the
+                          context and returned after the last block has been produced.
+                        * **block_name + variable_name**: If the complete string does not match a
+                          block name but it contains at least one dot, ``'.'``, it will be split
+                          in two parts on the last dot. If the first part of the string matches a
+                          block name exactly, the second part of the string will be considered a
+                          variable name, assuming the format ``{block_name}.{variable_name}``, and
+                          the indicated variable will be extracted from the context and returned
+                          after the block has been produced. Otherwise, if the extracted
+                          ``block_name`` does not match a block name exactly, a ``ValueError``
+                          will be raised.
+
+            start_ (str or int or None):
+                Block index or block name to start processing from. The
                 value can either be an integer, which will be interpreted as a block index,
                 or the name of a block, including the conter number at the end.
                 If given, the execution of the pipeline will start on the specified block,
                 and all the blocks before that one will be skipped.
-            **kwargs: Any additional keyword arguments will be directly added
-                      to the context dictionary and available for the blocks.
+
+            **kwargs:
+                Any additional keyword arguments will be directly added
+                to the context dictionary and available for the blocks.
 
         Returns:
             None or dict or object:
@@ -328,11 +376,12 @@ class MLPipeline():
             start_ = self._get_block_name(start_)
 
         for block_name, block in self.blocks.items():
-            if block_name == start_:
-                start_ = False
-            elif start_:
-                LOGGER.debug("Skipping block %s fit", block_name)
-                continue
+            if start_:
+                if block_name == start_:
+                    start_ = False
+                else:
+                    LOGGER.debug("Skipping block %s fit", block_name)
+                    continue
 
             LOGGER.debug("Fitting block %s", block_name)
             try:
@@ -357,7 +406,11 @@ class MLPipeline():
             if block_name == output_block:
                 return self._get_output(output_variable, context)
 
-    def predict(self, X=None, output_='y', start_=None, **kwargs):
+        if start_:
+            # We skipped all the blocks up to the end
+            raise ValueError('Unknown block name: {}'.format(start_))
+
+    def predict(self, X=None, output_=None, start_=None, **kwargs):
         """Produce predictions using the blocks of this pipeline.
 
         Sequentially call the `produce` method of each block, capturing the
@@ -369,23 +422,43 @@ class MLPipeline():
         will be taken.
 
         Args:
-            X: Data which the pipeline will use to make predictions.
-            output_ (str or int): Output specification, which can be a string or an integer.
-                If an integer is given, it is interpreted as the block number, and the whole
-                context after running the specified block will be returned.
-                If a string is given, it is expected to be the name of one block, including
-                its counter number at the end. Optionally, a variable name can be included
-                at the end after the counter number using a ``'.'`` as a separator between the
-                block name and the variable name. If the variable name is given, this will be
-                extracted from the context and returned. Otherwise, the whole context will
-                be returned.
-            start_ (str or int): Block index or block name to start processing from. The
+            X:
+                Data which the pipeline will use to make predictions.
+
+            output_ (str or int or None):
+                Output specification, which can be a string or an integer or None.
+                    * If it is None (default), the output of the last block will be returned.
+                    * If an integer is given, it is interpreted as the block number, and the whole
+                      context after running the specified block will be returned.
+                    * If it is a string, it can be interpreted in three ways:
+
+                        * **block name**: If the string matches a block name exactly, including
+                          its hash and counter number ``#n`` at the end, the whole context will be
+                          returned after that block is produced.
+                        * **variable_name**: If the string does not match any block name and does
+                          not contain any dot characted, ``'.'``, it will be considered a variable
+                          name. In this case, the indicated variable will be extracted from the
+                          context and returned after the last block has been produced.
+                        * **block_name + variable_name**: If the complete string does not match a
+                          block name but it contains at least one dot, ``'.'``, it will be split
+                          in two parts on the last dot. If the first part of the string matches a
+                          block name exactly, the second part of the string will be considered a
+                          variable name, assuming the format ``{block_name}.{variable_name}``, and
+                          the indicated variable will be extracted from the context and returned
+                          after the block has been produced. Otherwise, if the extracted
+                          ``block_name`` does not match a block name exactly, a ``ValueError``
+                          will be raised.
+
+            start_ (str or int or None):
+                Block index or block name to start processing from. The
                 value can either be an integer, which will be interpreted as a block index,
                 or the name of a block, including the conter number at the end.
                 If given, the execution of the pipeline will start on the specified block,
                 and all the blocks before that one will be skipped.
-            **kwargs: Any additional keyword arguments will be directly added
-                      to the context dictionary and available for the blocks.
+
+            **kwargs:
+                Any additional keyword arguments will be directly added
+                to the context dictionary and available for the blocks.
 
         Returns:
             None or dict or object:
@@ -408,11 +481,12 @@ class MLPipeline():
             start_ = self._get_block_name(start_)
 
         for block_name, block in self.blocks.items():
-            if block_name == start_:
-                start_ = False
-            elif start_:
-                LOGGER.debug("Skipping block %s produce", block_name)
-                continue
+            if start_:
+                if block_name == start_:
+                    start_ = False
+                else:
+                    LOGGER.debug("Skipping block %s produce", block_name)
+                    continue
 
             LOGGER.debug("Producing block %s", block_name)
             try:
@@ -431,6 +505,9 @@ class MLPipeline():
         if start_:
             # We skipped all the blocks up to the end
             raise ValueError('Unknown block name: {}'.format(start_))
+
+        if output_ is None:
+            return outputs
 
     def to_dict(self):
         """Return all the details of this MLPipeline in a dict.
@@ -487,7 +564,8 @@ class MLPipeline():
         The content of the JSON file is the dict returned by the `to_dict` method.
 
         Args:
-            path (str): Path to the JSON file to write.
+            path (str):
+                Path to the JSON file to write.
         """
         with open(path, 'w') as out_file:
             json.dump(self.to_dict(), out_file, indent=4)
@@ -499,7 +577,8 @@ class MLPipeline():
         The dict structure is the same as the one created by the `to_dict` method.
 
         Args:
-            metadata (dict): Dictionary containing the pipeline specification.
+            metadata (dict):
+                Dictionary containing the pipeline specification.
 
         Returns:
             MLPipeline:
@@ -531,7 +610,8 @@ class MLPipeline():
         The JSON file format is the same as the one created by the `to_dict` method.
 
         Args:
-            path (str): Path of the JSON file to load.
+            path (str):
+                Path of the JSON file to load.
 
         Returns:
             MLPipeline:

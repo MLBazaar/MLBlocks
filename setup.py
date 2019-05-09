@@ -59,6 +59,10 @@ development_requires = [
     # Advanced testing
     'tox>=2.9.1',
     'coverage>=4.5.1',
+
+    # Documentation style
+    'doc8==0.8.0',
+    'pydocstyle==3.0.0'
 ]
 
 

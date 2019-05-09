@@ -39,7 +39,12 @@ extensions = [
     'sphinx.ext.graphviz',
     'IPython.sphinxext.ipython_console_highlighting',
     'IPython.sphinxext.ipython_directive',
+    'autodocsumm',
 ]
+
+autodoc_default_options = {
+    'autosummary': True,
+}
 
 ipython_execlines = ["import pandas as pd", "pd.set_option('display.width', 1000000)"]
 
@@ -49,10 +54,6 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 source_suffix = ['.rst', '.md', '.ipynb']
-
-# source_parsers = {
-#     '.md': CommonMarkParser,
-# }
 
 # The master toctree document.
 master_doc = 'index'

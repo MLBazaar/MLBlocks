@@ -100,6 +100,7 @@ class Dataset():
         **kwargs: Any additional keyword argument passed on initialization will be made
             available as instance attributes.
     """
+
     def __init__(self, description, data, target, score, shuffle=True, stratify=False, **kwargs):
 
         self.name = description.splitlines()[0]
@@ -115,10 +116,10 @@ class Dataset():
         self.__dict__.update(kwargs)
 
     def score(self, *args, **kwargs):
-        """Scoring function for this dataset.
+        r"""Scoring function for this dataset.
 
         Args:
-            \\*args, \\*\\*kwargs: Any given arguments and keyword arguments will be
+            \*args, \*\*kwargs: Any given arguments and keyword arguments will be
             directly passed to the given scoring function.
 
         Returns:
@@ -315,7 +316,6 @@ def load_dic28():
     There exist 52,652 words (vertices in a network) having 2 up to 8 characters
     in the dictionary. The obtained network has 89038 edges.
     """
-
     dataset_path = _load('dic28')
 
     X = _load_csv(dataset_path, 'data')
@@ -344,7 +344,6 @@ def load_nomination():
     Data consists of one graph whose nodes contain two attributes, attr1 and attr2.
     Associated with each node is a label that has to be learned and predicted.
     """
-
     dataset_path = _load('nomination')
 
     X = _load_csv(dataset_path, 'data')
@@ -363,7 +362,6 @@ def load_amazon():
     co-purchased with product j, the graph contains an undirected edge from i to j.
     Each product category provided by Amazon defines each ground-truth community.
     """
-
     dataset_path = _load('amazon')
 
     X = _load_csv(dataset_path, 'data')
@@ -383,7 +381,6 @@ def load_jester():
     source: "University of California Berkeley, CA"
     sourceURI: "http://eigentaste.berkeley.edu/dataset/"
     """
-
     dataset_path = _load('jester')
 
     X = _load_csv(dataset_path, 'data')
@@ -393,7 +390,7 @@ def load_jester():
 
 
 def load_wikiqa():
-    """A Challenge Dataset for Open-Domain Question Answering.
+    """Challenge Dataset for Open-Domain Question Answering.
 
     WikiQA dataset is a publicly available set of question and sentence (QS) pairs,
     collected and annotated for research on open-domain question answering.
@@ -401,7 +398,6 @@ def load_wikiqa():
     source: "Microsoft"
     sourceURI: "https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/#"
     """  # noqa
-
     dataset_path = _load('wikiqa')
 
     data = _load_csv(dataset_path, 'data', set_index=True)

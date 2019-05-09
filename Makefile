@@ -98,6 +98,11 @@ fix-lint: ## fix lint issues using autoflake, autopep8, and isort
 	autopep8 --in-place --recursive --aggressive tests
 	isort --apply --atomic --recursive tests
 
+.PHONY: lint-docs
+lint-docs: ## check docs formatting with doc8 and pydocstyle
+	doc8 mlblocks/
+	pydocstyle mlblocks/
+
 
 # TEST TARGETS
 
