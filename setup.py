@@ -40,9 +40,10 @@ development_requires = [
     'm2r>=0.2.0',
     'Sphinx>=1.7.1',
     'sphinx_rtd_theme>=0.2.4',
-    'graphviz==0.9',
-    'ipython==6.5.0',
-    'matplotlib==2.2.3',
+    'graphviz>=0.9',
+    'ipython>=6.5.0',
+    'matplotlib>=2.2.3',
+    'autodocsumm>=0.1.10',
 
     # style check
     'flake8>=3.5.0',
@@ -61,8 +62,8 @@ development_requires = [
     'coverage>=4.5.1',
 
     # Documentation style
-    'doc8==0.8.0',
-    'pydocstyle==3.0.0'
+    'doc8>=0.8.0',
+    'pydocstyle>=3.0.0'
 ]
 
 
