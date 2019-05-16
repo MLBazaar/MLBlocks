@@ -37,6 +37,7 @@ def add_primitives_path(path):
 
     Raises:
         ValueError: A `ValueError` will be raised if the path is not valid.
+
     """
     if path not in _PRIMITIVES_PATHS:
         if not os.path.isdir(path):
@@ -68,7 +69,6 @@ def get_primitives_paths():
         list:
             The list of folders.
     """
-
     primitives_paths = list()
     entry_points = pkg_resources.iter_entry_points('mlprimitives')
     for entry_point in entry_points:
@@ -99,7 +99,6 @@ def load_primitive(name):
         ValueError: A `ValueError` will be raised if the primitive cannot be
                     found.
     """
-
     for base_path in get_primitives_paths():
         parts = name.split('.')
         number_of_parts = len(parts)
