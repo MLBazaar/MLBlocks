@@ -15,13 +15,14 @@ with open('HISTORY.md') as history_file:
 
 
 install_requires = [
-    'mlprimitives>=0.1.3',
 ]
 
 
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
+    'mlprimitives>=0.1.3,<0.2',
+    'urllib3>=1.20,<1.25'
 ]
 
 

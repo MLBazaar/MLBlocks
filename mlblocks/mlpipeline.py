@@ -164,22 +164,10 @@ class MLPipeline():
         kwargs = dict()
         for arg in block_args:
             name = arg['name']
-            keyword = arg.get('keyword', name)
             variable = input_names.get(name, name)
 
             if variable in context:
-                value = context[variable]
-
-            elif 'default' in arg:
-                value = arg['default']
-
-            else:
-                raise TypeError(
-                    "Expected argument '{}.{}' not found in context"
-                    .format(block_name, variable)
-                )
-
-            kwargs[keyword] = value
+                kwargs[name] = context[variable]
 
         return kwargs
 

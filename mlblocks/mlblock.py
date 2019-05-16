@@ -222,6 +222,43 @@ class MLBlock():
             LOGGER.debug('Creating a new primitive instance for %s', self.name)
             self.instance = self.primitive(**self._hyperparameters)
 
+    def _get_method_kwargs(self, kwargs, method_args):
+        """Prepare the kwargs for the method.
+
+        The kwargs dict will be altered according to the method_kwargs
+        specification to make them ready for the primitive method to
+        accept them.
+
+        Args:
+            kwargs (dict):
+                keyword arguments that have been passed to the block method.
+            method_args (list):
+                method arguments as specified in the JSON annotation.
+
+        Returns:
+            dict:
+                A dictionary containing the argument names and values to pass
+                to the primitive method.
+        """
+
+        method_kwargs = dict()
+        for arg in method_args:
+            name = arg['name']
+            keyword = arg.get('keyword', name)
+
+            if name in kwargs:
+                value = kwargs[name]
+
+            elif 'default' in arg:
+                value = arg['default']
+
+            else:
+                raise TypeError("missing expected argument '{}'".format(name))
+
+            method_kwargs[keyword] = value
+
+        return method_kwargs
+
     def fit(self, **kwargs):
         """Call the fit method of the primitive.
 
@@ -244,9 +281,10 @@ class MLBlock():
                 method is given.
         """
         if self.fit_method is not None:
-            fit_args = self._fit_params.copy()
-            fit_args.update(kwargs)
-            getattr(self.instance, self.fit_method)(**fit_args)
+            fit_kwargs = self._fit_params.copy()
+            fit_kwargs.update(kwargs)
+            fit_kwargs = self._get_method_kwargs(fit_kwargs, self.fit_args)
+            getattr(self.instance, self.fit_method)(**fit_kwargs)
 
     def produce(self, **kwargs):
         """Call the primitive function, or the predict method of the primitive.
@@ -262,10 +300,11 @@ class MLBlock():
             The output of the call to the primitive function or primitive
             produce method.
         """
-        produce_args = self._produce_params.copy()
-        produce_args.update(kwargs)
+        produce_kwargs = self._produce_params.copy()
+        produce_kwargs.update(kwargs)
+        produce_kwargs = self._get_method_kwargs(produce_kwargs, self.produce_args)
         if self._class:
-            return getattr(self.instance, self.produce_method)(**produce_args)
+            return getattr(self.instance, self.produce_method)(**produce_kwargs)
 
-        produce_args.update(self._hyperparameters)
-        return self.primitive(**produce_args)
+        produce_kwargs.update(self._hyperparameters)
+        return self.primitive(**produce_kwargs)
