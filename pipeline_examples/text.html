@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Image Pipelines" href="image.html" />
     <link rel="prev" title="Multi Table Pipelines" href="multi_table.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -286,31 +288,31 @@ for later ones.</p>
 
 <span class="c1"># set up the pipeline</span>
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;mlprimitives.counters.UniqueCounter&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;mlprimitives.text.TextCleaner&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;mlprimitives.counters.VocabularyCounter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mlprimitives.custom.counters.UniqueCounter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mlprimitives.custom.text.TextCleaner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mlprimitives.custom.counters.VocabularyCounter&quot;</span><span class="p">,</span>
     <span class="s2">&quot;keras.preprocessing.text.Tokenizer&quot;</span><span class="p">,</span>
     <span class="s2">&quot;keras.preprocessing.sequence.pad_sequences&quot;</span><span class="p">,</span>
     <span class="s2">&quot;keras.Sequential.LSTMTextClassifier&quot;</span>
 <span class="p">]</span>
 <span class="n">input_names</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;mlprimitives.counters.UniqueCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.custom.counters.UniqueCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 <span class="n">output_names</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;mlprimitives.counters.UniqueCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.custom.counters.UniqueCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;counts&quot;</span><span class="p">:</span> <span class="s2">&quot;classes&quot;</span>
     <span class="p">},</span>
-    <span class="s2">&quot;mlprimitives.counters.VocabularyCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.custom.counters.VocabularyCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;counts&quot;</span><span class="p">:</span> <span class="s2">&quot;vocabulary_size&quot;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 <span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;mlprimitives.counters.VocabularyCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.custom.counters.VocabularyCounter#1&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;add&quot;</span><span class="p">:</span> <span class="mi">1</span>
     <span class="p">},</span>
-    <span class="s2">&quot;mlprimitives.text.TextCleaner#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mlprimitives.custom.text.TextCleaner#1&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;keras.preprocessing.sequence.pad_sequences#1&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -357,12 +359,12 @@ to encode all the string features, and go directly into the
 <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;stopwords&#39;</span><span class="p">)</span>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;mlprimitives.text.TextCleaner&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mlprimitives.feature_extraction.StringVectorizer&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mlprimitives.custom.text.TextCleaner&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mlprimitives.custom.feature_extraction.StringVectorizer&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;mlprimitives.text.TextCleaner&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;mlprimitives.custom.text.TextCleaner&#39;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span>
         <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;nl&#39;</span>
     <span class="p">},</span>
@@ -395,7 +397,7 @@ to encode all the string features, and go directly into the
         <a href="image.html" class="btn btn-neutral float-right" title="Image Pipelines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="multi_table.html" class="btn btn-neutral" title="Multi Table Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="multi_table.html" class="btn btn-neutral float-left" title="Multi Table Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -421,26 +423,16 @@ to encode all the string features, and go directly into the
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

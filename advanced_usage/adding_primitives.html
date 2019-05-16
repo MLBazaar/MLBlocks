@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Single Table Pipelines" href="../pipeline_examples/single_table.html" />
     <link rel="prev" title="Pipelines" href="pipelines.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -275,8 +277,8 @@ is to install <strong>MLPrimitives</strong>.</p>
 <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/tree/master/mlblocks_primitives">MLPrimitives integrated primitives</a>, so you will have to integrate the primitive yourself
 by writing the corresponding <a class="reference external" href="primitives.html#json-annotations">JSON annotation</a>.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you create new primitives for MLBlocks, please consider contributing them to the
+<p class="admonition-title">Note</p>
+<p>If you create new primitives for MLBlocks, please consider contributing them to the
 <strong>MLPrimitives</strong> project!</p>
 </div>
 <p>The first thing to do when adding a new primitive is making sure that it complies with the
@@ -296,9 +298,9 @@ calls after the instance creation is not possible.</p>
 place known to <strong>MLBlocks</strong>.</p>
 <p><strong>MLBlocks</strong> looks for primitives in the following folders, in this order:</p>
 <ol class="arabic simple">
-<li>Any folder specified by the user, starting by the latest one.</li>
-<li>A folder named <code class="docutils literal notranslate"><span class="pre">mlblocks_primitives</span></code> or <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code> in the current working directory.</li>
-<li>A folder named <code class="docutils literal notranslate"><span class="pre">mlblocks_primitives</span></code> or <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code> in the <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.prefix">system prefix</a>.</li>
+<li><p>Any folder specified by the user, starting by the latest one.</p></li>
+<li><p>A folder named <code class="docutils literal notranslate"><span class="pre">mlblocks_primitives</span></code> or <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code> in the current working directory.</p></li>
+<li><p>A folder named <code class="docutils literal notranslate"><span class="pre">mlblocks_primitives</span></code> or <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code> in the <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.prefix">system prefix</a>.</p></li>
 </ol>
 <p>The list of folders where <strong>MLBlocks</strong> will search for primitives can be seen at any time
 by calling the method <a class="reference external" href="../api_reference.html#mlblocks.get_primitives_paths">mlblocks.get_primitives_paths</a>.</p>
@@ -319,9 +321,9 @@ working directory.</p>
 all you need to do is setting up an <a class="reference external" href="https://packaging.python.org/specifications/entry-points/">Entry Point</a> in your <cite>setup.py</cite> script with the
 following specification:</p>
 <ol class="arabic simple">
-<li>It has to be published under the name <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code>.</li>
-<li>It has to be named exactly <code class="docutils literal notranslate"><span class="pre">jsons_path</span></code>.</li>
-<li>It has to point at a variable that contains the path to the JSONS folder.</li>
+<li><p>It has to be published under the name <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code>.</p></li>
+<li><p>It has to be named exactly <code class="docutils literal notranslate"><span class="pre">jsons_path</span></code>.</p></li>
+<li><p>It has to point at a variable that contains the path to the JSONS folder.</p></li>
 </ol>
 <p>An example of such an entry point would be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
@@ -349,7 +351,7 @@ following specification:</p>
         <a href="../pipeline_examples/single_table.html" class="btn btn-neutral float-right" title="Single Table Pipelines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pipelines.html" class="btn btn-neutral" title="Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pipelines.html" class="btn btn-neutral float-left" title="Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -375,26 +377,16 @@ following specification:</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

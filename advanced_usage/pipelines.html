@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Adding Primitives" href="adding_primitives.html" />
     <link rel="prev" title="Hyperparameters" href="hyperparameters.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -307,8 +309,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2b1f25d9e320&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2b1f25fd57b8&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2aaccd8614e0&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2aaccdbcfb70&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -332,8 +334,8 @@ within a single MLPipeline:</p>
 <p>This dictionary must have as keys the name of the blocks that the arguments belong to, and
 as values the dictionary that contains the argument names and their values.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If only one block of a specific primitive exists in the pipeline, the counter
+<p class="admonition-title">Note</p>
+<p>If only one block of a specific primitive exists in the pipeline, the counter
 appended to its name can be skipped when specifying the arguments, as shown in the
 example.</p>
 </div>
@@ -347,11 +349,11 @@ methods of a pipeline is the <strong>Context dictionary</strong>.</p>
 the variables passed to the method are stored in it.</p>
 <p>Then, the following happens for each block:</p>
 <ul class="simple">
-<li>The list of arguments that the method expects is retrieved from the block configuration.</li>
-<li>The corresponding values are read from the <strong>Context</strong> and passed to the method.</li>
-<li>The list of outputs that the method returns is retrieved from the block configuration.</li>
-<li>The indicated outputs are captured in order and put back to the <strong>Context</strong> dictionary
-using the name specified.</li>
+<li><p>The list of arguments that the method expects is retrieved from the block configuration.</p></li>
+<li><p>The corresponding values are read from the <strong>Context</strong> and passed to the method.</p></li>
+<li><p>The list of outputs that the method returns is retrieved from the block configuration.</p></li>
+<li><p>The indicated outputs are captured in order and put back to the <strong>Context</strong> dictionary
+using the name specified.</p></li>
 </ul>
 <div class="section" id="context-usage-examples">
 <h3>Context Usage Examples<a class="headerlink" href="#context-usage-examples" title="Permalink to this headline">¶</a></h3>
@@ -361,13 +363,13 @@ one, which outputs the final prediction, called <cite>y</cite>.</p>
 <p>In this case, supposing that we only have 3 blocks, the sequence when the <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X)</span></code>
 call is issued would be:</p>
 <ol class="arabic simple">
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is stored in the <strong>Context</strong>.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled from the <strong>Context</strong> and passed to <cite>block1</cite>.</li>
-<li>The output from <cite>block1</cite> is put back into the <strong>Context</strong>, overwriting the old value.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to <cite>block2</cite>.</li>
-<li>The output from <cite>block2</cite> is put back into the <strong>Context</strong>, overwriting again the old value.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled for the last time from the <strong>Context</strong> and passed to <cite>block3</cite>.</li>
-<li>The output from <cite>block3</cite>, since it is the last one, is returned.</li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is stored in the <strong>Context</strong>.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled from the <strong>Context</strong> and passed to <cite>block1</cite>.</p></li>
+<li><p>The output from <cite>block1</cite> is put back into the <strong>Context</strong>, overwriting the old value.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to <cite>block2</cite>.</p></li>
+<li><p>The output from <cite>block2</cite> is put back into the <strong>Context</strong>, overwriting again the old value.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled for the last time from the <strong>Context</strong> and passed to <cite>block3</cite>.</p></li>
+<li><p>The output from <cite>block3</cite>, since it is the last one, is returned.</p></li>
 </ol>
 <div class="graphviz"><img src="../_images/graphviz-b3981e4480a82cc9f77d01d9337416ff795e60e5.png" alt="digraph G {
     subgraph cluster_0 {
@@ -405,12 +407,12 @@ it needs to be given the list of features that it needs to encode in a variable 
 <p>In this case, the call would be <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X,</span> <span class="pre">features=features)</span></code>, and the sequence
 of actions would be:</p>
 <ol class="arabic simple">
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is stored in the <strong>Context</strong>.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is pulled from the <strong>Context</strong> and passed to the
-<cite>encoder</cite> block.</li>
-<li>The output from <cite>encoder</cite> is put back into the <strong>Context</strong> as <code class="docutils literal notranslate"><span class="pre">X</span></code>, overwriting the old value.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</li>
-<li>The output from the <cite>estimator</cite> block is returned.</li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is stored in the <strong>Context</strong>.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is pulled from the <strong>Context</strong> and passed to the
+<cite>encoder</cite> block.</p></li>
+<li><p>The output from <cite>encoder</cite> is put back into the <strong>Context</strong> as <code class="docutils literal notranslate"><span class="pre">X</span></code>, overwriting the old value.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</p></li>
+<li><p>The output from the <cite>estimator</cite> block is returned.</p></li>
 </ol>
 <div class="graphviz"><img src="../_images/graphviz-30b772283c09a682c0839163ff176f99cc84d262.png" alt="digraph G {
     subgraph cluster_0 {
@@ -448,14 +450,14 @@ are categorical and want to use it instead of passing a manually crafted list of
 <p>In this case, we go back to the <code class="docutils literal notranslate"><span class="pre">pipeline.predict(X)</span></code> call, and let the <cite>detector</cite> primitive
 do its job:</p>
 <ol class="arabic simple">
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is stored in the <strong>Context</strong>.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled from the <strong>Context</strong> and passed to the <cite>detector</cite> block.</li>
-<li>The output from the <cite>detector</cite> block is stored in the <strong>Context</strong> as the <cite>features</cite> variable.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is pulled from the <strong>Context</strong> and passed to the
-<cite>encoder</cite> block.</li>
-<li>The output from <cite>encoder</cite> is put back into the <strong>Context</strong> as <code class="docutils literal notranslate"><span class="pre">X</span></code>, overwriting the old value.</li>
-<li>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</li>
-<li>The output from the <cite>estimator</cite> block is returned.</li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is stored in the <strong>Context</strong>.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled from the <strong>Context</strong> and passed to the <cite>detector</cite> block.</p></li>
+<li><p>The output from the <cite>detector</cite> block is stored in the <strong>Context</strong> as the <cite>features</cite> variable.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">features</span></code> is pulled from the <strong>Context</strong> and passed to the
+<cite>encoder</cite> block.</p></li>
+<li><p>The output from <cite>encoder</cite> is put back into the <strong>Context</strong> as <code class="docutils literal notranslate"><span class="pre">X</span></code>, overwriting the old value.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">X</span></code> is pulled again from the <strong>Context</strong> and passed to the <cite>estimator</cite> block.</p></li>
+<li><p>The output from the <cite>estimator</cite> block is returned.</p></li>
 </ol>
 <div class="graphviz"><img src="../_images/graphviz-74f15df84efdedb1488bfe2b184fbe7cecd8355d.png" alt="digraph G {
     subgraph cluster_0 {
@@ -617,8 +619,8 @@ problem or dataset, we can do that directly on our dict representation.</p>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Notice how we skipped many items in this last dict representation and only included
+<p class="admonition-title">Note</p>
+<p>Notice how we skipped many items in this last dict representation and only included
 the parts that we want to be different than the default values. MLBlocks will figure out
 the rest of the elements directly from the primitive annotations on its own!</p>
 </div>
@@ -642,7 +644,7 @@ that allows loading the pipeline directly from a JSON file:</p>
         <a href="adding_primitives.html" class="btn btn-neutral float-right" title="Adding Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="hyperparameters.html" class="btn btn-neutral" title="Hyperparameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="hyperparameters.html" class="btn btn-neutral float-left" title="Hyperparameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -668,26 +670,16 @@ that allows loading the pipeline directly from a JSON file:</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

@@ -19,34 +19,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Credits" href="authors.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -258,39 +260,39 @@
 <div class="section" id="new-primitives-discovery">
 <h2>0.3.0 - New Primitives Discovery<a class="headerlink" href="#new-primitives-discovery" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>New primitives discovery system based on <cite>entry_points</cite>.</li>
-<li>Conditional Hyperparameters filtering in MLBlock initialization.</li>
-<li>Improved logging and exception reporting.</li>
+<li><p>New primitives discovery system based on <code class="docutils literal notranslate"><span class="pre">entry_points</span></code>.</p></li>
+<li><p>Conditional Hyperparameters filtering in MLBlock initialization.</p></li>
+<li><p>Improved logging and exception reporting.</p></li>
 </ul>
 </div>
 <div class="section" id="new-datasets-and-unit-tests">
 <h2>0.2.4 - New Datasets and Unit Tests<a class="headerlink" href="#new-datasets-and-unit-tests" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Add a new multi-table dataset.</li>
-<li>Add Unit Tests up to 50% coverage.</li>
-<li>Improve documentation.</li>
-<li>Fix minor bug in newsgroups dataset.</li>
+<li><p>Add a new multi-table dataset.</p></li>
+<li><p>Add Unit Tests up to 50% coverage.</p></li>
+<li><p>Improve documentation.</p></li>
+<li><p>Fix minor bug in newsgroups dataset.</p></li>
 </ul>
 </div>
 <div class="section" id="demo-datasets">
 <h2>0.2.3 - Demo Datasets<a class="headerlink" href="#demo-datasets" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Add new methods to Dataset class.</li>
-<li>Add documentation for the datasets module.</li>
+<li><p>Add new methods to Dataset class.</p></li>
+<li><p>Add documentation for the datasets module.</p></li>
 </ul>
 </div>
 <div class="section" id="mlpipeline-load-save">
 <h2>0.2.2 - MLPipeline Load/Save<a class="headerlink" href="#mlpipeline-load-save" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Implement save and load methods for MLPipelines</li>
-<li>Add more datasets</li>
+<li><p>Implement save and load methods for MLPipelines</p></li>
+<li><p>Add more datasets</p></li>
 </ul>
 </div>
 <div class="section" id="new-documentation">
 <h2>0.2.1 - New Documentation<a class="headerlink" href="#new-documentation" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Add mlblocks.datasets module with demo data download functions.</li>
-<li>Extensive documentation, including multiple pipeline examples.</li>
+<li><p>Add mlblocks.datasets module with demo data download functions.</p></li>
+<li><p>Extensive documentation, including multiple pipeline examples.</p></li>
 </ul>
 </div>
 <div class="section" id="new-mlblocks-api">
@@ -298,103 +300,100 @@
 <p>A new MLBlocks API and Primitive format.</p>
 <p>This is a summary of the changes:</p>
 <ul class="simple">
-<li>Primitives JSONs and Python code has been moved to a different repository, called MLPrimitives</li>
-<li>Optional usage of multiple JSON primitive folders.</li>
-<li><dl class="first docutils">
-<dt>JSON format has been changed to allow more flexibility and features:</dt>
-<dd><ul class="first last">
-<li>input and output arguments, as well as argument types, can be specified for each method</li>
-<li>both classes and function as primitives are supported</li>
-<li>multitype and conditional hyperparameters fully supported</li>
-<li>data modalities and primitive classifiers introduced</li>
-<li>metadata such as documentation, description and author fields added</li>
+<li><p>Primitives JSONs and Python code has been moved to a different repository, called MLPrimitives</p></li>
+<li><p>Optional usage of multiple JSON primitive folders.</p></li>
+<li><p>JSON format has been changed to allow more flexibility and features:</p>
+<ul>
+<li><p>input and output arguments, as well as argument types, can be specified for each method</p></li>
+<li><p>both classes and function as primitives are supported</p></li>
+<li><p>multitype and conditional hyperparameters fully supported</p></li>
+<li><p>data modalities and primitive classifiers introduced</p></li>
+<li><p>metadata such as documentation, description and author fields added</p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li>Parsers are removed, and now the MLBlock class is responsible for loading and reading the
-JSON primitive.</li>
-<li>Multiple blocks of the same primitive are supported within the same pipeline.</li>
-<li>Arbitrary inputs and outputs for both pipelines and blocks are allowed.</li>
-<li>Shared variables during pipeline execution, usable by multiple blocks.</li>
+<li><p>Parsers are removed, and now the MLBlock class is responsible for loading and reading the
+JSON primitive.</p></li>
+<li><p>Multiple blocks of the same primitive are supported within the same pipeline.</p></li>
+<li><p>Arbitrary inputs and outputs for both pipelines and blocks are allowed.</p></li>
+<li><p>Shared variables during pipeline execution, usable by multiple blocks.</p></li>
 </ul>
 </div>
 <div class="section" id="bugfix-release">
 <h2>0.1.9 - Bugfix Release<a class="headerlink" href="#bugfix-release" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Disable some NetworkX functions for incompatibilities with some types of graphs.</li>
+<li><p>Disable some NetworkX functions for incompatibilities with some types of graphs.</p></li>
 </ul>
 </div>
 <div class="section" id="new-primitives-and-some-improvements">
 <h2>0.1.8 - New primitives and some improvements<a class="headerlink" href="#new-primitives-and-some-improvements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Improve the NetworkX primitives.</li>
-<li>Add String Vectorization and Datetime Featurization primitives.</li>
-<li>Refactor some Keras primitives to work with single dimension <cite>y</cite> arrays and be compatible with <cite>pickle</cite>.</li>
-<li>Add XGBClassifier and XGBRegressor primitives.</li>
-<li>Add some <cite>keras.applications</cite> pretrained networks as preprocessing primitives.</li>
-<li>Add helper class to allow function primitives.</li>
+<li><p>Improve the NetworkX primitives.</p></li>
+<li><p>Add String Vectorization and Datetime Featurization primitives.</p></li>
+<li><p>Refactor some Keras primitives to work with single dimension <code class="docutils literal notranslate"><span class="pre">y</span></code> arrays and be compatible with <code class="docutils literal notranslate"><span class="pre">pickle</span></code>.</p></li>
+<li><p>Add XGBClassifier and XGBRegressor primitives.</p></li>
+<li><p>Add some <code class="docutils literal notranslate"><span class="pre">keras.applications</span></code> pretrained networks as preprocessing primitives.</p></li>
+<li><p>Add helper class to allow function primitives.</p></li>
 </ul>
 </div>
 <div class="section" id="nested-hyperparams-dicts">
 <h2>0.1.7 - Nested hyperparams dicts<a class="headerlink" href="#nested-hyperparams-dicts" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Support passing hyperparams as nested dicts.</li>
+<li><p>Support passing hyperparams as nested dicts.</p></li>
 </ul>
 </div>
 <div class="section" id="text-and-graph-pipelines">
 <h2>0.1.6 - Text and Graph Pipelines<a class="headerlink" href="#text-and-graph-pipelines" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Add LSTM classifier and regressor primitives.</li>
-<li>Add OneHotEncoder and MultiLabelEncoder primitives.</li>
-<li>Add several NetworkX graph featurization primitives.</li>
-<li>Add <cite>community.best_partition</cite> primitive.</li>
+<li><p>Add LSTM classifier and regressor primitives.</p></li>
+<li><p>Add OneHotEncoder and MultiLabelEncoder primitives.</p></li>
+<li><p>Add several NetworkX graph featurization primitives.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">community.best_partition</span></code> primitive.</p></li>
 </ul>
 </div>
 <div class="section" id="collaborative-filtering-pipelines">
 <h2>0.1.5 - Collaborative Filtering Pipelines<a class="headerlink" href="#collaborative-filtering-pipelines" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Add LightFM primitive.</li>
+<li><p>Add LightFM primitive.</p></li>
 </ul>
 </div>
 <div class="section" id="image-pipelines-improved">
 <h2>0.1.4 - Image pipelines improved<a class="headerlink" href="#image-pipelines-improved" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Allow passing <cite>init_params</cite> on <cite>MLPipeline</cite> creation.</li>
-<li>Fix bug with MLHyperparam types and Keras.</li>
-<li>Rename <cite>produce_params</cite> as <cite>predict_params</cite>.</li>
-<li>Add SingleCNN Classifier and Regressor primitives.</li>
-<li>Simplify and improve Trivial Predictor</li>
+<li><p>Allow passing <code class="docutils literal notranslate"><span class="pre">init_params</span></code> on <code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code> creation.</p></li>
+<li><p>Fix bug with MLHyperparam types and Keras.</p></li>
+<li><p>Rename <code class="docutils literal notranslate"><span class="pre">produce_params</span></code> as <code class="docutils literal notranslate"><span class="pre">predict_params</span></code>.</p></li>
+<li><p>Add SingleCNN Classifier and Regressor primitives.</p></li>
+<li><p>Simplify and improve Trivial Predictor</p></li>
 </ul>
 </div>
 <div class="section" id="multi-table-pipelines-improved">
 <h2>0.1.3 - Multi Table pipelines improved<a class="headerlink" href="#multi-table-pipelines-improved" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Improve RandomForest primitive ranges</li>
-<li>Improve DFS primitive</li>
-<li>Add Tree Based Feature Selection primitives</li>
-<li>Fix bugs in TrivialPredictor</li>
-<li>Improved documentation</li>
+<li><p>Improve RandomForest primitive ranges</p></li>
+<li><p>Improve DFS primitive</p></li>
+<li><p>Add Tree Based Feature Selection primitives</p></li>
+<li><p>Fix bugs in TrivialPredictor</p></li>
+<li><p>Improved documentation</p></li>
 </ul>
 </div>
 <div class="section" id="id1">
 <h2>0.1.2 - Bugfix release<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Fix bug in TrivialMedianPredictor</li>
-<li>Fix bug in OneHotLabelEncoder</li>
+<li><p>Fix bug in TrivialMedianPredictor</p></li>
+<li><p>Fix bug in OneHotLabelEncoder</p></li>
 </ul>
 </div>
 <div class="section" id="single-table-pipelines-improved">
 <h2>0.1.1 - Single Table pipelines improved<a class="headerlink" href="#single-table-pipelines-improved" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>New project structure and primitives for integration into MIT-TA2.</li>
-<li>MIT-TA2 default pipelines and single table pipelines fully working.</li>
+<li><p>New project structure and primitives for integration into MIT-TA2.</p></li>
+<li><p>MIT-TA2 default pipelines and single table pipelines fully working.</p></li>
 </ul>
 </div>
 <div class="section" id="id2">
 <h2>0.1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>First release on PyPI.</li>
+<li><p>First release on PyPI.</p></li>
 </ul>
 </div>
 </div>
@@ -408,7 +407,7 @@ JSON primitive.</li>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="authors.html" class="btn btn-neutral" title="Credits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="authors.html" class="btn btn-neutral float-left" title="Credits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -434,26 +433,16 @@ JSON primitive.</li>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

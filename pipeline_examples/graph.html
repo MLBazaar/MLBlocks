@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mlblocks" href="../api/mlblocks.html" />
     <link rel="prev" title="Image Pipelines" href="image.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -268,7 +270,7 @@ The target is a 1d numpy binary integer array indicating whether the indicated l
 <div class="section" id="networkx-mlprimitives-scikit-learn-xgboost">
 <h3>NetworkX + MLPrimitives + Scikit-learn + XGBoost<a class="headerlink" href="#networkx-mlprimitives-scikit-learn-xgboost" title="Permalink to this headline">¶</a></h3>
 <p>In this example, we will go use some <cite>NetworkX Link Prediction</cite> functions to extract attributes
-from the Graph, to later on encode the categorical features with the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.feature_extraction.CategoricalEncoder.json">CategoricalEncoder from
+from the Graph, to later on encode the categorical features with the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.custom.feature_extraction.CategoricalEncoder.json">CategoricalEncoder from
 MLPrimitives</a>, scale the data using the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html">StandardScaler from scikit-learn</a> and finally go into
 an <cite>XGBClassifier</cite>.</p>
 <p>Note how in this example, the Graph objects and the names of the node columns are passed as
@@ -284,7 +286,7 @@ additional information not found inside <cite>X</cite>.</p>
 
 <span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;networkx.link_prediction_feature_extraction&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mlprimitives.feature_extraction.CategoricalEncoder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">,</span>
     <span class="s1">&#39;xgboost.XGBClassifier&#39;</span>
 <span class="p">]</span>
@@ -328,7 +330,7 @@ additional information not found inside <cite>X</cite>.</p>
         <a href="../api/mlblocks.html" class="btn btn-neutral float-right" title="mlblocks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="image.html" class="btn btn-neutral" title="Image Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="image.html" class="btn btn-neutral float-left" title="Image Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -354,26 +356,16 @@ additional information not found inside <cite>X</cite>.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

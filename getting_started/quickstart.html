@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Primitives" href="../advanced_usage/primitives.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -259,15 +261,15 @@
 <p>Below is a short tutorial that will show you how to get started using <strong>MLBlocks</strong>.</p>
 <p>In this tutorial we will learn how to:</p>
 <ul class="simple">
-<li>Create a pipeline using multiple primitives</li>
-<li>Obtain the list of tunable hyperparameters from the pipeline</li>
-<li>Specify hyperparameters for each primitive in the pipeline</li>
-<li>Fit the pipeline using training data</li>
-<li>Use the pipeline to make predictions from new data</li>
+<li><p>Create a pipeline using multiple primitives</p></li>
+<li><p>Obtain the list of tunable hyperparameters from the pipeline</p></li>
+<li><p>Specify hyperparameters for each primitive in the pipeline</p></li>
+<li><p>Fit the pipeline using training data</p></li>
+<li><p>Use the pipeline to make predictions from new data</p></li>
 </ul>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Some additional dependencies are required in order to run this Quickstart.
+<p class="admonition-title">Note</p>
+<p>Some additional dependencies are required in order to run this Quickstart.
 Make sure that <a class="reference external" href="install.html#additional-dependencies">you have already installed them</a>.</p>
 </div>
 <div class="section" id="creating-a-pipeline">
@@ -277,7 +279,7 @@ them to the <a class="reference external" href="../api_reference.html#mlblocks.M
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
 
 <span class="gp">In [2]: </span><span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
-<span class="gp">   ...: </span>    <span class="s1">&#39;mlprimitives.feature_extraction.StringVectorizer&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;mlprimitives.custom.feature_extraction.StringVectorizer&#39;</span><span class="p">,</span>
 <span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">,</span>
 <span class="gp">   ...: </span><span class="p">]</span>
 <span class="gp">   ...: </span>
@@ -302,7 +304,7 @@ for each block, by calling the <a class="reference external" href="../api_refere
 a dictionary with the <a class="reference external" href="../advanced_usage/hyperparameters.html">hyperparameters</a> of the corresponding block as values.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
 <span class="gh">Out[6]: </span><span class="go"></span>
-<span class="go">{&#39;mlprimitives.feature_extraction.StringVectorizer#1&#39;: {&#39;features&#39;: &#39;auto&#39;,</span>
+<span class="go">{&#39;mlprimitives.custom.feature_extraction.StringVectorizer#1&#39;: {&#39;features&#39;: &#39;auto&#39;,</span>
 <span class="go">  &#39;input&#39;: &#39;content&#39;,</span>
 <span class="go">  &#39;decode_error&#39;: &#39;ignore&#39;,</span>
 <span class="go">  &#39;analyzer&#39;: &#39;word&#39;,</span>
@@ -338,7 +340,7 @@ for each block in the pipeline, ready to be passed to any hyperparameter tuning 
 as <a class="reference external" href="https://github.com/HDI-Project/BTB">BTB</a>.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
 <span class="gh">Out[7]: </span><span class="go"></span>
-<span class="go">{&#39;mlprimitives.feature_extraction.StringVectorizer#1&#39;: {&#39;lowercase&#39;: {&#39;type&#39;: &#39;bool&#39;,</span>
+<span class="go">{&#39;mlprimitives.custom.feature_extraction.StringVectorizer#1&#39;: {&#39;lowercase&#39;: {&#39;type&#39;: &#39;bool&#39;,</span>
 <span class="go">   &#39;default&#39;: True},</span>
 <span class="go">  &#39;binary&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True},</span>
 <span class="go">  &#39;max_features&#39;: {&#39;type&#39;: &#39;int&#39;, &#39;default&#39;: 1, &#39;range&#39;: [1, 1000]}},</span>
@@ -407,11 +409,11 @@ to obtain predictions from the pipeline.</p>
 
 <span class="gp">In [17]: </span><span class="n">predictions</span>
 <span class="gh">Out[17]: </span><span class="go"></span>
-<span class="go">array([1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,</span>
-<span class="go">       1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0])</span>
+<span class="go">array([1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,</span>
+<span class="go">       1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1])</span>
 
 <span class="gp">In [18]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
-<span class="go">                                                                                                                                        Out[18]: 0.5675675675675675</span>
+<span class="go">                                                                                                                                        Out[18]: 0.6756756756756757</span>
 </pre></div>
 </div>
 </div>
@@ -428,7 +430,7 @@ to obtain predictions from the pipeline.</p>
         <a href="../advanced_usage/primitives.html" class="btn btn-neutral float-right" title="Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -454,26 +456,16 @@ to obtain predictions from the pipeline.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

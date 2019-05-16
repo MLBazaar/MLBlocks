@@ -19,34 +19,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Installation" href="getting_started/install.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -264,25 +266,25 @@ user to specify how to integrate with each tool, here called primitives, in orde
 a common uniform interface to each one of them.</p>
 <p>At a high level:</p>
 <ul class="simple">
-<li>Each available primitive has been annotated using a standardized JSON file that specifies its
-native interface, as well as which hyperparameters can be used to tune its behavior.</li>
-<li>A list of primitives that will be combined into a pipeline is provided by the user, optionally
-passing along the hyperparameters to use for each primitive.</li>
-<li>An MLBlock instance is build for each primitive, offering a common interface for all of them.</li>
-<li>The MLBlock instances are then combined into an MLPipeline instance, able to run them all in
-the right order, passing the output from each one as input to the next one.</li>
-<li>The training data is passed to the <cite>MLPipeline.fit</cite> method, which sequentially fits each
-MLBlock instance following the JSON annotation specification.</li>
-<li>The data used to make predictions is passed to the <cite>MLPipeline.predict</cite> method, which uses each
-MLBlock sequentially to obtain the desired predictions.</li>
+<li><p>Each available primitive has been annotated using a standardized JSON file that specifies its
+native interface, as well as which hyperparameters can be used to tune its behavior.</p></li>
+<li><p>A list of primitives that will be combined into a pipeline is provided by the user, optionally
+passing along the hyperparameters to use for each primitive.</p></li>
+<li><p>An MLBlock instance is build for each primitive, offering a common interface for all of them.</p></li>
+<li><p>The MLBlock instances are then combined into an MLPipeline instance, able to run them all in
+the right order, passing the output from each one as input to the next one.</p></li>
+<li><p>The training data is passed to the <cite>MLPipeline.fit</cite> method, which sequentially fits each
+MLBlock instance following the JSON annotation specification.</p></li>
+<li><p>The data used to make predictions is passed to the <cite>MLPipeline.predict</cite> method, which uses each
+MLBlock sequentially to obtain the desired predictions.</p></li>
 </ul>
 <div class="section" id="history">
 <h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <p>In its first iteration in 2015, MLBlocks was designed for only multi table, multi entity temporal
 data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis:</p>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/HDI-Project/mlblocks">Machine learning blocks</a>.
-Bryan Collazo. Masters thesis, MIT EECS, 2015.</li>
+<li><p><a class="reference external" href="https://github.com/HDI-Project/mlblocks">Machine learning blocks</a>.
+Bryan Collazo. Masters thesis, MIT EECS, 2015.</p></li>
 </ul>
 <p>With recent availability of a multitude of libraries and tools, we decided it was time to integrate
 them and expand the library to address other data types: images, text, graph, time series and
@@ -335,9 +337,9 @@ integrate with deep learning libraries.</p>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 </div>
 
@@ -376,26 +378,16 @@ integrate with deep learning libraries.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

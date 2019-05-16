@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Contributing" href="../contributing.html" />
     <link rel="prev" title="mlblocks.datasets" href="mlblocks.datasets.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -259,29 +261,45 @@
 <p>Primitives module.</p>
 <p>This module contains functions to load primitive annotations,
 as well as to configure how MLBlocks finds the primitives.</p>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.primitives.add_primitives_path" title="mlblocks.primitives.add_primitives_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_primitives_path</span></code></a>(path)</p></td>
+<td><p>Add a new path to look for primitives.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.primitives.get_primitives_paths" title="mlblocks.primitives.get_primitives_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_primitives_paths</span></code></a>()</p></td>
+<td><p>Get the list of folders where the primitives will be looked for.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.primitives.load_primitive" title="mlblocks.primitives.load_primitive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_primitive</span></code></a>(name)</p></td>
+<td><p>Locate and load the JSON annotation of the given primitive.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="mlblocks.primitives.add_primitives_path">
-<code class="descclassname">mlblocks.primitives.</code><code class="descname">add_primitives_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.primitives.add_primitives_path" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mlblocks.primitives.</code><code class="descname">add_primitives_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/primitives.html#add_primitives_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.primitives.add_primitives_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new path to look for primitives.</p>
 <p>The new path will be inserted in the first place of the list,
 so any primitive found in this new folder will take precedence
 over any other primitive with the same name that existed in the
 system before.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) – path to add</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – A <cite>ValueError</cite> will be raised if the path is not valid.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to add</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – A <cite>ValueError</cite> will be raised if the path is not valid.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="mlblocks.primitives.get_primitives_paths">
-<code class="descclassname">mlblocks.primitives.</code><code class="descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.primitives.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mlblocks.primitives.</code><code class="descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/primitives.html#get_primitives_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.primitives.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of folders where the primitives will be looked for.</p>
 <p>This list will include the value of any <cite>entry_point</cite> named <cite>jsons_path</cite> published under
 the name <cite>mlprimitives</cite>.</p>
@@ -297,42 +315,40 @@ the name <cite>mlprimitives</cite>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SOME_VARIABLE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;jsons&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of folders.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of folders.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="mlblocks.primitives.load_primitive">
-<code class="descclassname">mlblocks.primitives.</code><code class="descname">load_primitive</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#mlblocks.primitives.load_primitive" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mlblocks.primitives.</code><code class="descname">load_primitive</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/primitives.html#load_primitive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.primitives.load_primitive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locate and load the JSON annotation of the given primitive.</p>
 <p>All the paths found in PRIMTIVE_PATHS will be scanned to find a JSON file
 with the given name, and as soon as a JSON with the given name is found it
 is returned.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – name of the primitive to look for. The name should
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – name of the primitive to look for. The name should
 correspond to the primitive, not to the filename, as the
-<cite>.json</cite> extension will be added dynamically.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The content of the JSON annotation file loaded into a dict.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – A <cite>ValueError</cite> will be raised if the primitive cannot be
-found.</td>
-</tr>
-</tbody>
-</table>
+<cite>.json</cite> extension will be added dynamically.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The content of the JSON annotation file loaded into a dict.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – A <cite>ValueError</cite> will be raised if the primitive cannot be
+    found.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -348,7 +364,7 @@ found.</td>
         <a href="../contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mlblocks.datasets.html" class="btn btn-neutral" title="mlblocks.datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="mlblocks.datasets.html" class="btn btn-neutral float-left" title="mlblocks.datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -374,26 +390,16 @@ found.</td>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

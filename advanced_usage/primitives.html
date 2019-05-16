@@ -19,13 +19,20 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -33,21 +40,16 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Hyperparameters" href="hyperparameters.html" />
     <link rel="prev" title="Quickstart" href="../getting_started/quickstart.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -264,77 +266,77 @@ build <a class="reference external" href="pipelines.html">pipelines</a> out of t
 <h2>What is a Primitive?<a class="headerlink" href="#what-is-a-primitive" title="Permalink to this headline">¶</a></h2>
 <p>A valid MLBlocks primitive is an importable Python object that:</p>
 <ul class="simple">
-<li>Must be either a function or a class.</li>
-<li>If it is a class, it <strong>might</strong> have a <cite>fitting</cite> stage, where the primitive is passed some
+<li><p>Must be either a function or a class.</p></li>
+<li><p>If it is a class, it <strong>might</strong> have a <cite>fitting</cite> stage, where the primitive is passed some
 training data and it <cite>learns</cite> from it, and which can be executed with a single method call.
-Function primitives have no <cite>fitting</cite> stage.</li>
-<li><strong>Must</strong> have a <cite>producing</cite> stage, where the primitive is passed some data and it returns some
+Function primitives have no <cite>fitting</cite> stage.</p></li>
+<li><p><strong>Must</strong> have a <cite>producing</cite> stage, where the primitive is passed some data and it returns some
 other data, whether it is a transformation of the input data or some new data derived from it,
 such as a set of predictions. This <cite>producing</cite> stage must be executed with a single function or
-method call.</li>
-<li>Might have <a class="reference external" href="hyperparameters.html">hyperparameters</a>, additional arguments to be passed to either the function call or
-the class constructor in order to alter or control the way the fitting and producing stages work.</li>
+method call.</p></li>
+<li><p>Might have <a class="reference external" href="hyperparameters.html">hyperparameters</a>, additional arguments to be passed to either the function call or
+the class constructor in order to alter or control the way the fitting and producing stages work.</p></li>
 </ul>
 <p>Here are some examples of primitives:</p>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="51%" />
-<col width="12%" />
-<col width="15%" />
-<col width="22%" />
+<col style="width: 51%" />
+<col style="width: 12%" />
+<col style="width: 15%" />
+<col style="width: 22%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">primitive</th>
-<th class="head">type</th>
-<th class="head">fit</th>
-<th class="head">produce</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>primitive</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>fit</p></th>
+<th class="head"><p>produce</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>sklearn.preprocessing.StandardScaler</td>
-<td>class</td>
-<td>fit</td>
-<td>transform</td>
+<tbody>
+<tr class="row-even"><td><p>sklearn.preprocessing.StandardScaler</p></td>
+<td><p>class</p></td>
+<td><p>fit</p></td>
+<td><p>transform</p></td>
 </tr>
-<tr class="row-odd"><td>sklearn.ensemble.RandomForestClassifier</td>
-<td>class</td>
-<td>fit</td>
-<td>predict</td>
+<tr class="row-odd"><td><p>sklearn.ensemble.RandomForestClassifier</p></td>
+<td><p>class</p></td>
+<td><p>fit</p></td>
+<td><p>predict</p></td>
 </tr>
-<tr class="row-even"><td>skimage.feature.hog</td>
-<td>function</td>
-<td>–</td>
-<td>–</td>
+<tr class="row-even"><td><p>skimage.feature.hog</p></td>
+<td><p>function</p></td>
+<td><p>–</p></td>
+<td><p>–</p></td>
 </tr>
-<tr class="row-odd"><td>xgboost.XGBRegressor</td>
-<td>class</td>
-<td>fit</td>
-<td>predict</td>
+<tr class="row-odd"><td><p>xgboost.XGBRegressor</p></td>
+<td><p>class</p></td>
+<td><p>fit</p></td>
+<td><p>predict</p></td>
 </tr>
-<tr class="row-even"><td>keras.applications.resnet50.preprocess_input</td>
-<td>function</td>
-<td>–</td>
-<td>–</td>
+<tr class="row-even"><td><p>keras.applications.resnet50.preprocess_input</p></td>
+<td><p>function</p></td>
+<td><p>–</p></td>
+<td><p>–</p></td>
 </tr>
-<tr class="row-odd"><td>keras.applications.resnet50.ResNet50</td>
-<td>class</td>
-<td>–</td>
-<td>predict</td>
+<tr class="row-odd"><td><p>keras.applications.resnet50.ResNet50</p></td>
+<td><p>class</p></td>
+<td><p>–</p></td>
+<td><p>predict</p></td>
 </tr>
-<tr class="row-even"><td>keras.preprocessing.sequence.pad_sequences</td>
-<td>function</td>
-<td>–</td>
-<td>–</td>
+<tr class="row-even"><td><p>keras.preprocessing.sequence.pad_sequences</p></td>
+<td><p>function</p></td>
+<td><p>–</p></td>
+<td><p>–</p></td>
 </tr>
-<tr class="row-odd"><td>keras.preprocessing.text.Tokenizer</td>
-<td>class</td>
-<td>fit_on_texts</td>
-<td>texts_to_sequences</td>
+<tr class="row-odd"><td><p>keras.preprocessing.text.Tokenizer</p></td>
+<td><p>class</p></td>
+<td><p>fit_on_texts</p></td>
+<td><p>texts_to_sequences</p></td>
 </tr>
-<tr class="row-even"><td>lightfm.LightFM</td>
-<td>class</td>
-<td>fit</td>
-<td>predict</td>
+<tr class="row-even"><td><p>lightfm.LightFM</p></td>
+<td><p>class</p></td>
+<td><p>fit</p></td>
+<td><p>predict</p></td>
 </tr>
 </tbody>
 </table>
@@ -346,13 +348,13 @@ their types and, most importantly, any possible <a class="reference external" hr
 as their types, ranges and conditions, if any.</p>
 <p>These JSON annotations can be:</p>
 <ul class="simple">
-<li><strong>Installed</strong> using the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a> related project, which is the recommended approach.</li>
-<li><strong>Created by the user</strong> and configured for MLBlocks to use them.</li>
+<li><p><strong>Installed</strong> using the <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a> related project, which is the recommended approach.</p></li>
+<li><p><strong>Created by the user</strong> and configured for MLBlocks to use them.</p></li>
 </ul>
 <p>And the primitives can be of two types:</p>
 <ul class="simple">
-<li>Function Primitives: Simple functions that can be called directly.</li>
-<li>Class Primitives: Class objects that need to be instantiated before they can be used.</li>
+<li><p>Function Primitives: Simple functions that can be called directly.</p></li>
+<li><p>Class Primitives: Class objects that need to be instantiated before they can be used.</p></li>
 </ul>
 <p>Here are some simplified examples of these JSONs, but for more detailed examples, please refer to
 the <a class="reference external" href="https://github.com/HDI-Project/MLBlocks/tree/master/examples">examples folder</a> of the project.</p>
@@ -396,12 +398,12 @@ maximum values along an axis.</p>
 </div>
 <p>The main elements of this JSON are:</p>
 <ul>
-<li><p class="first"><strong>primitive</strong>: The fully qualified, directly importable name of the function to be used:</p>
+<li><p><strong>primitive</strong>: The fully qualified, directly importable name of the function to be used:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;primitive&quot;</span><span class="p">:</span> <span class="s2">&quot;numpy.argmax&quot;</span><span class="p">,</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>produce</strong>: A nested JSON that specifies the names and types of arguments and the output values
+<li><p><strong>produce</strong>: A nested JSON that specifies the names and types of arguments and the output values
 of the primitive:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;produce&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -420,7 +422,7 @@ of the primitive:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>hyperparameters</strong>: A nested JSON that specifies the <a class="reference external" href="hyperparameters.html">hyperparameters</a> of this primitive.
+<li><p><strong>hyperparameters</strong>: A nested JSON that specifies the <a class="reference external" href="hyperparameters.html">hyperparameters</a> of this primitive.
 Note that multiple types of hyperparameters exist, but that this primitive has only one <code class="docutils literal notranslate"><span class="pre">fixed</span></code>
 hyperparameter, which mean that this is not tunable and that, even though the user can specify
 a value different than the default, changes are not expected during the MLBlock instance life
@@ -496,13 +498,13 @@ same center and scale.</p>
 <p>Note that there are some details of this JSON annotation that make it different from the
 Function Primitive one that explained above:</p>
 <ul>
-<li><p class="first"><strong>primitive</strong>: The fully qualified, directly importable name of the class to be used. This
+<li><p><strong>primitive</strong>: The fully qualified, directly importable name of the class to be used. This
 class is the one that will be used to create the actual primitive instance:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;primitive&quot;</span><span class="p">:</span> <span class="s2">&quot;sklearn.preprocessing.StandardScaler&quot;</span><span class="p">,</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>fit</strong>: A nested JSON that specifies the name of the method to call during the fitting phase,
+<li><p><strong>fit</strong>: A nested JSON that specifies the name of the method to call during the fitting phase,
 which in this case happens to also be <code class="docutils literal notranslate"><span class="pre">fit</span></code>, as well as the names and types of
 arguments that this method expects:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;fit&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -517,7 +519,7 @@ arguments that this method expects:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>produce</strong>: A nested JSON that specifies the name of the method to call during the predicting
+<li><p><strong>produce</strong>: A nested JSON that specifies the name of the method to call during the predicting
 phase, in this case called <code class="docutils literal notranslate"><span class="pre">transform</span></code>, as well as the names and types of
 arguments that this method expects and its outputs:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;produce&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -538,7 +540,7 @@ arguments that this method expects and its outputs:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>hyperparameters</strong>: A nested JSON that specifies the hyperparameters of this primitive.
+<li><p><strong>hyperparameters</strong>: A nested JSON that specifies the hyperparameters of this primitive.
 In this case, only <code class="docutils literal notranslate"><span class="pre">tunable</span></code> hyperparameters are specified, with their
 names and types. If the type was something other than <code class="docutils literal notranslate"><span class="pre">bool</span></code>, a list or
 range of valid values would also be specified:</p>
@@ -607,7 +609,7 @@ section in the <a class="reference external" href="../api_reference.html">API Re
         <a href="hyperparameters.html" class="btn btn-neutral float-right" title="Hyperparameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../getting_started/quickstart.html" class="btn btn-neutral" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../getting_started/quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -633,26 +635,16 @@ section in the <a class="reference external" href="../api_reference.html">API Re
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

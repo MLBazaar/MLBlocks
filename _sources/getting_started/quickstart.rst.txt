@@ -24,7 +24,7 @@ them to the `MLPipeline class`_:
 
     from mlblocks import MLPipeline
     primitives = [
-        'mlprimitives.feature_extraction.StringVectorizer',
+        'mlprimitives.custom.feature_extraction.StringVectorizer',
         'sklearn.ensemble.RandomForestClassifier',
     ]
     pipeline = MLPipeline(primitives)

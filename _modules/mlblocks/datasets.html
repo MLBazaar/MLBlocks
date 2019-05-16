@@ -1,0 +1,742 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mlblocks.datasets &mdash; MLBlocks 0.3.1-dev documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> MLBlocks
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">What is MLBlocks?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/primitives.html">Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/primitives.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/primitives.html#function-primitives">Function Primitives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/primitives.html#class-primitives">Class Primitives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/primitives.html#the-mlblock-class">The MLBlock Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/hyperparameters.html">Hyperparameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/hyperparameters.html#fixed-hyperparameters">Fixed Hyperparameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/hyperparameters.html#tunable-hyperparameters">Tunable Hyperparameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/hyperparameters.html#special-hyperparameter-types">Special Hyperparameter Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../advanced_usage/hyperparameters.html#multitype-hyperparameters">Multitype Hyperparameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../advanced_usage/hyperparameters.html#conditional-hyperparameters">Conditional Hyperparameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/pipelines.html">Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/pipelines.html#what-is-a-pipeline">What is a Pipeline?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/pipelines.html#the-mlpipeline-class">The MLPipeline Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/pipelines.html#block-names">Block Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/pipelines.html#init-arguments">Init Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/pipelines.html#context">Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/pipelines.html#context-usage-examples">Context Usage Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/pipelines.html#json-annotations">JSON Annotations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/pipelines.html#representing-a-pipeline-as-a-dict">Representing a  Pipeline as a dict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/pipelines.html#loading-a-pipeline-from-a-dict">Loading a Pipeline from a dict</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/adding_primitives.html#mlprimitives">MLPrimitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/adding_primitives.html#writing-primitives">Writing Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/adding_primitives.html#primitives-lookup">Primitives Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/adding_primitives.html#adding-a-primitives-folder">Adding a Primitives Folder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/adding_primitives.html#developing-a-primitives-library">Developing a Primitives Library</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/single_table.html#classification-pipeline">Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_examples/multi_table.html">Multi Table Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/multi_table.html#multi-table-classification-pipeline">Multi Table Classification Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_examples/text.html">Text Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/text.html#text-classification">Text Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../pipeline_examples/text.html#mlprimitives-keras-preprocessing-keras-lstm">MLPrimitives + Keras Preprocessing + Keras LSTM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/text.html#tabular-data-with-text">Tabular Data with Text</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../pipeline_examples/text.html#mlprimitives-scikit-learn-randomforestclassifier">MLPrimitives + Scikit-learn RandomForestClassifier</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_examples/image.html">Image Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/image.html#image-classification">Image Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../pipeline_examples/image.html#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/image.html#opencv-gaussianblur-keras-single-layer-cnn">OpenCV GaussianBlur + Keras Single Layer CNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/image.html#image-regression">Image Regression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../pipeline_examples/image.html#keras-mobilenet-xgbregressor">Keras MobileNet + XGBRegressor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_examples/graph.html">Graph Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/graph.html#link-prediction">Link Prediction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../pipeline_examples/graph.html#networkx-mlprimitives-scikit-learn-xgboost">NetworkX + MLPrimitives + Scikit-learn + XGBoost</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MLBlocks</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>mlblocks.datasets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mlblocks.datasets</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Datasets module.</span>
+
+<span class="sd">This module contains functions that allow loading datasets for easy</span>
+<span class="sd">testing of pipelines and primitives over multiple data modalities</span>
+<span class="sd">and task types.</span>
+
+<span class="sd">The available datasets by data modality and task type are:</span>
+
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Dataset       | Data Modality | Task Type               |</span>
+<span class="sd">+===============+===============+=========================+</span>
+<span class="sd">| Amazon        | Graph         | Community Detection     |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| DIC28         | Graph         | Graph Matching          |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| UMLs          | Graph         | Link Prediction         |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Nomination    | Graph         | Vertex Nomination       |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| USPS          | Image         | Classification          |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Hand Geometry | Image         | Regression              |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Iris          | Single Table  | Classification          |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Jester        | Single Table  | Collaborative Filtering |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Boston        | Single Table  | Regression              |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Wiki QA       | Multi Table   | Classification          |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| Personae      | Text          | Classification          |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+<span class="sd">| News Groups   | Text          | Classification          |</span>
+<span class="sd">+---------------+---------------+-------------------------+</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">keras.preprocessing.image</span> <span class="k">import</span> <span class="n">img_to_array</span><span class="p">,</span> <span class="n">load_img</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">normalized_mutual_info_score</span><span class="p">,</span> <span class="n">r2_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">train_test_split</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">INPUT_SHAPE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+    <span class="s1">&#39;data&#39;</span>
+<span class="p">)</span>
+<span class="n">DATA_URL</span> <span class="o">=</span> <span class="s1">&#39;http://dai-mlblocks.s3.amazonaws.com/</span><span class="si">{}</span><span class="s1">.tar.gz&#39;</span>
+
+
+<div class="viewcode-block" id="Dataset"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.Dataset">[docs]</a><span class="k">class</span> <span class="nc">Dataset</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Dataset class.</span>
+
+<span class="sd">    This class represents the abstraction of a dataset and works as</span>
+<span class="sd">    a container of all the things needed in order to use a dataset</span>
+<span class="sd">    for testing.</span>
+
+<span class="sd">    Among other things, it includes the actual dataset data, information</span>
+<span class="sd">    about its origin, a score function that works for this dataset,</span>
+<span class="sd">    and a method to split the data in multiple ways for goodnes-of-fit</span>
+<span class="sd">    evaluation.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): Name of this dataset.</span>
+<span class="sd">        description (str): Short description about the data that composes this dataset.</span>
+<span class="sd">        data (array-like): Numpy array or pandas DataFrame containing all the data of</span>
+<span class="sd">            this dataset, excluding the labels or target values.</span>
+<span class="sd">        target (array-like): Numpy array or pandas Series containing the expected labels</span>
+<span class="sd">            or values</span>
+<span class="sd">        **kwargs: Any additional keyword argument passed on initailization is also</span>
+<span class="sd">            available as instance attributes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        description (str): Short description about the data that composes this dataset.</span>
+<span class="sd">            The first line of the description is expected to be a human friendly</span>
+<span class="sd">            name for the dataset, and will be set as the `name` attribute.</span>
+<span class="sd">        data (array-like): Numpy array or pandas DataFrame containing all the data of</span>
+<span class="sd">            this dataset, excluding the labels or target values.</span>
+<span class="sd">        target (array-like): Numpy array or pandas Series containing the expected labels</span>
+<span class="sd">            or values</span>
+<span class="sd">        score (callable): Function that will be used to compute the score of this dataset.</span>
+<span class="sd">        shuffle (bool): Whether or not to shuffle the data before splitting.</span>
+<span class="sd">        stratify (bool): Whther to use a stratified or regular KFold for splitting.</span>
+<span class="sd">        **kwargs: Any additional keyword argument passed on initialization will be made</span>
+<span class="sd">            available as instance attributes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stratify</span> <span class="o">=</span> <span class="n">stratify</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_score</span> <span class="o">=</span> <span class="n">score</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Dataset.score"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.Dataset.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Scoring function for this dataset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            \*args, \*\*kwargs: Any given arguments and keyword arguments will be</span>
+<span class="sd">            directly passed to the given scoring function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float:</span>
+<span class="sd">                The computed score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="Dataset.describe"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.Dataset.describe">[docs]</a>    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print the description of this Dataset on stdout.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;iloc&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Dataset.get_splits"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.Dataset.get_splits">[docs]</a>    <span class="k">def</span> <span class="nf">get_splits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return splits of this dataset ready for Cross Validation.</span>
+
+<span class="sd">        If n_splits is 1, a tuple containing the X for train and test</span>
+<span class="sd">        and the y for train and test is returned.</span>
+<span class="sd">        Otherwise, if n_splits is bigger than 1, a list of such tuples</span>
+<span class="sd">        is returned, one for each split.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_splits (int): Number of times that the data needs to be splitted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple or list:</span>
+<span class="sd">                if n_splits is 1, a tuple containing the X for train and test</span>
+<span class="sd">                and the y for train and test is returned.</span>
+<span class="sd">                Otherwise, if n_splits is bigger than 1, a list of such tuples</span>
+<span class="sd">                is returned, one for each split.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">n_splits</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">stratify</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stratify</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="k">return</span> <span class="n">train_test_split</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+                <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_shuffle</span><span class="p">,</span>
+                <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">,</span>
+                <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cv_class</span> <span class="o">=</span> <span class="n">StratifiedKFold</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stratify</span> <span class="k">else</span> <span class="n">KFold</span>
+            <span class="n">cv</span> <span class="o">=</span> <span class="n">cv_class</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_shuffle</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
+            <span class="n">splits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">):</span>
+                <span class="n">X_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">train</span><span class="p">)</span>
+                <span class="n">y_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">train</span><span class="p">)</span>
+                <span class="n">X_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+                <span class="n">y_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+                <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">splits</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_download</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">dataset_path</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">DATA_URL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">)</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Downloading dataset </span><span class="si">%s</span><span class="s1"> from </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">bytes_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Extracting dataset into </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">bytes_io</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r:gz&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tf</span><span class="p">:</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">):</span>
+        <span class="n">_download</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">dataset_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dataset_path</span>
+
+
+<span class="k">def</span> <span class="nf">_load_images</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading </span><span class="si">%s</span><span class="s1"> images from </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">),</span> <span class="n">image_dir</span><span class="p">)</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">load_img</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">INPUT_SHAPE</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">img_to_array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span> <span class="o">/</span> <span class="mf">255.0</span>  <span class="c1"># Quantize images.</span>
+        <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">set_index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">csv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading csv </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">set_index</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<div class="viewcode-block" id="load_usps"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_usps">[docs]</a><span class="k">def</span> <span class="nf">load_usps</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;USPs Digits Dataset.</span>
+
+<span class="sd">    The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)</span>
+<span class="sd">    containing 9298 224x224 RGB photos of handwritten digits, and the target is</span>
+<span class="sd">    a 1d numpy integer array containing the label of the digit represented in</span>
+<span class="sd">    the image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;usps&#39;</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_images</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_usps</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_handgeometry"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_handgeometry">[docs]</a><span class="k">def</span> <span class="nf">load_handgeometry</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Hand Geometry Dataset.</span>
+
+<span class="sd">    The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)</span>
+<span class="sd">    containing 112 224x224 RGB photos of hands, and the target is a 1d numpy</span>
+<span class="sd">    float array containing the width of the wrist in centimeters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;handgeometry&#39;</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_images</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_handgeometry</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_personae"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_personae">[docs]</a><span class="k">def</span> <span class="nf">load_personae</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Personae Dataset.</span>
+
+<span class="sd">    The data of this dataset is a 2d numpy array vector containing 145 entries</span>
+<span class="sd">    that include texts written by Dutch users in Twitter, with some additional</span>
+<span class="sd">    information about the author, and the target is a 1d numpy binary integer</span>
+<span class="sd">    array indicating whether the author was extrovert or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;personae&#39;</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_personae</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_umls"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_umls">[docs]</a><span class="k">def</span> <span class="nf">load_umls</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;UMLs Dataset.</span>
+
+<span class="sd">    The data consists of information about a 135 Graph and the relations between</span>
+<span class="sd">    their nodes given as a DataFrame with three columns, source, target and type,</span>
+<span class="sd">    indicating which nodes are related and with which type of link. The target is</span>
+<span class="sd">    a 1d numpy binary integer array indicating whether the indicated link exists</span>
+<span class="sd">    or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;umls&#39;</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">read_gml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;graph.gml&#39;</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_umls</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_dic28"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_dic28">[docs]</a><span class="k">def</span> <span class="nf">load_dic28</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;DIC28 Dataset from Pajek.</span>
+
+<span class="sd">    This network represents connections among English words in a dictionary.</span>
+<span class="sd">    It was generated from Knuth&#39;s dictionary. Two words are connected by an</span>
+<span class="sd">    edge if we can reach one from the other by</span>
+<span class="sd">    - changing a single character (e. g., work - word)</span>
+<span class="sd">    - adding / removing a single character (e. g., ever - fever).</span>
+
+<span class="sd">    There exist 52,652 words (vertices in a network) having 2 up to 8 characters</span>
+<span class="sd">    in the dictionary. The obtained network has 89038 edges.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;dic28&#39;</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">graph1</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">read_gml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;graph1.gml&#39;</span><span class="p">)))</span>
+    <span class="n">graph2</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">read_gml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;graph2.gml&#39;</span><span class="p">)))</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">graph1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">graph2</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">graph2</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">X</span><span class="p">[[</span><span class="s1">&#39;graph1&#39;</span><span class="p">,</span> <span class="s1">&#39;graph2&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">graphs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;graph1&#39;</span><span class="p">:</span> <span class="n">graph1</span><span class="p">,</span>
+        <span class="s1">&#39;graph2&#39;</span><span class="p">:</span> <span class="n">graph2</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_dic28</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span>
+                   <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">graphs</span><span class="o">=</span><span class="n">graphs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_nomination"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_nomination">[docs]</a><span class="k">def</span> <span class="nf">load_nomination</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Sample 1 of graph vertex nomination data from MII Lincoln Lab.</span>
+
+<span class="sd">    Data consists of one graph whose nodes contain two attributes, attr1 and attr2.</span>
+<span class="sd">    Associated with each node is a label that has to be learned and predicted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;nomination&#39;</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">read_gml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;graph.gml&#39;</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_nomination</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_amazon"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_amazon">[docs]</a><span class="k">def</span> <span class="nf">load_amazon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Amazon product co-purchasing network and ground-truth communities.</span>
+
+<span class="sd">    Network was collected by crawling Amazon website. It is based on Customers Who Bought</span>
+<span class="sd">    This Item Also Bought feature of the Amazon website. If a product i is frequently</span>
+<span class="sd">    co-purchased with product j, the graph contains an undirected edge from i to j.</span>
+<span class="sd">    Each product category provided by Amazon defines each ground-truth community.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;amazon&#39;</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">read_gml</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;graph.gml&#39;</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_amazon</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">normalized_mutual_info_score</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_jester"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_jester">[docs]</a><span class="k">def</span> <span class="nf">load_jester</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Ratings from the Jester Online Joke Recommender System.</span>
+
+<span class="sd">    This dataset consists of over 1.7 million instances of (user_id, item_id, rating)</span>
+<span class="sd">    triples, which is split 50-50 into train and test data.</span>
+
+<span class="sd">    source: &quot;University of California Berkeley, CA&quot;</span>
+<span class="sd">    sourceURI: &quot;http://eigentaste.berkeley.edu/dataset/&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;jester&#39;</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;rating&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_jester</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_wikiqa"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_wikiqa">[docs]</a><span class="k">def</span> <span class="nf">load_wikiqa</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Challenge Dataset for Open-Domain Question Answering.</span>
+
+<span class="sd">    WikiQA dataset is a publicly available set of question and sentence (QS) pairs,</span>
+<span class="sd">    collected and annotated for research on open-domain question answering.</span>
+
+<span class="sd">    source: &quot;Microsoft&quot;</span>
+<span class="sd">    sourceURI: &quot;https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/#&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
+    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="s1">&#39;wikiqa&#39;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">set_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">questions</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;questions&#39;</span><span class="p">,</span> <span class="n">set_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sentences</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;sentences&#39;</span><span class="p">,</span> <span class="n">set_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">vocabulary</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="s1">&#39;vocabulary&#39;</span><span class="p">,</span> <span class="n">set_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">entities</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;d3mIndex&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s1">&#39;questions&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">questions</span><span class="p">,</span> <span class="s1">&#39;qIndex&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s1">&#39;sentences&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="s1">&#39;sIndex&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s1">&#39;vocabulary&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">vocabulary</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">relationships</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;questions&#39;</span><span class="p">,</span> <span class="s1">&#39;qIndex&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;qIndex&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;sentences&#39;</span><span class="p">,</span> <span class="s1">&#39;sIndex&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;sIndex&#39;</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;isAnswer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_wikiqa</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">startify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">entities</span><span class="o">=</span><span class="n">entities</span><span class="p">,</span> <span class="n">relationships</span><span class="o">=</span><span class="n">relationships</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_newsgroups"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_newsgroups">[docs]</a><span class="k">def</span> <span class="nf">load_newsgroups</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;20 News Groups Dataset.</span>
+
+<span class="sd">    The data of this dataset is a 1d numpy array vector containing the texts</span>
+<span class="sd">    from 11314 newsgroups posts, and the target is a 1d numpy integer array</span>
+<span class="sd">    containing the label of one of the 20 topics that they are about.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">fetch_20newsgroups</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_newsgroups</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+                   <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_iris"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_iris">[docs]</a><span class="k">def</span> <span class="nf">load_iris</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Iris Dataset.&quot;&quot;&quot;</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_iris</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+                   <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_boston"><a class="viewcode-back" href="../../api/mlblocks.datasets.html#mlblocks.datasets.load_boston">[docs]</a><span class="k">def</span> <span class="nf">load_boston</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Boston House Prices Dataset.&quot;&quot;&quot;</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_boston</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">load_boston</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
