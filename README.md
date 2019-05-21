@@ -81,10 +81,10 @@ them to the `MLPipeline` class.
 >>> pipeline = MLPipeline(primitives)
 ```
 
-Optionally, specific hyperparameters can be also set by specifying them in a dictionary:
+Optionally, specific initialization arguments can be also set by specifying them in a dictionary:
 
 ```python
->>> hyperparameters = {
+>>> init_params = {
 ...    'skimage.feature.hog': {
 ...        'multichannel': True,
 ...        'visualize': False
@@ -93,7 +93,7 @@ Optionally, specific hyperparameters can be also set by specifying them in a dic
 ...         'n_estimators': 100,
 ...    }
 ... }
->>> pipeline = MLPipeline(primitives, hyperparameters)
+>>> pipeline = MLPipeline(primitives, init_params=init_params)
 ```
 
 If you can see which hyperparameters a particular pipeline is using, you can do so by calling
