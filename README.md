@@ -58,10 +58,25 @@ make install
 For development, you can use `make install-develop` instead in order to install all
 the required dependencies for testing and code linting.
 
+## MLPrimitives
+
+In order to be usable, MLBlocks requires a compatible primitives library.
+
+The official library, required in order to follow the following MLBlocks tutorial,
+is [MLPrimitives](https://github.com/HDI-Project/MLPrimitives), which you can install
+with this command:
+
+```bash
+pip install mlprimitives
+```
+
 # Usage Example
 
 Below there is a short example about how to use MLBlocks to create a simple pipeline, fit it
 using demo data and use it to make predictions.
+
+Please make sure to having installed [MLPrimitives](https://github.com/HDI-Project/MLPrimitives)
+before following it.
 
 For advance usage and more detailed explanation about each component, please have a look
 at the [documentation](https://HDI-Project.github.io/MLBlocks)
