@@ -623,23 +623,6 @@ class MLPipeline():
                 A new MLPipeline instance with the details found in the
                 given specification dictionary.
         """
-        # hyperparameters = metadata.get('hyperparameters')
-        # tunable = metadata.get('tunable_hyperparameters')
-
-        # pipeline = cls(
-        #     metadata['primitives'],
-        #     metadata.get('init_params'),
-        #     metadata.get('input_names'),
-        #     metadata.get('output_names'),
-        # )
-
-        # if hyperparameters:
-        #     pipeline.set_hyperparameters(hyperparameters)
-
-        # if tunable is not None:
-        #     pipeline._tunable_hyperparameters = tunable
-
-        # return pipeline
         return cls(metadata)
 
     @classmethod
