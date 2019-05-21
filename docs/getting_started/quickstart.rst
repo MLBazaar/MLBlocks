@@ -38,7 +38,7 @@ Optionally, specific `hyperparameters`_ can be also set by specifying them in a 
             'n_estimators': 100
         }
     }
-    pipeline = MLPipeline(primitives, hyperparameters)
+    pipeline = MLPipeline(primitives, init_params=hyperparameters)
 
 Once the pipeline has been instantiated, we can easily see what `hyperparameters`_ have been set
 for each block, by calling the `get_hyperparameters method`_.

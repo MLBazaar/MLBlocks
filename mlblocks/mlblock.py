@@ -30,15 +30,16 @@ class MLBlock():
         primitive (object):
             the actual function or instance which this MLBlock wraps.
         fit_args (dict):
-            specification of the arguments expected by the `fit` method.
+            specification of the arguments expected by the ``fit`` method.
         fit_method (str):
-            name of the primitive method to call on `fit`. `None` if the primitive is a function.
+            name of the primitive method to call on ``fit``. ``None`` if the
+            primitive is a function.
         produce_args (dict):
-            specification of the arguments expected by the `predict` method.
+            specification of the arguments expected by the ``predict`` method.
         produce_output (dict):
-            specification of the outputs of the `produce` method.
+            specification of the outputs of the ``produce`` method.
         produce_method (str):
-            name of the primitive method to call on `produce`. `None` if the primitive is a
+            name of the primitive method to call on ``produce``. ``None`` if the primitive is a
             function.
 
     Args:
@@ -46,19 +47,19 @@ class MLBlock():
             Name given to this MLBlock.
         **kwargs:
             Any additional arguments that will be used as hyperparameters or passed to the
-            `fit` or `produce` methods.
+            ``fit`` or ``produce`` methods.
 
     Raises:
         TypeError:
-            A `TypeError` is raised if a required argument is not found within the `kwargs`
+            A ``TypeError`` is raised if a required argument is not found within the ``kwargs``
             or if an unexpected argument has been given.
     """  # pylint: disable=too-many-instance-attributes
 
     def _extract_params(self, kwargs, hyperparameters):
         """Extract init, fit and produce params from kwargs.
 
-        The `init_params`, `fit_params` and `produce_params` are extracted
-        from the passed `kwargs` taking the metadata hyperparameters as a
+        The ``init_params``, ``fit_params`` and ``produce_params`` are extracted
+        from the passed ``kwargs`` taking the metadata hyperparameters as a
         reference.
 
         During this extraction, make sure that all the required hyperparameters
@@ -66,15 +67,15 @@ class MLBlock():
 
         Args:
             kwargs (dict):
-                dict containing the Keyword arguments that have been passed to the `__init__`
+                dict containing the Keyword arguments that have been passed to the ``__init__``
                 method upon initialization.
             hyperparameters (dict):
                 hyperparameters dictionary, as found in the JSON annotation.
 
         Raises:
             TypeError:
-                A `TypeError` is raised if a required argument is not found in the `kwargs` dict,
-                or if an unexpected argument has been given.
+                A ``TypeError`` is raised if a required argument is not found in the
+                ``kwargs`` dict, or if an unexpected argument has been given.
         """
         init_params = dict()
         fit_params = dict()
@@ -262,7 +263,7 @@ class MLBlock():
     def fit(self, **kwargs):
         """Call the fit method of the primitive.
 
-        The given keyword arguments will be passed directly to the `fit`
+        The given keyword arguments will be passed directly to the ``fit``
         method of the primitive instance specified in the JSON annotation.
 
         If any of the arguments expected by the produce method had been
@@ -277,7 +278,7 @@ class MLBlock():
 
         Raises:
             TypeError:
-                A `TypeError` might be raised if any argument not expected by the primitive fit
+                A ``TypeError`` might be raised if any argument not expected by the primitive fit
                 method is given.
         """
         if self.fit_method is not None:
@@ -290,7 +291,7 @@ class MLBlock():
         """Call the primitive function, or the predict method of the primitive.
 
         The given keyword arguments will be passed directly to the primitive,
-        if it is a simple function, or to the `produce` method of the
+        if it is a simple function, or to the ``produce`` method of the
         primitive instance specified in the JSON annotation, if it is a class.
 
         If any of the arguments expected by the fit method had been given

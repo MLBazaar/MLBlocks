@@ -42,7 +42,7 @@ def _add_lookup_path(path, paths):
 
     Raises:
         ValueError:
-            A `ValueError` will be raised if the path is not valid.
+            A ``ValueError`` will be raised if the path is not valid.
 
     """
     if path not in paths:
@@ -67,7 +67,7 @@ def add_primitives_path(path):
 
     Raises:
         ValueError:
-            A `ValueError` will be raised if the path is not valid.
+            A ``ValueError`` will be raised if the path is not valid.
     """
     added = _add_lookup_path(path, _PRIMITIVES_PATHS)
     if added:
@@ -88,7 +88,7 @@ def add_pipelines_path(path):
 
     Raises:
         ValueError:
-            A `ValueError` will be raised if the path is not valid.
+            A ``ValueError`` will be raised if the path is not valid.
     """
     added = _add_lookup_path(path, _PIPELINES_PATHS)
     if added:
@@ -98,7 +98,7 @@ def add_pipelines_path(path):
 def _get_lookup_paths(entry_point):
     """Get the list of folders where elements will be looked for.
 
-    This list will include the value of any `entry_point` named `jsons_path` published under
+    This list will include the value of any ``entry_point`` named ``jsons_path`` published under
     the entry_point name.
 
     An example of such an entry point would be::
@@ -109,13 +109,13 @@ def _get_lookup_paths(entry_point):
             ]
         }
 
-    where the module `some_module` contains a variable such as::
+    where the module ``some_module`` contains a variable such as::
 
         SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
 
     Args:
         entry_point:
-            The name of the `entry_point` to look for.
+            The name of the ``entry_point`` to look for.
 
     Returns:
         list:
@@ -134,8 +134,8 @@ def _get_lookup_paths(entry_point):
 def get_primitives_paths():
     """Get the list of folders where primitives will be looked for.
 
-    This list will include the value of any `entry_point` named `jsons_path` published under
-    the `mlprimitives` name.
+    This list will include the value of any ``entry_point`` named ``jsons_path`` published under
+    the ``mlprimitives`` name.
 
     An example of such an entry point would be::
 
@@ -145,7 +145,7 @@ def get_primitives_paths():
             ]
         }
 
-    where the module `some_module` contains a variable such as::
+    where the module ``some_module`` contains a variable such as::
 
         SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
 
@@ -159,8 +159,8 @@ def get_primitives_paths():
 def get_pipelines_paths():
     """Get the list of folders where pipelines will be looked for.
 
-    This list will include the value of any `entry_point` named `jsons_path` published under
-    the `mlpipelines` name.
+    This list will include the value of any ``entry_point`` named ``jsons_path`` published under
+    the ``mlpipelines`` name.
 
     An example of such an entry point would be::
 
@@ -170,7 +170,7 @@ def get_pipelines_paths():
             ]
         }
 
-    where the module `some_module` contains a variable such as::
+    where the module ``some_module`` contains a variable such as::
 
         SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
 
@@ -190,7 +190,7 @@ def _load(name, paths):
     Args:
         name (str):
             name of the JSON to look for. The name should not contain the
-            `.json` extension, as it will be added dynamically.
+            ``.json`` extension, as it will be added dynamically.
 
     Returns:
         dict:
@@ -220,7 +220,7 @@ def load_primitive(name):
     Args:
         name (str):
             name of the JSON to look for. The name should not contain the
-            `.json` extension, as it will be added dynamically.
+            ``.json`` extension, as it will be added dynamically.
 
     Returns:
         dict:
@@ -228,7 +228,7 @@ def load_primitive(name):
 
     Raises:
         ValueError:
-            A `ValueError` will be raised if the primitive cannot be found.
+            A ``ValueError`` will be raised if the primitive cannot be found.
     """
     primitive = _load(name, get_primitives_paths())
     if not primitive:
@@ -246,7 +246,7 @@ def load_pipeline(name):
     Args:
         name (str):
             name of the JSON to look for. The name should not contain the
-            `.json` extension, as it will be added dynamically.
+            ``.json`` extension, as it will be added dynamically.
 
     Returns:
         dict:
@@ -254,7 +254,7 @@ def load_pipeline(name):
 
     Raises:
         ValueError:
-            A `ValueError` will be raised if the pipeline cannot be found.
+            A ``ValueError`` will be raised if the pipeline cannot be found.
     """
     pipeline = _load(name, get_pipelines_paths())
     if not pipeline:
