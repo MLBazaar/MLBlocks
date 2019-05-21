@@ -39,7 +39,11 @@ class TestMLPipline(TestCase):
         }
         expected_input_names = input_names.copy()
 
-        mlpipeline = MLPipeline(primitives, init_params, input_names)
+        mlpipeline = MLPipeline(
+            primitives=primitives,
+            init_params=init_params,
+            input_names=input_names
+        )
 
         assert mlpipeline.primitives == expected_primitives
         assert mlpipeline.init_params == expected_init_params

@@ -6,6 +6,7 @@ import json
 import logging
 from collections import Counter, OrderedDict
 
+from mlblocks.discovery import load_pipeline
 from mlblocks.mlblock import MLBlock
 
 LOGGER = logging.getLogger(__name__)
@@ -46,6 +47,12 @@ class MLPipeline():
             output_names dictionary, as given when the instance was created.
 
     Args:
+        pipeline (str, list, dict or MLPipeline):
+            The pipeline argument accepts four different types with different interpretations:
+                * `str`: the name of the pipeline to search and load.
+                * `list`: the primitives list.
+                * `dict`: a complete pipeline specification.
+                * `MLPipeline`: another pipeline to be cloned.
         primitives (list):
             List with the names of the primitives that will compose this pipeline.
         init_params (dict):
@@ -73,10 +80,9 @@ class MLPipeline():
 
         return tunable
 
-    def __init__(self, primitives, init_params=None, input_names=None, output_names=None):
-        self.primitives = primitives
-        self.init_params = init_params or dict()
-        self.blocks = OrderedDict()
+    @staticmethod
+    def _build_blocks(primitives, init_params):
+        blocks = OrderedDict()
 
         block_names_count = Counter()
         for primitive in primitives:
@@ -84,23 +90,67 @@ class MLPipeline():
                 block_names_count.update([primitive])
                 block_count = block_names_count[primitive]
                 block_name = '{}#{}'.format(primitive, block_count)
-                block_params = self.init_params.get(block_name, dict())
+                block_params = init_params.get(block_name, dict())
                 if not block_params:
-                    block_params = self.init_params.get(primitive, dict())
+                    block_params = init_params.get(primitive, dict())
                     if block_params and block_count > 1:
                         LOGGER.warning(("Non-numbered init_params are being used "
                                         "for more than one block %s."), primitive)
 
                 block = MLBlock(primitive, **block_params)
-                self.blocks[block_name] = block
+                blocks[block_name] = block
 
             except Exception:
                 LOGGER.exception("Exception caught building MLBlock %s", primitive)
                 raise
 
-        self.input_names = input_names or dict()
-        self.output_names = output_names or dict()
-        self._tunable_hyperparameters = self._get_tunable_hyperparameters()
+        return blocks
+
+    @staticmethod
+    def _get_pipeline_dict(pipeline, primitives):
+
+        if isinstance(pipeline, dict):
+            return pipeline
+
+        elif isinstance(pipeline, str):
+            return load_pipeline(pipeline)
+
+        elif isinstance(pipeline, MLPipeline):
+            return pipeline.to_dict()
+
+        elif isinstance(pipeline, list):
+            if primitives is not None:
+                raise ValueError('if `pipeline` is a `list`, `primitives` must be `None`')
+
+            return {'primitives': pipeline}
+
+        elif pipeline is None:
+            if primitives is None:
+                raise ValueError('Either `pipeline` or `primitives` must be not `None`.')
+
+            return dict()
+
+    def __init__(self, pipeline=None, primitives=None, init_params=None,
+                 input_names=None, output_names=None):
+
+        pipeline = self._get_pipeline_dict(pipeline, primitives)
+
+        self.primitives = primitives or pipeline['primitives']
+        self.init_params = init_params or pipeline.get('init_params', dict())
+        self.blocks = self._build_blocks(self.primitives, self.init_params)
+
+        self.input_names = input_names or pipeline.get('input_names', dict())
+        self.output_names = output_names or pipeline.get('output_names', dict())
+
+        tunable = pipeline.get('tunable_hyperparameters')
+        if tunable is not None:
+            self._tunable_hyperparameters = tunable
+        else:
+            self._tunable_hyperparameters = self._get_tunable_hyperparameters()
+
+        hyperparameters = pipeline.get('hyperparameters')
+        if hyperparameters:
+            self.set_hyperparameters(hyperparameters)
 
     def get_tunable_hyperparameters(self):
         """Get the tunable hyperparamters of each block.

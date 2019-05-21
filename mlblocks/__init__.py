@@ -10,9 +10,11 @@ seamlessly combining tools from any python library with a simple, common and uni
 * Documentation: https://HDI-Project.github.io/MLBlocks
 """
 
+from mlblocks.discovery import (
+    add_pipelines_path, add_primitives_path, get_pipelines_paths, get_primitives_paths,
+    load_pipeline, load_primitive)
 from mlblocks.mlblock import MLBlock
 from mlblocks.mlpipeline import MLPipeline
-from mlblocks.primitives import add_primitives_path, get_primitives_paths, load_primitive
 
 __author__ = 'MIT Data To AI Lab'
 __copyright__ = 'Copyright (c) 2018, MIT Data To AI Lab'
@@ -21,6 +23,6 @@ __license__ = 'MIT'
 __version__ = '0.3.1-dev'
 
 __all__ = [
-    'MLBlock', 'MLPipeline', 'add_primitives_path',
-    'get_primitives_paths', 'load_primitive'
+    'MLBlock', 'MLPipeline', 'add_pipelines_path', 'add_primitives_path',
+    'get_pipelines_paths', 'get_primitives_paths', 'load_pipeline', 'load_primitive'
 ]

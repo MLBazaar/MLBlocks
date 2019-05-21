@@ -5,7 +5,7 @@
 import importlib
 import logging
 
-from mlblocks.primitives import load_primitive
+from mlblocks.discovery import load_primitive
 
 LOGGER = logging.getLogger(__name__)
 
