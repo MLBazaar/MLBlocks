@@ -102,17 +102,17 @@ def add_pipelines_path(path):
         LOGGER.debug('New pipelines path added: %s', path)
 
 
-def _get_lookup_paths(entry_point):
-    """Get the list of folders where elements will be looked for.
+def _load_entry_points(entry_point_name, entry_point_group='mlblocks'):
+    """Get a list of folders from entry points.
 
-    This list will include the value of any ``entry_point`` named ``jsons_path`` published under
-    the entry_point name.
+    This list will include the value of any entry point named after the given
+    ``entry_point_name`` published under the given ``entry_point_group``.
 
     An example of such an entry point would be::
 
         entry_points = {
-            'mlprimitives': [
-                'jsons_path=some_module:SOME_VARIABLE'
+            'mlblocks': [
+                'primitives=some_module:SOME_VARIABLE'
             ]
         }
 
@@ -129,11 +129,14 @@ def _get_lookup_paths(entry_point):
             The list of folders.
     """
     lookup_paths = list()
-    entry_points = pkg_resources.iter_entry_points(entry_point)
+    entry_points = pkg_resources.iter_entry_points(entry_point_group)
     for entry_point in entry_points:
-        if entry_point.name == 'jsons_path':
-            path = entry_point.load()
-            lookup_paths.append(path)
+        if entry_point.name == entry_point_name:
+            paths = entry_point.load()
+            if isinstance(paths, str):
+                lookup_paths.append(paths)
+            elif isinstance(paths, (list, tuple)):
+                lookup_paths.extend(paths)
 
     return lookup_paths
 
@@ -141,14 +144,18 @@ def _get_lookup_paths(entry_point):
 def get_primitives_paths():
     """Get the list of folders where primitives will be looked for.
 
-    This list will include the value of any ``entry_point`` named ``jsons_path`` published under
-    the ``mlprimitives`` name.
+    This list will include the values of all the entry points named ``primitives``
+    published under the entry point group ``mlblocks``.
+
+    Also, for backwards compatibility reasons, the paths from the entry points
+    named ``jsons_path`` published under the ``mlprimitives`` group will also
+    be included.
 
     An example of such an entry point would be::
 
         entry_points = {
-            'mlprimitives': [
-                'jsons_path=some_module:SOME_VARIABLE'
+            'mlblocks': [
+                'primitives=some_module:SOME_VARIABLE'
             ]
         }
 
@@ -160,20 +167,21 @@ def get_primitives_paths():
         list:
             The list of folders.
     """
-    return _PRIMITIVES_PATHS + _get_lookup_paths('mlprimitives')
+    paths = _load_entry_points('primitives') + _load_entry_points('jsons_path', 'mlprimitives')
+    return _PRIMITIVES_PATHS + paths
 
 
 def get_pipelines_paths():
     """Get the list of folders where pipelines will be looked for.
 
-    This list will include the value of any ``entry_point`` named ``jsons_path`` published under
-    the ``mlpipelines`` name.
+    This list will include the values of all the entry points named ``pipelines``
+    published under the entry point group ``mlblocks``.
 
     An example of such an entry point would be::
 
         entry_points = {
-            'mlpipelines': [
-                'jsons_path=some_module:SOME_VARIABLE'
+            'mlblocks': [
+                'pipelines=some_module:SOME_VARIABLE'
             ]
         }
 
@@ -185,7 +193,7 @@ def get_pipelines_paths():
         list:
             The list of folders.
     """
-    return _PIPELINES_PATHS + _get_lookup_paths('mlpipelines')
+    return _PIPELINES_PATHS + _load_entry_points('pipelines')
 
 
 def _load(name, paths):
