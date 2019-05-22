@@ -6,6 +6,7 @@ import json
 import logging
 from collections import Counter, OrderedDict
 
+from mlblocks.discovery import load_pipeline
 from mlblocks.mlblock import MLBlock
 
 LOGGER = logging.getLogger(__name__)
@@ -46,12 +47,18 @@ class MLPipeline():
             output_names dictionary, as given when the instance was created.
 
     Args:
+        pipeline (str, list, dict or MLPipeline):
+            The pipeline argument accepts four different types with different interpretations:
+                * `str`: the name of the pipeline to search and load.
+                * `list`: the primitives list.
+                * `dict`: a complete pipeline specification.
+                * `MLPipeline`: another pipeline to be cloned.
         primitives (list):
             List with the names of the primitives that will compose this pipeline.
         init_params (dict):
             dictionary containing initialization arguments to be passed when creating the
             MLBlocks instances. The dictionary keys must be the corresponding primitive names
-            and the values must be another dictionary that will be passed as `**kargs` to the
+            and the values must be another dictionary that will be passed as ``**kargs`` to the
             MLBlock instance.
         input_names (dict):
             dictionary that maps input variable names with the actual names expected by each
@@ -73,13 +80,11 @@ class MLPipeline():
 
         return tunable
 
-    def __init__(self, primitives, init_params=None, input_names=None, output_names=None):
-        self.primitives = primitives
-        self.init_params = init_params or dict()
-        self.blocks = OrderedDict()
+    def _build_blocks(self):
+        blocks = OrderedDict()
 
         block_names_count = Counter()
-        for primitive in primitives:
+        for primitive in self.primitives:
             try:
                 block_names_count.update([primitive])
                 block_count = block_names_count[primitive]
@@ -92,15 +97,59 @@ class MLPipeline():
                                         "for more than one block %s."), primitive)
 
                 block = MLBlock(primitive, **block_params)
-                self.blocks[block_name] = block
+                blocks[block_name] = block
 
             except Exception:
                 LOGGER.exception("Exception caught building MLBlock %s", primitive)
                 raise
 
-        self.input_names = input_names or dict()
-        self.output_names = output_names or dict()
-        self._tunable_hyperparameters = self._get_tunable_hyperparameters()
+        return blocks
+
+    @staticmethod
+    def _get_pipeline_dict(pipeline, primitives):
+
+        if isinstance(pipeline, dict):
+            return pipeline
+
+        elif isinstance(pipeline, str):
+            return load_pipeline(pipeline)
+
+        elif isinstance(pipeline, MLPipeline):
+            return pipeline.to_dict()
+
+        elif isinstance(pipeline, list):
+            if primitives is not None:
+                raise ValueError('if `pipeline` is a `list`, `primitives` must be `None`')
+
+            return {'primitives': pipeline}
+
+        elif pipeline is None:
+            if primitives is None:
+                raise ValueError('Either `pipeline` or `primitives` must be not `None`.')
+
+            return dict()
+
+    def __init__(self, pipeline=None, primitives=None, init_params=None,
+                 input_names=None, output_names=None):
+
+        pipeline = self._get_pipeline_dict(pipeline, primitives)
+
+        self.primitives = primitives or pipeline['primitives']
+        self.init_params = init_params or pipeline.get('init_params', dict())
+        self.blocks = self._build_blocks()
+
+        self.input_names = input_names or pipeline.get('input_names', dict())
+        self.output_names = output_names or pipeline.get('output_names', dict())
+
+        tunable = pipeline.get('tunable_hyperparameters')
+        if tunable is not None:
+            self._tunable_hyperparameters = tunable
+        else:
+            self._tunable_hyperparameters = self._get_tunable_hyperparameters()
+
+        hyperparameters = pipeline.get('hyperparameters')
+        if hyperparameters:
+            self.set_hyperparameters(hyperparameters)
 
     def get_tunable_hyperparameters(self):
         """Get the tunable hyperparamters of each block.
@@ -141,7 +190,7 @@ class MLPipeline():
         """Get the arguments expected by the block method from the context.
 
         The arguments will be taken from the context using both the method
-        arguments specification and the `input_names` given when the pipeline
+        arguments specification and the ``input_names`` given when the pipeline
         was created.
 
         Args:
@@ -195,7 +244,7 @@ class MLPipeline():
         return output_dict
 
     def _get_block_name(self, index):
-        """Get the name of the block in the `index` position."""
+        """Get the name of the block in the ``index`` position."""
         return list(self.blocks.keys())[index]
 
     def _get_output_spec(self, output):
@@ -288,14 +337,14 @@ class MLPipeline():
     def fit(self, X=None, y=None, output_=None, start_=None, **kwargs):
         """Fit the blocks of this pipeline.
 
-        Sequentially call the `fit` and the `produce` methods of each block,
-        capturing the outputs each `produce` method before calling the `fit`
+        Sequentially call the ``fit`` and the ``produce`` methods of each block,
+        capturing the outputs each ``produce`` method before calling the ``fit``
         method of the next one.
 
         During the whole process a context dictionary is built, where both the
-        passed arguments and the captured outputs of the `produce` methods
-        are stored, and from which the arguments for the next `fit` and
-        `produce` calls will be taken.
+        passed arguments and the captured outputs of the ``produce`` methods
+        are stored, and from which the arguments for the next ``fit`` and
+        ``produce`` calls will be taken.
 
         Args:
             X:
@@ -401,12 +450,12 @@ class MLPipeline():
     def predict(self, X=None, output_=None, start_=None, **kwargs):
         """Produce predictions using the blocks of this pipeline.
 
-        Sequentially call the `produce` method of each block, capturing the
+        Sequentially call the ``produce`` method of each block, capturing the
         outputs before calling the next one.
 
         During the whole process a context dictionary is built, where both the
-        passed arguments and the captured outputs of the `produce` methods
-        are stored, and from which the arguments for the next `produce` calls
+        passed arguments and the captured outputs of the ``produce`` methods
+        are stored, and from which the arguments for the next ``produce`` calls
         will be taken.
 
         Args:
@@ -500,7 +549,7 @@ class MLPipeline():
     def to_dict(self):
         """Return all the details of this MLPipeline in a dict.
 
-        The dict structure contains all the `__init__` arguments of the
+        The dict structure contains all the ``__init__`` arguments of the
         MLPipeline, as well as the current hyperparameter values and the
         specification of the tunable_hyperparameters::
 
@@ -549,7 +598,7 @@ class MLPipeline():
     def save(self, path):
         """Save the specification of this MLPipeline in a JSON file.
 
-        The content of the JSON file is the dict returned by the `to_dict` method.
+        The content of the JSON file is the dict returned by the ``to_dict`` method.
 
         Args:
             path (str):
@@ -562,7 +611,7 @@ class MLPipeline():
     def from_dict(cls, metadata):
         """Create a new MLPipeline from a dict specification.
 
-        The dict structure is the same as the one created by the `to_dict` method.
+        The dict structure is the same as the one created by the ``to_dict`` method.
 
         Args:
             metadata (dict):
@@ -573,29 +622,13 @@ class MLPipeline():
                 A new MLPipeline instance with the details found in the
                 given specification dictionary.
         """
-        hyperparameters = metadata.get('hyperparameters')
-        tunable = metadata.get('tunable_hyperparameters')
-
-        pipeline = cls(
-            metadata['primitives'],
-            metadata.get('init_params'),
-            metadata.get('input_names'),
-            metadata.get('output_names'),
-        )
-
-        if hyperparameters:
-            pipeline.set_hyperparameters(hyperparameters)
-
-        if tunable is not None:
-            pipeline._tunable_hyperparameters = tunable
-
-        return pipeline
+        return cls(metadata)
 
     @classmethod
     def load(cls, path):
         """Create a new MLPipeline from a JSON specification.
 
-        The JSON file format is the same as the one created by the `to_dict` method.
+        The JSON file format is the same as the one created by the ``to_dict`` method.
 
         Args:
             path (str):

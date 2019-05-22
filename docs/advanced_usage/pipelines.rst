@@ -86,7 +86,7 @@ This can be done by passing an extra dictionary to the MLPipeline when it is cre
             'n_estimators': 100
         }
     }
-    pipeline = MLPipeline(primitives, init_params)
+    pipeline = MLPipeline(primitives, init_params=init_params)
 
 This dictionary must have as keys the name of the blocks that the arguments belong to, and
 as values the dictionary that contains the argument names and their values.

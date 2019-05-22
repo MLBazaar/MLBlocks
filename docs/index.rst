@@ -74,7 +74,7 @@ integrate with deep learning libraries.
 
    api/mlblocks
    api/mlblocks.datasets
-   api/mlblocks.primitives
+   api/mlblocks.discovery
 
 .. toctree::
    :caption: Resources
