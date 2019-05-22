@@ -183,7 +183,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mlblocks.primitives.html">mlblocks.primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -275,7 +275,7 @@ seamlessly combining tools from any python library with a simple, common and uni
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLBlock" title="mlblocks.MLBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLBlock</span></code></a>(name, **kwargs)</p></td>
 <td><p>MLBlock Class.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLPipeline</span></code></a>(primitives[, init_params, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLPipeline</span></code></a>([pipeline, primitives, …])</p></td>
 <td><p>MLPipeline Class.</p></td>
 </tr>
 </tbody>
@@ -287,14 +287,23 @@ seamlessly combining tools from any python library with a simple, common and uni
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.add_primitives_path" title="mlblocks.add_primitives_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_primitives_path</span></code></a>(path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.add_pipelines_path" title="mlblocks.add_pipelines_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_pipelines_path</span></code></a>(path)</p></td>
+<td><p>Add a new path to look for pipelines.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.add_primitives_path" title="mlblocks.add_primitives_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_primitives_path</span></code></a>(path)</p></td>
 <td><p>Add a new path to look for primitives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.get_primitives_paths" title="mlblocks.get_primitives_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_primitives_paths</span></code></a>()</p></td>
-<td><p>Get the list of folders where the primitives will be looked for.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.get_pipelines_paths" title="mlblocks.get_pipelines_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines_paths</span></code></a>()</p></td>
+<td><p>Get the list of folders where pipelines will be looked for.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.load_primitive" title="mlblocks.load_primitive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_primitive</span></code></a>(name)</p></td>
-<td><p>Locate and load the JSON annotation of the given primitive.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.get_primitives_paths" title="mlblocks.get_primitives_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_primitives_paths</span></code></a>()</p></td>
+<td><p>Get the list of folders where primitives will be looked for.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.load_pipeline" title="mlblocks.load_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_pipeline</span></code></a>(name)</p></td>
+<td><p>Locate and load the pipeline JSON annotation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.load_primitive" title="mlblocks.load_primitive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_primitive</span></code></a>(name)</p></td>
+<td><p>Locate and load the primitive JSON annotation.</p></td>
 </tr>
 </tbody>
 </table>
@@ -354,7 +363,7 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.fit_args">
 <code class="descname">fit_args</code><a class="headerlink" href="#mlblocks.MLBlock.fit_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>specification of the arguments expected by the <cite>fit</cite> method.</p>
+<dd><p>specification of the arguments expected by the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -365,7 +374,8 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.fit_method">
 <code class="descname">fit_method</code><a class="headerlink" href="#mlblocks.MLBlock.fit_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>name of the primitive method to call on <cite>fit</cite>. <cite>None</cite> if the primitive is a function.</p>
+<dd><p>name of the primitive method to call on <code class="docutils literal notranslate"><span class="pre">fit</span></code>. <code class="docutils literal notranslate"><span class="pre">None</span></code> if the
+primitive is a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str</p>
@@ -376,7 +386,7 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.produce_args">
 <code class="descname">produce_args</code><a class="headerlink" href="#mlblocks.MLBlock.produce_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>specification of the arguments expected by the <cite>predict</cite> method.</p>
+<dd><p>specification of the arguments expected by the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -387,7 +397,7 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.produce_output">
 <code class="descname">produce_output</code><a class="headerlink" href="#mlblocks.MLBlock.produce_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>specification of the outputs of the <cite>produce</cite> method.</p>
+<dd><p>specification of the outputs of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -398,7 +408,7 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.produce_method">
 <code class="descname">produce_method</code><a class="headerlink" href="#mlblocks.MLBlock.produce_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>name of the primitive method to call on <cite>produce</cite>. <cite>None</cite> if the primitive is a
+<dd><p>name of the primitive method to call on <code class="docutils literal notranslate"><span class="pre">produce</span></code>. <code class="docutils literal notranslate"><span class="pre">None</span></code> if the primitive is a
 function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -412,11 +422,11 @@ function.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name given to this MLBlock.</p></li>
 <li><p><strong>**kwargs</strong> – Any additional arguments that will be used as hyperparameters or passed to the
-<cite>fit</cite> or <cite>produce</cite> methods.</p></li>
+<code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">produce</span></code> methods.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – A <cite>TypeError</cite> is raised if a required argument is not found within the <cite>kwargs</cite>
+<dd class="field-even"><p><strong>TypeError</strong> – A <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> is raised if a required argument is not found within the <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>
     or if an unexpected argument has been given.</p>
 </dd>
 </dl>
@@ -424,7 +434,7 @@ function.</p>
 <dt id="mlblocks.MLBlock.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlblock.html#MLBlock.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLBlock.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the fit method of the primitive.</p>
-<p>The given keyword arguments will be passed directly to the <cite>fit</cite>
+<p>The given keyword arguments will be passed directly to the <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 method of the primitive instance specified in the JSON annotation.</p>
 <p>If any of the arguments expected by the produce method had been
 given during the MLBlock initialization, they will be passed as well.</p>
@@ -435,7 +445,7 @@ the primitive is a simple function, this will be a noop.</p>
 <dd class="field-odd"><p><strong>**kwargs</strong> – Any given keyword argument will be directly passed to the primitive fit method.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – A <cite>TypeError</cite> might be raised if any argument not expected by the primitive fit
+<dd class="field-even"><p><strong>TypeError</strong> – A <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> might be raised if any argument not expected by the primitive fit
     method is given.</p>
 </dd>
 </dl>
@@ -480,7 +490,7 @@ ranges or values.</p>
 <code class="descname">produce</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlblock.html#MLBlock.produce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLBlock.produce" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the primitive function, or the predict method of the primitive.</p>
 <p>The given keyword arguments will be passed directly to the primitive,
-if it is a simple function, or to the <cite>produce</cite> method of the
+if it is a simple function, or to the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of the
 primitive instance specified in the JSON annotation, if it is a class.</p>
 <p>If any of the arguments expected by the fit method had been given
 during the MLBlock initialization, they will be passed as well.</p>
@@ -511,7 +521,7 @@ values the values to be used.</p>
 
 <dl class="class">
 <dt id="mlblocks.MLPipeline">
-<em class="property">class </em><code class="descclassname">mlblocks.</code><code class="descname">MLPipeline</code><span class="sig-paren">(</span><em>primitives</em>, <em>init_params=None</em>, <em>input_names=None</em>, <em>output_names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mlblocks.</code><code class="descname">MLPipeline</code><span class="sig-paren">(</span><em>pipeline=None</em>, <em>primitives=None</em>, <em>init_params=None</em>, <em>input_names=None</em>, <em>output_names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>MLPipeline Class.</p>
 <p>The <strong>MLPipeline</strong> class represents a Machine Learning Pipeline, which
 is an ordered collection of Machine Learning tools or Primitives,
@@ -622,10 +632,20 @@ results, which will be returned as the prediction of the pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline</strong> (<em>str</em><em>, </em><em>list</em><em>, </em><em>dict</em><em> or </em><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline"><em>MLPipeline</em></a>) – <dl class="simple">
+<dt>The pipeline argument accepts four different types with different interpretations:</dt><dd><ul>
+<li><p><cite>str</cite>: the name of the pipeline to search and load.</p></li>
+<li><p><cite>list</cite>: the primitives list.</p></li>
+<li><p><cite>dict</cite>: a complete pipeline specification.</p></li>
+<li><p><cite>MLPipeline</cite>: another pipeline to be cloned.</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
 <li><p><strong>primitives</strong> (<em>list</em>) – List with the names of the primitives that will compose this pipeline.</p></li>
 <li><p><strong>init_params</strong> (<em>dict</em>) – dictionary containing initialization arguments to be passed when creating the
 MLBlocks instances. The dictionary keys must be the corresponding primitive names
-and the values must be another dictionary that will be passed as <cite>**kargs</cite> to the
+and the values must be another dictionary that will be passed as <code class="docutils literal notranslate"><span class="pre">**kargs</span></code> to the
 MLBlock instance.</p></li>
 <li><p><strong>input_names</strong> (<em>dict</em>) – dictionary that maps input variable names with the actual names expected by each
 primitive. This allows reusing the same input argument for multiple primitives that
@@ -642,13 +662,13 @@ the same one.</p></li>
 <dt id="mlblocks.MLPipeline.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>X=None</em>, <em>y=None</em>, <em>output_=None</em>, <em>start_=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the blocks of this pipeline.</p>
-<p>Sequentially call the <cite>fit</cite> and the <cite>produce</cite> methods of each block,
-capturing the outputs each <cite>produce</cite> method before calling the <cite>fit</cite>
+<p>Sequentially call the <code class="docutils literal notranslate"><span class="pre">fit</span></code> and the <code class="docutils literal notranslate"><span class="pre">produce</span></code> methods of each block,
+capturing the outputs each <code class="docutils literal notranslate"><span class="pre">produce</span></code> method before calling the <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 method of the next one.</p>
 <p>During the whole process a context dictionary is built, where both the
-passed arguments and the captured outputs of the <cite>produce</cite> methods
-are stored, and from which the arguments for the next <cite>fit</cite> and
-<cite>produce</cite> calls will be taken.</p>
+passed arguments and the captured outputs of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> methods
+are stored, and from which the arguments for the next <code class="docutils literal notranslate"><span class="pre">fit</span></code> and
+<code class="docutils literal notranslate"><span class="pre">produce</span></code> calls will be taken.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -717,7 +737,7 @@ after the produce method of that block has been called.</p></li>
 <dt id="mlblocks.MLPipeline.from_dict">
 <em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new MLPipeline from a dict specification.</p>
-<p>The dict structure is the same as the one created by the <cite>to_dict</cite> method.</p>
+<p>The dict structure is the same as the one created by the <code class="docutils literal notranslate"><span class="pre">to_dict</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Dictionary containing the pipeline specification.</p>
@@ -766,7 +786,7 @@ the block tunable hyperparameters dictionary as values.</p>
 <dt id="mlblocks.MLPipeline.load">
 <em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new MLPipeline from a JSON specification.</p>
-<p>The JSON file format is the same as the one created by the <cite>to_dict</cite> method.</p>
+<p>The JSON file format is the same as the one created by the <code class="docutils literal notranslate"><span class="pre">to_dict</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path of the JSON file to load.</p>
@@ -785,11 +805,11 @@ in the JSON file.</p>
 <dt id="mlblocks.MLPipeline.predict">
 <code class="descname">predict</code><span class="sig-paren">(</span><em>X=None</em>, <em>output_=None</em>, <em>start_=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce predictions using the blocks of this pipeline.</p>
-<p>Sequentially call the <cite>produce</cite> method of each block, capturing the
+<p>Sequentially call the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of each block, capturing the
 outputs before calling the next one.</p>
 <p>During the whole process a context dictionary is built, where both the
-passed arguments and the captured outputs of the <cite>produce</cite> methods
-are stored, and from which the arguments for the next <cite>produce</cite> calls
+passed arguments and the captured outputs of the <code class="docutils literal notranslate"><span class="pre">produce</span></code> methods
+are stored, and from which the arguments for the next <code class="docutils literal notranslate"><span class="pre">produce</span></code> calls
 will be taken.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -857,7 +877,7 @@ after the produce method of that block has been called.</p></li>
 <dt id="mlblocks.MLPipeline.save">
 <code class="descname">save</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the specification of this MLPipeline in a JSON file.</p>
-<p>The content of the JSON file is the dict returned by the <cite>to_dict</cite> method.</p>
+<p>The content of the JSON file is the dict returned by the <code class="docutils literal notranslate"><span class="pre">to_dict</span></code> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the JSON file to write.</p>
@@ -881,7 +901,7 @@ dictionary as values.</p>
 <dt id="mlblocks.MLPipeline.to_dict">
 <code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all the details of this MLPipeline in a dict.</p>
-<p>The dict structure contains all the <cite>__init__</cite> arguments of the
+<p>The dict structure contains all the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> arguments of the
 MLPipeline, as well as the current hyperparameter values and the
 specification of the tunable_hyperparameters:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -923,8 +943,26 @@ specification of the tunable_hyperparameters:</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="mlblocks.add_pipelines_path">
+<code class="descclassname">mlblocks.</code><code class="descname">add_pipelines_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#add_pipelines_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.add_pipelines_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new path to look for pipelines.</p>
+<p>The new path will be inserted in the first place of the list,
+so any primitive found in this new folder will take precedence
+over any other pipeline with the same name that existed in the
+system before.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to add</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised if the path is not valid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="mlblocks.add_primitives_path">
-<code class="descclassname">mlblocks.</code><code class="descname">add_primitives_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/primitives.html#add_primitives_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.add_primitives_path" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mlblocks.</code><code class="descname">add_primitives_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#add_primitives_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.add_primitives_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new path to look for primitives.</p>
 <p>The new path will be inserted in the first place of the list,
 so any primitive found in this new folder will take precedence
@@ -935,26 +973,26 @@ system before.</p>
 <dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to add</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – A <cite>ValueError</cite> will be raised if the path is not valid.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised if the path is not valid.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="mlblocks.get_primitives_paths">
-<code class="descclassname">mlblocks.</code><code class="descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/primitives.html#get_primitives_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the list of folders where the primitives will be looked for.</p>
-<p>This list will include the value of any <cite>entry_point</cite> named <cite>jsons_path</cite> published under
-the name <cite>mlprimitives</cite>.</p>
+<dt id="mlblocks.get_pipelines_paths">
+<code class="descclassname">mlblocks.</code><code class="descname">get_pipelines_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_pipelines_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.get_pipelines_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of folders where pipelines will be looked for.</p>
+<p>This list will include the values of all the entry points named <code class="docutils literal notranslate"><span class="pre">pipelines</span></code>
+published under the entry point group <code class="docutils literal notranslate"><span class="pre">mlblocks</span></code>.</p>
 <p>An example of such an entry point would be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;mlprimitives&#39;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s1">&#39;jsons_path=some_module:SOME_VARIABLE&#39;</span>
+    <span class="s1">&#39;mlblocks&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;pipelines=some_module:SOME_VARIABLE&#39;</span>
     <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>where the module <cite>some_module</cite> contains a variable such as:</p>
+<p>where the module <code class="docutils literal notranslate"><span class="pre">some_module</span></code> contains a variable such as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SOME_VARIABLE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;jsons&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -969,17 +1007,46 @@ the name <cite>mlprimitives</cite>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="mlblocks.load_primitive">
-<code class="descclassname">mlblocks.</code><code class="descname">load_primitive</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/primitives.html#load_primitive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.load_primitive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Locate and load the JSON annotation of the given primitive.</p>
-<p>All the paths found in PRIMTIVE_PATHS will be scanned to find a JSON file
-with the given name, and as soon as a JSON with the given name is found it
-is returned.</p>
+<dt id="mlblocks.get_primitives_paths">
+<code class="descclassname">mlblocks.</code><code class="descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_primitives_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of folders where primitives will be looked for.</p>
+<p>This list will include the values of all the entry points named <code class="docutils literal notranslate"><span class="pre">primitives</span></code>
+published under the entry point group <code class="docutils literal notranslate"><span class="pre">mlblocks</span></code>.</p>
+<p>Also, for backwards compatibility reasons, the paths from the entry points
+named <code class="docutils literal notranslate"><span class="pre">jsons_path</span></code> published under the <code class="docutils literal notranslate"><span class="pre">mlprimitives</span></code> group will also
+be included.</p>
+<p>An example of such an entry point would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;mlblocks&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;primitives=some_module:SOME_VARIABLE&#39;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where the module <code class="docutils literal notranslate"><span class="pre">some_module</span></code> contains a variable such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SOME_VARIABLE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;jsons&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of folders.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.load_pipeline">
+<code class="descclassname">mlblocks.</code><code class="descname">load_pipeline</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#load_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.load_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locate and load the pipeline JSON annotation.</p>
+<p>All the pipeline paths will be scanned to find a JSON file with the given name,
+and as soon as a JSON with the given name is found it is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – name of the primitive to look for. The name should
-correspond to the primitive, not to the filename, as the
-<cite>.json</cite> extension will be added dynamically.</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – name of the JSON to look for. The name should not contain the
+<code class="docutils literal notranslate"><span class="pre">.json</span></code> extension, as it will be added dynamically.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The content of the JSON annotation file loaded into a dict.</p>
@@ -988,8 +1055,30 @@ correspond to the primitive, not to the filename, as the
 <dd class="field-odd"><p>dict</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – A <cite>ValueError</cite> will be raised if the primitive cannot be
-    found.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised if the pipeline cannot be found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.load_primitive">
+<code class="descclassname">mlblocks.</code><code class="descname">load_primitive</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#load_primitive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.load_primitive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locate and load the primitive JSON annotation.</p>
+<p>All the primitive paths will be scanned to find a JSON file with the given name,
+and as soon as a JSON with the given name is found it is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – name of the JSON to look for. The name should not contain the
+<code class="docutils literal notranslate"><span class="pre">.json</span></code> extension, as it will be added dynamically.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The content of the JSON annotation file loaded into a dict.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised if the primitive cannot be found.</p>
 </dd>
 </dl>
 </dd></dl>

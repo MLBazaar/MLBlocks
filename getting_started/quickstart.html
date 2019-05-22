@@ -183,7 +183,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -287,15 +287,16 @@ them to the <a class="reference external" href="../api_reference.html#mlblocks.M
 <span class="gp">In [3]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Optionally, specific <a class="reference external" href="../advanced_usage/hyperparameters.html">hyperparameters</a> can be also set by specifying them in a dictionary:</p>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+<p>Optionally, specific <a class="reference external" href="../advanced_usage/hyperparameters.html">hyperparameters</a> can be also set by specifying them in a dictionary and
+passing them as the <code class="docutils literal notranslate"><span class="pre">init_params</span></code> argument:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
 <span class="gp">   ...: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span>
 <span class="gp">   ...: </span>    <span class="p">}</span>
 <span class="gp">   ...: </span><span class="p">}</span>
 <span class="gp">   ...: </span>
 
-<span class="gp">In [5]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
+<span class="gp">In [5]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once the pipeline has been instantiated, we can easily see what <a class="reference external" href="../advanced_usage/hyperparameters.html">hyperparameters</a> have been set

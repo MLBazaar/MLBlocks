@@ -181,7 +181,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -259,6 +259,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span>
 
+<span class="kn">from</span> <span class="nn">mlblocks.discovery</span> <span class="k">import</span> <span class="n">load_pipeline</span>
 <span class="kn">from</span> <span class="nn">mlblocks.mlblock</span> <span class="k">import</span> <span class="n">MLBlock</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -299,12 +300,18 @@
 <span class="sd">            output_names dictionary, as given when the instance was created.</span>
 
 <span class="sd">    Args:</span>
+<span class="sd">        pipeline (str, list, dict or MLPipeline):</span>
+<span class="sd">            The pipeline argument accepts four different types with different interpretations:</span>
+<span class="sd">                * `str`: the name of the pipeline to search and load.</span>
+<span class="sd">                * `list`: the primitives list.</span>
+<span class="sd">                * `dict`: a complete pipeline specification.</span>
+<span class="sd">                * `MLPipeline`: another pipeline to be cloned.</span>
 <span class="sd">        primitives (list):</span>
 <span class="sd">            List with the names of the primitives that will compose this pipeline.</span>
 <span class="sd">        init_params (dict):</span>
 <span class="sd">            dictionary containing initialization arguments to be passed when creating the</span>
 <span class="sd">            MLBlocks instances. The dictionary keys must be the corresponding primitive names</span>
-<span class="sd">            and the values must be another dictionary that will be passed as `**kargs` to the</span>
+<span class="sd">            and the values must be another dictionary that will be passed as ``**kargs`` to the</span>
 <span class="sd">            MLBlock instance.</span>
 <span class="sd">        input_names (dict):</span>
 <span class="sd">            dictionary that maps input variable names with the actual names expected by each</span>
@@ -326,13 +333,11 @@
 
         <span class="k">return</span> <span class="n">tunable</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primitives</span> <span class="o">=</span> <span class="n">primitives</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_params</span> <span class="o">=</span> <span class="n">init_params</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_build_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
 
         <span class="n">block_names_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="n">primitives</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">primitives</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">block_names_count</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="n">primitive</span><span class="p">])</span>
                 <span class="n">block_count</span> <span class="o">=</span> <span class="n">block_names_count</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span>
@@ -345,15 +350,59 @@
                                         <span class="s2">&quot;for more than one block </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">),</span> <span class="n">primitive</span><span class="p">)</span>
 
                 <span class="n">block</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span>
+                <span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span>
 
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught building MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">primitive</span><span class="p">)</span>
                 <span class="k">raise</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span> <span class="o">=</span> <span class="n">input_names</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span> <span class="o">=</span> <span class="n">output_names</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tunable_hyperparameters</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">blocks</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_pipeline_dict</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">primitives</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pipeline</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">MLPipeline</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">primitives</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;if `pipeline` is a `list`, `primitives` must be `None`&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;primitives&#39;</span><span class="p">:</span> <span class="n">pipeline</span><span class="p">}</span>
+
+        <span class="k">elif</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">primitives</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Either `pipeline` or `primitives` must be not `None`.&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">primitives</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">input_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pipeline_dict</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">primitives</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">primitives</span> <span class="o">=</span> <span class="n">primitives</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="p">[</span><span class="s1">&#39;primitives&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_params</span> <span class="o">=</span> <span class="n">init_params</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;init_params&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_blocks</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span> <span class="o">=</span> <span class="n">input_names</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_names&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span> <span class="o">=</span> <span class="n">output_names</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_names&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+
+        <span class="n">tunable</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tunable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span> <span class="o">=</span> <span class="n">tunable</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tunable_hyperparameters</span><span class="p">()</span>
+
+        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MLPipeline.get_tunable_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_tunable_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the tunable hyperparamters of each block.</span>
@@ -394,7 +443,7 @@
         <span class="sd">&quot;&quot;&quot;Get the arguments expected by the block method from the context.</span>
 
 <span class="sd">        The arguments will be taken from the context using both the method</span>
-<span class="sd">        arguments specification and the `input_names` given when the pipeline</span>
+<span class="sd">        arguments specification and the ``input_names`` given when the pipeline</span>
 <span class="sd">        was created.</span>
 
 <span class="sd">        Args:</span>
@@ -448,7 +497,7 @@
         <span class="k">return</span> <span class="n">output_dict</span>
 
     <span class="k">def</span> <span class="nf">_get_block_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the name of the block in the `index` position.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the name of the block in the ``index`` position.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">index</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_output_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
@@ -541,14 +590,14 @@
 <div class="viewcode-block" id="MLPipeline.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the blocks of this pipeline.</span>
 
-<span class="sd">        Sequentially call the `fit` and the `produce` methods of each block,</span>
-<span class="sd">        capturing the outputs each `produce` method before calling the `fit`</span>
+<span class="sd">        Sequentially call the ``fit`` and the ``produce`` methods of each block,</span>
+<span class="sd">        capturing the outputs each ``produce`` method before calling the ``fit``</span>
 <span class="sd">        method of the next one.</span>
 
 <span class="sd">        During the whole process a context dictionary is built, where both the</span>
-<span class="sd">        passed arguments and the captured outputs of the `produce` methods</span>
-<span class="sd">        are stored, and from which the arguments for the next `fit` and</span>
-<span class="sd">        `produce` calls will be taken.</span>
+<span class="sd">        passed arguments and the captured outputs of the ``produce`` methods</span>
+<span class="sd">        are stored, and from which the arguments for the next ``fit`` and</span>
+<span class="sd">        ``produce`` calls will be taken.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            X:</span>
@@ -654,12 +703,12 @@
 <div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Produce predictions using the blocks of this pipeline.</span>
 
-<span class="sd">        Sequentially call the `produce` method of each block, capturing the</span>
+<span class="sd">        Sequentially call the ``produce`` method of each block, capturing the</span>
 <span class="sd">        outputs before calling the next one.</span>
 
 <span class="sd">        During the whole process a context dictionary is built, where both the</span>
-<span class="sd">        passed arguments and the captured outputs of the `produce` methods</span>
-<span class="sd">        are stored, and from which the arguments for the next `produce` calls</span>
+<span class="sd">        passed arguments and the captured outputs of the ``produce`` methods</span>
+<span class="sd">        are stored, and from which the arguments for the next ``produce`` calls</span>
 <span class="sd">        will be taken.</span>
 
 <span class="sd">        Args:</span>
@@ -753,7 +802,7 @@
 <div class="viewcode-block" id="MLPipeline.to_dict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all the details of this MLPipeline in a dict.</span>
 
-<span class="sd">        The dict structure contains all the `__init__` arguments of the</span>
+<span class="sd">        The dict structure contains all the ``__init__`` arguments of the</span>
 <span class="sd">        MLPipeline, as well as the current hyperparameter values and the</span>
 <span class="sd">        specification of the tunable_hyperparameters::</span>
 
@@ -802,7 +851,7 @@
 <div class="viewcode-block" id="MLPipeline.save"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save the specification of this MLPipeline in a JSON file.</span>
 
-<span class="sd">        The content of the JSON file is the dict returned by the `to_dict` method.</span>
+<span class="sd">        The content of the JSON file is the dict returned by the ``to_dict`` method.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            path (str):</span>
@@ -815,7 +864,7 @@
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new MLPipeline from a dict specification.</span>
 
-<span class="sd">        The dict structure is the same as the one created by the `to_dict` method.</span>
+<span class="sd">        The dict structure is the same as the one created by the ``to_dict`` method.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (dict):</span>
@@ -826,29 +875,13 @@
 <span class="sd">                A new MLPipeline instance with the details found in the</span>
 <span class="sd">                given specification dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">)</span>
-        <span class="n">tunable</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">)</span>
-
-        <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitives&#39;</span><span class="p">],</span>
-            <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;init_params&#39;</span><span class="p">),</span>
-            <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_names&#39;</span><span class="p">),</span>
-            <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_names&#39;</span><span class="p">),</span>
-        <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">tunable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span> <span class="o">=</span> <span class="n">tunable</span>
-
-        <span class="k">return</span> <span class="n">pipeline</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MLPipeline.load"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.load">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new MLPipeline from a JSON specification.</span>
 
-<span class="sd">        The JSON file format is the same as the one created by the `to_dict` method.</span>
+<span class="sd">        The JSON file format is the same as the one created by the ``to_dict`` method.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            path (str):</span>

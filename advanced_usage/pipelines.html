@@ -183,7 +183,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -309,8 +309,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2aaccd8614e0&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2aaccdbcfb70&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2ab2994608d0&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2ab2997c8748&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -328,7 +328,7 @@ within a single MLPipeline:</p>
 <span class="gp">   ...: </span><span class="p">}</span>
 <span class="gp">   ...: </span>
 
-<span class="gp">In [6]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="p">)</span>
+<span class="gp">In [6]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="n">init_params</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This dictionary must have as keys the name of the blocks that the arguments belong to, and

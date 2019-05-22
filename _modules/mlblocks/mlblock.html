@@ -181,7 +181,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -258,7 +258,7 @@
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">mlblocks.primitives</span> <span class="k">import</span> <span class="n">load_primitive</span>
+<span class="kn">from</span> <span class="nn">mlblocks.discovery</span> <span class="k">import</span> <span class="n">load_primitive</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -283,15 +283,16 @@
 <span class="sd">        primitive (object):</span>
 <span class="sd">            the actual function or instance which this MLBlock wraps.</span>
 <span class="sd">        fit_args (dict):</span>
-<span class="sd">            specification of the arguments expected by the `fit` method.</span>
+<span class="sd">            specification of the arguments expected by the ``fit`` method.</span>
 <span class="sd">        fit_method (str):</span>
-<span class="sd">            name of the primitive method to call on `fit`. `None` if the primitive is a function.</span>
+<span class="sd">            name of the primitive method to call on ``fit``. ``None`` if the</span>
+<span class="sd">            primitive is a function.</span>
 <span class="sd">        produce_args (dict):</span>
-<span class="sd">            specification of the arguments expected by the `predict` method.</span>
+<span class="sd">            specification of the arguments expected by the ``predict`` method.</span>
 <span class="sd">        produce_output (dict):</span>
-<span class="sd">            specification of the outputs of the `produce` method.</span>
+<span class="sd">            specification of the outputs of the ``produce`` method.</span>
 <span class="sd">        produce_method (str):</span>
-<span class="sd">            name of the primitive method to call on `produce`. `None` if the primitive is a</span>
+<span class="sd">            name of the primitive method to call on ``produce``. ``None`` if the primitive is a</span>
 <span class="sd">            function.</span>
 
 <span class="sd">    Args:</span>
@@ -299,19 +300,19 @@
 <span class="sd">            Name given to this MLBlock.</span>
 <span class="sd">        **kwargs:</span>
 <span class="sd">            Any additional arguments that will be used as hyperparameters or passed to the</span>
-<span class="sd">            `fit` or `produce` methods.</span>
+<span class="sd">            ``fit`` or ``produce`` methods.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        TypeError:</span>
-<span class="sd">            A `TypeError` is raised if a required argument is not found within the `kwargs`</span>
+<span class="sd">            A ``TypeError`` is raised if a required argument is not found within the ``kwargs``</span>
 <span class="sd">            or if an unexpected argument has been given.</span>
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
 
     <span class="k">def</span> <span class="nf">_extract_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract init, fit and produce params from kwargs.</span>
 
-<span class="sd">        The `init_params`, `fit_params` and `produce_params` are extracted</span>
-<span class="sd">        from the passed `kwargs` taking the metadata hyperparameters as a</span>
+<span class="sd">        The ``init_params``, ``fit_params`` and ``produce_params`` are extracted</span>
+<span class="sd">        from the passed ``kwargs`` taking the metadata hyperparameters as a</span>
 <span class="sd">        reference.</span>
 
 <span class="sd">        During this extraction, make sure that all the required hyperparameters</span>
@@ -319,15 +320,15 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            kwargs (dict):</span>
-<span class="sd">                dict containing the Keyword arguments that have been passed to the `__init__`</span>
+<span class="sd">                dict containing the Keyword arguments that have been passed to the ``__init__``</span>
 <span class="sd">                method upon initialization.</span>
 <span class="sd">            hyperparameters (dict):</span>
 <span class="sd">                hyperparameters dictionary, as found in the JSON annotation.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError:</span>
-<span class="sd">                A `TypeError` is raised if a required argument is not found in the `kwargs` dict,</span>
-<span class="sd">                or if an unexpected argument has been given.</span>
+<span class="sd">                A ``TypeError`` is raised if a required argument is not found in the</span>
+<span class="sd">                ``kwargs`` dict, or if an unexpected argument has been given.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">init_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">fit_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -515,7 +516,7 @@
 <div class="viewcode-block" id="MLBlock.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call the fit method of the primitive.</span>
 
-<span class="sd">        The given keyword arguments will be passed directly to the `fit`</span>
+<span class="sd">        The given keyword arguments will be passed directly to the ``fit``</span>
 <span class="sd">        method of the primitive instance specified in the JSON annotation.</span>
 
 <span class="sd">        If any of the arguments expected by the produce method had been</span>
@@ -530,7 +531,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError:</span>
-<span class="sd">                A `TypeError` might be raised if any argument not expected by the primitive fit</span>
+<span class="sd">                A ``TypeError`` might be raised if any argument not expected by the primitive fit</span>
 <span class="sd">                method is given.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -543,7 +544,7 @@
         <span class="sd">&quot;&quot;&quot;Call the primitive function, or the predict method of the primitive.</span>
 
 <span class="sd">        The given keyword arguments will be passed directly to the primitive,</span>
-<span class="sd">        if it is a simple function, or to the `produce` method of the</span>
+<span class="sd">        if it is a simple function, or to the ``produce`` method of the</span>
 <span class="sd">        primitive instance specified in the JSON annotation, if it is a class.</span>
 
 <span class="sd">        If any of the arguments expected by the fit method had been given</span>

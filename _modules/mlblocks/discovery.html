@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.primitives &mdash; MLBlocks 0.3.1-dev documentation</title>
+  <title>mlblocks.discovery &mdash; MLBlocks 0.3.1-dev documentation</title>
   
 
   
@@ -181,7 +181,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.primitives.html">mlblocks.primitives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -235,7 +235,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>mlblocks.primitives</li>
+      <li>mlblocks.discovery</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -250,14 +250,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for mlblocks.primitives</h1><div class="highlight"><pre>
+  <h1>Source code for mlblocks.discovery</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Primitives module.</span>
+<span class="sd">Primitives and Pipelines discovery module.</span>
 
-<span class="sd">This module contains functions to load primitive annotations,</span>
-<span class="sd">as well as to configure how MLBlocks finds the primitives.</span>
+<span class="sd">This module contains functions to load primitive and pipeline</span>
+<span class="sd">annotations, as well as to configure how MLBlocks finds the</span>
+<span class="sd">primitives and pipelines.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
@@ -275,9 +276,44 @@
     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;mlblocks_primitives&#39;</span><span class="p">),</span>    <span class="c1"># legacy</span>
     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;mlblocks_primitives&#39;</span><span class="p">),</span>    <span class="c1"># legacy</span>
 <span class="p">]</span>
+<span class="n">_PIPELINES_PATHS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;mlpipelines&#39;</span><span class="p">),</span>
+<span class="p">]</span>
 
 
-<div class="viewcode-block" id="add_primitives_path"><a class="viewcode-back" href="../../api/mlblocks.primitives.html#mlblocks.add_primitives_path">[docs]</a><span class="k">def</span> <span class="nf">add_primitives_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_add_lookup_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a new path to lookup.</span>
+
+<span class="sd">    The new path will be inserted in the first place of the list,</span>
+<span class="sd">    so any element found in this new folder will take precedence</span>
+<span class="sd">    over any other element with the same name that existed in the</span>
+<span class="sd">    system before.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str):</span>
+<span class="sd">            path to add</span>
+<span class="sd">        paths (list):</span>
+<span class="sd">            list where the new path will be added.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            A ``ValueError`` will be raised if the path is not valid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool:</span>
+<span class="sd">            Whether the new path was added or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid path: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+        <span class="n">paths</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="add_primitives_path"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.add_primitives_path">[docs]</a><span class="k">def</span> <span class="nf">add_primitives_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a new path to look for primitives.</span>
 
 <span class="sd">    The new path will be inserted in the first place of the list,</span>
@@ -286,35 +322,97 @@
 <span class="sd">    system before.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        path (str): path to add</span>
+<span class="sd">        path (str):</span>
+<span class="sd">            path to add</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: A `ValueError` will be raised if the path is not valid.</span>
-
+<span class="sd">        ValueError:</span>
+<span class="sd">            A ``ValueError`` will be raised if the path is not valid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_PRIMITIVES_PATHS</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid path: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
-
-        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Adding new primitives path </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-        <span class="n">_PRIMITIVES_PATHS</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+    <span class="n">added</span> <span class="o">=</span> <span class="n">_add_lookup_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">_PRIMITIVES_PATHS</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">added</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;New primitives path added: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_primitives_paths"><a class="viewcode-back" href="../../api/mlblocks.primitives.html#mlblocks.get_primitives_paths">[docs]</a><span class="k">def</span> <span class="nf">get_primitives_paths</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Get the list of folders where the primitives will be looked for.</span>
+<div class="viewcode-block" id="add_pipelines_path"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.add_pipelines_path">[docs]</a><span class="k">def</span> <span class="nf">add_pipelines_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a new path to look for pipelines.</span>
 
-<span class="sd">    This list will include the value of any `entry_point` named `jsons_path` published under</span>
-<span class="sd">    the name `mlprimitives`.</span>
+<span class="sd">    The new path will be inserted in the first place of the list,</span>
+<span class="sd">    so any primitive found in this new folder will take precedence</span>
+<span class="sd">    over any other pipeline with the same name that existed in the</span>
+<span class="sd">    system before.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str):</span>
+<span class="sd">            path to add</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            A ``ValueError`` will be raised if the path is not valid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">added</span> <span class="o">=</span> <span class="n">_add_lookup_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">_PIPELINES_PATHS</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">added</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;New pipelines path added: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_load_entry_points</span><span class="p">(</span><span class="n">entry_point_name</span><span class="p">,</span> <span class="n">entry_point_group</span><span class="o">=</span><span class="s1">&#39;mlblocks&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of folders from entry points.</span>
+
+<span class="sd">    This list will include the value of any entry point named after the given</span>
+<span class="sd">    ``entry_point_name`` published under the given ``entry_point_group``.</span>
 
 <span class="sd">    An example of such an entry point would be::</span>
 
 <span class="sd">        entry_points = {</span>
-<span class="sd">            &#39;mlprimitives&#39;: [</span>
-<span class="sd">                &#39;jsons_path=some_module:SOME_VARIABLE&#39;</span>
+<span class="sd">            &#39;mlblocks&#39;: [</span>
+<span class="sd">                &#39;primitives=some_module:SOME_VARIABLE&#39;</span>
 <span class="sd">            ]</span>
 <span class="sd">        }</span>
 
-<span class="sd">    where the module `some_module` contains a variable such as::</span>
+<span class="sd">    where the module ``some_module`` contains a variable such as::</span>
+
+<span class="sd">        SOME_VARIABLE = os.path.join(os.path.dirname(__file__), &#39;jsons&#39;)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        entry_point:</span>
+<span class="sd">            The name of the ``entry_point`` to look for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list:</span>
+<span class="sd">            The list of folders.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lookup_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">entry_points</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">iter_entry_points</span><span class="p">(</span><span class="n">entry_point_group</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">entry_point</span> <span class="ow">in</span> <span class="n">entry_points</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">entry_point_name</span><span class="p">:</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">lookup_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">lookup_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">lookup_paths</span>
+
+
+<div class="viewcode-block" id="get_primitives_paths"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.get_primitives_paths">[docs]</a><span class="k">def</span> <span class="nf">get_primitives_paths</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the list of folders where primitives will be looked for.</span>
+
+<span class="sd">    This list will include the values of all the entry points named ``primitives``</span>
+<span class="sd">    published under the entry point group ``mlblocks``.</span>
+
+<span class="sd">    Also, for backwards compatibility reasons, the paths from the entry points</span>
+<span class="sd">    named ``jsons_path`` published under the ``mlprimitives`` group will also</span>
+<span class="sd">    be included.</span>
+
+<span class="sd">    An example of such an entry point would be::</span>
+
+<span class="sd">        entry_points = {</span>
+<span class="sd">            &#39;mlblocks&#39;: [</span>
+<span class="sd">                &#39;primitives=some_module:SOME_VARIABLE&#39;</span>
+<span class="sd">            ]</span>
+<span class="sd">        }</span>
+
+<span class="sd">    where the module ``some_module`` contains a variable such as::</span>
 
 <span class="sd">        SOME_VARIABLE = os.path.join(os.path.dirname(__file__), &#39;jsons&#39;)</span>
 
@@ -322,37 +420,53 @@
 <span class="sd">        list:</span>
 <span class="sd">            The list of folders.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">primitives_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="n">entry_points</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">iter_entry_points</span><span class="p">(</span><span class="s1">&#39;mlprimitives&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">entry_point</span> <span class="ow">in</span> <span class="n">entry_points</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;jsons_path&#39;</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-            <span class="n">primitives_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">_PRIMITIVES_PATHS</span> <span class="o">+</span> <span class="n">primitives_paths</span></div>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">_load_entry_points</span><span class="p">(</span><span class="s1">&#39;primitives&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">_load_entry_points</span><span class="p">(</span><span class="s1">&#39;jsons_path&#39;</span><span class="p">,</span> <span class="s1">&#39;mlprimitives&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_PRIMITIVES_PATHS</span> <span class="o">+</span> <span class="n">paths</span></div>
 
 
-<div class="viewcode-block" id="load_primitive"><a class="viewcode-back" href="../../api/mlblocks.primitives.html#mlblocks.load_primitive">[docs]</a><span class="k">def</span> <span class="nf">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Locate and load the JSON annotation of the given primitive.</span>
+<div class="viewcode-block" id="get_pipelines_paths"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.get_pipelines_paths">[docs]</a><span class="k">def</span> <span class="nf">get_pipelines_paths</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the list of folders where pipelines will be looked for.</span>
 
-<span class="sd">    All the paths found in PRIMTIVE_PATHS will be scanned to find a JSON file</span>
-<span class="sd">    with the given name, and as soon as a JSON with the given name is found it</span>
-<span class="sd">    is returned.</span>
+<span class="sd">    This list will include the values of all the entry points named ``pipelines``</span>
+<span class="sd">    published under the entry point group ``mlblocks``.</span>
+
+<span class="sd">    An example of such an entry point would be::</span>
+
+<span class="sd">        entry_points = {</span>
+<span class="sd">            &#39;mlblocks&#39;: [</span>
+<span class="sd">                &#39;pipelines=some_module:SOME_VARIABLE&#39;</span>
+<span class="sd">            ]</span>
+<span class="sd">        }</span>
+
+<span class="sd">    where the module ``some_module`` contains a variable such as::</span>
+
+<span class="sd">        SOME_VARIABLE = os.path.join(os.path.dirname(__file__), &#39;jsons&#39;)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list:</span>
+<span class="sd">            The list of folders.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_PIPELINES_PATHS</span> <span class="o">+</span> <span class="n">_load_entry_points</span><span class="p">(</span><span class="s1">&#39;pipelines&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Locate and load the JSON annotation in any of the given paths.</span>
+
+<span class="sd">    All the given paths will be scanned to find a JSON file with the given name,</span>
+<span class="sd">    and as soon as a JSON with the given name is found it is returned.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name (str): name of the primitive to look for. The name should</span>
-<span class="sd">                    correspond to the primitive, not to the filename, as the</span>
-<span class="sd">                    `.json` extension will be added dynamically.</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            name of the JSON to look for. The name should not contain the</span>
+<span class="sd">            ``.json`` extension, as it will be added dynamically.</span>
+<span class="sd">        paths (list):</span>
+<span class="sd">            list of paths where the primitives will be looked for.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        dict:</span>
 <span class="sd">            The content of the JSON annotation file loaded into a dict.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        ValueError: A `ValueError` will be raised if the primitive cannot be</span>
-<span class="sd">                    found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">base_path</span> <span class="ow">in</span> <span class="n">get_primitives_paths</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">base_path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
         <span class="n">number_of_parts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
 
@@ -363,10 +477,60 @@
 
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">json_path</span><span class="p">):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
-                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading primitive </span><span class="si">%s</span><span class="s1"> from </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">json_path</span><span class="p">)</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading </span><span class="si">%s</span><span class="s1"> from </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">json_path</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="load_primitive"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.load_primitive">[docs]</a><span class="k">def</span> <span class="nf">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Locate and load the primitive JSON annotation.</span>
+
+<span class="sd">    All the primitive paths will be scanned to find a JSON file with the given name,</span>
+<span class="sd">    and as soon as a JSON with the given name is found it is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            name of the JSON to look for. The name should not contain the</span>
+<span class="sd">            ``.json`` extension, as it will be added dynamically.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict:</span>
+<span class="sd">            The content of the JSON annotation file loaded into a dict.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            A ``ValueError`` will be raised if the primitive cannot be found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">primitive</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get_primitives_paths</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">primitive</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">primitive</span></div>
+
+
+<div class="viewcode-block" id="load_pipeline"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.load_pipeline">[docs]</a><span class="k">def</span> <span class="nf">load_pipeline</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Locate and load the pipeline JSON annotation.</span>
+
+<span class="sd">    All the pipeline paths will be scanned to find a JSON file with the given name,</span>
+<span class="sd">    and as soon as a JSON with the given name is found it is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            name of the JSON to look for. The name should not contain the</span>
+<span class="sd">            ``.json`` extension, as it will be added dynamically.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict:</span>
+<span class="sd">            The content of the JSON annotation file loaded into a dict.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            A ``ValueError`` will be raised if the pipeline cannot be found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get_pipelines_paths</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown pipeline: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">pipeline</span></div>
 </pre></div>
 
            </div>
