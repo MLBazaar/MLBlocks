@@ -80,19 +80,18 @@ class MLPipeline():
 
         return tunable
 
-    @staticmethod
-    def _build_blocks(primitives, init_params):
+    def _build_blocks(self):
         blocks = OrderedDict()
 
         block_names_count = Counter()
-        for primitive in primitives:
+        for primitive in self.primitives:
             try:
                 block_names_count.update([primitive])
                 block_count = block_names_count[primitive]
                 block_name = '{}#{}'.format(primitive, block_count)
-                block_params = init_params.get(block_name, dict())
+                block_params = self.init_params.get(block_name, dict())
                 if not block_params:
-                    block_params = init_params.get(primitive, dict())
+                    block_params = self.init_params.get(primitive, dict())
                     if block_params and block_count > 1:
                         LOGGER.warning(("Non-numbered init_params are being used "
                                         "for more than one block %s."), primitive)
@@ -137,7 +136,7 @@ class MLPipeline():
 
         self.primitives = primitives or pipeline['primitives']
         self.init_params = init_params or pipeline.get('init_params', dict())
-        self.blocks = self._build_blocks(self.primitives, self.init_params)
+        self.blocks = self._build_blocks()
 
         self.input_names = input_names or pipeline.get('input_names', dict())
         self.output_names = output_names or pipeline.get('output_names', dict())

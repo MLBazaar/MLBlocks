@@ -39,11 +39,16 @@ def _add_lookup_path(path, paths):
     Args:
         path (str):
             path to add
+        paths (list):
+            list where the new path will be added.
 
     Raises:
         ValueError:
             A ``ValueError`` will be raised if the path is not valid.
 
+    Returns:
+        bool:
+            Whether the new path was added or not.
     """
     if path not in paths:
         if not os.path.isdir(path):
@@ -51,6 +56,8 @@ def _add_lookup_path(path, paths):
 
         paths.insert(0, os.path.abspath(path))
         return True
+
+    return False
 
 
 def add_primitives_path(path):
@@ -191,6 +198,8 @@ def _load(name, paths):
         name (str):
             name of the JSON to look for. The name should not contain the
             ``.json`` extension, as it will be added dynamically.
+        paths (list):
+            list of paths where the primitives will be looked for.
 
     Returns:
         dict:
