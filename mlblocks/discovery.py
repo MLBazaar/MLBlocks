@@ -11,6 +11,7 @@ primitives and pipelines.
 import json
 import logging
 import os
+import re
 import sys
 
 import pkg_resources
@@ -23,6 +24,7 @@ _PRIMITIVES_PATHS = [
     os.path.join(os.getcwd(), 'mlblocks_primitives'),    # legacy
     os.path.join(sys.prefix, 'mlblocks_primitives'),    # legacy
 ]
+
 _PIPELINES_PATHS = [
     os.path.join(os.getcwd(), 'mlpipelines'),
 ]
@@ -168,7 +170,7 @@ def get_primitives_paths():
             The list of folders.
     """
     paths = _load_entry_points('primitives') + _load_entry_points('jsons_path', 'mlprimitives')
-    return _PRIMITIVES_PATHS + paths
+    return _PRIMITIVES_PATHS + list(set(paths))
 
 
 def get_pipelines_paths():
@@ -228,6 +230,9 @@ def _load(name, paths):
                     return json.load(json_file)
 
 
+_PRIMITIVES = dict()
+
+
 def load_primitive(name):
     """Locate and load the primitive JSON annotation.
 
@@ -247,11 +252,18 @@ def load_primitive(name):
         ValueError:
             A ``ValueError`` will be raised if the primitive cannot be found.
     """
-    primitive = _load(name, get_primitives_paths())
-    if not primitive:
-        raise ValueError("Unknown primitive: {}".format(name))
+    primitive = _PRIMITIVES.get(name)
+    if primitive is None:
+        primitive = _load(name, get_primitives_paths())
+        if primitive is None:
+            raise ValueError("Unknown primitive: {}".format(name))
+
+        _PRIMITIVES[name] = primitive
 
     return primitive
+
+
+_PIPELINES = dict()
 
 
 def load_pipeline(name):
@@ -273,8 +285,59 @@ def load_pipeline(name):
         ValueError:
             A ``ValueError`` will be raised if the pipeline cannot be found.
     """
-    pipeline = _load(name, get_pipelines_paths())
-    if not pipeline:
-        raise ValueError("Unknown pipeline: {}".format(name))
+    pipeline = _PIPELINES.get(name)
+    if pipeline is None:
+        pipeline = _load(name, get_pipelines_paths())
+        if pipeline is None:
+            raise ValueError("Unknown pipeline: {}".format(name))
+
+        _PIPELINES[name] = pipeline
 
     return pipeline
+
+
+def _search_annotations(base_path, pattern, parts=None):
+    annotations = dict()
+    parts = parts or list()
+    if os.path.exists(base_path):
+        for name in os.listdir(base_path):
+            path = os.path.abspath(os.path.join(base_path, name))
+            if os.path.isdir(path):
+                annotations.update(_search_annotations(path, pattern, parts + [name]))
+            elif path not in annotations:
+                name = '.'.join(parts + [name])
+                if pattern.search(name) and name.endswith('.json'):
+                    annotations[path] = name[:-5]
+
+    return annotations
+
+
+def _get_annotations_list(paths, loader, pattern, **metadata_filters):
+    pattern = re.compile(pattern)
+    annotations = dict()
+    for base_path in paths:
+        annotations.update(_search_annotations(base_path, pattern))
+
+    matching = list()
+    for name in sorted(annotations.values()):
+        annotation = loader(name)
+        metadata = annotation.get('metadata', dict())
+        for key, value in metadata_filters.items():
+            metadata_value = metadata.get(key, '')
+            if not re.search(value, metadata_value):
+                break
+
+        else:
+            matching.append(name)
+
+    return matching
+
+
+def get_primitives_list(pattern='', **metadata_filters):
+    return _get_annotations_list(
+        get_primitives_paths(), load_primitive, pattern, **metadata_filters)
+
+
+def get_pipelines_list(pattern='', **metadata_filters):
+    return _get_annotations_list(
+        get_pipelines_paths(), load_pipeline, pattern, **metadata_filters)

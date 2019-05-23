@@ -11,7 +11,7 @@ from pkg_resources import Distribution, EntryPoint
 
 from mlblocks import discovery
 
-FAKE_MLPRIMITIVES_PATH = 'this/is/a/fake'
+FAKE_PRIMITIVES_PATH = 'this/is/a/fake'
 
 
 def test__add_lookup_path_do_nothing():
@@ -78,7 +78,7 @@ def test__load_entry_points_entry_points(iep_mock):
     primitives_ep = EntryPoint(
         'primitives',
         'tests.test_discovery',
-        attrs=['FAKE_MLPRIMITIVES_PATH'],
+        attrs=['FAKE_PRIMITIVES_PATH'],
         dist=Distribution()
     )
     iep_mock.return_value = [
