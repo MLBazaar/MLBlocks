@@ -4,7 +4,9 @@
 
 import json
 import logging
-from collections import Counter, OrderedDict
+from collections import Counter, OrderedDict, defaultdict
+
+import numpy as np
 
 from mlblocks.discovery import load_pipeline
 from mlblocks.mlblock import MLBlock
@@ -161,17 +163,111 @@ class MLPipeline():
         """
         return self._tunable_hyperparameters.copy()
 
-    def get_hyperparameters(self):
+    @classmethod
+    def _sanitize_value(cls, value):
+        """Convert numpy values to their python primitive type equivalent.
+
+        If a value is a dict, recursively sanitize its values.
+
+        Args:
+            value:
+                value to sanitize.
+
+        Returns:
+            sanitized value.
+        """
+        if isinstance(value, dict):
+            return {
+                key: cls._sanitize_value(value)
+                for key, value in value.items()
+            }
+        if isinstance(value, np.integer):
+            return int(value)
+        elif isinstance(value, np.floating):
+            return float(value)
+        elif isinstance(value, np.ndarray):
+            return value.tolist()
+        elif isinstance(value, np.bool_):
+            return bool(value)
+        elif value == 'None':
+            return None
+
+        return value
+
+    @classmethod
+    def _sanitize(cls, hyperparameters):
+        """Convert tuple hyperparameter keys to nested dicts.
+
+        Also convert numpy types to primary python types.
+
+        The input hyperparameters dict can specify them in two formats:
+
+        One is the native MLBlocks format, where each key is the name of a block and each value
+        is a dict containing a complete hyperparameter specification for that block::
+
+            {
+                "block_name": {
+                    "hyperparameter_name": "hyperparameter_value",
+                    ...
+                },
+                ...
+            }
+
+        The other one is an alternative format where each key is a two element tuple containing
+        the name of the block as the first element and the name of the hyperparameter as the
+        second one::
+
+            {
+                ("block_name", "hyperparameter_name"): "hyperparameter_value",
+                ...
+            }
+
+
+        Args:
+            hyperparaeters (dict):
+                hyperparameters dict to sanitize.
+
+        Returns:
+            dict:
+                Sanitized dict.
+        """
+        params_tree = defaultdict(dict)
+        for key, value in hyperparameters.items():
+            value = cls._sanitize_value(value)
+            if isinstance(key, tuple):
+                block, hyperparameter = key
+                params_tree[block][hyperparameter] = value
+            else:
+                params_tree[key] = value
+
+        return params_tree
+
+    def get_hyperparameters(self, flat=False):
         """Get the current hyperparamters of each block.
+
+        Args:
+            flat (bool): If True, return a flattened dictionary where each key
+                is a two elements tuple containing the name of the block as the first
+                element and the name of the hyperparameter as the second one.
+                If False (default), return a dictionary where each key is the name of
+                a block and each value is a dictionary containing the complete
+                hyperparameter specification of that block.
 
         Returns:
             dict:
                 A dictionary containing the block names as keys and
                 the current block hyperparameters dictionary as values.
         """
-        hyperparameters = {}
+        hyperparameters = dict()
         for block_name, block in self.blocks.items():
             hyperparameters[block_name] = block.get_hyperparameters()
+
+        if flat:
+            hyperparameters = {
+                (block, name): value
+                for block, block_hyperparameters in hyperparameters.items()
+                for name, value in block_hyperparameters.items()
+            }
 
         return hyperparameters
 
@@ -183,6 +279,7 @@ class MLPipeline():
                 A dictionary containing the block names as keys and the new hyperparameters
                 dictionary as values.
         """
+        hyperparameters = self._sanitize(hyperparameters)
         for block_name, block_hyperparams in hyperparameters.items():
             self.blocks[block_name].set_hyperparameters(block_hyperparams)
 
