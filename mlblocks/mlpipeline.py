@@ -153,15 +153,35 @@ class MLPipeline():
         if hyperparameters:
             self.set_hyperparameters(hyperparameters)
 
-    def get_tunable_hyperparameters(self):
+    @staticmethod
+    def _flatten_dict(hyperparameters):
+        return {
+            (block, name): value
+            for block, block_hyperparameters in hyperparameters.items()
+            for name, value in block_hyperparameters.items()
+        }
+
+    def get_tunable_hyperparameters(self, flat=False):
         """Get the tunable hyperparamters of each block.
+
+        Args:
+            flat (bool): If True, return a flattened dictionary where each key
+                is a two elements tuple containing the name of the block as the first
+                element and the name of the hyperparameter as the second one.
+                If False (default), return a dictionary where each key is the name of
+                a block and each value is a dictionary containing the complete
+                hyperparameter specification of that block.
 
         Returns:
             dict:
                 A dictionary containing the block names as keys and
                 the block tunable hyperparameters dictionary as values.
         """
-        return self._tunable_hyperparameters.copy()
+        tunables = self._tunable_hyperparameters.copy()
+        if flat:
+            tunables = self._flatten_dict(tunables)
+
+        return tunables
 
     @classmethod
     def _sanitize_value(cls, value):
@@ -263,11 +283,7 @@ class MLPipeline():
             hyperparameters[block_name] = block.get_hyperparameters()
 
         if flat:
-            hyperparameters = {
-                (block, name): value
-                for block, block_hyperparameters in hyperparameters.items()
-                for name, value in block_hyperparameters.items()
-            }
+            hyperparameters = self._flatten_dict(hyperparameters)
 
         return hyperparameters
 
