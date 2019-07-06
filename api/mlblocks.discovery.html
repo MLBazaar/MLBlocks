@@ -263,7 +263,7 @@
 annotations, as well as to configure how MLBlocks finds the
 primitives and pipelines.</p>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -291,7 +291,7 @@ primitives and pipelines.</p>
 </table>
 <dl class="function">
 <dt id="mlblocks.discovery.add_pipelines_path">
-<code class="descclassname">mlblocks.discovery.</code><code class="descname">add_pipelines_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#add_pipelines_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.add_pipelines_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">add_pipelines_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#add_pipelines_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.add_pipelines_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new path to look for pipelines.</p>
 <p>The new path will be inserted in the first place of the list,
 so any primitive found in this new folder will take precedence
@@ -309,7 +309,7 @@ system before.</p>
 
 <dl class="function">
 <dt id="mlblocks.discovery.add_primitives_path">
-<code class="descclassname">mlblocks.discovery.</code><code class="descname">add_primitives_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#add_primitives_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.add_primitives_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">add_primitives_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#add_primitives_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.add_primitives_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new path to look for primitives.</p>
 <p>The new path will be inserted in the first place of the list,
 so any primitive found in this new folder will take precedence
@@ -327,7 +327,7 @@ system before.</p>
 
 <dl class="function">
 <dt id="mlblocks.discovery.get_pipelines_paths">
-<code class="descclassname">mlblocks.discovery.</code><code class="descname">get_pipelines_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_pipelines_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.get_pipelines_paths" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">get_pipelines_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_pipelines_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.get_pipelines_paths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of folders where pipelines will be looked for.</p>
 <p>This list will include the values of all the entry points named <code class="docutils literal notranslate"><span class="pre">pipelines</span></code>
 published under the entry point group <code class="docutils literal notranslate"><span class="pre">mlblocks</span></code>.</p>
@@ -355,7 +355,7 @@ published under the entry point group <code class="docutils literal notranslate"
 
 <dl class="function">
 <dt id="mlblocks.discovery.get_primitives_paths">
-<code class="descclassname">mlblocks.discovery.</code><code class="descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_primitives_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">get_primitives_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_primitives_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.get_primitives_paths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of folders where primitives will be looked for.</p>
 <p>This list will include the values of all the entry points named <code class="docutils literal notranslate"><span class="pre">primitives</span></code>
 published under the entry point group <code class="docutils literal notranslate"><span class="pre">mlblocks</span></code>.</p>
@@ -386,7 +386,7 @@ be included.</p>
 
 <dl class="function">
 <dt id="mlblocks.discovery.load_pipeline">
-<code class="descclassname">mlblocks.discovery.</code><code class="descname">load_pipeline</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#load_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.load_pipeline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">load_pipeline</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#load_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.load_pipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locate and load the pipeline JSON annotation.</p>
 <p>All the pipeline paths will be scanned to find a JSON file with the given name,
 and as soon as a JSON with the given name is found it is returned.</p>
@@ -409,7 +409,7 @@ and as soon as a JSON with the given name is found it is returned.</p>
 
 <dl class="function">
 <dt id="mlblocks.discovery.load_primitive">
-<code class="descclassname">mlblocks.discovery.</code><code class="descname">load_primitive</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#load_primitive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.load_primitive" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">load_primitive</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#load_primitive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.load_primitive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locate and load the primitive JSON annotation.</p>
 <p>All the primitive paths will be scanned to find a JSON file with the given name,
 and as soon as a JSON with the given name is found it is returned.</p>

@@ -257,7 +257,9 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">mlblocks.discovery</span> <span class="k">import</span> <span class="n">load_pipeline</span>
 <span class="kn">from</span> <span class="nn">mlblocks.mlblock</span> <span class="k">import</span> <span class="n">MLBlock</span>
@@ -404,27 +406,137 @@
         <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MLPipeline.get_tunable_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_tunable_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_flatten_dict</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span> <span class="n">value</span>
+            <span class="k">for</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_hyperparameters</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">block_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="MLPipeline.get_tunable_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_tunable_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the tunable hyperparamters of each block.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            flat (bool): If True, return a flattened dictionary where each key</span>
+<span class="sd">                is a two elements tuple containing the name of the block as the first</span>
+<span class="sd">                element and the name of the hyperparameter as the second one.</span>
+<span class="sd">                If False (default), return a dictionary where each key is the name of</span>
+<span class="sd">                a block and each value is a dictionary containing the complete</span>
+<span class="sd">                hyperparameter specification of that block.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict:</span>
 <span class="sd">                A dictionary containing the block names as keys and</span>
 <span class="sd">                the block tunable hyperparameters dictionary as values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+        <span class="n">tunables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">flat</span><span class="p">:</span>
+            <span class="n">tunables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flatten_dict</span><span class="p">(</span><span class="n">tunables</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MLPipeline.get_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tunables</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_sanitize_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert numpy values to their python primitive type equivalent.</span>
+
+<span class="sd">        If a value is a dict, recursively sanitize its values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value:</span>
+<span class="sd">                value to sanitize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            sanitized value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="n">key</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sanitize_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_sanitize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert tuple hyperparameter keys to nested dicts.</span>
+
+<span class="sd">        Also convert numpy types to primary python types.</span>
+
+<span class="sd">        The input hyperparameters dict can specify them in two formats:</span>
+
+<span class="sd">        One is the native MLBlocks format, where each key is the name of a block and each value</span>
+<span class="sd">        is a dict containing a complete hyperparameter specification for that block::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;block_name&quot;: {</span>
+<span class="sd">                    &quot;hyperparameter_name&quot;: &quot;hyperparameter_value&quot;,</span>
+<span class="sd">                    ...</span>
+<span class="sd">                },</span>
+<span class="sd">                ...</span>
+<span class="sd">            }</span>
+
+<span class="sd">        The other one is an alternative format where each key is a two element tuple containing</span>
+<span class="sd">        the name of the block as the first element and the name of the hyperparameter as the</span>
+<span class="sd">        second one::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                (&quot;block_name&quot;, &quot;hyperparameter_name&quot;): &quot;hyperparameter_value&quot;,</span>
+<span class="sd">                ...</span>
+<span class="sd">            }</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            hyperparaeters (dict):</span>
+<span class="sd">                hyperparameters dict to sanitize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict:</span>
+<span class="sd">                Sanitized dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params_tree</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_sanitize_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">block</span><span class="p">,</span> <span class="n">hyperparameter</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="n">params_tree</span><span class="p">[</span><span class="n">block</span><span class="p">][</span><span class="n">hyperparameter</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">params_tree</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">params_tree</span>
+
+<div class="viewcode-block" id="MLPipeline.get_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the current hyperparamters of each block.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            flat (bool): If True, return a flattened dictionary where each key</span>
+<span class="sd">                is a two elements tuple containing the name of the block as the first</span>
+<span class="sd">                element and the name of the hyperparameter as the second one.</span>
+<span class="sd">                If False (default), return a dictionary where each key is the name of</span>
+<span class="sd">                a block and each value is a dictionary containing the complete</span>
+<span class="sd">                hyperparameter specification of that block.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict:</span>
 <span class="sd">                A dictionary containing the block names as keys and</span>
 <span class="sd">                the current block hyperparameters dictionary as values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">hyperparameters</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">flat</span><span class="p">:</span>
+            <span class="n">hyperparameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flatten_dict</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">hyperparameters</span></div>
 
@@ -436,6 +548,7 @@
 <span class="sd">                A dictionary containing the block names as keys and the new hyperparameters</span>
 <span class="sd">                dictionary as values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block_hyperparams</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">block_hyperparams</span><span class="p">)</span></div>
 

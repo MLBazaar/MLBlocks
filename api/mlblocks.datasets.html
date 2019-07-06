@@ -263,7 +263,7 @@
 testing of pipelines and primitives over multiple data modalities
 and task types.</p>
 <p>The available datasets by data modality and task type are:</p>
-<table class="docutils align-center">
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 27%" />
 <col style="width: 27%" />
@@ -327,7 +327,7 @@ and task types.</p>
 </tbody>
 </table>
 <p><strong>Classes</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -339,7 +339,7 @@ and task types.</p>
 </tbody>
 </table>
 <p><strong>Functions</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -385,7 +385,7 @@ and task types.</p>
 </table>
 <dl class="class">
 <dt id="mlblocks.datasets.Dataset">
-<em class="property">class </em><code class="descclassname">mlblocks.datasets.</code><code class="descname">Dataset</code><span class="sig-paren">(</span><em>description</em>, <em>data</em>, <em>target</em>, <em>score</em>, <em>shuffle=True</em>, <em>stratify=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">Dataset</code><span class="sig-paren">(</span><em class="sig-param">description</em>, <em class="sig-param">data</em>, <em class="sig-param">target</em>, <em class="sig-param">score</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">stratify=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dataset class.</p>
 <p>This class represents the abstraction of a dataset and works as
 a container of all the things needed in order to use a dataset
@@ -395,7 +395,7 @@ about its origin, a score function that works for this dataset,
 and a method to split the data in multiple ways for goodnes-of-fit
 evaluation.</p>
 <p><strong>Methods</strong></p>
-<table class="longtable docutils align-center">
+<table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -414,7 +414,7 @@ evaluation.</p>
 </table>
 <dl class="attribute">
 <dt id="mlblocks.datasets.Dataset.name">
-<code class="descname">name</code><a class="headerlink" href="#mlblocks.datasets.Dataset.name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">name</code><a class="headerlink" href="#mlblocks.datasets.Dataset.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Name of this dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -425,7 +425,7 @@ evaluation.</p>
 
 <dl class="attribute">
 <dt id="mlblocks.datasets.Dataset.description">
-<code class="descname">description</code><a class="headerlink" href="#mlblocks.datasets.Dataset.description" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">description</code><a class="headerlink" href="#mlblocks.datasets.Dataset.description" title="Permalink to this definition">¶</a></dt>
 <dd><p>Short description about the data that composes this dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -436,7 +436,7 @@ evaluation.</p>
 
 <dl class="attribute">
 <dt id="mlblocks.datasets.Dataset.data">
-<code class="descname">data</code><a class="headerlink" href="#mlblocks.datasets.Dataset.data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">data</code><a class="headerlink" href="#mlblocks.datasets.Dataset.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Numpy array or pandas DataFrame containing all the data of
 this dataset, excluding the labels or target values.</p>
 <dl class="field-list simple">
@@ -448,7 +448,7 @@ this dataset, excluding the labels or target values.</p>
 
 <dl class="attribute">
 <dt id="mlblocks.datasets.Dataset.target">
-<code class="descname">target</code><a class="headerlink" href="#mlblocks.datasets.Dataset.target" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">target</code><a class="headerlink" href="#mlblocks.datasets.Dataset.target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Numpy array or pandas Series containing the expected labels
 or values</p>
 <dl class="field-list simple">
@@ -460,7 +460,7 @@ or values</p>
 
 <dl class="attribute">
 <dt>
-<code class="descname">**kwargs</code></dt>
+<code class="sig-name descname">**kwargs</code></dt>
 <dd><p>Any additional keyword argument passed on initailization is also
 available as instance attributes.</p>
 </dd></dl>
@@ -485,13 +485,13 @@ available as instance attributes.</p></li>
 </dl>
 <dl class="method">
 <dt id="mlblocks.datasets.Dataset.describe">
-<code class="descname">describe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.describe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">describe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.describe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the description of this Dataset on stdout.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mlblocks.datasets.Dataset.get_splits">
-<code class="descname">get_splits</code><span class="sig-paren">(</span><em>n_splits=1</em>, <em>random_state=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.get_splits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.get_splits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_splits</code><span class="sig-paren">(</span><em class="sig-param">n_splits=1</em>, <em class="sig-param">random_state=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.get_splits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.get_splits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return splits of this dataset ready for Cross Validation.</p>
 <p>If n_splits is 1, a tuple containing the X for train and test
 and the y for train and test is returned.
@@ -515,7 +515,7 @@ is returned, one for each split.</p>
 
 <dl class="method">
 <dt id="mlblocks.datasets.Dataset.score">
-<code class="descname">score</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scoring function for this dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -537,7 +537,7 @@ is returned, one for each split.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_amazon">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_amazon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_amazon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_amazon" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_amazon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_amazon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_amazon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Amazon product co-purchasing network and ground-truth communities.</p>
 <p>Network was collected by crawling Amazon website. It is based on Customers Who Bought
 This Item Also Bought feature of the Amazon website. If a product i is frequently
@@ -547,13 +547,13 @@ Each product category provided by Amazon defines each ground-truth community.</p
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_boston">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_boston</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_boston"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_boston" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_boston</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_boston"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_boston" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boston House Prices Dataset.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_dic28">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_dic28</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_dic28"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_dic28" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_dic28</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_dic28"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_dic28" title="Permalink to this definition">¶</a></dt>
 <dd><p>DIC28 Dataset from Pajek.</p>
 <p>This network represents connections among English words in a dictionary.
 It was generated from Knuth’s dictionary. Two words are connected by an
@@ -566,7 +566,7 @@ in the dictionary. The obtained network has 89038 edges.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_handgeometry">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_handgeometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_handgeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_handgeometry" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_handgeometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_handgeometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_handgeometry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hand Geometry Dataset.</p>
 <p>The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
 containing 112 224x224 RGB photos of hands, and the target is a 1d numpy
@@ -575,13 +575,13 @@ float array containing the width of the wrist in centimeters.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_iris">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_iris</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_iris"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_iris" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_iris</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_iris"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_iris" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iris Dataset.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_jester">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_jester</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_jester"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_jester" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_jester</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_jester"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_jester" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ratings from the Jester Online Joke Recommender System.</p>
 <p>This dataset consists of over 1.7 million instances of (user_id, item_id, rating)
 triples, which is split 50-50 into train and test data.</p>
@@ -591,7 +591,7 @@ sourceURI: “<a class="reference external" href="http://eigentaste.berkeley.edu
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_newsgroups">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_newsgroups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_newsgroups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_newsgroups" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_newsgroups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_newsgroups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_newsgroups" title="Permalink to this definition">¶</a></dt>
 <dd><p>20 News Groups Dataset.</p>
 <p>The data of this dataset is a 1d numpy array vector containing the texts
 from 11314 newsgroups posts, and the target is a 1d numpy integer array
@@ -600,7 +600,7 @@ containing the label of one of the 20 topics that they are about.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_nomination">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_nomination</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_nomination"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_nomination" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_nomination</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_nomination"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_nomination" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sample 1 of graph vertex nomination data from MII Lincoln Lab.</p>
 <p>Data consists of one graph whose nodes contain two attributes, attr1 and attr2.
 Associated with each node is a label that has to be learned and predicted.</p>
@@ -608,7 +608,7 @@ Associated with each node is a label that has to be learned and predicted.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_personae">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_personae</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_personae"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_personae" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_personae</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_personae"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_personae" title="Permalink to this definition">¶</a></dt>
 <dd><p>Personae Dataset.</p>
 <p>The data of this dataset is a 2d numpy array vector containing 145 entries
 that include texts written by Dutch users in Twitter, with some additional
@@ -618,7 +618,7 @@ array indicating whether the author was extrovert or not.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_umls">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_umls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_umls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_umls" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_umls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_umls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_umls" title="Permalink to this definition">¶</a></dt>
 <dd><p>UMLs Dataset.</p>
 <p>The data consists of information about a 135 Graph and the relations between
 their nodes given as a DataFrame with three columns, source, target and type,
@@ -629,7 +629,7 @@ or not.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_usps">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_usps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_usps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_usps" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_usps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_usps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_usps" title="Permalink to this definition">¶</a></dt>
 <dd><p>USPs Digits Dataset.</p>
 <p>The data of this dataset is a 3d numpy array vector with shape (224, 224, 3)
 containing 9298 224x224 RGB photos of handwritten digits, and the target is
@@ -639,7 +639,7 @@ the image.</p>
 
 <dl class="function">
 <dt id="mlblocks.datasets.load_wikiqa">
-<code class="descclassname">mlblocks.datasets.</code><code class="descname">load_wikiqa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_wikiqa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_wikiqa" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mlblocks.datasets.</code><code class="sig-name descname">load_wikiqa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#load_wikiqa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.load_wikiqa" title="Permalink to this definition">¶</a></dt>
 <dd><p>Challenge Dataset for Open-Domain Question Answering.</p>
 <p>WikiQA dataset is a publicly available set of question and sentence (QS) pairs,
 collected and annotated for research on open-domain question answering.</p>
