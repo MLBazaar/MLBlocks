@@ -40,31 +40,31 @@ for later ones.
 
     # set up the pipeline
     primitives = [
-        "mlprimitives.counters.UniqueCounter",
-        "mlprimitives.text.TextCleaner",
-        "mlprimitives.counters.VocabularyCounter",
+        "mlprimitives.custom.counters.UniqueCounter",
+        "mlprimitives.custom.text.TextCleaner",
+        "mlprimitives.custom.counters.VocabularyCounter",
         "keras.preprocessing.text.Tokenizer",
         "keras.preprocessing.sequence.pad_sequences",
         "keras.Sequential.LSTMTextClassifier"
     ]
     input_names = {
-        "mlprimitives.counters.UniqueCounter#1": {
+        "mlprimitives.custom.counters.UniqueCounter#1": {
             "X": "y"
         }
     }
     output_names = {
-        "mlprimitives.counters.UniqueCounter#1": {
+        "mlprimitives.custom.counters.UniqueCounter#1": {
             "counts": "classes"
         },
-        "mlprimitives.counters.VocabularyCounter#1": {
+        "mlprimitives.custom.counters.VocabularyCounter#1": {
             "counts": "vocabulary_size"
         }
     }
     init_params = {
-        "mlprimitives.counters.VocabularyCounter#1": {
+        "mlprimitives.custom.counters.VocabularyCounter#1": {
             "add": 1
         },
-        "mlprimitives.text.TextCleaner#1": {
+        "mlprimitives.custom.text.TextCleaner#1": {
             "language": "en"
         },
         "keras.preprocessing.sequence.pad_sequences#1": {
@@ -116,12 +116,12 @@ to encode all the string features, and go directly into the
     nltk.download('stopwords')
 
     primitives = [
-        'mlprimitives.text.TextCleaner',
-        'mlprimitives.feature_extraction.StringVectorizer',
+        'mlprimitives.custom.text.TextCleaner',
+        'mlprimitives.custom.feature_extraction.StringVectorizer',
         'sklearn.ensemble.RandomForestClassifier',
     ]
     init_params = {
-        'mlprimitives.text.TextCleaner': {
+        'mlprimitives.custom.text.TextCleaner': {
             'column': 'text',
             'language': 'nl'
         },

@@ -86,7 +86,7 @@ This can be done by passing an extra dictionary to the MLPipeline when it is cre
             'n_estimators': 100
         }
     }
-    pipeline = MLPipeline(primitives, init_params)
+    pipeline = MLPipeline(primitives, init_params=init_params)
 
 This dictionary must have as keys the name of the blocks that the arguments belong to, and
 as values the dictionary that contains the argument names and their values.
@@ -271,7 +271,7 @@ Like primitives, Pipelines can also be annotated and stored as dicts or JSON fil
 the different arguments expected by the ``MLPipeline`` class, as well as the set hyperparameters
 and tunable hyperparameters.
 
-Representing a  Pipeline as a dict
+Representing a Pipeline as a dict
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The dict representation of an Pipeline can be obtained directly from an ``MLPipeline`` instance,
@@ -343,6 +343,86 @@ that allows loading the pipeline directly from a JSON file:
 .. ipython:: python
 
     pipeline = MLPipeline.load('pipeline.json')
+
+
+Intermediate Outputs and Partial Execution
+------------------------------------------
+
+Sometimes we might be interested in capturing an intermediate output within a
+pipeline execution in order to inspect it, for debugging purposes, or to reuse
+it later on in order to speed up a tuning process where the pipeline needs
+to be executed multiple times over the same data.
+
+For this, two special arguments have been included in the ``fit`` and ``predict``
+methods of an MLPipeline:
+
+output\_
+~~~~~~~~
+
+The ``output_`` argument indicates which block within the pipeline we are interested
+in taking the output values from. This, implicitly, indicates up to which block the
+pipeline needs to be executed within ``fit`` and ``predict`` before returning.
+
+The ``output_`` argument is optional, and it can either be ``None``, which is the default,
+and Integer or a String.
+
+And its format is as follows:
+
+* If it is ``None`` (default), the ``fit`` method will return nothing and the
+  ``predict`` method will return the output of the last block in the pipeline.
+* If an integer is given, it is interpreted as the block index, starting on 0,
+  and the whole context after executing the specified block will be returned.
+  In case of ``fit``, this means that the outputs will be returned after fitting
+  a block and then producing it on the same data.
+* If it is a string, it can be interpreted in three ways:
+
+    * **block name**: If the string matches a block name exactly, including
+      its hash and counter number ``#n`` at the end, the whole context will be
+      returned after that block is produced.
+    * **variable_name**: If the string does not match any block name and does
+      not contain any dot character, ``'.'``, it will be considered a variable
+      name. In this case, the indicated variable will be extracted from the
+      context and returned after the last block has been produced.
+    * **block_name + variable_name**: If the complete string does not match a
+      block name but it contains at least one dot, ``'.'``, it will be split
+      in two parts on the last dot. If the first part of the string matches a
+      block name exactly, the second part of the string will be considered a
+      variable name, assuming the format ``{block_name}.{variable_name}``, and
+      the indicated variable will be extracted from the context and returned
+      after the block has been produced. Otherwise, if the extracted
+      ``block_name`` does not match a block name exactly, a ``ValueError``
+      will be raised.
+
+start\_
+~~~~~~~
+
+The ``start_`` argument indicates which block within the pipeline we are interested
+in starting the computation from when executing ``fit`` and ``predict``, allowing us
+to skip some of the initial blocks.
+
+The ``start_`` argument is optional, and it can either be ``None``, which is the default,
+and Integer or a String.
+
+And its format is as follows:
+
+* If it is ``None``, the execution will start on the first block.
+* If it is an integer, it is interpreted as the block index
+* If it is a string, it is expected to be the name of the block, including the counter
+  number at the end.
+
+This is specially useful when used in combination with the ``output_`` argument, as it
+effectively allows us to both capture intermediate outputs for debugging purposes or
+reusing intermediate states of the pipeline to accelerate tuning processes.
+
+An example of this situation, where we want to reuse the output of the first block, could be::
+
+    context_0 = pipeline.fit(X_train, y_train, output_=0)
+
+    # Afterwards, within the tuning loop
+    pipeline.fit(start_=1, **context_0)
+    predictions = pipeline.predict(X_test)
+    score = compute_score(y_test, predictions)
+
 
 .. _API Reference: ../api_reference.html
 .. _primitives: ../primitives.html

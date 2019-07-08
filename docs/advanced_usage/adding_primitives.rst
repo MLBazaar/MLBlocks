@@ -91,20 +91,27 @@ In order to make **MLBLocks** able to find the primitives defined in such a libr
 all you need to do is setting up an `Entry Point`_ in your `setup.py` script with the
 following specification:
 
-1. It has to be published under the name ``mlprimitives``.
-2. It has to be named exactly ``jsons_path``.
-3. It has to point at a variable that contains the path to the JSONS folder.
+1. It has to be published under the group ``mlblocks``.
+2. It has to be named exactly ``primitives``.
+3. It has to point at a variable that contains a path or a list of paths to the JSONS folder(s).
 
 An example of such an entry point would be::
 
     entry_points = {
-        'mlprimitives': [
-            'jsons_path=some_module:SOME_VARIABLE'
+        'mlblocks': [
+            'primitives=some_module:SOME_VARIABLE'
         ]
     }
 
 where the module `some_module` contains a variable such as::
 
-    SOME_VARIABLE = os.path.join(os.path.dirname(__file__), 'jsons')
+    SOME_VARIABLE = 'path/to/primitives'
+
+or::
+
+    SOME_VARIABLE = [
+        'path/to/primitives',
+        'path/to/more/primitives'
+    ]
 
 .. _Entry Point: https://packaging.python.org/specifications/entry-points/

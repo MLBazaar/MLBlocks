@@ -98,6 +98,11 @@ fix-lint: ## fix lint issues using autoflake, autopep8, and isort
 	autopep8 --in-place --recursive --aggressive tests
 	isort --apply --atomic --recursive tests
 
+.PHONY: lint-docs
+lint-docs: ## check docs formatting with doc8 and pydocstyle
+	doc8 mlblocks/
+	pydocstyle mlblocks/
+
 
 # TEST TARGETS
 
@@ -122,7 +127,6 @@ coverage: ## check code coverage quickly with the default Python
 .PHONY: docs
 docs: clean-docs ## generate Sphinx HTML documentation, including API docs
 	$(MAKE) -C docs html
-	touch docs/_build/html/.nojekyll
 
 .PHONY: view-docs
 view-docs: docs ## view docs in browser

@@ -5,7 +5,7 @@
 import importlib
 import logging
 
-from mlblocks.primitives import load_primitive
+from mlblocks.discovery import load_primitive
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,54 +25,57 @@ class MLBlock():
     as wrapping them and providing a common interface to run them.
 
     Attributes:
-        name (str): Name given to this MLBlock.
-        primitive (object): the actual function or instance which this MLBlock
-                            wraps.
-        fit_args (dict): specification of the arguments expected by the `fit`
-                         method.
-        fit_method (str): name of the primitive method to call on `fit`.
-                          `None` if the primitive is a function.
-        produce_args (dict): specification of the arguments expected by the
-                             `predict` method.
-        produce_output (dict): specification of the outputs of the `produce`
-                               method.
-        produce_method (str): name of the primitive method to call on
-                              `produce`. `None` if the primitive is a function.
+        name (str):
+            Name given to this MLBlock.
+        primitive (object):
+            the actual function or instance which this MLBlock wraps.
+        fit_args (dict):
+            specification of the arguments expected by the ``fit`` method.
+        fit_method (str):
+            name of the primitive method to call on ``fit``. ``None`` if the
+            primitive is a function.
+        produce_args (dict):
+            specification of the arguments expected by the ``predict`` method.
+        produce_output (dict):
+            specification of the outputs of the ``produce`` method.
+        produce_method (str):
+            name of the primitive method to call on ``produce``. ``None`` if the primitive is a
+            function.
 
     Args:
-        name (str): Name given to this MLBlock.
-        **kwargs: Any additional arguments that will be used as
-                  hyperparameters or passed to the `fit` or `produce`
-                  methods.
+        name (str):
+            Name given to this MLBlock.
+        **kwargs:
+            Any additional arguments that will be used as hyperparameters or passed to the
+            ``fit`` or ``produce`` methods.
 
     Raises:
-        TypeError: A `TypeError` is raised if a required argument is not
-                   found within the `kwargs` or if an unexpected
-                   argument has been given.
-    """
-    # pylint: disable=too-many-instance-attributes
+        TypeError:
+            A ``TypeError`` is raised if a required argument is not found within the ``kwargs``
+            or if an unexpected argument has been given.
+    """  # pylint: disable=too-many-instance-attributes
 
     def _extract_params(self, kwargs, hyperparameters):
         """Extract init, fit and produce params from kwargs.
 
-        The `init_params`, `fit_params` and `produce_params` are extracted
-        from the passed `kwargs` taking the metadata hyperparameters as a
+        The ``init_params``, ``fit_params`` and ``produce_params`` are extracted
+        from the passed ``kwargs`` taking the metadata hyperparameters as a
         reference.
 
         During this extraction, make sure that all the required hyperparameters
         have been given and that nothing unexpected exists in the input.
 
         Args:
-            kwargs (dict): dict containing the Keyword arguments that have
-                           been passed to the `__init__` method upon
-                           initialization.
-            hyperparameters (dict): hyperparameters dictionary, as found in
-                                    the JSON annotation.
+            kwargs (dict):
+                dict containing the Keyword arguments that have been passed to the ``__init__``
+                method upon initialization.
+            hyperparameters (dict):
+                hyperparameters dictionary, as found in the JSON annotation.
 
         Raises:
-            TypeError: A `TypeError` is raised if a required argument is not
-                       found in the `kwargs` dict, or if an unexpected
-                       argument has been given.
+            TypeError:
+                A ``TypeError`` is raised if a required argument is not found in the
+                ``kwargs`` dict, or if an unexpected argument has been given.
         """
         init_params = dict()
         fit_params = dict()
@@ -138,7 +141,6 @@ class MLBlock():
         return tunable
 
     def __init__(self, name, **kwargs):
-
         self.name = name
 
         metadata = load_primitive(name)
@@ -174,6 +176,7 @@ class MLBlock():
         self.set_hyperparameters(default)
 
     def __str__(self):
+        """Return a string that represents this block."""
         return 'MLBlock - {}'.format(self.name)
 
     def get_tunable_hyperparameters(self):
@@ -210,9 +213,9 @@ class MLBlock():
         If necessary, a new instance of the primitive is created.
 
         Args:
-            hyperparameters (dict): Dictionary containing as keys the name
-                                    of the hyperparameters and as values
-                                    the values to be used.
+            hyperparameters (dict):
+                Dictionary containing as keys the name of the hyperparameters and as
+                values the values to be used.
         """
         self._hyperparameters.update(hyperparameters)
 
@@ -220,10 +223,47 @@ class MLBlock():
             LOGGER.debug('Creating a new primitive instance for %s', self.name)
             self.instance = self.primitive(**self._hyperparameters)
 
+    def _get_method_kwargs(self, kwargs, method_args):
+        """Prepare the kwargs for the method.
+
+        The kwargs dict will be altered according to the method_kwargs
+        specification to make them ready for the primitive method to
+        accept them.
+
+        Args:
+            kwargs (dict):
+                keyword arguments that have been passed to the block method.
+            method_args (list):
+                method arguments as specified in the JSON annotation.
+
+        Returns:
+            dict:
+                A dictionary containing the argument names and values to pass
+                to the primitive method.
+        """
+
+        method_kwargs = dict()
+        for arg in method_args:
+            name = arg['name']
+            keyword = arg.get('keyword', name)
+
+            if name in kwargs:
+                value = kwargs[name]
+
+            elif 'default' in arg:
+                value = arg['default']
+
+            else:
+                raise TypeError("missing expected argument '{}'".format(name))
+
+            method_kwargs[keyword] = value
+
+        return method_kwargs
+
     def fit(self, **kwargs):
         """Call the fit method of the primitive.
 
-        The given keyword arguments will be passed directly to the `fit`
+        The given keyword arguments will be passed directly to the ``fit``
         method of the primitive instance specified in the JSON annotation.
 
         If any of the arguments expected by the produce method had been
@@ -233,23 +273,25 @@ class MLBlock():
         the primitive is a simple function, this will be a noop.
 
         Args:
-            **kwargs: Any given keyword argument will be directly passed
-                      to the primitive fit method.
+            **kwargs:
+                Any given keyword argument will be directly passed to the primitive fit method.
 
         Raises:
-            TypeError: A `TypeError` might be raised if any argument not
-                       expected by the primitive fit method is given.
+            TypeError:
+                A ``TypeError`` might be raised if any argument not expected by the primitive fit
+                method is given.
         """
         if self.fit_method is not None:
-            fit_args = self._fit_params.copy()
-            fit_args.update(kwargs)
-            getattr(self.instance, self.fit_method)(**fit_args)
+            fit_kwargs = self._fit_params.copy()
+            fit_kwargs.update(kwargs)
+            fit_kwargs = self._get_method_kwargs(fit_kwargs, self.fit_args)
+            getattr(self.instance, self.fit_method)(**fit_kwargs)
 
     def produce(self, **kwargs):
         """Call the primitive function, or the predict method of the primitive.
 
         The given keyword arguments will be passed directly to the primitive,
-        if it is a simple function, or to the `produce` method of the
+        if it is a simple function, or to the ``produce`` method of the
         primitive instance specified in the JSON annotation, if it is a class.
 
         If any of the arguments expected by the fit method had been given
@@ -259,10 +301,11 @@ class MLBlock():
             The output of the call to the primitive function or primitive
             produce method.
         """
-        produce_args = self._produce_params.copy()
-        produce_args.update(kwargs)
+        produce_kwargs = self._produce_params.copy()
+        produce_kwargs.update(kwargs)
+        produce_kwargs = self._get_method_kwargs(produce_kwargs, self.produce_args)
         if self._class:
-            return getattr(self.instance, self.produce_method)(**produce_args)
+            return getattr(self.instance, self.produce_method)(**produce_kwargs)
 
-        produce_args.update(self._hyperparameters)
-        return self.primitive(**produce_args)
+        produce_kwargs.update(self._hyperparameters)
+        return self.primitive(**produce_kwargs)

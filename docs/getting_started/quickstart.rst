@@ -24,21 +24,22 @@ them to the `MLPipeline class`_:
 
     from mlblocks import MLPipeline
     primitives = [
-        'mlprimitives.feature_extraction.StringVectorizer',
+        'mlprimitives.custom.feature_extraction.StringVectorizer',
         'sklearn.ensemble.RandomForestClassifier',
     ]
     pipeline = MLPipeline(primitives)
 
-Optionally, specific `hyperparameters`_ can be also set by specifying them in a dictionary:
+Optionally, specific `hyperparameters`_ can be also set by specifying them in a dictionary and
+passing them as the ``init_params`` argument:
 
 .. ipython:: python
 
-    hyperparameters = {
+    init_params = {
         'sklearn.ensemble.RandomForestClassifier': {
             'n_estimators': 100
         }
     }
-    pipeline = MLPipeline(primitives, hyperparameters)
+    pipeline = MLPipeline(primitives, init_params=init_params)
 
 Once the pipeline has been instantiated, we can easily see what `hyperparameters`_ have been set
 for each block, by calling the `get_hyperparameters method`_.

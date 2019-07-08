@@ -15,13 +15,15 @@ with open('HISTORY.md') as history_file:
 
 
 install_requires = [
-    'mlprimitives>=0.1.3',
 ]
 
 
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
+    'mlprimitives>=0.1.3,<0.2',
+    'urllib3>=1.20,<1.25',
+    'setuptools>=41.0.0'
 ]
 
 
@@ -40,10 +42,10 @@ development_requires = [
     'm2r>=0.2.0',
     'Sphinx>=1.7.1',
     'sphinx_rtd_theme>=0.2.4',
-    'graphviz==0.9',
-    'ipython==6.5.0',
-    'matplotlib==2.2.3',
-    'recommonmark>=0.4.0',
+    'graphviz>=0.9',
+    'ipython>=6.5.0',
+    'matplotlib>=2.2.3',
+    'autodocsumm>=0.1.10',
 
     # style check
     'flake8>=3.5.0',
@@ -60,6 +62,10 @@ development_requires = [
     # Advanced testing
     'tox>=2.9.1',
     'coverage>=4.5.1',
+
+    # Documentation style
+    'doc8>=0.8.0',
+    'pydocstyle>=3.0.0'
 ]
 
 
@@ -92,6 +98,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.3.0',
+    version='0.3.1-dev',
     zip_safe=False,
 )
