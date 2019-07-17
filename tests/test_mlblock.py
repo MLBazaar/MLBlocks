@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import MagicMock, Mock, patch
 
 from mlblocks.mlblock import MLBlock, import_object
 
@@ -403,27 +403,53 @@ class TestMLBlock(TestCase):
         assert returned == tunable
         assert returned is not tunable
 
-    @patch('mlblocks.mlblock.import_object')
-    @patch('mlblocks.mlblock.load_primitive')
-    def test_get_hyperparameters(self, load_primitive_mock, import_object_mock):
-        """get_hyperparameters has to return a copy of the _hyperparameters attribute."""
-        load_primitive_mock.return_value = {
-            'primitive': 'a_primitive_name',
-            'produce': {
-                'args': [],
-                'output': []
-            }
-        }
-
+    @patch('mlblocks.mlblock.import_object', new=Mock())
+    @patch('mlblocks.mlblock.load_primitive', new=MagicMock())
+    def test_get_hyperparameters(self):
+        """get_hyperparameters has to return a deepcopy of the _hyperparameters attribute."""
         mlblock = MLBlock('given_primitive_name')
 
-        hyperparameters = dict()
+        hyperparameters = {
+            'a_list_param': ['a']
+        }
         mlblock._hyperparameters = hyperparameters
 
         returned = mlblock.get_hyperparameters()
 
         assert returned == hyperparameters
         assert returned is not hyperparameters
+
+        returned['a_list_param'].append('b')
+        assert 'b' not in hyperparameters['a_list_param']
+
+    @patch('mlblocks.mlblock.import_object')
+    @patch('mlblocks.mlblock.load_primitive')
+    def test_modify_hyperparameters(self, lp_mock, io_mock):
+        """If a primitive method modifies the hyperparameters, changes should not persist."""
+
+        def primitive(a_list_param):
+            a_list_param.append('b')
+
+        io_mock.return_value = primitive
+
+        lp_mock.return_value = {
+            'primitive': 'a_primitive',
+            'produce': {
+                'args': [],
+                'output': []
+            }
+        }
+
+        mlblock = MLBlock('a_primitive')
+
+        hyperparameters = {
+            'a_list_param': ['a']
+        }
+        mlblock._hyperparameters = hyperparameters
+
+        mlblock.produce()
+
+        assert 'b' not in hyperparameters['a_list_param']
 
     def test_set_hyperparameters_function(self):
         pass
