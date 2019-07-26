@@ -46,6 +46,7 @@ development_requires = [
     'ipython>=6.5.0',
     'matplotlib>=2.2.3',
     'autodocsumm>=0.1.10',
+    'docutils<0.15,>=0.10',    # botocore incompatibility with 0.15
 
     # style check
     'flake8>=3.5.0',
