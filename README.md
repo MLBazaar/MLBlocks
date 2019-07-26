@@ -1,11 +1,16 @@
-<p align="center">
-<img width=30% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
+<p align="left">
+<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt=“MLBlocksr” />
+<i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
-<p align="center">
-<i>
+
+
+<p align="left">
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
+</p>
+
+<p align="left">
 Pipelines and Primitives for Machine Learning and Data Science.
-</i>
 </p>
 
 [![PyPi][pypi-img]][pypi-url]
