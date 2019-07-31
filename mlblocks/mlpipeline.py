@@ -330,6 +330,10 @@ class MLPipeline():
 
             if variable in context:
                 kwargs[name] = context[variable]
+            elif 'default' in arg:
+                kwargs[name] = arg['default']
+            elif arg.get('required', True):
+                raise ValueError('Input variable {} not found in context'.format(variable))
 
         return kwargs
 

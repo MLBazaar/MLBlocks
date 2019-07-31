@@ -238,7 +238,42 @@ class TestMLPipline(TestCase):
         block_2.set_hyperparameters.assert_called_once_with({'some': 'arg'})
 
     def test__get_block_args(self):
-        pass
+        input_names = {
+            'a_block': {
+                'arg_3': 'arg_3_alt'
+            }
+        }
+        pipeline = MLPipeline(list(), input_names=input_names)
+
+        block_args = [
+            {
+                'name': 'arg_1',
+            },
+            {
+                'name': 'arg_2',
+                'default': 'arg_2_value'
+            },
+            {
+                'name': 'arg_3',
+            },
+            {
+                'name': 'arg_4',
+                'required': False
+            },
+        ]
+        context = {
+            'arg_1': 'arg_1_value',
+            'arg_3_alt': 'arg_3_value'
+        }
+
+        args = pipeline._get_block_args('a_block', block_args, context)
+
+        expected = {
+            'arg_1': 'arg_1_value',
+            'arg_2': 'arg_2_value',
+            'arg_3': 'arg_3_value',
+        }
+        assert args == expected
 
     def test__get_outputs(self):
         pass
