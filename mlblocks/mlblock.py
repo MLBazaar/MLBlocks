@@ -4,6 +4,7 @@
 
 import importlib
 import logging
+from copy import deepcopy
 
 from mlblocks.discovery import load_primitive
 
@@ -194,7 +195,7 @@ class MLBlock():
                 tuned, their types and, if applicable, the accepted
                 ranges or values.
         """
-        return self._tunable.copy()
+        return deepcopy(self._tunable)
 
     def get_hyperparameters(self):
         """Get hyperparameters values that the current MLBlock is using.
@@ -204,7 +205,7 @@ class MLBlock():
                 the dictionary containing the hyperparameter values that the
                 MLBlock is currently using.
         """
-        return self._hyperparameters.copy()
+        return deepcopy(self._hyperparameters)
 
     def set_hyperparameters(self, hyperparameters):
         """Set new hyperparameters.
@@ -223,7 +224,7 @@ class MLBlock():
 
         if self._class:
             LOGGER.debug('Creating a new primitive instance for %s', self.name)
-            self.instance = self.primitive(**self._hyperparameters)
+            self.instance = self.primitive(**self.get_hyperparameters())
 
     def _get_method_kwargs(self, kwargs, method_args):
         """Prepare the kwargs for the method.
@@ -309,5 +310,5 @@ class MLBlock():
         if self._class:
             return getattr(self.instance, self.produce_method)(**produce_kwargs)
 
-        produce_kwargs.update(self._hyperparameters)
+        produce_kwargs.update(self.get_hyperparameters())
         return self.primitive(**produce_kwargs)

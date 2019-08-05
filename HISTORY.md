@@ -1,6 +1,20 @@
 Changelog
 =========
 
+0.3.1 - Pipelines Discovery
+---------------------------
+
+* Support flat hyperparameter dictionaries
+  [Issue #92](https://github.com/HDI-Project/MLBlocks/issues/92) by @csala
+* Load pipelines by name and register them as `entry_points`
+  [Issue #88](https://github.com/HDI-Project/MLBlocks/issues/88) by @csala
+* Implement partial re-fit
+  [Issue #61](https://github.com/HDI-Project/MLBlocks/issues/61) by @csala
+* Move argument parsing to MLBlock
+  [Issue #86](https://github.com/HDI-Project/MLBlocks/issues/86) by @csala
+* Allow getting intermediate outputs
+  [Issue #58](https://github.com/HDI-Project/MLBlocks/issues/58) by @csala
+
 0.3.0 - New Primitives Discovery
 --------------------------------
 
