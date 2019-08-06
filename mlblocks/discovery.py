@@ -312,11 +312,11 @@ def _search_annotations(base_path, pattern, parts=None):
     return annotations
 
 
-def _match_filter(annotation, key, value):
+def _match(annotation, key, value):
     if '.' in key:
         name, key = key.split('.', 1)
         part = annotation.get(name) or dict()
-        return _match_filter(part, key, value)
+        return _match(part, key, value)
 
     annotation_value = annotation.get(key)
     if not isinstance(annotation_value, type(value)):
@@ -338,7 +338,7 @@ def _get_annotations_list(paths, loader, pattern, filters):
     for name in sorted(annotations.values()):
         annotation = loader(name)
         for key, value in filters.items():
-            if not _match_filter(annotation, key, value):
+            if not _match(annotation, key, value):
                 break
 
         else:
@@ -347,11 +347,11 @@ def _get_annotations_list(paths, loader, pattern, filters):
     return matching
 
 
-def get_primitives_list(pattern='', filters=None):
+def find_primitives(pattern='', filters=None):
     filters = filters or dict()
     return _get_annotations_list(get_primitives_paths(), load_primitive, pattern, filters)
 
 
-def get_pipelines_list(pattern='', filters=None):
+def find_pipelines(pattern='', filters=None):
     filters = filters or dict()
     return _get_annotations_list(get_pipelines_paths(), load_pipeline, pattern, filters)

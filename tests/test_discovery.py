@@ -2,9 +2,10 @@
 
 import json
 import os
+import re
 import tempfile
 import uuid
-from unittest.mock import call, patch
+from unittest.mock import Mock, call, patch
 
 import pytest
 from pkg_resources import Distribution, EntryPoint
@@ -12,6 +13,10 @@ from pkg_resources import Distribution, EntryPoint
 from mlblocks import discovery
 
 FAKE_PRIMITIVES_PATH = 'this/is/a/fake'
+FAKE_PRIMITIVES_PATHS = [
+    'this/is/another/fake',
+    'this/is/yet/another/fake',
+]
 
 
 def test__add_lookup_path_do_nothing():
@@ -81,9 +86,16 @@ def test__load_entry_points_entry_points(iep_mock):
         attrs=['FAKE_PRIMITIVES_PATH'],
         dist=Distribution()
     )
+    another_primitives_ep = EntryPoint(
+        'primitives',
+        'tests.test_discovery',
+        attrs=['FAKE_PRIMITIVES_PATHS'],
+        dist=Distribution()
+    )
     iep_mock.return_value = [
         something_else_ep,
-        primitives_ep
+        primitives_ep,
+        another_primitives_ep
     ]
 
     # run
@@ -91,7 +103,9 @@ def test__load_entry_points_entry_points(iep_mock):
 
     # assert
     expected = [
-        'this/is/a/fake'
+        'this/is/a/fake',
+        'this/is/another/fake',
+        'this/is/yet/another/fake',
     ]
     assert paths == expected
 
@@ -196,3 +210,184 @@ def test__load_pipeline_success(load_mock, gpp_mock):
     load_mock.assert_called_once_with('valid.pipeline', ['a', 'b'])
 
     assert pipeline == load_mock.return_value
+
+
+@patch('mlblocks.discovery.os')
+def test__search_annotations(os_mock):
+    os_mock.path.abspath = os.path.abspath
+    os_mock.path.join = os.path.join
+    os_mock.path.exists.return_value = True
+    os_mock.listdir.side_effect = [
+        [
+            'a.primitive.json',
+            'another.primitive.json',
+            'some',
+        ],
+        [
+            'other',
+        ],
+        [
+            'primitive.json'
+        ]
+    ]
+    os_mock.path.isdir.return_value = False
+    os_mock.path.isdir.side_effect = [
+        False,
+        False,
+        True,
+        True,
+        False
+    ]
+
+    pattern = re.compile('other')
+    annotations = discovery._search_annotations('/path/to', pattern)
+
+    assert annotations == {
+        '/path/to/another.primitive.json': 'another.primitive',
+        '/path/to/some/other/primitive.json': 'some.other.primitive'
+    }
+
+
+def test__match_no_match():
+    annotation = {
+        'name': 'a.primitive',
+    }
+
+    matches = discovery._match(annotation, 'key', 'value')
+
+    assert not matches
+
+
+def test__match_root():
+    annotation = {
+        'name': 'a.primitive',
+        'key': 'value'
+    }
+
+    matches = discovery._match(annotation, 'key', 'value')
+
+    assert matches
+
+
+def test__match_sublevel():
+    annotation = {
+        'name': 'a.primitive',
+        'some': {
+            'sublevel': {
+                'key': 'value'
+            }
+        }
+    }
+
+    matches = discovery._match(annotation, 'some.sublevel.key', 'value')
+
+    assert matches
+
+
+def test__match_list_no_match():
+    annotation = {
+        'name': 'a.primitive',
+        'key': [
+            'another_value'
+            'yet_another_value'
+        ]
+    }
+
+    matches = discovery._match(annotation, 'key', 'value')
+
+    assert not matches
+
+
+def test__match_list():
+    annotation = {
+        'name': 'a.primitive',
+        'key': [
+            'value',
+            'another_value'
+        ]
+    }
+
+    matches = discovery._match(annotation, 'key', 'value')
+
+    assert matches
+
+
+def test__match_dict():
+    annotation = {
+        'name': 'a.primitive',
+        'key': {
+            'value': 'subvalue',
+            'another_value': 'another_subvalue'
+        }
+    }
+
+    matches = discovery._match(annotation, 'key', 'value')
+
+    assert matches
+
+
+def test__match_multiple_keys():
+    annotation = {
+        'name': 'a.primitive',
+        'key': 'value'
+    }
+
+    matches = discovery._match(annotation, 'key', ['value', 'another_value'])
+
+    assert matches
+
+
+@patch('mlblocks.discovery._search_annotations')
+def test__get_annotations_list(search_annotations_mock):
+    search_annotations_mock.return_value = {
+        '/path/to/a/classifier.primitive.json': 'classifier.primitive',
+        '/path/to/a/regressor.primitive.json': 'regressor.primitive',
+    }
+
+    loader = Mock()
+    loader.side_effect = [
+        {
+            'name': 'classifier.primitive',
+            'classifiers': {
+                'type': 'estimator',
+                'subtype': 'classifier',
+            }
+        },
+        {
+            'name': 'regressor.primitive',
+            'classifiers': {
+                'type': 'estimator',
+                'subtype': 'regressor',
+            }
+        }
+    ]
+
+    filters = {
+        'classifiers.subtype': 'regressor'
+    }
+    annotations = discovery._get_annotations_list(['/a/path'], loader, 'pattern', filters)
+
+    assert annotations == ['regressor.primitive']
+    search_annotations_mock.assert_called_once_with('/a/path', re.compile('pattern'))
+
+
+@patch('mlblocks.discovery._get_annotations_list')
+@patch('mlblocks.discovery.get_primitives_paths')
+def test_find_primitives(gpp_mock, gal_mock):
+    primitives = discovery.find_primitives('pattern')
+
+    gal_mock.assert_called_once_with(
+        gpp_mock.return_value, discovery.load_primitive, 'pattern', dict())
+
+    assert primitives == gal_mock.return_value
+
+
+@patch('mlblocks.discovery._get_annotations_list')
+@patch('mlblocks.discovery.get_pipelines_paths')
+def test_find_primitives(gpp_mock, gal_mock):
+    primitives = discovery.find_pipelines('pattern', {'a': 'filter'})
+
+    gal_mock.assert_called_once_with(
+        gpp_mock.return_value, discovery.load_pipeline, 'pattern', {'a': 'filter'})
+
+    assert primitives == gal_mock.return_value
