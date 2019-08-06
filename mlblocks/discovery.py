@@ -312,7 +312,23 @@ def _search_annotations(base_path, pattern, parts=None):
     return annotations
 
 
-def _get_annotations_list(paths, loader, pattern, **metadata_filters):
+def _match_filter(annotation, key, value):
+    if '.' in key:
+        name, key = key.split('.', 1)
+        part = annotation.get(name) or dict()
+        return _match_filter(part, key, value)
+
+    annotation_value = annotation.get(key)
+    if not isinstance(annotation_value, type(value)):
+        if isinstance(annotation_value, (list, dict)):
+            return value in annotation_value
+        elif isinstance(value, (list, dict)):
+            return annotation_value in value
+
+    return annotation_value == value
+
+
+def _get_annotations_list(paths, loader, pattern, filters):
     pattern = re.compile(pattern)
     annotations = dict()
     for base_path in paths:
@@ -321,10 +337,8 @@ def _get_annotations_list(paths, loader, pattern, **metadata_filters):
     matching = list()
     for name in sorted(annotations.values()):
         annotation = loader(name)
-        metadata = annotation.get('metadata', dict())
-        for key, value in metadata_filters.items():
-            metadata_value = metadata.get(key, '')
-            if not re.search(value, metadata_value):
+        for key, value in filters.items():
+            if not _match_filter(annotation, key, value):
                 break
 
         else:
@@ -333,11 +347,11 @@ def _get_annotations_list(paths, loader, pattern, **metadata_filters):
     return matching
 
 
-def get_primitives_list(pattern='', **metadata_filters):
-    return _get_annotations_list(
-        get_primitives_paths(), load_primitive, pattern, **metadata_filters)
+def get_primitives_list(pattern='', filters=None):
+    filters = filters or dict()
+    return _get_annotations_list(get_primitives_paths(), load_primitive, pattern, filters)
 
 
-def get_pipelines_list(pattern='', **metadata_filters):
-    return _get_annotations_list(
-        get_pipelines_paths(), load_pipeline, pattern, **metadata_filters)
+def get_pipelines_list(pattern='', filters=None):
+    filters = filters or dict()
+    return _get_annotations_list(get_pipelines_paths(), load_pipeline, pattern, filters)
