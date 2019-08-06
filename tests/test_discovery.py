@@ -384,7 +384,7 @@ def test_find_primitives(gpp_mock, gal_mock):
 
 @patch('mlblocks.discovery._get_annotations_list')
 @patch('mlblocks.discovery.get_pipelines_paths')
-def test_find_primitives(gpp_mock, gal_mock):
+def test_find_pipelines(gpp_mock, gal_mock):
     primitives = discovery.find_pipelines('pattern', {'a': 'filter'})
 
     gal_mock.assert_called_once_with(
