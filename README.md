@@ -3,8 +3,6 @@
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
-
-
 <p align="left">
 <img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
 </p>
@@ -22,7 +20,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 * Documentation: https://HDI-Project.github.io/MLBlocks
 - Homepage: https://github.com/HDI-Project/MLBlocks
 
-# Overview
+# MLBlocks
 
 MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
 seamlessly combining tools from any python library with a simple, common and uniform interface.
