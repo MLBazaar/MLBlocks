@@ -16,6 +16,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 [![PyPi][pypi-img]][pypi-url]
 [![Travis][travis-img]][travis-url]
 [![CodeCov][codecov-img]][codecov-url]
+[![Downloads][downloads-img]][downloads-url]
 
 [pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
 [pypi-url]: https://pypi.python.org/pypi/mlblocks
@@ -23,6 +24,8 @@ Pipelines and Primitives for Machine Learning and Data Science.
 [travis-url]: https://travis-ci.org/HDI-Project/MLBlocks
 [codecov-img]: https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/HDI-Project/MLBlocks
+[downloads-img]: https://pepy.tech/badge/mlblocks
+[downloads-url]: https://pepy.tech/project/mlblocks
 
 * Free software: MIT license
 * Documentation: https://HDI-Project.github.io/MLBlocks
@@ -80,7 +83,7 @@ pip install mlprimitives
 Below there is a short example about how to use MLBlocks to create a simple pipeline, fit it
 using demo data and use it to make predictions.
 
-Please make sure to having installed [MLPrimitives](https://github.com/HDI-Project/MLPrimitives)
+Please make sure to have installed [MLPrimitives](https://github.com/HDI-Project/MLPrimitives)
 before following it.
 
 For advance usage and more detailed explanation about each component, please have a look
