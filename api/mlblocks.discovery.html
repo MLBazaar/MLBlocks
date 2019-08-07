@@ -280,6 +280,12 @@ primitives and pipelines.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.discovery.add_primitives_path" title="mlblocks.discovery.add_primitives_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_primitives_path</span></code></a>(path)</p></td>
 <td><p>Add a new path to look for primitives.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.discovery.find_pipelines" title="mlblocks.discovery.find_pipelines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_pipelines</span></code></a>([pattern, filters])</p></td>
+<td><p>Find pipelines by name and filters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.discovery.find_primitives" title="mlblocks.discovery.find_primitives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_primitives</span></code></a>([pattern, filters])</p></td>
+<td><p>Find primitives by name and filters.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.discovery.get_pipelines_paths" title="mlblocks.discovery.get_pipelines_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines_paths</span></code></a>()</p></td>
 <td><p>Get the list of folders where pipelines will be looked for.</p></td>
 </tr>
@@ -326,6 +332,68 @@ system before.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised if the path is not valid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.discovery.find_pipelines">
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">find_pipelines</code><span class="sig-paren">(</span><em class="sig-param">pattern=''</em>, <em class="sig-param">filters=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#find_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.find_pipelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find pipelines by name and filters.</p>
+<p>If a patter is given, only the pipelines whose name matches
+the pattern will be returned.</p>
+<p>If filters are given, they should be a dictionary containing key/value
+filters that will have to be matched within the pipeline annotation
+for it to be included in the results.</p>
+<p>If the given key is not found but it contains dots, split by the dots
+and consider each part a sublevel in the annotation.</p>
+<p>If the key value within the annotation is a list or a dict, check
+whether any of the given values is contained within it instead of
+checking for equality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Regular expression to match agains the pipeline names.</p></li>
+<li><p><strong>filters</strong> (<em>dict</em>) – Dictionary containing the filters to apply over the matchin
+pipelines.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Names of the matching pipelines.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.discovery.find_primitives">
+<code class="sig-prename descclassname">mlblocks.discovery.</code><code class="sig-name descname">find_primitives</code><span class="sig-paren">(</span><em class="sig-param">pattern=''</em>, <em class="sig-param">filters=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#find_primitives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.discovery.find_primitives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find primitives by name and filters.</p>
+<p>If a patter is given, only the primitives whose name matches
+the pattern will be returned.</p>
+<p>If filters are given, they should be a dictionary containing key/value
+filters that will have to be matched within the primitive annotation
+for it to be included in the results.</p>
+<p>If the given key is not found but it contains dots, split by the dots
+and consider each part a sublevel in the annotation.</p>
+<p>If the key value within the annotation is a list or a dict, check
+whether any of the given values is contained within it instead of
+checking for equality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Regular expression to match agains the primitive names.</p></li>
+<li><p><strong>filters</strong> (<em>dict</em>) – Dictionary containing the filters to apply over the matchin
+primitives.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Names of the matching primitives.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>

@@ -286,6 +286,8 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        name (str):</span>
 <span class="sd">            Name given to this MLBlock.</span>
+<span class="sd">        metadata (dict):</span>
+<span class="sd">            Additional information about this primitive</span>
 <span class="sd">        primitive (object):</span>
 <span class="sd">            the actual function or instance which this MLBlock wraps.</span>
 <span class="sd">        fit_args (dict):</span>
@@ -402,22 +404,22 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fit&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fit&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_produce</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;produce&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_produce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;produce&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">produce_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_produce</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">produce_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_produce</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">produce_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_produce</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_class</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">produce_method</span><span class="p">)</span>
 
-        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
         <span class="n">init_params</span><span class="p">,</span> <span class="n">fit_params</span><span class="p">,</span> <span class="n">produce_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_params</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="n">init_params</span>

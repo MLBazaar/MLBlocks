@@ -269,6 +269,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
@@ -281,6 +282,7 @@
     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;mlblocks_primitives&#39;</span><span class="p">),</span>    <span class="c1"># legacy</span>
     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;mlblocks_primitives&#39;</span><span class="p">),</span>    <span class="c1"># legacy</span>
 <span class="p">]</span>
+
 <span class="n">_PIPELINES_PATHS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;mlpipelines&#39;</span><span class="p">),</span>
 <span class="p">]</span>
@@ -426,7 +428,7 @@
 <span class="sd">            The list of folders.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="n">_load_entry_points</span><span class="p">(</span><span class="s1">&#39;primitives&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">_load_entry_points</span><span class="p">(</span><span class="s1">&#39;jsons_path&#39;</span><span class="p">,</span> <span class="s1">&#39;mlprimitives&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_PRIMITIVES_PATHS</span> <span class="o">+</span> <span class="n">paths</span></div>
+    <span class="k">return</span> <span class="n">_PRIMITIVES_PATHS</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">paths</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="get_pipelines_paths"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.get_pipelines_paths">[docs]</a><span class="k">def</span> <span class="nf">get_pipelines_paths</span><span class="p">():</span>
@@ -486,6 +488,9 @@
                     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
 
 
+<span class="n">_PRIMITIVES</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="load_primitive"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.load_primitive">[docs]</a><span class="k">def</span> <span class="nf">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Locate and load the primitive JSON annotation.</span>
 
@@ -505,11 +510,18 @@
 <span class="sd">        ValueError:</span>
 <span class="sd">            A ``ValueError`` will be raised if the primitive cannot be found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">primitive</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get_primitives_paths</span><span class="p">())</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">primitive</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">primitive</span> <span class="o">=</span> <span class="n">_PRIMITIVES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">primitive</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">primitive</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get_primitives_paths</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">primitive</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown primitive: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="n">_PRIMITIVES</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">primitive</span>
 
     <span class="k">return</span> <span class="n">primitive</span></div>
+
+
+<span class="n">_PIPELINES</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="load_pipeline"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.load_pipeline">[docs]</a><span class="k">def</span> <span class="nf">load_pipeline</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -531,11 +543,199 @@
 <span class="sd">        ValueError:</span>
 <span class="sd">            A ``ValueError`` will be raised if the pipeline cannot be found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get_pipelines_paths</span><span class="p">())</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown pipeline: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">_PIPELINES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">get_pipelines_paths</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown pipeline: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="n">_PIPELINES</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline</span>
 
     <span class="k">return</span> <span class="n">pipeline</span></div>
+
+
+<span class="k">def</span> <span class="nf">_search_annotations</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">parts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Search for annotations within the given path.</span>
+
+<span class="sd">    If the indicated path has subfolders, search recursively within them.</span>
+
+<span class="sd">    If a pattern is given, return only the annotations whose name</span>
+<span class="sd">    matches the pattern.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        base_path (str):</span>
+<span class="sd">            path to the folder to be searched for annotations.</span>
+<span class="sd">        pattern (str):</span>
+<span class="sd">            Regular expression to search in the annotation names.</span>
+<span class="sd">        parts (list):</span>
+<span class="sd">            Optional. List containing the parent folders that are also part</span>
+<span class="sd">            of the annotation name. Used during recursion to be able to</span>
+<span class="sd">            build the final annotation name before returning it.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict:</span>
+<span class="sd">            dictionary containing paths as keys and annotation names as</span>
+<span class="sd">            values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_search_annotations</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">parts</span> <span class="o">+</span> <span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span> <span class="o">+</span> <span class="p">[</span><span class="n">name</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+                    <span class="n">annotations</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">annotations</span>
+
+
+<span class="k">def</span> <span class="nf">_match</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if the anotation has the key and it matches any of the values.</span>
+
+<span class="sd">    If the given key is not found but it contains dots, split by the dots</span>
+<span class="sd">    and consider each part a sublevel in the annotation.</span>
+
+<span class="sd">    If the key value within the annotation is a list or a dict, check</span>
+<span class="sd">    whether any of the given values is contained within it instead of</span>
+<span class="sd">    checking for equality.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        annotation (dict):</span>
+<span class="sd">            Dictionary annotation.</span>
+<span class="sd">        key (str):</span>
+<span class="sd">            Key to search within the annoation. It can contain dots to</span>
+<span class="sd">            separated nested subdictionary levels within the annotation.</span>
+<span class="sd">        values (object or list):</span>
+<span class="sd">            Value or list of values to search for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool:</span>
+<span class="sd">            whether there is a match or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annotation</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">part</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">_match</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">annotation_value</span> <span class="o">=</span> <span class="n">annotation</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">annotation_value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">annotation_value</span>
+        <span class="k">elif</span> <span class="n">annotation_value</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">_find_annotations</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">loader</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">filters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find matching annotations within the given paths.</span>
+
+<span class="sd">    Math annotations by both name pattern and filters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        paths (list):</span>
+<span class="sd">            List of paths to search annotations in.</span>
+<span class="sd">        loader (callable):</span>
+<span class="sd">            Function to use to load the annotation contents.</span>
+<span class="sd">        pattern (str):</span>
+<span class="sd">            Pattern to match against the annotation name.</span>
+<span class="sd">        filters (dict):</span>
+<span class="sd">            Dictionary containing key/value filters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list:</span>
+<span class="sd">            names of the matching annotations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">base_path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_search_annotations</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">))</span>
+
+    <span class="n">matching</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">annotation</span> <span class="o">=</span> <span class="n">loader</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">filters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_match</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">matching</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">matching</span>
+
+
+<div class="viewcode-block" id="find_primitives"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.find_primitives">[docs]</a><span class="k">def</span> <span class="nf">find_primitives</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find primitives by name and filters.</span>
+
+<span class="sd">    If a patter is given, only the primitives whose name matches</span>
+<span class="sd">    the pattern will be returned.</span>
+
+<span class="sd">    If filters are given, they should be a dictionary containing key/value</span>
+<span class="sd">    filters that will have to be matched within the primitive annotation</span>
+<span class="sd">    for it to be included in the results.</span>
+
+<span class="sd">    If the given key is not found but it contains dots, split by the dots</span>
+<span class="sd">    and consider each part a sublevel in the annotation.</span>
+
+<span class="sd">    If the key value within the annotation is a list or a dict, check</span>
+<span class="sd">    whether any of the given values is contained within it instead of</span>
+<span class="sd">    checking for equality.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pattern (str):</span>
+<span class="sd">            Regular expression to match agains the primitive names.</span>
+<span class="sd">        filters (dict):</span>
+<span class="sd">            Dictionary containing the filters to apply over the matchin</span>
+<span class="sd">            primitives.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list:</span>
+<span class="sd">            Names of the matching primitives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_find_annotations</span><span class="p">(</span><span class="n">get_primitives_paths</span><span class="p">(),</span> <span class="n">load_primitive</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_pipelines"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.find_pipelines">[docs]</a><span class="k">def</span> <span class="nf">find_pipelines</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find pipelines by name and filters.</span>
+
+<span class="sd">    If a patter is given, only the pipelines whose name matches</span>
+<span class="sd">    the pattern will be returned.</span>
+
+<span class="sd">    If filters are given, they should be a dictionary containing key/value</span>
+<span class="sd">    filters that will have to be matched within the pipeline annotation</span>
+<span class="sd">    for it to be included in the results.</span>
+
+<span class="sd">    If the given key is not found but it contains dots, split by the dots</span>
+<span class="sd">    and consider each part a sublevel in the annotation.</span>
+
+<span class="sd">    If the key value within the annotation is a list or a dict, check</span>
+<span class="sd">    whether any of the given values is contained within it instead of</span>
+<span class="sd">    checking for equality.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pattern (str):</span>
+<span class="sd">            Regular expression to match agains the pipeline names.</span>
+<span class="sd">        filters (dict):</span>
+<span class="sd">            Dictionary containing the filters to apply over the matchin</span>
+<span class="sd">            pipelines.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list:</span>
+<span class="sd">            Names of the matching pipelines.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_find_annotations</span><span class="p">(</span><span class="n">get_pipelines_paths</span><span class="p">(),</span> <span class="n">load_pipeline</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
