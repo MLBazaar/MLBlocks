@@ -146,22 +146,22 @@ class MLBlock():
     def __init__(self, name, **kwargs):
         self.name = name
 
-        primitive = load_primitive(name)
+        self.metadata = load_primitive(name)
 
-        self.primitive = import_object(primitive['primitive'])
+        self.primitive = import_object(self.metadata['primitive'])
 
-        self._fit = primitive.get('fit', dict())
+        self._fit = self.metadata.get('fit', dict())
         self.fit_args = self._fit.get('args', [])
         self.fit_method = self._fit.get('method')
 
-        self._produce = primitive['produce']
+        self._produce = self.metadata['produce']
         self.produce_args = self._produce['args']
         self.produce_output = self._produce['output']
         self.produce_method = self._produce.get('method')
 
         self._class = bool(self.produce_method)
 
-        hyperparameters = primitive.get('hyperparameters', dict())
+        hyperparameters = self.metadata.get('hyperparameters', dict())
         init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
 
         self._hyperparameters = init_params
