@@ -297,6 +297,29 @@ def load_pipeline(name):
 
 
 def _search_annotations(base_path, pattern, parts=None):
+    """Search for annotations within the given path.
+
+    If the indicated path has subfolders, search recursively within them.
+
+    If a pattern is given, return only the annotations whose name
+    matches the pattern.
+
+    Args:
+        base_path (str):
+            path to the folder to be searched for annotations.
+        pattern (str):
+            Regular expression to search in the annotation names.
+        parts (list):
+            Optional. List containing the parent folders that are also part
+            of the annotation name. Used during recursion to be able to
+            build the final annotation name before returning it.
+
+    Returns:
+        dict:
+            dictionary containing paths as keys and annotation names as
+            values.
+    """
+    pattern = re.compile(pattern)
     annotations = dict()
     parts = parts or list()
     if os.path.exists(base_path):
@@ -312,24 +335,70 @@ def _search_annotations(base_path, pattern, parts=None):
     return annotations
 
 
-def _match(annotation, key, value):
-    if '.' in key:
-        name, key = key.split('.', 1)
-        part = annotation.get(name) or dict()
-        return _match(part, key, value)
+def _match(annotation, key, values):
+    """Check if the anotation has the key and it matches any of the values.
 
-    annotation_value = annotation.get(key)
-    if not isinstance(annotation_value, type(value)):
+    If the given key is not found but it contains dots, split by the dots
+    and consider each part a sublevel in the annotation.
+
+    If the key value within the annotation is a list or a dict, check
+    whether any of the given values is contained within it instead of
+    checking for equality.
+
+    Args:
+        annotation (dict):
+            Dictionary annotation.
+        key (str):
+            Key to search within the annoation. It can contain dots to
+            separated nested subdictionary levels within the annotation.
+        values (object or list):
+            Value or list of values to search for.
+
+    Returns:
+        bool:
+            whether there is a match or not.
+    """
+    if not isinstance(values, list):
+        values = [values]
+
+    if key not in annotation:
+        if '.' in key:
+            name, key = key.split('.', 1)
+            part = annotation.get(name) or dict()
+            return _match(part, key, values)
+        else:
+            return False
+
+    annotation_value = annotation[key]
+
+    for value in values:
         if isinstance(annotation_value, (list, dict)):
             return value in annotation_value
-        elif isinstance(value, (list, dict)):
-            return annotation_value in value
+        elif annotation_value == value:
+            return True
 
-    return annotation_value == value
+    return False
 
 
-def _get_annotations_list(paths, loader, pattern, filters):
-    pattern = re.compile(pattern)
+def _find_annotations(paths, loader, pattern, filters):
+    """Find matching annotations within the given paths.
+
+    Math annotations by both name pattern and filters.
+
+    Args:
+        paths (list):
+            List of paths to search annotations in.
+        loader (callable):
+            Function to use to load the annotation contents.
+        pattern (str):
+            Pattern to match against the annotation name.
+        filters (dict):
+            Dictionary containing key/value filters.
+
+    Returns:
+        list:
+            names of the matching annotations.
+    """
     annotations = dict()
     for base_path in paths:
         annotations.update(_search_annotations(base_path, pattern))
@@ -348,10 +417,64 @@ def _get_annotations_list(paths, loader, pattern, filters):
 
 
 def find_primitives(pattern='', filters=None):
+    """Find primitives by name and filters.
+
+    If a patter is given, only the primitives whose name matches
+    the pattern will be returned.
+
+    If filters are given, they should be a dictionary containing key/value
+    filters that will have to be matched within the primitive annotation
+    for it to be included in the results.
+
+    If the given key is not found but it contains dots, split by the dots
+    and consider each part a sublevel in the annotation.
+
+    If the key value within the annotation is a list or a dict, check
+    whether any of the given values is contained within it instead of
+    checking for equality.
+
+    Args:
+        pattern (str):
+            Regular expression to match agains the primitive names.
+        filters (dict):
+            Dictionary containing the filters to apply over the matchin
+            primitives.
+
+    Returns:
+        list:
+            Names of the matching primitives.
+    """
     filters = filters or dict()
-    return _get_annotations_list(get_primitives_paths(), load_primitive, pattern, filters)
+    return _find_annotations(get_primitives_paths(), load_primitive, pattern, filters)
 
 
 def find_pipelines(pattern='', filters=None):
+    """Find pipelines by name and filters.
+
+    If a patter is given, only the pipelines whose name matches
+    the pattern will be returned.
+
+    If filters are given, they should be a dictionary containing key/value
+    filters that will have to be matched within the pipeline annotation
+    for it to be included in the results.
+
+    If the given key is not found but it contains dots, split by the dots
+    and consider each part a sublevel in the annotation.
+
+    If the key value within the annotation is a list or a dict, check
+    whether any of the given values is contained within it instead of
+    checking for equality.
+
+    Args:
+        pattern (str):
+            Regular expression to match agains the pipeline names.
+        filters (dict):
+            Dictionary containing the filters to apply over the matchin
+            pipelines.
+
+    Returns:
+        list:
+            Names of the matching pipelines.
+    """
     filters = filters or dict()
-    return _get_annotations_list(get_pipelines_paths(), load_pipeline, pattern, filters)
+    return _find_annotations(get_pipelines_paths(), load_pipeline, pattern, filters)

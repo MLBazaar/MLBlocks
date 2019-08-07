@@ -2,7 +2,6 @@
 
 import json
 import os
-import re
 import tempfile
 import uuid
 from unittest.mock import Mock, call, patch
@@ -239,8 +238,7 @@ def test__search_annotations(os_mock):
         False
     ]
 
-    pattern = re.compile('other')
-    annotations = discovery._search_annotations('/path/to', pattern)
+    annotations = discovery._search_annotations('/path/to', 'other')
 
     assert annotations == {
         '/path/to/another.primitive.json': 'another.primitive',
@@ -338,7 +336,7 @@ def test__match_multiple_keys():
 
 
 @patch('mlblocks.discovery._search_annotations')
-def test__get_annotations_list(search_annotations_mock):
+def test__find_annotations(search_annotations_mock):
     search_annotations_mock.return_value = {
         '/path/to/a/classifier.primitive.json': 'classifier.primitive',
         '/path/to/a/regressor.primitive.json': 'regressor.primitive',
@@ -365,29 +363,29 @@ def test__get_annotations_list(search_annotations_mock):
     filters = {
         'classifiers.subtype': 'regressor'
     }
-    annotations = discovery._get_annotations_list(['/a/path'], loader, 'pattern', filters)
+    annotations = discovery._find_annotations(['/a/path'], loader, 'pattern', filters)
 
     assert annotations == ['regressor.primitive']
-    search_annotations_mock.assert_called_once_with('/a/path', re.compile('pattern'))
+    search_annotations_mock.assert_called_once_with('/a/path', 'pattern')
 
 
-@patch('mlblocks.discovery._get_annotations_list')
+@patch('mlblocks.discovery._find_annotations')
 @patch('mlblocks.discovery.get_primitives_paths')
-def test_find_primitives(gpp_mock, gal_mock):
+def test_find_primitives(gpp_mock, fa_mock):
     primitives = discovery.find_primitives('pattern')
 
-    gal_mock.assert_called_once_with(
+    fa_mock.assert_called_once_with(
         gpp_mock.return_value, discovery.load_primitive, 'pattern', dict())
 
-    assert primitives == gal_mock.return_value
+    assert primitives == fa_mock.return_value
 
 
-@patch('mlblocks.discovery._get_annotations_list')
+@patch('mlblocks.discovery._find_annotations')
 @patch('mlblocks.discovery.get_pipelines_paths')
-def test_find_pipelines(gpp_mock, gal_mock):
+def test_find_pipelines(gpp_mock, fa_mock):
     primitives = discovery.find_pipelines('pattern', {'a': 'filter'})
 
-    gal_mock.assert_called_once_with(
+    fa_mock.assert_called_once_with(
         gpp_mock.return_value, discovery.load_pipeline, 'pattern', {'a': 'filter'})
 
-    assert primitives == gal_mock.return_value
+    assert primitives == fa_mock.return_value
