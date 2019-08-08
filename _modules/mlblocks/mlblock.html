@@ -271,8 +271,11 @@
 
 <span class="k">def</span> <span class="nf">import_object</span><span class="p">(</span><span class="n">object_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Import an object from its Fully Qualified Name.&quot;&quot;&quot;</span>
-    <span class="n">package</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">object_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">package</span><span class="p">),</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">package</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">object_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">package</span><span class="p">),</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">object_name</span>
 
 
 <div class="viewcode-block" id="MLBlock"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock">[docs]</a><span class="k">class</span> <span class="nc">MLBlock</span><span class="p">():</span>
@@ -285,7 +288,7 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        name (str):</span>
-<span class="sd">            Name given to this MLBlock.</span>
+<span class="sd">            Primitive name.</span>
 <span class="sd">        metadata (dict):</span>
 <span class="sd">            Additional information about this primitive</span>
 <span class="sd">        primitive (object):</span>
@@ -304,8 +307,8 @@
 <span class="sd">            function.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name (str):</span>
-<span class="sd">            Name given to this MLBlock.</span>
+<span class="sd">        primitive (str or dict):</span>
+<span class="sd">            primitive name or primitive dictionary.</span>
 <span class="sd">        **kwargs:</span>
 <span class="sd">            Any additional arguments that will be used as hyperparameters or passed to the</span>
 <span class="sd">            ``fit`` or ``produce`` methods.</span>
@@ -401,10 +404,12 @@
 
         <span class="k">return</span> <span class="n">tunable</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primitive</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">primitive</span> <span class="o">=</span> <span class="n">load_primitive</span><span class="p">(</span><span class="n">primitive</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">primitive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">primitive</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span> <span class="o">=</span> <span class="n">import_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;primitive&#39;</span><span class="p">])</span>
 
@@ -510,11 +515,9 @@
 
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-
             <span class="k">elif</span> <span class="s1">&#39;default&#39;</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span>
-
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">arg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;missing expected argument &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
             <span class="n">method_kwargs</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>

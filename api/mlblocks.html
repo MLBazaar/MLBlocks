@@ -277,7 +277,7 @@ seamlessly combining tools from any python library with a simple, common and uni
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLBlock" title="mlblocks.MLBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLBlock</span></code></a>(name, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLBlock" title="mlblocks.MLBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLBlock</span></code></a>(primitive, **kwargs)</p></td>
 <td><p>MLBlock Class.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline" title="mlblocks.MLPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLPipeline</span></code></a>([pipeline, primitives, …])</p></td>
@@ -314,7 +314,7 @@ seamlessly combining tools from any python library with a simple, common and uni
 </table>
 <dl class="class">
 <dt id="mlblocks.MLBlock">
-<em class="property">class </em><code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">MLBlock</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlblock.html#MLBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLBlock" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">MLBlock</code><span class="sig-paren">(</span><em class="sig-param">primitive</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlblock.html#MLBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>MLBlock Class.</p>
 <p>The MLBlock class represents a single step within an MLPipeline.</p>
 <p>It is responsible for loading and interpreting JSON primitives, as well
@@ -346,7 +346,7 @@ as wrapping them and providing a common interface to run them.</p>
 <dl class="attribute">
 <dt id="mlblocks.MLBlock.name">
 <code class="sig-name descname">name</code><a class="headerlink" href="#mlblocks.MLBlock.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Name given to this MLBlock.</p>
+<dd><p>Primitive name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str</p>
@@ -436,7 +436,7 @@ function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name given to this MLBlock.</p></li>
+<li><p><strong>primitive</strong> (<em>str</em><em> or </em><em>dict</em>) – primitive name or primitive dictionary.</p></li>
 <li><p><strong>**kwargs</strong> – Any additional arguments that will be used as hyperparameters or passed to the
 <code class="docutils literal notranslate"><span class="pre">fit</span></code> or <code class="docutils literal notranslate"><span class="pre">produce</span></code> methods.</p></li>
 </ul>
