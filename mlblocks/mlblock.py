@@ -13,8 +13,11 @@ LOGGER = logging.getLogger(__name__)
 
 def import_object(object_name):
     """Import an object from its Fully Qualified Name."""
-    package, name = object_name.rsplit('.', 1)
-    return getattr(importlib.import_module(package), name)
+    if isinstance(object_name, str):
+        package, name = object_name.rsplit('.', 1)
+        return getattr(importlib.import_module(package), name)
+
+    return object_name
 
 
 class MLBlock():
@@ -27,7 +30,7 @@ class MLBlock():
 
     Attributes:
         name (str):
-            Name given to this MLBlock.
+            Primitive name.
         metadata (dict):
             Additional information about this primitive
         primitive (object):
@@ -46,8 +49,8 @@ class MLBlock():
             function.
 
     Args:
-        name (str):
-            Name given to this MLBlock.
+        primitive (str or dict):
+            primitive name or primitive dictionary.
         **kwargs:
             Any additional arguments that will be used as hyperparameters or passed to the
             ``fit`` or ``produce`` methods.
@@ -143,10 +146,12 @@ class MLBlock():
 
         return tunable
 
-    def __init__(self, name, **kwargs):
-        self.name = name
+    def __init__(self, primitive, **kwargs):
+        if isinstance(primitive, str):
+            primitive = load_primitive(primitive)
 
-        self.metadata = load_primitive(name)
+        self.metadata = primitive
+        self.name = primitive['name']
 
         self.primitive = import_object(self.metadata['primitive'])
 
@@ -252,11 +257,9 @@ class MLBlock():
 
             if name in kwargs:
                 value = kwargs[name]
-
             elif 'default' in arg:
                 value = arg['default']
-
-            else:
+            elif arg.get('required', True):
                 raise TypeError("missing expected argument '{}'".format(name))
 
             method_kwargs[keyword] = value
