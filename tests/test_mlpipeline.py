@@ -270,7 +270,6 @@ class TestMLPipline(TestCase):
 
         expected = {
             'arg_1': 'arg_1_value',
-            'arg_2': 'arg_2_value',
             'arg_3': 'arg_3_value',
         }
         assert args == expected

@@ -323,6 +323,7 @@ class TestMLBlock(TestCase):
     @patch('mlblocks.mlblock.load_primitive')
     def test___init__(self, load_primitive_mock, import_object_mock, set_hps_mock):
         load_primitive_mock.return_value = {
+            'name': 'a_primitive_name',
             'primitive': 'a_primitive_name',
             'produce': {
                 'args': [
@@ -335,9 +336,22 @@ class TestMLBlock(TestCase):
             }
         }
 
-        mlblock = MLBlock('given_primitive_name', argument='value')
+        mlblock = MLBlock('a_primitive_name', argument='value')
 
-        assert mlblock.name == 'given_primitive_name'
+        assert mlblock.metadata == {
+            'name': 'a_primitive_name',
+            'primitive': 'a_primitive_name',
+            'produce': {
+                'args': [
+                    {
+                        'name': 'argument'
+                    }
+                ],
+                'output': [
+                ]
+            }
+        }
+        assert mlblock.name == 'a_primitive_name'
         assert mlblock.primitive == import_object_mock.return_value
         assert mlblock._fit == dict()
         assert mlblock.fit_args == list()
@@ -370,6 +384,7 @@ class TestMLBlock(TestCase):
     @patch('mlblocks.mlblock.load_primitive')
     def test___str__(self, load_primitive_mock, import_object_mock):
         load_primitive_mock.return_value = {
+            'name': 'a_primitive_name',
             'primitive': 'a_primitive_name',
             'produce': {
                 'args': [],
@@ -377,15 +392,16 @@ class TestMLBlock(TestCase):
             }
         }
 
-        mlblock = MLBlock('given_primitive_name')
+        mlblock = MLBlock('a_primitive_name')
 
-        assert str(mlblock) == 'MLBlock - given_primitive_name'
+        assert str(mlblock) == 'MLBlock - a_primitive_name'
 
     @patch('mlblocks.mlblock.import_object')
     @patch('mlblocks.mlblock.load_primitive')
     def test_get_tunable_hyperparameters(self, load_primitive_mock, import_object_mock):
         """get_tunable_hyperparameters has to return a copy of the _tunables attribute."""
         load_primitive_mock.return_value = {
+            'name': 'a_primitive_name',
             'primitive': 'a_primitive_name',
             'produce': {
                 'args': [],
@@ -433,6 +449,7 @@ class TestMLBlock(TestCase):
         io_mock.return_value = primitive
 
         lp_mock.return_value = {
+            'name': 'a_primitive',
             'primitive': 'a_primitive',
             'produce': {
                 'args': [],
