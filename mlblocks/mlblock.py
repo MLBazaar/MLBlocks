@@ -4,6 +4,7 @@
 
 import importlib
 import logging
+from copy import deepcopy
 
 from mlblocks.discovery import load_primitive
 
@@ -12,8 +13,11 @@ LOGGER = logging.getLogger(__name__)
 
 def import_object(object_name):
     """Import an object from its Fully Qualified Name."""
-    package, name = object_name.rsplit('.', 1)
-    return getattr(importlib.import_module(package), name)
+    if isinstance(object_name, str):
+        package, name = object_name.rsplit('.', 1)
+        return getattr(importlib.import_module(package), name)
+
+    return object_name
 
 
 class MLBlock():
@@ -26,7 +30,9 @@ class MLBlock():
 
     Attributes:
         name (str):
-            Name given to this MLBlock.
+            Primitive name.
+        metadata (dict):
+            Additional information about this primitive
         primitive (object):
             the actual function or instance which this MLBlock wraps.
         fit_args (dict):
@@ -43,8 +49,8 @@ class MLBlock():
             function.
 
     Args:
-        name (str):
-            Name given to this MLBlock.
+        primitive (str or dict):
+            primitive name or primitive dictionary.
         **kwargs:
             Any additional arguments that will be used as hyperparameters or passed to the
             ``fit`` or ``produce`` methods.
@@ -140,25 +146,27 @@ class MLBlock():
 
         return tunable
 
-    def __init__(self, name, **kwargs):
-        self.name = name
+    def __init__(self, primitive, **kwargs):
+        if isinstance(primitive, str):
+            primitive = load_primitive(primitive)
 
-        metadata = load_primitive(name)
+        self.metadata = primitive
+        self.name = primitive['name']
 
-        self.primitive = import_object(metadata['primitive'])
+        self.primitive = import_object(self.metadata['primitive'])
 
-        self._fit = metadata.get('fit', dict())
+        self._fit = self.metadata.get('fit', dict())
         self.fit_args = self._fit.get('args', [])
         self.fit_method = self._fit.get('method')
 
-        self._produce = metadata['produce']
+        self._produce = self.metadata['produce']
         self.produce_args = self._produce['args']
         self.produce_output = self._produce['output']
         self.produce_method = self._produce.get('method')
 
         self._class = bool(self.produce_method)
 
-        hyperparameters = metadata.get('hyperparameters', dict())
+        hyperparameters = self.metadata.get('hyperparameters', dict())
         init_params, fit_params, produce_params = self._extract_params(kwargs, hyperparameters)
 
         self._hyperparameters = init_params
@@ -192,7 +200,7 @@ class MLBlock():
                 tuned, their types and, if applicable, the accepted
                 ranges or values.
         """
-        return self._tunable.copy()
+        return deepcopy(self._tunable)
 
     def get_hyperparameters(self):
         """Get hyperparameters values that the current MLBlock is using.
@@ -202,7 +210,7 @@ class MLBlock():
                 the dictionary containing the hyperparameter values that the
                 MLBlock is currently using.
         """
-        return self._hyperparameters.copy()
+        return deepcopy(self._hyperparameters)
 
     def set_hyperparameters(self, hyperparameters):
         """Set new hyperparameters.
@@ -221,7 +229,7 @@ class MLBlock():
 
         if self._class:
             LOGGER.debug('Creating a new primitive instance for %s', self.name)
-            self.instance = self.primitive(**self._hyperparameters)
+            self.instance = self.primitive(**self.get_hyperparameters())
 
     def _get_method_kwargs(self, kwargs, method_args):
         """Prepare the kwargs for the method.
@@ -249,11 +257,9 @@ class MLBlock():
 
             if name in kwargs:
                 value = kwargs[name]
-
             elif 'default' in arg:
                 value = arg['default']
-
-            else:
+            elif arg.get('required', True):
                 raise TypeError("missing expected argument '{}'".format(name))
 
             method_kwargs[keyword] = value
@@ -307,5 +313,5 @@ class MLBlock():
         if self._class:
             return getattr(self.instance, self.produce_method)(**produce_kwargs)
 
-        produce_kwargs.update(self._hyperparameters)
+        produce_kwargs.update(self.get_hyperparameters())
         return self.primitive(**produce_kwargs)

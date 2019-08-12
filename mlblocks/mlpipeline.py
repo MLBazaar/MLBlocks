@@ -87,16 +87,21 @@ class MLPipeline():
 
         block_names_count = Counter()
         for primitive in self.primitives:
+            if isinstance(primitive, str):
+                primitive_name = primitive
+            else:
+                primitive_name = primitive['name']
+
             try:
-                block_names_count.update([primitive])
-                block_count = block_names_count[primitive]
-                block_name = '{}#{}'.format(primitive, block_count)
+                block_names_count.update([primitive_name])
+                block_count = block_names_count[primitive_name]
+                block_name = '{}#{}'.format(primitive_name, block_count)
                 block_params = self.init_params.get(block_name, dict())
                 if not block_params:
-                    block_params = self.init_params.get(primitive, dict())
+                    block_params = self.init_params.get(primitive_name, dict())
                     if block_params and block_count > 1:
                         LOGGER.warning(("Non-numbered init_params are being used "
-                                        "for more than one block %s."), primitive)
+                                        "for more than one block %s."), primitive_name)
 
                 block = MLBlock(primitive, **block_params)
                 blocks[block_name] = block
@@ -513,11 +518,12 @@ class MLPipeline():
                   the value of that variable from the context will extracted and returned
                   after the produce method of that block has been called.
         """
-        context = {
-            'X': X,
-            'y': y
-        }
-        context.update(kwargs)
+        context = kwargs.copy()
+        if X is not None:
+            context['X'] = X
+
+        if y is not None:
+            context['y'] = y
 
         output_block, output_variable = self._get_output_spec(output_)
         last_block_name = self._get_block_name(-1)
@@ -620,10 +626,9 @@ class MLPipeline():
                   the value of that variable from the context will extracted and returned
                   after the produce method of that block has been called.
         """
-        context = {
-            'X': X
-        }
-        context.update(kwargs)
+        context = kwargs.copy()
+        if X is not None:
+            context['X'] = X
 
         output_block, output_variable = self._get_output_spec(output_)
 

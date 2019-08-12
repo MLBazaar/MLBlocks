@@ -21,9 +21,10 @@ install_requires = [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.1.3,<0.2',
+    'mlprimitives>=0.2,<0.3',
     'urllib3>=1.20,<1.25',
-    'setuptools>=41.0.0'
+    'setuptools>=41.0.0',
+    'numpy<1.17',
 ]
 
 
@@ -46,6 +47,7 @@ development_requires = [
     'ipython>=6.5.0',
     'matplotlib>=2.2.3',
     'autodocsumm>=0.1.10',
+    'docutils<0.15,>=0.10',    # botocore incompatibility with 0.15
 
     # style check
     'flake8>=3.5.0',
@@ -98,6 +100,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/HDI-Project/MLBlocks',
-    version='0.3.1',
+    version='0.3.2-dev',
     zip_safe=False,
 )

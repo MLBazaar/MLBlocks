@@ -1,28 +1,26 @@
-<p align="center">
-<img width=30% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
+<p align="left">
+<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt=“MLBlocksr” />
+<i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
-<p align="center">
-<i>
+<p align="left">
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
+</p>
+
+<p align="left">
 Pipelines and Primitives for Machine Learning and Data Science.
-</i>
 </p>
 
-[![PyPi][pypi-img]][pypi-url]
-[![Travis][travis-img]][travis-url]
-[![CodeCov][codecov-img]][codecov-url]
-
-[pypi-img]: https://img.shields.io/pypi/v/mlblocks.svg
-[pypi-url]: https://pypi.python.org/pypi/mlblocks
-[travis-img]: https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master
-[travis-url]: https://travis-ci.org/HDI-Project/MLBlocks
-[codecov-img]: https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/HDI-Project/MLBlocks
+[![PyPi](https://img.shields.io/pypi/v/mlblocks.svg)](https://pypi.python.org/pypi/mlblocks)
+[![Travis](https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master)](https://travis-ci.org/HDI-Project/MLBlocks)
+[![CodeCov](https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/HDI-Project/MLBlocks)
+[![Downloads](https://pepy.tech/badge/mlblocks)](https://pepy.tech/project/mlblocks)
 
 * Free software: MIT license
 * Documentation: https://HDI-Project.github.io/MLBlocks
+- Homepage: https://github.com/HDI-Project/MLBlocks
 
-# Overview
+# MLBlocks
 
 MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
 seamlessly combining tools from any python library with a simple, common and uniform interface.
@@ -39,24 +37,82 @@ Features include:
   outputs per primitive.
 * Easy save and load Pipelines using JSON Annotations.
 
-# Installation
+# Install
 
-The simplest and recommended way to install MLBlocks is using `pip`:
+## Requirements
+
+**MLBlocks** has been developed and tested on [Python 3.5 and 3.6](https://www.python.org/downloads/)
+
+Also, although it is not strictly required, the usage of a
+[virtualenv](https://virtualenv.pypa.io/en/latest/) is highly recommended in order to avoid
+interfering with other software installed in the system where **MLBlocks** is run.
+
+These are the minimum commands needed to create a virtualenv using python3.6 for **MLBlocks**:
+
+```bash
+pip install virtualenv
+virtualenv -p $(which python3.6) mlblocks-venv
+```
+
+Afterwards, you have to execute this command to have the virtualenv activated:
+
+```bash
+source mlblocks-venv/bin/activate
+```
+
+Remember about executing it every time you start a new console to work on **MLBlocks**!
+
+## Install with pip
+
+After creating the virtualenv and activating it, we recommend using
+[pip](https://pip.pypa.io/en/stable/) in order to install **MLBlocks**:
 
 ```bash
 pip install mlblocks
 ```
 
-Alternatively, you can also clone the repository and install it from sources
+This will pull and install the latest stable release from [PyPi](https://pypi.org/).
+
+## Install from source
+
+Alternatively, with your virtualenv activated, you can clone the repository and install it from
+source by running `make install` on the `stable` branch:
 
 ```bash
 git clone git@github.com:HDI-Project/MLBlocks.git
 cd MLBlocks
+git checkout stable
 make install
 ```
 
-For development, you can use `make install-develop` instead in order to install all
-the required dependencies for testing and code linting.
+## Install for Development
+
+If you want to contribute to the project, a few more steps are required to make the project ready
+for development.
+
+First, please head to [the GitHub page of the project](https://github.com/HDI-Project/MLBlocks)
+and make a fork of the project under you own username by clicking on the **fork** button on the
+upper right corner of the page.
+
+Afterwards, clone your fork and create a branch from master with a descriptive name that includes
+the number of the issue that you are going to work on:
+
+```bash
+git clone git@github.com:{your username}/MLBlocks.git
+cd MLBlocks
+git branch issue-xx-cool-new-feature master
+git checkout issue-xx-cool-new-feature
+```
+
+Finally, install the project with the following command, which will install some additional
+dependencies for code linting and testing.
+
+```bash
+make install-develop
+```
+
+Make sure to use them regularly while developing by running the commands `make lint` and `make test`.
+
 
 ## MLPrimitives
 
@@ -70,12 +126,12 @@ with this command:
 pip install mlprimitives
 ```
 
-# Usage Example
+# Quickstart
 
 Below there is a short example about how to use MLBlocks to create a simple pipeline, fit it
 using demo data and use it to make predictions.
 
-Please make sure to having installed [MLPrimitives](https://github.com/HDI-Project/MLPrimitives)
+Please make sure to also having installed [MLPrimitives](https://github.com/HDI-Project/MLPrimitives)
 before following it.
 
 For advance usage and more detailed explanation about each component, please have a look
@@ -148,7 +204,7 @@ its `get_hyperparameters` method:
 }
 ```
 
-### Making predictions
+## Making predictions
 
 Once we have created the pipeline with the desired hyperparameters we can fit it
 and then use it to make predictions on new data.
@@ -175,7 +231,7 @@ to obtain predictions from the pipeline.
 array([3, 2, 1, ..., 1, 1, 2])
 ```
 
-## What's Next?
+# What's Next?
 
 If you want to learn more about how to tune the pipeline hyperparameters, save and load
 the pipelines using JSON annotations or build complex multi-branched pipelines, please
