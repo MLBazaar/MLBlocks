@@ -209,7 +209,9 @@ class MLPipeline():
 
             for variable in block.produce_output:
                 if variable['name'] == variable_name:
-                    return [{'name': variable_name, 'variable': output}]
+                    output_variable = deepcopy(variable)
+                    output_variable['variable'] = output
+                    return [output_variable]
 
             raise ValueError('Block {} has no output {}'.format(block_name, variable_name))
 
