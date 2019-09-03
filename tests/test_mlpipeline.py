@@ -2,7 +2,7 @@
 
 from collections import OrderedDict
 from unittest import TestCase
-from unittest.mock import Mock, call, patch
+from unittest.mock import MagicMock, Mock, call, patch
 
 from mlblocks.mlpipeline import MLPipeline
 
@@ -12,7 +12,15 @@ class TestMLPipline(TestCase):
     @patch('mlblocks.mlpipeline.LOGGER')
     @patch('mlblocks.mlpipeline.MLBlock')
     def test___init__(self, mlblock_mock, logger_mock):
-        blocks = [Mock(), Mock(), Mock(), Mock()]
+        blocks = [Mock(), Mock(), Mock()]
+        last_block = Mock()
+        last_block.produce_output = [
+            {
+                'name': 'y',
+                'type': 'array'
+            }
+        ]
+        blocks.append(last_block)
         mlblock_mock.side_effect = blocks
 
         primitives = [
@@ -61,6 +69,16 @@ class TestMLPipline(TestCase):
             'another.primitive.Name#1': blocks[2].get_tunable_hyperparameters.return_value,
             'another.primitive.Name#2': blocks[3].get_tunable_hyperparameters.return_value
         }
+        assert mlpipeline.outputs == {
+            'default': [
+                {
+                    'name': 'y',
+                    'type': 'array',
+                    'variable': 'another.primitive.Name#2.y'
+                }
+            ]
+        }
+        assert mlpipeline.verbose
 
         expected_calls = [
             call('a.primitive.Name', an_argument='value'),
@@ -75,8 +93,9 @@ class TestMLPipline(TestCase):
             'a.primitive.Name'
         )
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_tunable_hyperparameters(self):
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         tunable = dict()
         mlpipeline._tunable_hyperparameters = tunable
 
@@ -85,8 +104,9 @@ class TestMLPipline(TestCase):
         assert returned == tunable
         assert returned is not tunable
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_tunable_hyperparameters_flat(self):
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         tunable = {
             'block_1': {
                 'hp_1': {
@@ -141,6 +161,7 @@ class TestMLPipline(TestCase):
         }
         assert returned == expected
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_hyperparameters(self):
         block_1 = Mock()
         block_1.get_hyperparameters.return_value = {
@@ -155,7 +176,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = mlpipeline.get_hyperparameters()
@@ -172,6 +193,7 @@ class TestMLPipline(TestCase):
         block_1.get_hyperparameters.assert_called_once_with()
         block_2.get_hyperparameters.assert_called_once_with()
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_hyperparameters_flat(self):
         block_1 = Mock()
         block_1.get_hyperparameters.return_value = {
@@ -186,7 +208,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = mlpipeline.get_hyperparameters(flat=True)
@@ -199,6 +221,7 @@ class TestMLPipline(TestCase):
         block_1.get_hyperparameters.assert_called_once_with()
         block_2.get_hyperparameters.assert_called_once_with()
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_set_hyperparameters(self):
         block_1 = Mock()
         block_2 = Mock()
@@ -206,7 +229,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = {
@@ -219,6 +242,7 @@ class TestMLPipline(TestCase):
         block_1.set_hyperparameters.assert_not_called()
         block_2.set_hyperparameters.assert_called_once_with({'some': 'arg'})
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_set_hyperparameters_flat(self):
         block_1 = Mock()
         block_2 = Mock()
@@ -226,7 +250,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = {
@@ -237,13 +261,14 @@ class TestMLPipline(TestCase):
         block_1.set_hyperparameters.assert_not_called()
         block_2.set_hyperparameters.assert_called_once_with({'some': 'arg'})
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test__get_block_args(self):
         input_names = {
             'a_block': {
                 'arg_3': 'arg_3_alt'
             }
         }
-        pipeline = MLPipeline(list(), input_names=input_names)
+        pipeline = MLPipeline(['a_primitive'], input_names=input_names)
 
         block_args = [
             {

@@ -40,7 +40,7 @@ class TestPartialOutputs(TestCase):
         invalid_int = 10
         str_block = 'sklearn.preprocessing.StandardScaler#1'
         invalid_block = 'InvalidBlockName'
-        str_block_variable = 'sklearn.preprocessing.StandardScaler#1.y'
+        str_block_variable = 'sklearn.preprocessing.StandardScaler#1.X'
         invalid_variable = 'sklearn.preprocessing.StandardScaler#1.invalid'
 
         # Run
@@ -58,16 +58,9 @@ class TestPartialOutputs(TestCase):
             [0.71269665, -0.645124, 0.39067021, 0.31740553],
             [0.26726124, -0.10752067, 1.36734573, 1.55176035]
         ])
-        y = np.array([1, 0, 0, 1, 2])
-        context = {
-            'X': X,
-            'y': y
-        }
-        almost_equal(context, int_out)
-        almost_equal(context, str_out)
-
-        almost_equal(y, str_out_variable)
-
+        almost_equal(X, int_out)
+        almost_equal(X, str_out)
+        almost_equal(X, str_out_variable)
         assert no_output is None
 
         # Run asserting exceptions
