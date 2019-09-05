@@ -5,6 +5,7 @@
 import json
 import logging
 from collections import Counter, OrderedDict, defaultdict
+from copy import deepcopy
 
 import numpy as np
 
@@ -72,6 +73,11 @@ class MLPipeline():
             given when stored in the context dictionary. This allows storing the output of
             different primitives in different variables, even if the primitive output name is
             the same one.
+        outputs (dict):
+            dictionary containing lists of output variables associated to a name.
+        verbose (bool):
+            whether to log the exceptions that occur when running the pipeline before
+            raising them or not.
     """
 
     def _get_tunable_hyperparameters(self):
@@ -114,7 +120,6 @@ class MLPipeline():
 
     @staticmethod
     def _get_pipeline_dict(pipeline, primitives):
-
         if isinstance(pipeline, dict):
             return pipeline
 
@@ -136,17 +141,49 @@ class MLPipeline():
 
             return dict()
 
+    def _get_block_outputs(self, block_name):
+        """Get the list of output variables for the given block."""
+        block = self.blocks[block_name]
+        outputs = deepcopy(block.produce_output)
+        for output in outputs:
+            output['variable'] = '{}.{}'.format(block_name, output['name'])
+
+        return outputs
+
+    def _get_outputs(self, pipeline, outputs):
+        """Get the output definitions from the pipeline dictionary.
+
+        If the ``"default"`` entry does not exist, it is built using the
+        outputs from the last block in the pipeline.
+        """
+        outputs = outputs or pipeline.get('outputs')
+        if outputs is None:
+            outputs = dict()
+
+        if 'default' not in outputs:
+            outputs['default'] = self._get_block_outputs(self._last_block_name)
+
+        return outputs
+
+    def _get_block_name(self, index):
+        """Get the name of the block in the ``index`` position."""
+        return list(self.blocks.keys())[index]
+
     def __init__(self, pipeline=None, primitives=None, init_params=None,
-                 input_names=None, output_names=None):
+                 input_names=None, output_names=None, outputs=None, verbose=True):
 
         pipeline = self._get_pipeline_dict(pipeline, primitives)
 
         self.primitives = primitives or pipeline['primitives']
         self.init_params = init_params or pipeline.get('init_params', dict())
         self.blocks = self._build_blocks()
+        self._last_block_name = self._get_block_name(-1)
 
         self.input_names = input_names or pipeline.get('input_names', dict())
         self.output_names = output_names or pipeline.get('output_names', dict())
+
+        self.outputs = self._get_outputs(pipeline, outputs)
+        self.verbose = verbose
 
         tunable = pipeline.get('tunable_hyperparameters')
         if tunable is not None:
@@ -157,6 +194,124 @@ class MLPipeline():
         hyperparameters = pipeline.get('hyperparameters')
         if hyperparameters:
             self.set_hyperparameters(hyperparameters)
+
+    def _get_str_output(self, output):
+        """Get the outputs that correspond to the str specification."""
+        if output in self.outputs:
+            return self.outputs[output]
+        elif output in self.blocks:
+            return self._get_block_outputs(output)
+        elif '.' in output:
+            block_name, variable_name = output.rsplit('.', 1)
+            block = self.blocks.get(block_name)
+            if not block:
+                raise ValueError('Invalid block name: {}'.format(block_name))
+
+            for variable in block.produce_output:
+                if variable['name'] == variable_name:
+                    output_variable = deepcopy(variable)
+                    output_variable['variable'] = output
+                    return [output_variable]
+
+            raise ValueError('Block {} has no output {}'.format(block_name, variable_name))
+
+        raise ValueError('Invalid Output Specification: {}'.format(output))
+
+    def get_outputs(self, outputs='default'):
+        """Get the list of output variables that correspond to the specified outputs.
+
+        Outputs specification can either be a single string, a single integer, or a
+        list of strings and integers.
+
+        If strings are given, they can either be one of the named outputs that have
+        been specified on the pipeline definition or the name of a block, including the
+        counter number at the end, or a full variable specification following the format
+        ``{block-name}.{variable-name}``.
+
+        Alternatively, integers can be passed as indexes of the blocks from which to get
+        the outputs.
+
+        If output specifications that resolve to multiple output variables are given,
+        such as the named outputs or block names, all the variables are concatenated
+        together, in order, in a single variable list.
+
+        Args:
+            outputs (str, int or list[str or int]):
+                Single or list of output specifications.
+
+        Returns:
+            list:
+                List of dictionaries specifying all the output variables. Each
+                dictionary contains the entries ``name`` and ``variable``, as
+                well as any other metadata that may have been included in the
+                pipeline outputs or block produce outputs specification.
+
+        Raises:
+            ValueError:
+                If an output specification is not valid.
+            TypeError:
+                If the type of a specification is not an str or an int.
+        """
+        if not isinstance(outputs, (list, tuple)):
+            outputs = (outputs, )
+
+        computed = list()
+        for output in outputs:
+            if isinstance(output, str):
+                computed.extend(self._get_str_output(output))
+            elif isinstance(output, int):
+                block_name = self._get_block_name(output)
+                computed.extend(self._get_block_outputs(block_name))
+            else:
+                raise TypeError('Output Specification can only be str or int')
+
+        return computed
+
+    def get_output_names(self, outputs='default'):
+        """Get the names of the outputs that correspond to the given specification.
+
+        The indicated outputs will be resolved and the names of the output variables
+        will be returned as a single list.
+
+        Args:
+            outputs (str, int or list[str or int]):
+                Single or list of output specifications.
+
+        Returns:
+            list:
+                List of variable names
+
+        Raises:
+            ValueError:
+                If an output specification is not valid.
+            TypeError:
+                If the type of a specification is not an str or an int.
+        """
+        outputs = self.get_outputs(outputs)
+        return [output['name'] for output in outputs]
+
+    def get_output_variables(self, outputs='default'):
+        """Get the list of variable specifications of the given outputs.
+
+        The indicated outputs will be resolved and their variables specifications
+        will be returned as a single list.
+
+        Args:
+            outputs (str, int or list[str or int]):
+                Single or list of output specifications.
+
+        Returns:
+            list:
+                List of variable specifications.
+
+        Raises:
+            ValueError:
+                If an output specification is not valid.
+            TypeError:
+                If the type of a specification is not an str or an int.
+        """
+        outputs = self.get_outputs(outputs)
+        return [output['variable'] for output in outputs]
 
     @staticmethod
     def _flatten_dict(hyperparameters):
@@ -361,96 +516,48 @@ class MLPipeline():
 
         return output_dict
 
-    def _get_block_name(self, index):
-        """Get the name of the block in the ``index`` position."""
-        return list(self.blocks.keys())[index]
+    def _update_outputs(self, block_name, output_variables, outputs, outputs_dict):
+        """Set the requested block outputs into the outputs list in the right place."""
+        for key, value in outputs_dict.items():
+            variable_name = '{}.{}'.format(block_name, key)
+            if variable_name in output_variables:
+                index = output_variables.index(variable_name)
+                outputs[index] = deepcopy(value)
 
-    def _get_output_spec(self, output):
-        """Parse the output specification and get a block name and a variable name.
+    def _fit_block(self, block, block_name, context):
+        """Get the block args from the context and fit the block."""
+        LOGGER.debug("Fitting block %s", block_name)
+        try:
+            fit_args = self._get_block_args(block_name, block.fit_args, context)
+            block.fit(**fit_args)
+        except Exception:
+            if self.verbose:
+                LOGGER.exception("Exception caught fitting MLBlock %s", block_name)
 
-        The output specification can be of two types: int and str.
+            raise
 
-        If it is an integer, it is interpreted as a block index, and the variable name
-        is considered to be ``None``, which means that the whole context will be returned.
+    def _produce_block(self, block, block_name, context, output_variables, outputs):
+        """Get the block args from the context and produce the block.
 
-        If it is a string, it can be interpreted in three ways:
-
-            * **block name**: If the string matches a block name exactly, including
-            its hash and counter number ``#n`` at the end, the whole context will be
-            returned after that block is produced.
-            * **variable_name**: If the string does not match any block name and does
-            not contain any dot characted, ``'.'``, it will be considered a variable
-            name. In this case, the indicated variable will be extracted from the
-            context and returned after the last block has been produced.
-            * **block_name + variable_name**: If the complete string does not match a
-            block name but it contains at least one dot, ``'.'``, it will be split
-            in two parts on the last dot. If the first part of the string matches a
-            block name exactly, the second part of the string will be considered a
-            variable name, assuming the format ``{block_name}.{variable_name}``, and
-            the indicated variable will be extracted from the context and returned
-            after the block has been produced. Otherwise, if the extracted
-            ``block_name`` does not match a block name exactly, a ``ValueError``
-            will be raised.
-
-        Args:
-            output (str or int):
-                Output specification as either a string or an integer.
-
-        Raises:
-            ValueError:
-                If the output string contains dots but it does not match a block
-                name exactly
-
-        Returns:
-            tuple:
-                The output is a tuple containing:
-                    * block_name (str): name of the block from which the output will be
-                        returned, including its counter number.
-                    * variable_name (str): Name of the variable to extract from the context.
-                        It can be ``None``, which means that the whole context is to be
-                        returned.
+        Afterwards, set the block outputs back into the context and update
+        the outputs list if necessary.
         """
-        # If None is given, both block and varialbe are None
-        if output is None:
-            return None, None
+        LOGGER.debug("Producing block %s", block_name)
+        try:
+            produce_args = self._get_block_args(block_name, block.produce_args, context)
+            block_outputs = block.produce(**produce_args)
 
-        # If an int is given, it is a block index and there is no variable
-        if isinstance(output, int):
-            output = self._get_block_name(output)
-            return output, None
+            outputs_dict = self._extract_outputs(block_name, block_outputs, block.produce_output)
+            context.update(outputs_dict)
 
-        # If the string matches a block name, there is no variable
-        if output in self.blocks:
-            return output, None
+            if output_variables:
+                self._update_outputs(block_name, output_variables, outputs, outputs_dict)
 
-        # If there is at least one dot in the output, but it did not match
-        # a block name, it is considered to be {block_name}.{variable_name}
-        if '.' in output:
-            output_block, output_variable = output.rsplit('.', 1)
-            if output_block not in self.blocks:
-                raise ValueError('Unknown block name: {}'.format(output_block))
+        except Exception:
+            if self.verbose:
+                LOGGER.exception("Exception caught producing MLBlock %s", block_name)
 
-            return output_block, output_variable
-
-        # If the given string is not a block name and it has no dots,
-        # it is considered to be a variable name to be extracted
-        # from the context after the last block has been produced
-        last_block_name = self._get_block_name(-1)
-        return last_block_name, output
-
-    def _get_output(self, output_variable, context):
-        """Get the specified output variable from the context.
-
-        If the variable name is ``None``, return the entire context.
-        """
-        if output_variable:
-            if output_variable not in context:
-                raise ValueError('Output variable {} not found in context'
-                                 .format(output_variable))
-
-            return context[output_variable]
-        else:
-            return context
+            raise
 
     def fit(self, X=None, y=None, output_=None, start_=None, **kwargs):
         """Fit the blocks of this pipeline.
@@ -467,35 +574,13 @@ class MLPipeline():
         Args:
             X:
                 Fit Data, which the pipeline will learn from.
-
             y:
                 Fit Data labels, which the pipeline will use to learn how to
                 behave.
 
-            output_ (str or int or None):
-                Output specification, which can be a string or an integer or None.
-
-                    * If it is None (default), nothing will be returned
-                    * If an integer is given, it is interpreted as the block number, and the whole
-                      context after running the specified block will be returned.
-                    * If it is a string, it can be interpreted in three ways:
-
-                        * **block name**: If the string matches a block name exactly, including
-                          its hash and counter number ``#n`` at the end, the whole context will be
-                          returned after that block is produced.
-                        * **variable_name**: If the string does not match any block name and does
-                          not contain any dot characted, ``'.'``, it will be considered a variable
-                          name. In this case, the indicated variable will be extracted from the
-                          context and returned after the last block has been produced.
-                        * **block_name + variable_name**: If the complete string does not match a
-                          block name but it contains at least one dot, ``'.'``, it will be split
-                          in two parts on the last dot. If the first part of the string matches a
-                          block name exactly, the second part of the string will be considered a
-                          variable name, assuming the format ``{block_name}.{variable_name}``, and
-                          the indicated variable will be extracted from the context and returned
-                          after the block has been produced. Otherwise, if the extracted
-                          ``block_name`` does not match a block name exactly, a ``ValueError``
-                          will be raised.
+            output_ (str or int or list or None):
+                Output specification, as required by ``get_outputs``. If ``None`` is given,
+                nothing will be returned.
 
             start_ (str or int or None):
                 Block index or block name to start processing from. The
@@ -510,13 +595,9 @@ class MLPipeline():
 
         Returns:
             None or dict or object:
-                * If no output is specified, nothing will be returned.
-                * If an output block has been specified without and output variable, the
-                  context dictionary will be returned after the produce method of that block
-                  has been called.
-                * If both an output block and an output variable have been specified,
-                  the value of that variable from the context will extracted and returned
-                  after the produce method of that block has been called.
+                * If no ``output`` is specified, nothing will be returned.
+                * If ``output_`` has been specified, either a single value or a
+                  tuple of values will be returned.
         """
         context = kwargs.copy()
         if X is not None:
@@ -525,8 +606,14 @@ class MLPipeline():
         if y is not None:
             context['y'] = y
 
-        output_block, output_variable = self._get_output_spec(output_)
-        last_block_name = self._get_block_name(-1)
+        if output_ is not None:
+            output_variables = self.get_output_variables(output_)
+            outputs = output_variables.copy()
+            output_blocks = {variable.rsplit('.', 1)[0] for variable in output_variables}
+        else:
+            output_variables = None
+            outputs = None
+            output_blocks = set()
 
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)
@@ -539,34 +626,28 @@ class MLPipeline():
                     LOGGER.debug("Skipping block %s fit", block_name)
                     continue
 
-            LOGGER.debug("Fitting block %s", block_name)
-            try:
-                fit_args = self._get_block_args(block_name, block.fit_args, context)
-                block.fit(**fit_args)
-            except Exception:
-                LOGGER.exception("Exception caught fitting MLBlock %s", block_name)
-                raise
+            self._fit_block(block, block_name, context)
 
-            if (block_name != last_block_name) or (block_name == output_block):
-                LOGGER.debug("Producing block %s", block_name)
-                try:
-                    produce_args = self._get_block_args(block_name, block.produce_args, context)
-                    outputs = block.produce(**produce_args)
+            if (block_name != self._last_block_name) or (block_name in output_blocks):
+                self._produce_block(block, block_name, context, output_variables, outputs)
 
-                    output_dict = self._extract_outputs(block_name, outputs, block.produce_output)
-                    context.update(output_dict)
-                except Exception:
-                    LOGGER.exception("Exception caught producing MLBlock %s", block_name)
-                    raise
+                # We already captured the output from this block
+                if block_name in output_blocks:
+                    output_blocks.remove(block_name)
 
-            if block_name == output_block:
-                return self._get_output(output_variable, context)
+            # If there was an output_ but there are no pending
+            # outputs we are done.
+            if output_ is not None and not output_blocks:
+                if len(outputs) > 1:
+                    return tuple(outputs)
+                else:
+                    return outputs[0]
 
         if start_:
             # We skipped all the blocks up to the end
             raise ValueError('Unknown block name: {}'.format(start_))
 
-    def predict(self, X=None, output_=None, start_=None, **kwargs):
+    def predict(self, X=None, output_='default', start_=None, **kwargs):
         """Produce predictions using the blocks of this pipeline.
 
         Sequentially call the ``produce`` method of each block, capturing the
@@ -581,29 +662,9 @@ class MLPipeline():
             X:
                 Data which the pipeline will use to make predictions.
 
-            output_ (str or int or None):
-                Output specification, which can be a string or an integer or None.
-                    * If it is None (default), the output of the last block will be returned.
-                    * If an integer is given, it is interpreted as the block number, and the whole
-                      context after running the specified block will be returned.
-                    * If it is a string, it can be interpreted in three ways:
-
-                        * **block name**: If the string matches a block name exactly, including
-                          its hash and counter number ``#n`` at the end, the whole context will be
-                          returned after that block is produced.
-                        * **variable_name**: If the string does not match any block name and does
-                          not contain any dot characted, ``'.'``, it will be considered a variable
-                          name. In this case, the indicated variable will be extracted from the
-                          context and returned after the last block has been produced.
-                        * **block_name + variable_name**: If the complete string does not match a
-                          block name but it contains at least one dot, ``'.'``, it will be split
-                          in two parts on the last dot. If the first part of the string matches a
-                          block name exactly, the second part of the string will be considered a
-                          variable name, assuming the format ``{block_name}.{variable_name}``, and
-                          the indicated variable will be extracted from the context and returned
-                          after the block has been produced. Otherwise, if the extracted
-                          ``block_name`` does not match a block name exactly, a ``ValueError``
-                          will be raised.
+            output_ (str or int or list or None):
+                Output specification, as required by ``get_outputs``. If not specified
+                the ``default`` output will be returned.
 
             start_ (str or int or None):
                 Block index or block name to start processing from. The
@@ -617,20 +678,17 @@ class MLPipeline():
                 to the context dictionary and available for the blocks.
 
         Returns:
-            None or dict or object:
-                * If no output is specified, the output of the last block will be returned.
-                * If an output block has been specified without and output variable, the
-                  context dictionary will be returned after the produce method of that block
-                  has been called.
-                * If both an output block and an output variable have been specified,
-                  the value of that variable from the context will extracted and returned
-                  after the produce method of that block has been called.
+            object or tuple:
+                * If a single output is requested, it is returned alone.
+                * If multiple outputs have been requested, a tuple is returned.
         """
         context = kwargs.copy()
         if X is not None:
             context['X'] = X
 
-        output_block, output_variable = self._get_output_spec(output_)
+        output_variables = self.get_output_variables(output_)
+        outputs = output_variables.copy()
+        output_blocks = {variable.rsplit('.', 1)[0] for variable in output_variables}
 
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)
@@ -643,26 +701,23 @@ class MLPipeline():
                     LOGGER.debug("Skipping block %s produce", block_name)
                     continue
 
-            LOGGER.debug("Producing block %s", block_name)
-            try:
-                produce_args = self._get_block_args(block_name, block.produce_args, context)
-                outputs = block.produce(**produce_args)
-                output_dict = self._extract_outputs(block_name, outputs, block.produce_output)
-                context.update(output_dict)
+            self._produce_block(block, block_name, context, output_variables, outputs)
 
-                if block_name == output_block:
-                    return self._get_output(output_variable, context)
+            # We already captured the output from this block
+            if block_name in output_blocks:
+                output_blocks.remove(block_name)
 
-            except Exception:
-                LOGGER.exception("Exception caught producing MLBlock %s", block_name)
-                raise
+            # If there was an output_ but there are no pending
+            # outputs we are done.
+            if not output_blocks:
+                if len(outputs) > 1:
+                    return tuple(outputs)
+                else:
+                    return outputs[0]
 
         if start_:
             # We skipped all the blocks up to the end
             raise ValueError('Unknown block name: {}'.format(start_))
-
-        if output_ is None:
-            return outputs
 
     def to_dict(self):
         """Return all the details of this MLPipeline in a dict.
@@ -710,7 +765,8 @@ class MLPipeline():
             'input_names': self.input_names,
             'output_names': self.output_names,
             'hyperparameters': self.get_hyperparameters(),
-            'tunable_hyperparameters': self._tunable_hyperparameters
+            'tunable_hyperparameters': self._tunable_hyperparameters,
+            'outputs': self.outputs,
         }
 
     def save(self, path):
