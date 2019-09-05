@@ -314,8 +314,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2b340e45f240&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x2b340e559d30&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fcc6d0cfc18&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fcc6cd83ba8&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -548,7 +548,10 @@ by calling its <code class="docutils literal notranslate"><span class="pre">to_d
 <span class="go">    &#39;default&#39;: 0.0,</span>
 <span class="go">    &#39;range&#39;: [0.0, 1000.0]},</span>
 <span class="go">   &#39;bootstrap&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: True},</span>
-<span class="go">   &#39;oob_score&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: False}}}}</span>
+<span class="go">   &#39;oob_score&#39;: {&#39;type&#39;: &#39;bool&#39;, &#39;default&#39;: False}}},</span>
+<span class="go"> &#39;outputs&#39;: {&#39;default&#39;: [{&#39;name&#39;: &#39;y&#39;,</span>
+<span class="go">    &#39;type&#39;: &#39;ndarray&#39;,</span>
+<span class="go">    &#39;variable&#39;: &#39;sklearn.ensemble.RandomForestClassifier#1.y&#39;}]}}</span>
 </pre></div>
 </div>
 <p>Notice how the dict includes all the arguments that used when we created the <code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code>,

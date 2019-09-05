@@ -263,6 +263,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -330,6 +331,11 @@
 <span class="sd">            given when stored in the context dictionary. This allows storing the output of</span>
 <span class="sd">            different primitives in different variables, even if the primitive output name is</span>
 <span class="sd">            the same one.</span>
+<span class="sd">        outputs (dict):</span>
+<span class="sd">            dictionary containing lists of output variables associated to a name.</span>
+<span class="sd">        verbose (bool):</span>
+<span class="sd">            whether to log the exceptions that occur when running the pipeline before</span>
+<span class="sd">            raising them or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -372,7 +378,6 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_pipeline_dict</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">primitives</span><span class="p">):</span>
-
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">pipeline</span>
 
@@ -394,17 +399,49 @@
 
             <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">_get_block_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the list of output variables for the given block.&quot;&quot;&quot;</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">outputs</span>
+
+    <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the output definitions from the pipeline dictionary.</span>
+
+<span class="sd">        If the ``&quot;default&quot;`` entry does not exist, it is built using the</span>
+<span class="sd">        outputs from the last block in the pipeline.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">outputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;default&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_block_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span>
+
+    <span class="k">def</span> <span class="nf">_get_block_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the name of the block in the ``index`` position.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">index</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">primitives</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">input_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">input_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pipeline_dict</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">primitives</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">primitives</span> <span class="o">=</span> <span class="n">primitives</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="p">[</span><span class="s1">&#39;primitives&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_params</span> <span class="o">=</span> <span class="n">init_params</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;init_params&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_blocks</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_block_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span> <span class="o">=</span> <span class="n">input_names</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_names&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span> <span class="o">=</span> <span class="n">output_names</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_names&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_outputs</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
 
         <span class="n">tunable</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tunable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -415,6 +452,124 @@
         <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hyperparameters&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">hyperparameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_str_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the outputs that correspond to the str specification.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_outputs</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">block_name</span><span class="p">,</span> <span class="n">variable_name</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">block</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">variable</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">variable_name</span><span class="p">:</span>
+                    <span class="n">output_variable</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+                    <span class="n">output_variable</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+                    <span class="k">return</span> <span class="p">[</span><span class="n">output_variable</span><span class="p">]</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Block </span><span class="si">{}</span><span class="s1"> has no output </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">))</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid Output Specification: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+
+<div class="viewcode-block" id="MLPipeline.get_outputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the list of output variables that correspond to the specified outputs.</span>
+
+<span class="sd">        Outputs specification can either be a single string, a single integer, or a</span>
+<span class="sd">        list of strings and integers.</span>
+
+<span class="sd">        If strings are given, they can either be one of the named outputs that have</span>
+<span class="sd">        been specified on the pipeline definition or the name of a block, including the</span>
+<span class="sd">        counter number at the end, or a full variable specification following the format</span>
+<span class="sd">        ``{block-name}.{variable-name}``.</span>
+
+<span class="sd">        Alternatively, integers can be passed as indexes of the blocks from which to get</span>
+<span class="sd">        the outputs.</span>
+
+<span class="sd">        If output specifications that resolve to multiple output variables are given,</span>
+<span class="sd">        such as the named outputs or block names, all the variables are concatenated</span>
+<span class="sd">        together, in order, in a single variable list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            outputs (str, int or list[str or int]):</span>
+<span class="sd">                Single or list of output specifications.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list:</span>
+<span class="sd">                List of dictionaries specifying all the output variables. Each</span>
+<span class="sd">                dictionary contains the entries ``name`` and ``variable``, as</span>
+<span class="sd">                well as any other metadata that may have been included in the</span>
+<span class="sd">                pipeline outputs or block produce outputs specification.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                If an output specification is not valid.</span>
+<span class="sd">            TypeError:</span>
+<span class="sd">                If the type of a specification is not an str or an int.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="p">)</span>
+
+        <span class="n">computed</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">computed</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_str_output</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">block_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+                <span class="n">computed</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_block_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output Specification can only be str or int&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">computed</span></div>
+
+<div class="viewcode-block" id="MLPipeline.get_output_names"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_output_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_output_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the names of the outputs that correspond to the given specification.</span>
+
+<span class="sd">        The indicated outputs will be resolved and the names of the output variables</span>
+<span class="sd">        will be returned as a single list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            outputs (str, int or list[str or int]):</span>
+<span class="sd">                Single or list of output specifications.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list:</span>
+<span class="sd">                List of variable names</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                If an output specification is not valid.</span>
+<span class="sd">            TypeError:</span>
+<span class="sd">                If the type of a specification is not an str or an int.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MLPipeline.get_output_variables"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_output_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_output_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the list of variable specifications of the given outputs.</span>
+
+<span class="sd">        The indicated outputs will be resolved and their variables specifications</span>
+<span class="sd">        will be returned as a single list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            outputs (str, int or list[str or int]):</span>
+<span class="sd">                Single or list of output specifications.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list:</span>
+<span class="sd">                List of variable specifications.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                If an output specification is not valid.</span>
+<span class="sd">            TypeError:</span>
+<span class="sd">                If the type of a specification is not an str or an int.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">]</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_flatten_dict</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">):</span>
@@ -619,96 +774,48 @@
 
         <span class="k">return</span> <span class="n">output_dict</span>
 
-    <span class="k">def</span> <span class="nf">_get_block_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the name of the block in the ``index`` position.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">_update_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">outputs_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the requested block outputs into the outputs list in the right place.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">variable_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">variable_name</span> <span class="ow">in</span> <span class="n">output_variables</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">output_variables</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
+                <span class="n">outputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_output_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse the output specification and get a block name and a variable name.</span>
+    <span class="k">def</span> <span class="nf">_fit_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the block args from the context and fit the block.&quot;&quot;&quot;</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fitting block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fit_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">fit_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">fit_args</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught fitting MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
 
-<span class="sd">        The output specification can be of two types: int and str.</span>
+            <span class="k">raise</span>
 
-<span class="sd">        If it is an integer, it is interpreted as a block index, and the variable name</span>
-<span class="sd">        is considered to be ``None``, which means that the whole context will be returned.</span>
+    <span class="k">def</span> <span class="nf">_produce_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the block args from the context and produce the block.</span>
 
-<span class="sd">        If it is a string, it can be interpreted in three ways:</span>
-
-<span class="sd">            * **block name**: If the string matches a block name exactly, including</span>
-<span class="sd">            its hash and counter number ``#n`` at the end, the whole context will be</span>
-<span class="sd">            returned after that block is produced.</span>
-<span class="sd">            * **variable_name**: If the string does not match any block name and does</span>
-<span class="sd">            not contain any dot characted, ``&#39;.&#39;``, it will be considered a variable</span>
-<span class="sd">            name. In this case, the indicated variable will be extracted from the</span>
-<span class="sd">            context and returned after the last block has been produced.</span>
-<span class="sd">            * **block_name + variable_name**: If the complete string does not match a</span>
-<span class="sd">            block name but it contains at least one dot, ``&#39;.&#39;``, it will be split</span>
-<span class="sd">            in two parts on the last dot. If the first part of the string matches a</span>
-<span class="sd">            block name exactly, the second part of the string will be considered a</span>
-<span class="sd">            variable name, assuming the format ``{block_name}.{variable_name}``, and</span>
-<span class="sd">            the indicated variable will be extracted from the context and returned</span>
-<span class="sd">            after the block has been produced. Otherwise, if the extracted</span>
-<span class="sd">            ``block_name`` does not match a block name exactly, a ``ValueError``</span>
-<span class="sd">            will be raised.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            output (str or int):</span>
-<span class="sd">                Output specification as either a string or an integer.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            ValueError:</span>
-<span class="sd">                If the output string contains dots but it does not match a block</span>
-<span class="sd">                name exactly</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            tuple:</span>
-<span class="sd">                The output is a tuple containing:</span>
-<span class="sd">                    * block_name (str): name of the block from which the output will be</span>
-<span class="sd">                        returned, including its counter number.</span>
-<span class="sd">                    * variable_name (str): Name of the variable to extract from the context.</span>
-<span class="sd">                        It can be ``None``, which means that the whole context is to be</span>
-<span class="sd">                        returned.</span>
+<span class="sd">        Afterwards, set the block outputs back into the context and update</span>
+<span class="sd">        the outputs list if necessary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># If None is given, both block and varialbe are None</span>
-        <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Producing block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">produce_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="n">block_outputs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="o">**</span><span class="n">produce_args</span><span class="p">)</span>
 
-        <span class="c1"># If an int is given, it is a block index and there is no variable</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="n">outputs_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block_outputs</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">outputs_dict</span><span class="p">)</span>
 
-        <span class="c1"># If the string matches a block name, there is no variable</span>
-        <span class="k">if</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">output_variables</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">outputs_dict</span><span class="p">)</span>
 
-        <span class="c1"># If there is at least one dot in the output, but it did not match</span>
-        <span class="c1"># a block name, it is considered to be {block_name}.{variable_name}</span>
-        <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-            <span class="n">output_block</span><span class="p">,</span> <span class="n">output_variable</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">output_block</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_block</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught producing MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="n">output_block</span><span class="p">,</span> <span class="n">output_variable</span>
-
-        <span class="c1"># If the given string is not a block name and it has no dots,</span>
-        <span class="c1"># it is considered to be a variable name to be extracted</span>
-        <span class="c1"># from the context after the last block has been produced</span>
-        <span class="n">last_block_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">last_block_name</span><span class="p">,</span> <span class="n">output</span>
-
-    <span class="k">def</span> <span class="nf">_get_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_variable</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the specified output variable from the context.</span>
-
-<span class="sd">        If the variable name is ``None``, return the entire context.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">output_variable</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">output_variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Output variable </span><span class="si">{}</span><span class="s1"> not found in context&#39;</span>
-                                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_variable</span><span class="p">))</span>
-
-            <span class="k">return</span> <span class="n">context</span><span class="p">[</span><span class="n">output_variable</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">context</span>
+            <span class="k">raise</span>
 
 <div class="viewcode-block" id="MLPipeline.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the blocks of this pipeline.</span>
@@ -725,35 +832,13 @@
 <span class="sd">        Args:</span>
 <span class="sd">            X:</span>
 <span class="sd">                Fit Data, which the pipeline will learn from.</span>
-
 <span class="sd">            y:</span>
 <span class="sd">                Fit Data labels, which the pipeline will use to learn how to</span>
 <span class="sd">                behave.</span>
 
-<span class="sd">            output_ (str or int or None):</span>
-<span class="sd">                Output specification, which can be a string or an integer or None.</span>
-
-<span class="sd">                    * If it is None (default), nothing will be returned</span>
-<span class="sd">                    * If an integer is given, it is interpreted as the block number, and the whole</span>
-<span class="sd">                      context after running the specified block will be returned.</span>
-<span class="sd">                    * If it is a string, it can be interpreted in three ways:</span>
-
-<span class="sd">                        * **block name**: If the string matches a block name exactly, including</span>
-<span class="sd">                          its hash and counter number ``#n`` at the end, the whole context will be</span>
-<span class="sd">                          returned after that block is produced.</span>
-<span class="sd">                        * **variable_name**: If the string does not match any block name and does</span>
-<span class="sd">                          not contain any dot characted, ``&#39;.&#39;``, it will be considered a variable</span>
-<span class="sd">                          name. In this case, the indicated variable will be extracted from the</span>
-<span class="sd">                          context and returned after the last block has been produced.</span>
-<span class="sd">                        * **block_name + variable_name**: If the complete string does not match a</span>
-<span class="sd">                          block name but it contains at least one dot, ``&#39;.&#39;``, it will be split</span>
-<span class="sd">                          in two parts on the last dot. If the first part of the string matches a</span>
-<span class="sd">                          block name exactly, the second part of the string will be considered a</span>
-<span class="sd">                          variable name, assuming the format ``{block_name}.{variable_name}``, and</span>
-<span class="sd">                          the indicated variable will be extracted from the context and returned</span>
-<span class="sd">                          after the block has been produced. Otherwise, if the extracted</span>
-<span class="sd">                          ``block_name`` does not match a block name exactly, a ``ValueError``</span>
-<span class="sd">                          will be raised.</span>
+<span class="sd">            output_ (str or int or list or None):</span>
+<span class="sd">                Output specification, as required by ``get_outputs``. If ``None`` is given,</span>
+<span class="sd">                nothing will be returned.</span>
 
 <span class="sd">            start_ (str or int or None):</span>
 <span class="sd">                Block index or block name to start processing from. The</span>
@@ -768,13 +853,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            None or dict or object:</span>
-<span class="sd">                * If no output is specified, nothing will be returned.</span>
-<span class="sd">                * If an output block has been specified without and output variable, the</span>
-<span class="sd">                  context dictionary will be returned after the produce method of that block</span>
-<span class="sd">                  has been called.</span>
-<span class="sd">                * If both an output block and an output variable have been specified,</span>
-<span class="sd">                  the value of that variable from the context will extracted and returned</span>
-<span class="sd">                  after the produce method of that block has been called.</span>
+<span class="sd">                * If no ``output`` is specified, nothing will be returned.</span>
+<span class="sd">                * If ``output_`` has been specified, either a single value or a</span>
+<span class="sd">                  tuple of values will be returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -783,8 +864,14 @@
         <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
 
-        <span class="n">output_block</span><span class="p">,</span> <span class="n">output_variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_output_spec</span><span class="p">(</span><span class="n">output_</span><span class="p">)</span>
-        <span class="n">last_block_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output_variables</span><span class="p">(</span><span class="n">output_</span><span class="p">)</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">output_variables</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">output_blocks</span> <span class="o">=</span> <span class="p">{</span><span class="n">variable</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">output_variables</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_variables</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">output_blocks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">start_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="n">start_</span><span class="p">)</span>
@@ -797,34 +884,28 @@
                     <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping block </span><span class="si">%s</span><span class="s2"> fit&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fitting block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">fit_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">fit_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-                <span class="n">block</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">fit_args</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught fitting MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
-                <span class="k">raise</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="n">block_name</span> <span class="o">!=</span> <span class="n">last_block_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">block_name</span> <span class="o">==</span> <span class="n">output_block</span><span class="p">):</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Producing block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">produce_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-                    <span class="n">outputs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="o">**</span><span class="n">produce_args</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">block_name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_block_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
 
-                    <span class="n">output_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
-                    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">output_dict</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught producing MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
-                    <span class="k">raise</span>
+                <span class="c1"># We already captured the output from this block</span>
+                <span class="k">if</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">:</span>
+                    <span class="n">output_blocks</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">block_name</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">output_block</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_output</span><span class="p">(</span><span class="n">output_variable</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="c1"># If there was an output_ but there are no pending</span>
+            <span class="c1"># outputs we are done.</span>
+            <span class="k">if</span> <span class="n">output_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output_blocks</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Produce predictions using the blocks of this pipeline.</span>
 
 <span class="sd">        Sequentially call the ``produce`` method of each block, capturing the</span>
@@ -839,29 +920,9 @@
 <span class="sd">            X:</span>
 <span class="sd">                Data which the pipeline will use to make predictions.</span>
 
-<span class="sd">            output_ (str or int or None):</span>
-<span class="sd">                Output specification, which can be a string or an integer or None.</span>
-<span class="sd">                    * If it is None (default), the output of the last block will be returned.</span>
-<span class="sd">                    * If an integer is given, it is interpreted as the block number, and the whole</span>
-<span class="sd">                      context after running the specified block will be returned.</span>
-<span class="sd">                    * If it is a string, it can be interpreted in three ways:</span>
-
-<span class="sd">                        * **block name**: If the string matches a block name exactly, including</span>
-<span class="sd">                          its hash and counter number ``#n`` at the end, the whole context will be</span>
-<span class="sd">                          returned after that block is produced.</span>
-<span class="sd">                        * **variable_name**: If the string does not match any block name and does</span>
-<span class="sd">                          not contain any dot characted, ``&#39;.&#39;``, it will be considered a variable</span>
-<span class="sd">                          name. In this case, the indicated variable will be extracted from the</span>
-<span class="sd">                          context and returned after the last block has been produced.</span>
-<span class="sd">                        * **block_name + variable_name**: If the complete string does not match a</span>
-<span class="sd">                          block name but it contains at least one dot, ``&#39;.&#39;``, it will be split</span>
-<span class="sd">                          in two parts on the last dot. If the first part of the string matches a</span>
-<span class="sd">                          block name exactly, the second part of the string will be considered a</span>
-<span class="sd">                          variable name, assuming the format ``{block_name}.{variable_name}``, and</span>
-<span class="sd">                          the indicated variable will be extracted from the context and returned</span>
-<span class="sd">                          after the block has been produced. Otherwise, if the extracted</span>
-<span class="sd">                          ``block_name`` does not match a block name exactly, a ``ValueError``</span>
-<span class="sd">                          will be raised.</span>
+<span class="sd">            output_ (str or int or list or None):</span>
+<span class="sd">                Output specification, as required by ``get_outputs``. If not specified</span>
+<span class="sd">                the ``default`` output will be returned.</span>
 
 <span class="sd">            start_ (str or int or None):</span>
 <span class="sd">                Block index or block name to start processing from. The</span>
@@ -875,20 +936,17 @@
 <span class="sd">                to the context dictionary and available for the blocks.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            None or dict or object:</span>
-<span class="sd">                * If no output is specified, the output of the last block will be returned.</span>
-<span class="sd">                * If an output block has been specified without and output variable, the</span>
-<span class="sd">                  context dictionary will be returned after the produce method of that block</span>
-<span class="sd">                  has been called.</span>
-<span class="sd">                * If both an output block and an output variable have been specified,</span>
-<span class="sd">                  the value of that variable from the context will extracted and returned</span>
-<span class="sd">                  after the produce method of that block has been called.</span>
+<span class="sd">            object or tuple:</span>
+<span class="sd">                * If a single output is requested, it is returned alone.</span>
+<span class="sd">                * If multiple outputs have been requested, a tuple is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span>
 
-        <span class="n">output_block</span><span class="p">,</span> <span class="n">output_variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_output_spec</span><span class="p">(</span><span class="n">output_</span><span class="p">)</span>
+        <span class="n">output_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output_variables</span><span class="p">(</span><span class="n">output_</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">output_variables</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">output_blocks</span> <span class="o">=</span> <span class="p">{</span><span class="n">variable</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">output_variables</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">start_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="n">start_</span><span class="p">)</span>
@@ -901,26 +959,23 @@
                     <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping block </span><span class="si">%s</span><span class="s2"> produce&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Producing block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">produce_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-                <span class="n">outputs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="o">**</span><span class="n">produce_args</span><span class="p">)</span>
-                <span class="n">output_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
-                <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">output_dict</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">output_block</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_output</span><span class="p">(</span><span class="n">output_variable</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="c1"># We already captured the output from this block</span>
+            <span class="k">if</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">:</span>
+                <span class="n">output_blocks</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">block_name</span><span class="p">)</span>
 
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught producing MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
-                <span class="k">raise</span>
+            <span class="c1"># If there was an output_ but there are no pending</span>
+            <span class="c1"># outputs we are done.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">output_blocks</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">output_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">outputs</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="MLPipeline.to_dict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all the details of this MLPipeline in a dict.</span>
@@ -968,7 +1023,8 @@
             <span class="s1">&#39;input_names&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span><span class="p">,</span>
             <span class="s1">&#39;output_names&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="p">,</span>
             <span class="s1">&#39;hyperparameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span>
-            <span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span>
+            <span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span><span class="p">,</span>
+            <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="MLPipeline.save"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>

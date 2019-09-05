@@ -537,7 +537,7 @@ values the values to be used.</p>
 
 <dl class="class">
 <dt id="mlblocks.MLPipeline">
-<em class="property">class </em><code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">MLPipeline</code><span class="sig-paren">(</span><em class="sig-param">pipeline=None</em>, <em class="sig-param">primitives=None</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">input_names=None</em>, <em class="sig-param">output_names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">MLPipeline</code><span class="sig-paren">(</span><em class="sig-param">pipeline=None</em>, <em class="sig-param">primitives=None</em>, <em class="sig-param">init_params=None</em>, <em class="sig-param">input_names=None</em>, <em class="sig-param">output_names=None</em>, <em class="sig-param">outputs=None</em>, <em class="sig-param">verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>MLPipeline Class.</p>
 <p>The <strong>MLPipeline</strong> class represents a Machine Learning Pipeline, which
 is an ordered collection of Machine Learning tools or Primitives,
@@ -570,22 +570,31 @@ results, which will be returned as the prediction of the pipeline.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_hyperparameters" title="mlblocks.MLPipeline.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a>([flat])</p></td>
 <td><p>Get the current hyperparamters of each block.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_tunable_hyperparameters" title="mlblocks.MLPipeline.get_tunable_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code></a>([flat])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_output_names" title="mlblocks.MLPipeline.get_output_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_names</span></code></a>([outputs])</p></td>
+<td><p>Get the names of the outputs that correspond to the given specification.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_output_variables" title="mlblocks.MLPipeline.get_output_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_variables</span></code></a>([outputs])</p></td>
+<td><p>Get the list of variable specifications of the given outputs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_outputs" title="mlblocks.MLPipeline.get_outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_outputs</span></code></a>([outputs])</p></td>
+<td><p>Get the list of output variables that correspond to the specified outputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_tunable_hyperparameters" title="mlblocks.MLPipeline.get_tunable_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code></a>([flat])</p></td>
 <td><p>Get the tunable hyperparamters of each block.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.load" title="mlblocks.MLPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.load" title="mlblocks.MLPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
 <td><p>Create a new MLPipeline from a JSON specification.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.predict" title="mlblocks.MLPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>([X, output_, start_])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.predict" title="mlblocks.MLPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>([X, output_, start_])</p></td>
 <td><p>Produce predictions using the blocks of this pipeline.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.save" title="mlblocks.MLPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.save" title="mlblocks.MLPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
 <td><p>Save the specification of this MLPipeline in a JSON file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.set_hyperparameters" title="mlblocks.MLPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.set_hyperparameters" title="mlblocks.MLPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
 <td><p>Set new hyperparameter values for some blocks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.to_dict" title="mlblocks.MLPipeline.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.to_dict" title="mlblocks.MLPipeline.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
 <td><p>Return all the details of this MLPipeline in a dict.</p></td>
 </tr>
 </tbody>
@@ -671,6 +680,9 @@ arguments named similary.</p></li>
 given when stored in the context dictionary. This allows storing the output of
 different primitives in different variables, even if the primitive output name is
 the same one.</p></li>
+<li><p><strong>outputs</strong> (<em>dict</em>) – dictionary containing lists of output variables associated to a name.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – whether to log the exceptions that occur when running the pipeline before
+raising them or not.</p></li>
 </ul>
 </dd>
 </dl>
@@ -691,37 +703,8 @@ are stored, and from which the arguments for the next <code class="docutils lite
 <li><p><strong>X</strong> – Fit Data, which the pipeline will learn from.</p></li>
 <li><p><strong>y</strong> – Fit Data labels, which the pipeline will use to learn how to
 behave.</p></li>
-<li><p><strong>output_</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>None</em>) – <p>Output specification, which can be a string or an integer or None.</p>
-<blockquote>
-<div><ul>
-<li><p>If it is None (default), nothing will be returned</p></li>
-<li><p>If an integer is given, it is interpreted as the block number, and the whole
-context after running the specified block will be returned.</p></li>
-<li><p>If it is a string, it can be interpreted in three ways:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>block name</strong>: If the string matches a block name exactly, including
-its hash and counter number <code class="docutils literal notranslate"><span class="pre">#n</span></code> at the end, the whole context will be
-returned after that block is produced.</p></li>
-<li><p><strong>variable_name</strong>: If the string does not match any block name and does
-not contain any dot characted, <code class="docutils literal notranslate"><span class="pre">'.'</span></code>, it will be considered a variable
-name. In this case, the indicated variable will be extracted from the
-context and returned after the last block has been produced.</p></li>
-<li><p><strong>block_name + variable_name</strong>: If the complete string does not match a
-block name but it contains at least one dot, <code class="docutils literal notranslate"><span class="pre">'.'</span></code>, it will be split
-in two parts on the last dot. If the first part of the string matches a
-block name exactly, the second part of the string will be considered a
-variable name, assuming the format <code class="docutils literal notranslate"><span class="pre">{block_name}.{variable_name}</span></code>, and
-the indicated variable will be extracted from the context and returned
-after the block has been produced. Otherwise, if the extracted
-<code class="docutils literal notranslate"><span class="pre">block_name</span></code> does not match a block name exactly, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
-will be raised.</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-</p></li>
+<li><p><strong>output_</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>list</em><em> or </em><em>None</em>) – Output specification, as required by <code class="docutils literal notranslate"><span class="pre">get_outputs</span></code>. If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given,
+nothing will be returned.</p></li>
 <li><p><strong>start_</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>None</em>) – Block index or block name to start processing from. The
 value can either be an integer, which will be interpreted as a block index,
 or the name of a block, including the conter number at the end.
@@ -733,13 +716,9 @@ to the context dictionary and available for the blocks.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p>If no output is specified, nothing will be returned.</p></li>
-<li><p>If an output block has been specified without and output variable, the
-context dictionary will be returned after the produce method of that block
-has been called.</p></li>
-<li><p>If both an output block and an output variable have been specified,
-the value of that variable from the context will extracted and returned
-after the produce method of that block has been called.</p></li>
+<li><p>If no <code class="docutils literal notranslate"><span class="pre">output</span></code> is specified, nothing will be returned.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">output_</span></code> has been specified, either a single value or a
+tuple of values will be returned.</p></li>
 </ul>
 </p>
 </dd>
@@ -792,6 +771,93 @@ the current block hyperparameters dictionary as values.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mlblocks.MLPipeline.get_output_names">
+<code class="sig-name descname">get_output_names</code><span class="sig-paren">(</span><em class="sig-param">outputs='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.get_output_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.get_output_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the names of the outputs that correspond to the given specification.</p>
+<p>The indicated outputs will be resolved and the names of the output variables
+will be returned as a single list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>outputs</strong> (<em>str</em><em>, </em><em>int</em><em> or </em><em>list</em><em>[</em><em>str</em><em> or </em><em>int</em><em>]</em>) – Single or list of output specifications.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of variable names</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If an output specification is not valid.</p></li>
+<li><p><strong>TypeError</strong> – If the type of a specification is not an str or an int.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mlblocks.MLPipeline.get_output_variables">
+<code class="sig-name descname">get_output_variables</code><span class="sig-paren">(</span><em class="sig-param">outputs='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.get_output_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.get_output_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of variable specifications of the given outputs.</p>
+<p>The indicated outputs will be resolved and their variables specifications
+will be returned as a single list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>outputs</strong> (<em>str</em><em>, </em><em>int</em><em> or </em><em>list</em><em>[</em><em>str</em><em> or </em><em>int</em><em>]</em>) – Single or list of output specifications.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of variable specifications.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If an output specification is not valid.</p></li>
+<li><p><strong>TypeError</strong> – If the type of a specification is not an str or an int.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mlblocks.MLPipeline.get_outputs">
+<code class="sig-name descname">get_outputs</code><span class="sig-paren">(</span><em class="sig-param">outputs='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.get_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.get_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of output variables that correspond to the specified outputs.</p>
+<p>Outputs specification can either be a single string, a single integer, or a
+list of strings and integers.</p>
+<p>If strings are given, they can either be one of the named outputs that have
+been specified on the pipeline definition or the name of a block, including the
+counter number at the end, or a full variable specification following the format
+<code class="docutils literal notranslate"><span class="pre">{block-name}.{variable-name}</span></code>.</p>
+<p>Alternatively, integers can be passed as indexes of the blocks from which to get
+the outputs.</p>
+<p>If output specifications that resolve to multiple output variables are given,
+such as the named outputs or block names, all the variables are concatenated
+together, in order, in a single variable list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>outputs</strong> (<em>str</em><em>, </em><em>int</em><em> or </em><em>list</em><em>[</em><em>str</em><em> or </em><em>int</em><em>]</em>) – Single or list of output specifications.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of dictionaries specifying all the output variables. Each
+dictionary contains the entries <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">variable</span></code>, as
+well as any other metadata that may have been included in the
+pipeline outputs or block produce outputs specification.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If an output specification is not valid.</p></li>
+<li><p><strong>TypeError</strong> – If the type of a specification is not an str or an int.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="mlblocks.MLPipeline.get_tunable_hyperparameters">
 <code class="sig-name descname">get_tunable_hyperparameters</code><span class="sig-paren">(</span><em class="sig-param">flat=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.get_tunable_hyperparameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.get_tunable_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the tunable hyperparamters of each block.</p>
@@ -835,7 +901,7 @@ in the JSON file.</p>
 
 <dl class="method">
 <dt id="mlblocks.MLPipeline.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">output_=None</em>, <em class="sig-param">start_=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X=None</em>, <em class="sig-param">output_='default'</em>, <em class="sig-param">start_=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce predictions using the blocks of this pipeline.</p>
 <p>Sequentially call the <code class="docutils literal notranslate"><span class="pre">produce</span></code> method of each block, capturing the
 outputs before calling the next one.</p>
@@ -847,37 +913,8 @@ will be taken.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> – Data which the pipeline will use to make predictions.</p></li>
-<li><p><strong>output_</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>None</em>) – <dl>
-<dt>Output specification, which can be a string or an integer or None.</dt><dd><ul>
-<li><p>If it is None (default), the output of the last block will be returned.</p></li>
-<li><p>If an integer is given, it is interpreted as the block number, and the whole
-context after running the specified block will be returned.</p></li>
-<li><p>If it is a string, it can be interpreted in three ways:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>block name</strong>: If the string matches a block name exactly, including
-its hash and counter number <code class="docutils literal notranslate"><span class="pre">#n</span></code> at the end, the whole context will be
-returned after that block is produced.</p></li>
-<li><p><strong>variable_name</strong>: If the string does not match any block name and does
-not contain any dot characted, <code class="docutils literal notranslate"><span class="pre">'.'</span></code>, it will be considered a variable
-name. In this case, the indicated variable will be extracted from the
-context and returned after the last block has been produced.</p></li>
-<li><p><strong>block_name + variable_name</strong>: If the complete string does not match a
-block name but it contains at least one dot, <code class="docutils literal notranslate"><span class="pre">'.'</span></code>, it will be split
-in two parts on the last dot. If the first part of the string matches a
-block name exactly, the second part of the string will be considered a
-variable name, assuming the format <code class="docutils literal notranslate"><span class="pre">{block_name}.{variable_name}</span></code>, and
-the indicated variable will be extracted from the context and returned
-after the block has been produced. Otherwise, if the extracted
-<code class="docutils literal notranslate"><span class="pre">block_name</span></code> does not match a block name exactly, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
-will be raised.</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</dd>
-</dl>
-</p></li>
+<li><p><strong>output_</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>list</em><em> or </em><em>None</em>) – Output specification, as required by <code class="docutils literal notranslate"><span class="pre">get_outputs</span></code>. If not specified
+the <code class="docutils literal notranslate"><span class="pre">default</span></code> output will be returned.</p></li>
 <li><p><strong>start_</strong> (<em>str</em><em> or </em><em>int</em><em> or </em><em>None</em>) – Block index or block name to start processing from. The
 value can either be an integer, which will be interpreted as a block index,
 or the name of a block, including the conter number at the end.
@@ -889,18 +926,13 @@ to the context dictionary and available for the blocks.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p>If no output is specified, the output of the last block will be returned.</p></li>
-<li><p>If an output block has been specified without and output variable, the
-context dictionary will be returned after the produce method of that block
-has been called.</p></li>
-<li><p>If both an output block and an output variable have been specified,
-the value of that variable from the context will extracted and returned
-after the produce method of that block has been called.</p></li>
+<li><p>If a single output is requested, it is returned alone.</p></li>
+<li><p>If multiple outputs have been requested, a tuple is returned.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None or dict or object</p>
+<dd class="field-odd"><p>object or tuple</p>
 </dd>
 </dl>
 </dd></dl>
