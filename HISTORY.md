@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.3 - 2019-09-09
+------------------
+
+* Improved intermediate outputs management - [Issue #105](https://github.com/HDI-Project/MLBlocks/issues/105) by @csala
+
 0.3.2 - 2019-08-12
 ------------------
 
@@ -8,7 +13,7 @@ Changelog
 * Support optional fit and produce args and arg defaults - [Issue #95](https://github.com/HDI-Project/MLBlocks/issues/95) by @csala
 * Isolate primitives from their hyperparameters dictionary - [Issue #94](https://github.com/HDI-Project/MLBlocks/issues/94) by @csala
 * Add functions to explore the available primitives and pipelines - [Issue #90](https://github.com/HDI-Project/MLBlocks/issues/90) by @csala
-* Add primitive caching New Feature - [Issue #22](https://github.com/HDI-Project/MLBlocks/issues/22) by @csala
+* Add primitive caching - [Issue #22](https://github.com/HDI-Project/MLBlocks/issues/22) by @csala
 
 0.3.1 - Pipelines Discovery
 ---------------------------

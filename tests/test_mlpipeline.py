@@ -2,7 +2,7 @@
 
 from collections import OrderedDict
 from unittest import TestCase
-from unittest.mock import Mock, call, patch
+from unittest.mock import MagicMock, Mock, call, patch
 
 from mlblocks.mlpipeline import MLPipeline
 
@@ -12,7 +12,15 @@ class TestMLPipline(TestCase):
     @patch('mlblocks.mlpipeline.LOGGER')
     @patch('mlblocks.mlpipeline.MLBlock')
     def test___init__(self, mlblock_mock, logger_mock):
-        blocks = [Mock(), Mock(), Mock(), Mock()]
+        blocks = [Mock(), Mock(), Mock()]
+        last_block = Mock()
+        last_block.produce_output = [
+            {
+                'name': 'y',
+                'type': 'array'
+            }
+        ]
+        blocks.append(last_block)
         mlblock_mock.side_effect = blocks
 
         primitives = [
@@ -61,6 +69,16 @@ class TestMLPipline(TestCase):
             'another.primitive.Name#1': blocks[2].get_tunable_hyperparameters.return_value,
             'another.primitive.Name#2': blocks[3].get_tunable_hyperparameters.return_value
         }
+        assert mlpipeline.outputs == {
+            'default': [
+                {
+                    'name': 'y',
+                    'type': 'array',
+                    'variable': 'another.primitive.Name#2.y'
+                }
+            ]
+        }
+        assert mlpipeline.verbose
 
         expected_calls = [
             call('a.primitive.Name', an_argument='value'),
@@ -75,8 +93,9 @@ class TestMLPipline(TestCase):
             'a.primitive.Name'
         )
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_tunable_hyperparameters(self):
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         tunable = dict()
         mlpipeline._tunable_hyperparameters = tunable
 
@@ -85,9 +104,10 @@ class TestMLPipline(TestCase):
         assert returned == tunable
         assert returned is not tunable
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_tunable_hyperparameters_flat(self):
-        mlpipeline = MLPipeline(list())
-        tunable = {
+        mlpipeline = MLPipeline(['a_primitive'])
+        mlpipeline._tunable_hyperparameters = {
             'block_1': {
                 'hp_1': {
                     'type': 'int',
@@ -113,7 +133,6 @@ class TestMLPipline(TestCase):
                 }
             }
         }
-        mlpipeline._tunable_hyperparameters = tunable
 
         returned = mlpipeline.get_tunable_hyperparameters(flat=True)
 
@@ -141,6 +160,7 @@ class TestMLPipline(TestCase):
         }
         assert returned == expected
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_hyperparameters(self):
         block_1 = Mock()
         block_1.get_hyperparameters.return_value = {
@@ -155,7 +175,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = mlpipeline.get_hyperparameters()
@@ -172,6 +192,7 @@ class TestMLPipline(TestCase):
         block_1.get_hyperparameters.assert_called_once_with()
         block_2.get_hyperparameters.assert_called_once_with()
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_get_hyperparameters_flat(self):
         block_1 = Mock()
         block_1.get_hyperparameters.return_value = {
@@ -186,7 +207,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = mlpipeline.get_hyperparameters(flat=True)
@@ -199,6 +220,7 @@ class TestMLPipline(TestCase):
         block_1.get_hyperparameters.assert_called_once_with()
         block_2.get_hyperparameters.assert_called_once_with()
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_set_hyperparameters(self):
         block_1 = Mock()
         block_2 = Mock()
@@ -206,7 +228,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = {
@@ -219,6 +241,7 @@ class TestMLPipline(TestCase):
         block_1.set_hyperparameters.assert_not_called()
         block_2.set_hyperparameters.assert_called_once_with({'some': 'arg'})
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test_set_hyperparameters_flat(self):
         block_1 = Mock()
         block_2 = Mock()
@@ -226,7 +249,7 @@ class TestMLPipline(TestCase):
             ('a.primitive.Name#1', block_1),
             ('a.primitive.Name#2', block_2),
         ))
-        mlpipeline = MLPipeline(list())
+        mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks = blocks
 
         hyperparameters = {
@@ -237,13 +260,14 @@ class TestMLPipline(TestCase):
         block_1.set_hyperparameters.assert_not_called()
         block_2.set_hyperparameters.assert_called_once_with({'some': 'arg'})
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
     def test__get_block_args(self):
         input_names = {
             'a_block': {
                 'arg_3': 'arg_3_alt'
             }
         }
-        pipeline = MLPipeline(list(), input_names=input_names)
+        pipeline = MLPipeline(['a_primitive'], input_names=input_names)
 
         block_args = [
             {
@@ -274,8 +298,167 @@ class TestMLPipline(TestCase):
         }
         assert args == expected
 
-    def test__get_outputs(self):
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
+    def test__get_outputs_no_outputs(self):
+        self_ = Mock()
+        self_._last_block_name = 'last_block'
+        self_._get_block_outputs.return_value = ['some', 'outputs']
+
+        pipeline = dict()
+        outputs = None
+        returned = MLPipeline._get_outputs(self_, pipeline, outputs)
+
+        expected = {
+            'default': ['some', 'outputs']
+        }
+        assert returned == expected
+
+        self_._get_block_outputs.assert_called_once_with('last_block')
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
+    def test__get_outputs_defaults(self):
+        self_ = Mock()
+
+        pipeline = dict()
+        outputs = {
+            'default': ['some', 'outputs']
+        }
+        returned = MLPipeline._get_outputs(self_, pipeline, outputs)
+
+        expected = {
+            'default': ['some', 'outputs']
+        }
+        assert returned == expected
+        self_._get_block_outputs.assert_not_called()
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
+    def test__get_outputs_additional(self):
+        self_ = Mock()
+
+        pipeline = {
+            'outputs': {
+                'default': ['some', 'outputs'],
+                'additional': ['other', 'outputs']
+            }
+        }
+        outputs = None
+        returned = MLPipeline._get_outputs(self_, pipeline, outputs)
+
+        expected = {
+            'default': ['some', 'outputs'],
+            'additional': ['other', 'outputs']
+        }
+        assert returned == expected
+        self_._get_block_outputs.assert_not_called()
+
+    def test_get_outputs_str(self):
         pass
+
+    def test_get_outputs_int(self):
+        pass
+
+    def test_get_outputs_list_of_str(self):
+        pass
+
+    def test_get_outputs_list_of_int(self):
+        pass
+
+    def test_get_outputs_named_outputs(self):
+        pass
+
+    def test_get_outputs_combination(self):
+        pass
+
+    @patch('mlblocks.mlpipeline.MLBlock')
+    def test_get_outputs_invalid(self, mlblock_mock):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_variable',
+                    'type': 'a_type',
+                }
+            ],
+            'debug': [
+                {
+                    'name': 'another_name',
+                    'variable': 'another_variable',
+                }
+            ]
+        }
+        mlblock_mock.side_effect = [MagicMock(), MagicMock()]
+        pipeline = MLPipeline(['a_primitive', 'another_primitive'], outputs=outputs)
+
+        pipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'output',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['another_primitive#1'].produce_output = [
+            {
+                'name': 'something',
+            }
+        ]
+
+        returned = pipeline.get_outputs(['default', 'debug', -1, 'a_primitive#1.output'])
+
+        expected = [
+            {
+                'name': 'a_name',
+                'variable': 'a_variable',
+                'type': 'a_type'
+            },
+            {
+                'name': 'another_name',
+                'variable': 'another_variable',
+            },
+            {
+                'name': 'something',
+                'variable': 'another_primitive#1.something',
+            },
+            {
+                'name': 'output',
+                'type': 'whatever',
+                'variable': 'a_primitive#1.output'
+            }
+        ]
+
+        assert returned == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
+    def test_get_output_names(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_variable',
+                    'type': 'a_type',
+                }
+            ]
+        }
+        pipeline = MLPipeline(['a_primitive'], outputs=outputs)
+
+        names = pipeline.get_output_names()
+
+        assert names == ['a_name']
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=MagicMock())
+    def test_get_output_variables(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_variable',
+                    'type': 'a_type',
+                }
+            ]
+        }
+        pipeline = MLPipeline(['a_primitive'], outputs=outputs)
+
+        names = pipeline.get_output_variables()
+
+        assert names == ['a_variable']
 
     def test_fit(self):
         pass
