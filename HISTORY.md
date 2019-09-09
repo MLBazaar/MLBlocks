@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.3 - 2019-09-09
+------------------
+
+* Improved intermediate outputs management - [Issue #105](https://github.com/HDI-Project/MLBlocks/issues/105) by @csala
+
 0.3.2 - 2019-08-12
 ------------------
 
