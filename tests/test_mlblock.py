@@ -3,19 +3,44 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, patch
 
-from mlblocks.mlblock import MLBlock, import_object
+import pytest
 
-# import pytest
+from mlblocks.mlblock import MLBlock, import_object
 
 
 class DummyClass:
+    def a_method(self):
+        pass
+
+
+def dummy_function():
     pass
 
 
-def test_import_object():
-    dummy_class = import_object(__name__ + '.DummyClass')
+class TestImportObject(TestCase):
 
-    assert dummy_class is DummyClass
+    def test_class(self):
+        imported = import_object(__name__ + '.DummyClass')
+
+        assert imported is DummyClass
+
+    def test_class_method(self):
+        imported = import_object(__name__ + '.DummyClass.a_method')
+
+        assert imported is DummyClass.a_method
+
+    def test_function(self):
+        imported = import_object(__name__ + '.dummy_function')
+
+        assert imported is dummy_function
+
+    def test_bad_object_name(self):
+        with pytest.raises(AttributeError):
+            import_object(__name__ + '.InvalidName')
+
+    def test_bad_module(self):
+        with pytest.raises(ModuleNotFoundError):
+            import_object('an.invalid.module')
 
 
 class TestMLBlock(TestCase):
