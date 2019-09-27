@@ -39,7 +39,7 @@ class TestImportObject(TestCase):
             import_object(__name__ + '.InvalidName')
 
     def test_bad_module(self):
-        with pytest.raises(ModuleNotFoundError):
+        with pytest.raises(ImportError):
             import_object('an.invalid.module')
 
 
