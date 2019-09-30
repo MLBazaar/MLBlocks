@@ -271,9 +271,17 @@
 
 <span class="k">def</span> <span class="nf">import_object</span><span class="p">(</span><span class="n">object_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Import an object from its Fully Qualified Name.&quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">package</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">object_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">package</span><span class="p">),</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">parent_name</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">object_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">parent_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="n">grand_parent_name</span><span class="p">,</span> <span class="n">parent_name</span> <span class="o">=</span> <span class="n">parent_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">grand_parent</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">grand_parent_name</span><span class="p">)</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">grand_parent</span><span class="p">,</span> <span class="n">parent_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">object_name</span>
 
