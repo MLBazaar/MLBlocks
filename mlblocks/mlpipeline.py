@@ -145,8 +145,11 @@ class MLPipeline():
         """Get the list of output variables for the given block."""
         block = self.blocks[block_name]
         outputs = deepcopy(block.produce_output)
+        output_names = self.output_names.get(block_name, dict())
         for output in outputs:
-            output['variable'] = '{}.{}'.format(block_name, output['name'])
+            name = output['name']
+            context_name = output_names.get(name, name)
+            output['variable'] = '{}.{}'.format(block_name, context_name)
 
         return outputs
 
@@ -606,7 +609,7 @@ class MLPipeline():
         if y is not None:
             context['y'] = y
 
-        if output_ is not None:
+        if isinstance(output_, str):
             output_variables = self.get_output_variables(output_)
             outputs = output_variables.copy()
             output_blocks = {variable.rsplit('.', 1)[0] for variable in output_variables}
@@ -614,6 +617,9 @@ class MLPipeline():
             output_variables = None
             outputs = None
             output_blocks = set()
+
+        if isinstance(output_, int):
+            output_ = self._get_block_name(output_)
 
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)
@@ -628,16 +634,19 @@ class MLPipeline():
 
             self._fit_block(block, block_name, context)
 
-            if (block_name != self._last_block_name) or (block_name in output_blocks):
+            last_block = block_name != self._last_block_name
+            if last_block or (block_name == output_) or (block_name in output_blocks):
                 self._produce_block(block, block_name, context, output_variables, outputs)
 
                 # We already captured the output from this block
                 if block_name in output_blocks:
                     output_blocks.remove(block_name)
+                elif block_name == output_:
+                    return context
 
             # If there was an output_ but there are no pending
             # outputs we are done.
-            if output_ is not None and not output_blocks:
+            if output_variables is not None and not output_blocks:
                 if len(outputs) > 1:
                     return tuple(outputs)
                 else:
