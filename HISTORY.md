@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3.4 - 2019-11-01
+------------------
+
+* Ability to return intermediate context - [Issue #110](https://github.com/HDI-Project/MLBlocks/issues/110) by @csala
+* Support for static or class methods - [Issue #107](https://github.com/HDI-Project/MLBlocks/issues/107) by @csala
+
 0.3.3 - 2019-09-09
 ------------------
 
