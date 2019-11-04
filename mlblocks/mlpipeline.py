@@ -4,6 +4,7 @@
 
 import json
 import logging
+import re
 from collections import Counter, OrderedDict, defaultdict
 from copy import deepcopy
 
@@ -145,8 +146,11 @@ class MLPipeline():
         """Get the list of output variables for the given block."""
         block = self.blocks[block_name]
         outputs = deepcopy(block.produce_output)
+        output_names = self.output_names.get(block_name, dict())
         for output in outputs:
-            output['variable'] = '{}.{}'.format(block_name, output['name'])
+            name = output['name']
+            context_name = output_names.get(name, name)
+            output['variable'] = '{}.{}'.format(block_name, context_name)
 
         return outputs
 
@@ -195,12 +199,15 @@ class MLPipeline():
         if hyperparameters:
             self.set_hyperparameters(hyperparameters)
 
+        self._re_block_name = re.compile(r'(^[^#]+#\d+)(\..*)?')
+
     def _get_str_output(self, output):
         """Get the outputs that correspond to the str specification."""
         if output in self.outputs:
             return self.outputs[output]
         elif output in self.blocks:
-            return self._get_block_outputs(output)
+            return [{'name': output, 'variable': output}]
+            # return self._get_block_outputs(output)
         elif '.' in output:
             block_name, variable_name = output.rsplit('.', 1)
             block = self.blocks.get(block_name)
@@ -257,11 +264,11 @@ class MLPipeline():
 
         computed = list()
         for output in outputs:
+            if isinstance(output, int):
+                output = self._get_block_name(output)
+
             if isinstance(output, str):
                 computed.extend(self._get_str_output(output))
-            elif isinstance(output, int):
-                block_name = self._get_block_name(output)
-                computed.extend(self._get_block_outputs(block_name))
             else:
                 raise TypeError('Output Specification can only be str or int')
 
@@ -312,6 +319,18 @@ class MLPipeline():
         """
         outputs = self.get_outputs(outputs)
         return [output['variable'] for output in outputs]
+
+    def _extract_block_name(self, variable_name):
+        return self._re_block_name.search(variable_name).group(1)
+
+    def _prepare_outputs(self, outputs):
+        output_variables = self.get_output_variables(outputs)
+        outputs = output_variables.copy()
+        output_blocks = {
+            self._extract_block_name(variable)
+            for variable in output_variables
+        }
+        return output_variables, outputs, output_blocks
 
     @staticmethod
     def _flatten_dict(hyperparameters):
@@ -516,13 +535,11 @@ class MLPipeline():
 
         return output_dict
 
-    def _update_outputs(self, block_name, output_variables, outputs, outputs_dict):
+    def _update_outputs(self, variable_name, output_variables, outputs, value):
         """Set the requested block outputs into the outputs list in the right place."""
-        for key, value in outputs_dict.items():
-            variable_name = '{}.{}'.format(block_name, key)
-            if variable_name in output_variables:
-                index = output_variables.index(variable_name)
-                outputs[index] = deepcopy(value)
+        if variable_name in output_variables:
+            index = output_variables.index(variable_name)
+            outputs[index] = deepcopy(value)
 
     def _fit_block(self, block, block_name, context):
         """Get the block args from the context and fit the block."""
@@ -551,7 +568,12 @@ class MLPipeline():
             context.update(outputs_dict)
 
             if output_variables:
-                self._update_outputs(block_name, output_variables, outputs, outputs_dict)
+                if block_name in output_variables:
+                    self._update_outputs(block_name, output_variables, outputs, context)
+                else:
+                    for key, value in outputs_dict.items():
+                        variable_name = '{}.{}'.format(block_name, key)
+                        self._update_outputs(variable_name, output_variables, outputs, value)
 
         except Exception:
             if self.verbose:
@@ -606,14 +628,12 @@ class MLPipeline():
         if y is not None:
             context['y'] = y
 
-        if output_ is not None:
-            output_variables = self.get_output_variables(output_)
-            outputs = output_variables.copy()
-            output_blocks = {variable.rsplit('.', 1)[0] for variable in output_variables}
-        else:
+        if output_ is None:
             output_variables = None
             outputs = None
             output_blocks = set()
+        else:
+            output_variables, outputs, output_blocks = self._prepare_outputs(output_)
 
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)
@@ -637,7 +657,7 @@ class MLPipeline():
 
             # If there was an output_ but there are no pending
             # outputs we are done.
-            if output_ is not None and not output_blocks:
+            if output_variables is not None and not output_blocks:
                 if len(outputs) > 1:
                     return tuple(outputs)
                 else:
@@ -686,9 +706,7 @@ class MLPipeline():
         if X is not None:
             context['X'] = X
 
-        output_variables = self.get_output_variables(output_)
-        outputs = output_variables.copy()
-        output_blocks = {variable.rsplit('.', 1)[0] for variable in output_variables}
+        output_variables, outputs, output_blocks = self._prepare_outputs(output_)
 
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)

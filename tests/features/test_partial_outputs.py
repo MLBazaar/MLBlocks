@@ -70,13 +70,14 @@ class TestPartialOutputs(TestCase):
         y = np.array([
             0, 0, 0, 0, 1
         ])
+        context = {'X': X, 'y': y}
 
         almost_equal(named_out, y)
         assert len(list_out) == 2
         almost_equal(list_out[0], y)
-        almost_equal(list_out[1], X)
-        almost_equal(X, int_out)
-        almost_equal(X, str_out)
+        almost_equal(list_out[1], context)
+        almost_equal(context, int_out)
+        almost_equal(context, str_out)
         almost_equal(X, str_out_variable)
         assert no_output is None
 
