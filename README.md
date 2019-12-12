@@ -18,7 +18,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 
 * Free software: MIT license
 * Documentation: https://HDI-Project.github.io/MLBlocks
-- Homepage: https://github.com/HDI-Project/MLBlocks
+* Homepage: https://github.com/HDI-Project/MLBlocks
 
 # MLBlocks
 
@@ -237,10 +237,33 @@ If you want to learn more about how to tune the pipeline hyperparameters, save a
 the pipelines using JSON annotations or build complex multi-branched pipelines, please
 check our [documentation](https://HDI-Project.github.io/MLBlocks).
 
-# History
+## Citing MLBlocks
 
-In its first iteration in 2015, MLBlocks was designed for only multi table, multi entity temporal
-data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis:
+If you use MLBlocks, please consider citing our related papers.
+
+For the current design of MLBlocks and its usage within the larger *Machine Learning Bazaar* project at
+the MIT Data To AI Lab, please see:
+
+Micah J. Smith, Carles Sala, James Max Kanter, and Kalyan Veeramachaneni. ["The Machine Learning Bazaar:
+Harnessing the ML Ecosystem for Effective System Development."](https://arxiv.org/abs/1905.08942) arXiv
+Preprint 1905.08942. 2019.
+
+``` bibtex
+@article{smith2019mlbazaar,
+  author = {Smith, Micah J. and Sala, Carles and Kanter, James Max and Veeramachaneni, Kalyan},
+  title = {The Machine Learning Bazaar: Harnessing the ML Ecosystem for Effective System Development},
+  journal = {arXiv e-prints},
+  year = {2019},
+  eid = {arXiv:1905.08942},
+  pages = {arXiv:1905.08942},
+  archivePrefix = {arXiv},
+  eprint = {1905.08942},
+}
+```
+
+For the first MLBlocks version from 2015, designed for only multi table, multi entity temporal data, please
+refer to Bryan Collazo’s thesis:
+
 * [Machine learning blocks](https://dai.lids.mit.edu/wp-content/uploads/2018/06/Mlblocks_Bryan.pdf).
   Bryan Collazo. Masters thesis, MIT EECS, 2015.
 
