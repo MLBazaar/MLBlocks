@@ -314,8 +314,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fd826d0c6a0&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fd8269e8b70&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fbddbe06940&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fbddba6f0f0&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -325,7 +325,7 @@ within a single MLPipeline:</p>
 <p>This can be done by passing an extra dictionary to the MLPipeline when it is created:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.preprocessing.StandardScaler&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">   ...: </span>        <span class="s1">&#39;with_mean&#39;</span><span class="p">:</span> <span class="bp">False</span>
+<span class="gp">   ...: </span>        <span class="s1">&#39;with_mean&#39;</span><span class="p">:</span> <span class="kc">False</span>
 <span class="gp">   ...: </span>    <span class="p">},</span>
 <span class="gp">   ...: </span>    <span class="s1">&#39;sklearn.ensemble.RandomForestClassifier&#39;</span><span class="p">:</span> <span class="p">{</span>
 <span class="gp">   ...: </span>        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="mi">100</span>
@@ -620,7 +620,7 @@ problem or dataset, we can do that directly on our dict representation.</p>
 <span class="go">  &#39;oob_score&#39;: False}}</span>
 
 <span class="gp">In [12]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
-<span class="go">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Out[12]: </span>
+<span class="gh">Out[12]: </span><span class="go"></span>
 <span class="go">{&#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;,</span>
 <span class="go">   &#39;default&#39;: 10,</span>
 <span class="go">   &#39;range&#39;: [1, 30]}}}</span>
