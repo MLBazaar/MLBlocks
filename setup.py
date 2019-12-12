@@ -25,6 +25,7 @@ tests_require = [
     'urllib3>=1.20,<1.25',
     'setuptools>=41.0.0',
     'numpy<1.17',
+    'python-dateutil<2.8.1,>=2.1',
 ]
 
 
