@@ -162,6 +162,7 @@ def test__load_success():
 
         assert primitive == loaded
 
+
 def test__load_json_path():
     primitive = {
         'name': 'temp.primitive',
@@ -177,39 +178,6 @@ def test__load_json_path():
         loaded = discovery._load(primitive_path, paths)
 
         assert primitive == loaded
-
-
-def _load(name, paths):
-    """Locate and load the JSON annotation in any of the given paths.
-
-    All the given paths will be scanned to find a JSON file with the given name,
-    and as soon as a JSON with the given name is found it is returned.
-
-    Args:
-        name (str):
-            Path to a JSON file or name of the JSON to look for withouth the ``.json`` extension.
-        paths (list):
-            list of paths where the primitives will be looked for.
-
-    Returns:
-        dict:
-            The content of the JSON annotation file loaded into a dict.
-    """
-    if os.path.isfile(name):
-        return _load_json(name)
-
-    for base_path in paths:
-        parts = name.split('.')
-        number_of_parts = len(parts)
-
-        for folder_parts in range(number_of_parts):
-            folder = os.path.join(base_path, *parts[:folder_parts])
-            filename = '.'.join(parts[folder_parts:]) + '.json'
-            json_path = os.path.join(folder, filename)
-
-            if os.path.isfile(json_path):
-                return _load_json(json_path)
-
 
 
 @patch('mlblocks.discovery.get_primitives_paths')
