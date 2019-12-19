@@ -198,6 +198,12 @@ def get_pipelines_paths():
     return _PIPELINES_PATHS + _load_entry_points('pipelines')
 
 
+def _load_json(json_path):
+    with open(json_path, 'r') as json_file:
+        LOGGER.debug('Loading %s', json_path)
+        return json.load(json_file)
+
+
 def _load(name, paths):
     """Locate and load the JSON annotation in any of the given paths.
 
@@ -206,8 +212,7 @@ def _load(name, paths):
 
     Args:
         name (str):
-            name of the JSON to look for. The name should not contain the
-            ``.json`` extension, as it will be added dynamically.
+            Path to a JSON file or name of the JSON to look for withouth the ``.json`` extension.
         paths (list):
             list of paths where the primitives will be looked for.
 
@@ -215,6 +220,9 @@ def _load(name, paths):
         dict:
             The content of the JSON annotation file loaded into a dict.
     """
+    if os.path.isfile(name):
+        return _load_json(name)
+
     for base_path in paths:
         parts = name.split('.')
         number_of_parts = len(parts)
@@ -225,12 +233,7 @@ def _load(name, paths):
             json_path = os.path.join(folder, filename)
 
             if os.path.isfile(json_path):
-                with open(json_path, 'r') as json_file:
-                    LOGGER.debug('Loading %s from %s', name, json_path)
-                    return json.load(json_file)
-
-
-_PRIMITIVES = dict()
+                return _load_json(json_path)
 
 
 def load_primitive(name):
@@ -241,8 +244,7 @@ def load_primitive(name):
 
     Args:
         name (str):
-            name of the JSON to look for. The name should not contain the
-            ``.json`` extension, as it will be added dynamically.
+            Path to a JSON file or name of the JSON to look for withouth the ``.json`` extension.
 
     Returns:
         dict:
@@ -252,18 +254,11 @@ def load_primitive(name):
         ValueError:
             A ``ValueError`` will be raised if the primitive cannot be found.
     """
-    primitive = _PRIMITIVES.get(name)
+    primitive = _load(name, get_primitives_paths())
     if primitive is None:
-        primitive = _load(name, get_primitives_paths())
-        if primitive is None:
-            raise ValueError("Unknown primitive: {}".format(name))
-
-        _PRIMITIVES[name] = primitive
+        raise ValueError("Unknown primitive: {}".format(name))
 
     return primitive
-
-
-_PIPELINES = dict()
 
 
 def load_pipeline(name):
@@ -274,8 +269,7 @@ def load_pipeline(name):
 
     Args:
         name (str):
-            name of the JSON to look for. The name should not contain the
-            ``.json`` extension, as it will be added dynamically.
+            Path to a JSON file or name of the JSON to look for withouth the ``.json`` extension.
 
     Returns:
         dict:
@@ -285,13 +279,9 @@ def load_pipeline(name):
         ValueError:
             A ``ValueError`` will be raised if the pipeline cannot be found.
     """
-    pipeline = _PIPELINES.get(name)
+    pipeline = _load(name, get_pipelines_paths())
     if pipeline is None:
-        pipeline = _load(name, get_pipelines_paths())
-        if pipeline is None:
-            raise ValueError("Unknown pipeline: {}".format(name))
-
-        _PIPELINES[name] = pipeline
+        raise ValueError("Unknown pipeline: {}".format(name))
 
     return pipeline
 
