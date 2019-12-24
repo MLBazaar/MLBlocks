@@ -163,6 +163,23 @@ def test__load_success():
         assert primitive == loaded
 
 
+def test__load_json_path():
+    primitive = {
+        'name': 'temp.primitive',
+        'primitive': 'temp.primitive'
+    }
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        paths = [tempdir]
+        primitive_path = os.path.join(tempdir, 'temp.primitive.json')
+        with open(primitive_path, 'w') as primitive_file:
+            json.dump(primitive, primitive_file, indent=4)
+
+        loaded = discovery._load(primitive_path, paths)
+
+        assert primitive == loaded
+
+
 @patch('mlblocks.discovery.get_primitives_paths')
 @patch('mlblocks.discovery._load')
 def test__load_primitive_value_error(load_mock, gpp_mock):

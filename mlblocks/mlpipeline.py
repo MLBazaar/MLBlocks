@@ -5,6 +5,7 @@
 import json
 import logging
 import re
+import warnings
 from collections import Counter, OrderedDict, defaultdict
 from copy import deepcopy
 
@@ -814,6 +815,11 @@ class MLPipeline():
                 A new MLPipeline instance with the details found in the
                 given specification dictionary.
         """
+        warnings.warn(
+            'MLPipeline.form_dict(pipeline_dict) is deprecated and will be removed in a '
+            'later release. Please use MLPipeline(dict) instead,',
+            DeprecationWarning
+        )
         return cls(metadata)
 
     @classmethod
@@ -831,6 +837,11 @@ class MLPipeline():
                 A new MLPipeline instance with the specification found
                 in the JSON file.
         """
+        warnings.warn(
+            'MLPipeline.load(path) is deprecated and will be removed in a later release. '
+            'Please use MLPipeline(path) instead,',
+            DeprecationWarning
+        )
         with open(path, 'r') as in_file:
             metadata = json.load(in_file)
 
