@@ -280,12 +280,6 @@ class MLPipeline():
                 Each dictionary contains the entry ``name``, as
                 well as any other metadata that may have been included in the
                 pipeline inputs specification.
-
-        Raises:
-            ValueError:
-                If an input specification is not valid.
-            TypeError:
-                If the type of a specification is not an str or an int.
         """
         inputs = dict()
         for block_name in reversed(self.blocks.keys()):  # iterates through pipeline backwards
