@@ -154,6 +154,45 @@ class MLPipeline():
 
         return outputs
 
+    def _get_block_outputs_dict(self, block_name):
+        """Get dictionary of output variables for the given block."""
+        block = self.blocks[block_name]
+        outputs = deepcopy(block.produce_output)
+        output_names = self.output_names.get(block_name, dict())
+        output_dict = {}
+        for output in outputs:
+            name = output['name']
+            context_name = output_names.get(name, name)
+            output_dict[context_name] = output
+
+        return output_dict
+
+    def _get_block_inputs_dict(self, block_name):
+        """Get dictionary of input variables for the given block."""
+        block = self.blocks[block_name]
+        print(block.produce_args)
+        inputs = deepcopy(block.produce_args)
+        input_names = self.input_names.get(block_name, dict())
+        inputs_dict = {}
+        for input_value in inputs:
+            name = input_value['name']
+            context_name = input_names.get(name, name)
+            inputs_dict[context_name] = input_value
+        return inputs_dict
+
+    def _get_block_fit_inputs_dict(self, block_name):
+        """Get the list of fit input variables for the given block."""
+        block = self.blocks[block_name]
+        fit_inputs = deepcopy(block.fit_args)
+        input_names = self.input_names.get(block_name, dict())
+        fit_inputs_dict = {}
+        for fit_input in fit_inputs:
+            name = fit_input['name']
+            context_name = input_names.get(name, name)
+            fit_inputs_dict[context_name] = fit_input
+
+        return fit_inputs_dict
+
     def _get_outputs(self, pipeline, outputs):
         """Get the output definitions from the pipeline dictionary.
 
@@ -223,6 +262,45 @@ class MLPipeline():
             raise ValueError('Block {} has no output {}'.format(block_name, variable_name))
 
         raise ValueError('Invalid Output Specification: {}'.format(output))
+
+    def get_inputs(self, fit=True):
+        """Get a dictionary mapping all input variable names required by the
+        pipeline to a dictionary with their specified information.
+
+        Can be specified to include fit arguments.
+
+        Args:
+            fit (bool):
+                Optional argument to include fit arguments or not. Defaults to ``True``.
+
+        Returns:
+            dictionary:
+                A dictionary mapping every input variable's name to a dictionary
+                specifying the information corresponding to that input variable.
+                Each dictionary contains the entry ``name``, as
+                well as any other metadata that may have been included in the
+                pipeline inputs specification.
+
+        Raises:
+            ValueError:
+                If an input specification is not valid.
+            TypeError:
+                If the type of a specification is not an str or an int.
+        """
+        inputs = dict()
+        for block_name in reversed(self.blocks.keys()):  # iterates through pipeline backwards
+            produce_outputs = self._get_block_outputs_dict(block_name)
+            for produce_output_name in produce_outputs.keys():
+                inputs.pop(produce_output_name, None)
+
+            produce_inputs = self._get_block_inputs_dict(block_name)
+            inputs.update(produce_inputs)
+
+            if fit:
+                fit_inputs = self._get_block_fit_inputs_dict(block_name)
+                inputs.update(fit_inputs)
+
+        return inputs
 
     def get_outputs(self, outputs='default'):
         """Get the list of output variables that correspond to the specified outputs.
