@@ -550,6 +550,29 @@ class TestMLPipline(TestCase):
         assert names == ['a_variable']
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test__get_block_variables(self):
+        expected = {
+            'name_output': {
+                'name': 'output',
+                'type': 'whatever',
+            }
+        }
+
+        pipeline = MLPipeline(['a_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_outputs = [
+            {
+                'name': 'output',
+                'type': 'whatever'
+            }
+        ]
+
+        outputs = pipeline._get_block_variables('a_primitive#1',
+                                                'produce_outputs',
+                                                {'output': 'name_output'})
+        assert outputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_get_inputs_fit(self):
         expected = {
             'input': {

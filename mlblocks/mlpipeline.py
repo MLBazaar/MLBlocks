@@ -144,54 +144,35 @@ class MLPipeline():
 
     def _get_block_outputs(self, block_name):
         """Get the list of output variables for the given block."""
-        block = self.blocks[block_name]
-        outputs = deepcopy(block.produce_output)
-        output_names = self.output_names.get(block_name, dict())
-        for output in outputs:
-            name = output['name']
-            context_name = output_names.get(name, name)
+        outputs = self._get_block_variables(block_name,
+                                            'produce_output',
+                                            self.output_names.get(block_name, dict()))
+        for context_name, output in outputs.items():
             output['variable'] = '{}.{}'.format(block_name, context_name)
 
-        return outputs
+        return list(outputs.values())
 
-    def _get_block_outputs_dict(self, block_name):
-        """Get dictionary of output variables for the given block."""
+    def _get_block_variables(self, block_name, variables_attr, names):
+        """Get dictionary of variable names to the variable for a given block
+
+        Args:
+            block_name (str):
+                Name of the block for which to get the specification
+            variables_attr (str):
+                Name of the attribute that has the variables list. It can be
+                `fit_args`, `produce_args` or `produce_output`.
+            names (dict):
+                Dictionary used to translate the variable names.
+        """
         block = self.blocks[block_name]
-        outputs = deepcopy(block.produce_output)
-        output_names = self.output_names.get(block_name, dict())
-        output_dict = {}
-        for output in outputs:
-            name = output['name']
-            context_name = output_names.get(name, name)
-            output_dict[context_name] = output
+        variables = deepcopy(getattr(block, variables_attr))
+        variable_dict = {}
+        for variable in variables:
+            name = variable['name']
+            context_name = names.get(name, name)
+            variable_dict[context_name] = variable
 
-        return output_dict
-
-    def _get_block_inputs_dict(self, block_name):
-        """Get dictionary of input variables for the given block."""
-        block = self.blocks[block_name]
-        print(block.produce_args)
-        inputs = deepcopy(block.produce_args)
-        input_names = self.input_names.get(block_name, dict())
-        inputs_dict = {}
-        for input_value in inputs:
-            name = input_value['name']
-            context_name = input_names.get(name, name)
-            inputs_dict[context_name] = input_value
-        return inputs_dict
-
-    def _get_block_fit_inputs_dict(self, block_name):
-        """Get the list of fit input variables for the given block."""
-        block = self.blocks[block_name]
-        fit_inputs = deepcopy(block.fit_args)
-        input_names = self.input_names.get(block_name, dict())
-        fit_inputs_dict = {}
-        for fit_input in fit_inputs:
-            name = fit_input['name']
-            context_name = input_names.get(name, name)
-            fit_inputs_dict[context_name] = fit_input
-
-        return fit_inputs_dict
+        return variable_dict
 
     def _get_outputs(self, pipeline, outputs):
         """Get the output definitions from the pipeline dictionary.
@@ -264,10 +245,11 @@ class MLPipeline():
         raise ValueError('Invalid Output Specification: {}'.format(output))
 
     def get_inputs(self, fit=True):
-        """Get a dictionary mapping all input variable names required by the
-        pipeline to a dictionary with their specified information.
+        """Get a relation of all the input variables required by this pipeline.
 
-        Can be specified to include fit arguments.
+        The result is a dictionary that maps each variable name with their
+        specified information.
+        Optionally include the fit arguments.
 
         Args:
             fit (bool):
@@ -283,15 +265,22 @@ class MLPipeline():
         """
         inputs = dict()
         for block_name in reversed(self.blocks.keys()):  # iterates through pipeline backwards
-            produce_outputs = self._get_block_outputs_dict(block_name)
+            produce_outputs = self._get_block_variables(block_name,
+                                                        'produce_output',
+                                                        self.output_names.get(block_name, dict()))
+
             for produce_output_name in produce_outputs.keys():
                 inputs.pop(produce_output_name, None)
 
-            produce_inputs = self._get_block_inputs_dict(block_name)
+            produce_inputs = self._get_block_variables(block_name,
+                                                       'produce_args',
+                                                       self.input_names.get(block_name, dict()))
             inputs.update(produce_inputs)
 
             if fit:
-                fit_inputs = self._get_block_fit_inputs_dict(block_name)
+                fit_inputs = self._get_block_variables(block_name,
+                                                       'fit_args',
+                                                       self.input_names.get(block_name, dict()))
                 inputs.update(fit_inputs)
 
         return inputs
