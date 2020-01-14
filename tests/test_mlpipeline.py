@@ -567,9 +567,11 @@ class TestMLPipline(TestCase):
             }
         ]
 
-        outputs = pipeline._get_block_variables('a_primitive#1',
-                                                'produce_outputs',
-                                                {'output': 'name_output'})
+        outputs = pipeline._get_block_variables(
+            'a_primitive#1',
+            'produce_outputs',
+            {'output': 'name_output'}
+        )
         assert outputs == expected
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)

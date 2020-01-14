@@ -144,9 +144,11 @@ class MLPipeline():
 
     def _get_block_outputs(self, block_name):
         """Get the list of output variables for the given block."""
-        outputs = self._get_block_variables(block_name,
-                                            'produce_output',
-                                            self.output_names.get(block_name, dict()))
+        outputs = self._get_block_variables(
+            block_name,
+            'produce_output',
+            self.output_names.get(block_name, dict())
+        )
         for context_name, output in outputs.items():
             output['variable'] = '{}.{}'.format(block_name, context_name)
 
@@ -265,22 +267,28 @@ class MLPipeline():
         """
         inputs = dict()
         for block_name in reversed(self.blocks.keys()):  # iterates through pipeline backwards
-            produce_outputs = self._get_block_variables(block_name,
-                                                        'produce_output',
-                                                        self.output_names.get(block_name, dict()))
+            produce_outputs = self._get_block_variables(
+                block_name,
+                'produce_output',
+                self.output_names.get(block_name, dict())
+            )
 
             for produce_output_name in produce_outputs.keys():
                 inputs.pop(produce_output_name, None)
 
-            produce_inputs = self._get_block_variables(block_name,
-                                                       'produce_args',
-                                                       self.input_names.get(block_name, dict()))
+            produce_inputs = self._get_block_variables(
+                block_name,
+                'produce_args',
+                self.input_names.get(block_name, dict())
+            )
             inputs.update(produce_inputs)
 
             if fit:
-                fit_inputs = self._get_block_variables(block_name,
-                                                       'fit_args',
-                                                       self.input_names.get(block_name, dict()))
+                fit_inputs = self._get_block_variables(
+                    block_name,
+                    'fit_args',
+                    self.input_names.get(block_name, dict())
+                )
                 inputs.update(fit_inputs)
 
         return inputs
