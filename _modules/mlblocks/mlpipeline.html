@@ -403,15 +403,37 @@
 
     <span class="k">def</span> <span class="nf">_get_block_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the list of output variables for the given block.&quot;&quot;&quot;</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
-        <span class="n">output_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-            <span class="n">context_name</span> <span class="o">=</span> <span class="n">output_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_variables</span><span class="p">(</span>
+            <span class="n">block_name</span><span class="p">,</span>
+            <span class="s1">&#39;produce_output&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">context_name</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">output</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">context_name</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">outputs</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_get_block_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">variables_attr</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get dictionary of variable names to the variable for a given block</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            block_name (str):</span>
+<span class="sd">                Name of the block for which to get the specification</span>
+<span class="sd">            variables_attr (str):</span>
+<span class="sd">                Name of the attribute that has the variables list. It can be</span>
+<span class="sd">                `fit_args`, `produce_args` or `produce_output`.</span>
+<span class="sd">            names (dict):</span>
+<span class="sd">                Dictionary used to translate the variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">variables_attr</span><span class="p">))</span>
+        <span class="n">variable_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">variable</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="n">context_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">variable_dict</span><span class="p">[</span><span class="n">context_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">variable</span>
+
+        <span class="k">return</span> <span class="n">variable_dict</span>
 
     <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the output definitions from the pipeline dictionary.</span>
@@ -482,6 +504,53 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Block </span><span class="si">{}</span><span class="s1"> has no output </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">))</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid Output Specification: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+
+<div class="viewcode-block" id="MLPipeline.get_inputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a relation of all the input variables required by this pipeline.</span>
+
+<span class="sd">        The result is a dictionary that maps each variable name with their</span>
+<span class="sd">        specified information.</span>
+<span class="sd">        Optionally include the fit arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fit (bool):</span>
+<span class="sd">                Optional argument to include fit arguments or not. Defaults to ``True``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dictionary:</span>
+<span class="sd">                A dictionary mapping every input variable&#39;s name to a dictionary</span>
+<span class="sd">                specifying the information corresponding to that input variable.</span>
+<span class="sd">                Each dictionary contains the entry ``name``, as</span>
+<span class="sd">                well as any other metadata that may have been included in the</span>
+<span class="sd">                pipeline inputs specification.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>  <span class="c1"># iterates through pipeline backwards</span>
+            <span class="n">produce_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_variables</span><span class="p">(</span>
+                <span class="n">block_name</span><span class="p">,</span>
+                <span class="s1">&#39;produce_output&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">produce_output_name</span> <span class="ow">in</span> <span class="n">produce_outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">inputs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">produce_output_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="n">produce_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_variables</span><span class="p">(</span>
+                <span class="n">block_name</span><span class="p">,</span>
+                <span class="s1">&#39;produce_args&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+            <span class="p">)</span>
+            <span class="n">inputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">produce_inputs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">fit</span><span class="p">:</span>
+                <span class="n">fit_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_variables</span><span class="p">(</span>
+                    <span class="n">block_name</span><span class="p">,</span>
+                    <span class="s1">&#39;fit_args&#39;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+                <span class="p">)</span>
+                <span class="n">inputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fit_inputs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inputs</span></div>
 
 <div class="viewcode-block" id="MLPipeline.get_outputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the list of output variables that correspond to the specified outputs.</span>

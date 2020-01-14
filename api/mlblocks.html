@@ -570,31 +570,34 @@ results, which will be returned as the prediction of the pipeline.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_hyperparameters" title="mlblocks.MLPipeline.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a>([flat])</p></td>
 <td><p>Get the current hyperparamters of each block.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_output_names" title="mlblocks.MLPipeline.get_output_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_names</span></code></a>([outputs])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_inputs" title="mlblocks.MLPipeline.get_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_inputs</span></code></a>([fit])</p></td>
+<td><p>Get a relation of all the input variables required by this pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_output_names" title="mlblocks.MLPipeline.get_output_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_names</span></code></a>([outputs])</p></td>
 <td><p>Get the names of the outputs that correspond to the given specification.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_output_variables" title="mlblocks.MLPipeline.get_output_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_variables</span></code></a>([outputs])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_output_variables" title="mlblocks.MLPipeline.get_output_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_variables</span></code></a>([outputs])</p></td>
 <td><p>Get the list of variable specifications of the given outputs.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_outputs" title="mlblocks.MLPipeline.get_outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_outputs</span></code></a>([outputs])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_outputs" title="mlblocks.MLPipeline.get_outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_outputs</span></code></a>([outputs])</p></td>
 <td><p>Get the list of output variables that correspond to the specified outputs.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_tunable_hyperparameters" title="mlblocks.MLPipeline.get_tunable_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code></a>([flat])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.get_tunable_hyperparameters" title="mlblocks.MLPipeline.get_tunable_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tunable_hyperparameters</span></code></a>([flat])</p></td>
 <td><p>Get the tunable hyperparamters of each block.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.load" title="mlblocks.MLPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.load" title="mlblocks.MLPipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path)</p></td>
 <td><p>Create a new MLPipeline from a JSON specification.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.predict" title="mlblocks.MLPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>([X, output_, start_])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.predict" title="mlblocks.MLPipeline.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>([X, output_, start_])</p></td>
 <td><p>Produce predictions using the blocks of this pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.save" title="mlblocks.MLPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.save" title="mlblocks.MLPipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path)</p></td>
 <td><p>Save the specification of this MLPipeline in a JSON file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.set_hyperparameters" title="mlblocks.MLPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.set_hyperparameters" title="mlblocks.MLPipeline.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a>(hyperparameters)</p></td>
 <td><p>Set new hyperparameter values for some blocks.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.to_dict" title="mlblocks.MLPipeline.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.MLPipeline.to_dict" title="mlblocks.MLPipeline.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
 <td><p>Return all the details of this MLPipeline in a dict.</p></td>
 </tr>
 </tbody>
@@ -766,6 +769,30 @@ the current block hyperparameters dictionary as values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mlblocks.MLPipeline.get_inputs">
+<code class="sig-name descname">get_inputs</code><span class="sig-paren">(</span><em class="sig-param">fit=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/mlpipeline.html#MLPipeline.get_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.MLPipeline.get_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a relation of all the input variables required by this pipeline.</p>
+<p>The result is a dictionary that maps each variable name with their
+specified information.
+Optionally include the fit arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fit</strong> (<em>bool</em>) – Optional argument to include fit arguments or not. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary mapping every input variable’s name to a dictionary
+specifying the information corresponding to that input variable.
+Each dictionary contains the entry <code class="docutils literal notranslate"><span class="pre">name</span></code>, as
+well as any other metadata that may have been included in the
+pipeline inputs specification.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
 </dd>
 </dl>
 </dd></dl>
