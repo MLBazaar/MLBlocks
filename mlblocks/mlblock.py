@@ -115,13 +115,21 @@ class MLBlock():
         produce_args = [arg['name'] for arg in self.produce_args]
 
         for name in list(kwargs.keys()):
+            pop = False
             if name in fit_args:
-                fit_params[name] = kwargs.pop(name)
+                pop = True
+                fit_params[name] = kwargs[name]
 
-            elif name in produce_args:
-                produce_params[name] = kwargs.pop(name)
+            if name in produce_args:
+                pop = True
+                produce_params[name] = kwargs[name]
 
-        if kwargs:
+            if pop:
+                kwargs.pop(name)
+
+        if hyperparameters.get('unknown'):
+            init_params.update(kwargs)
+        elif kwargs:
             error = "Unexpected hyperparameters '{}'".format(', '.join(kwargs.keys()))
             raise TypeError(error)
 
