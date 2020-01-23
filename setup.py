@@ -18,6 +18,12 @@ install_requires = [
 ]
 
 
+examples_require = [
+    'mlprimitives>=0.2.4.dev0',
+    'jupyter==1.0.0'
+]
+
+
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
@@ -88,6 +94,7 @@ setup(
     extras_require={
         'dev': development_requires + tests_require,
         'test': tests_require,
+        'examples': examples_require,
     },
     include_package_data=True,
     install_requires=install_requires,

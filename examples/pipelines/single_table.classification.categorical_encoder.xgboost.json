@@ -1,0 +1,16 @@
+{
+    "metadata": {
+        "data_modality": "single_table",
+        "task_type": "classification"
+    },
+    "validation": {
+        "dataset": "census"
+    },
+    "primitives": [
+        "mlprimitives.custom.preprocessing.ClassEncoder",
+        "mlprimitives.custom.feature_extraction.CategoricalEncoder",
+        "sklearn.impute.SimpleImputer",
+        "xgboost.XGBClassifier",
+        "mlprimitives.custom.preprocessing.ClassDecoder"
+    ]
+}
