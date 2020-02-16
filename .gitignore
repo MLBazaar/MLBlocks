@@ -109,3 +109,4 @@ ENV/
 .*.swp
 
 mlblocks/data
+examples/tutorials/pipeline.pkl
