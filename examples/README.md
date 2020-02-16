@@ -5,7 +5,7 @@ functionaliry.
 
 Within this folder you will find:
 
-* `examples.py`: Simple Python code examples of a class and a function based primitive implementation.
+<!--* `examples.py`: Simple Python code examples of a class and a function based primitive implementation.-->
 * `primitives`: Example primitive JSONs to demonstrate different MLBlocks functionalities.
 * `pipelines`: Example pipeline JSONs to demonstrate different MLBlocks functionalities.
 * `tutorials`: Collection of Jupyter Notebooks to show the usage of different MLBlocks functionalities.
@@ -45,7 +45,7 @@ cd MLBlocks
 make install-examples
 ```
 
-This will install [MLBLocks](https://github.com/HDI-Project/MLBlocks.git) and also [MLPrimitives](
+This will install [MLBLocks](https://github.com/HDI-Project/MLBlocks.git) as well as [MLPrimitives](
 https://github.com/HDI-Project/MLPrimitives.git) and [Jupyter](https://jupyter.org/).
 
 4. Enter the `examples` folder and start a Jupyter Notebook:
