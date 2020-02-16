@@ -27,7 +27,6 @@ import mlblocks
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
@@ -47,7 +46,6 @@ autodoc_default_options = {
 }
 
 ipython_execlines = ["import pandas as pd", "pd.set_option('display.width', 1000000)"]
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -116,7 +114,7 @@ html_context = {
 # documentation.
 html_theme_options = {
     'collapse_navigation': False,
-    'display_version': False,
+    'display_version': True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
