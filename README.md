@@ -16,11 +16,15 @@ Pipelines and Primitives for Machine Learning and Data Science.
 [![CodeCov](https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/HDI-Project/MLBlocks)
 [![Downloads](https://pepy.tech/badge/mlblocks)](https://pepy.tech/project/mlblocks)
 
-# Overview
+---
+
+# MLBlocks
 
 * Free software: MIT license
 * Documentation: https://HDI-Project.github.io/MLBlocks
 * Homepage: https://github.com/HDI-Project/MLBlocks
+
+## Overview
 
 MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
 seamlessly combining tools from any python library with a simple, common and uniform interface.
