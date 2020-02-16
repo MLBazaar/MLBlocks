@@ -120,7 +120,7 @@ Micah J. Smith, Carles Sala, James Max Kanter, and Kalyan Veeramachaneni. ["The 
 Harnessing the ML Ecosystem for Effective System Development."](https://arxiv.org/abs/1905.08942) arXiv
 Preprint 1905.08942. 2019.
 
-``` bibtex
+```bibtex
 @article{smith2019mlbazaar,
   author = {Smith, Micah J. and Sala, Carles and Kanter, James Max and Veeramachaneni, Kalyan},
   title = {The Machine Learning Bazaar: Harnessing the ML Ecosystem for Effective System Development},

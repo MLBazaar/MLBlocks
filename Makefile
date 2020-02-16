@@ -114,6 +114,10 @@ lint-docs: ## check docs formatting with doc8 and pydocstyle
 test: ## run tests quickly with the default Python
 	python -m pytest --cov=mlblocks
 
+.PHONY: test-readme
+test-readme: ## run the readme snippets
+	rundoc run --single-session python3 -t python3 README.md
+
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
 	tox -r
