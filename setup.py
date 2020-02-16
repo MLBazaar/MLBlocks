@@ -28,10 +28,8 @@ tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
     'mlprimitives>=0.2,<0.3',
-    # 'urllib3>=1.20,<1.25',
-    # 'setuptools>=41.0.0',
+    'setuptools>=41.0.0',
     'numpy<1.17',
-    # 'python-dateutil<2.8.1,>=2.1',
     'rundoc>=0.4.3',
     'prompt-toolkit>=2.0,<3.0',
 ]
