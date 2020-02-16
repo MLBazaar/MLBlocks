@@ -16,7 +16,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 [![CodeCov](https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/HDI-Project/MLBlocks)
 [![Downloads](https://pepy.tech/badge/mlblocks)](https://pepy.tech/project/mlblocks)
 
----
+<br>
 
 # MLBlocks
 
