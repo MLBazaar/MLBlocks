@@ -111,7 +111,7 @@ the pipelines using JSON annotations or build complex multi-branched pipelines, 
 check our [documentation site](https://HDI-Project.github.io/MLBlocks).
 
 Also do not forget to have a look at the [notebook tutorials](
-https://github.com/D3-AI/GreenGuard/tree/master/examples/tutorials)!
+https://github.com/HDI-Project/MLBlocks/tree/master/examples/tutorials)!
 
 # Citing MLBlocks
 
