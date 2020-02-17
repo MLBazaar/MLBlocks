@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; MLBlocks 0.3.5.dev0 documentation</title>
+  <title>Installation &mdash; MLBlocks 0.3.5.dev0 documentation</title>
   
 
   
@@ -37,7 +37,9 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quickstart" href="quickstart.html" />
+    <link rel="prev" title="What is MLBlocks?" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,10 +88,10 @@
             
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul>
@@ -245,10 +247,16 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Overview: module code</li>
+      <li>Installation</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/HDI-Project/MLBlocks/blob/master/docs/getting_started/install.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
         
       </li>
     
@@ -260,17 +268,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="mlblocks/datasets.html">mlblocks.datasets</a></li>
-<li><a href="mlblocks/discovery.html">mlblocks.discovery</a></li>
-<li><a href="mlblocks/mlblock.html">mlblocks.mlblock</a></li>
-<li><a href="mlblocks/mlpipeline.html">mlblocks.mlpipeline</a></li>
-</ul>
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="from-pypi">
+<h2>From PyPi<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h2>
+<p>The simplest and recommended way to install MLBlocks is using <cite>pip</cite>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install mlblocks</span>
+</pre></div>
+</div>
+<p>If you don’t have <a class="reference external" href="https://pip.pypa.io">pip</a> installed, this <a class="reference external" href="http://docs.python-guide.org/en/latest/starting/installation/">Python installation guide</a> can guide
+you through the process.</p>
+</div>
+<div class="section" id="additional-dependencies">
+<h2>Additional dependencies<a class="headerlink" href="#additional-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>In order to be usable, MLBlocks requires a compatible primitives library.</p>
+<p>The official library, required in order to follow the MLBlocks tutorials and documentation examples,
+is <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which you can install with this command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install mlprimitives</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-for-development">
+<h2>Install for development<a class="headerlink" href="#install-for-development" title="Permalink to this headline">¶</a></h2>
+<p>If you are installing <strong>MLBlocks</strong> in order to modify its code, the installation must be done
+from its sources, in the editable mode, and also including some additional dependencies in
+order to be able to run the tests and build the documentation. Instructions about this process
+can be found in the <a class="reference external" href="../contributing.html#get-started">Contributing guide</a>.</p>
+</div>
+</div>
+
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="What is MLBlocks?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
