@@ -79,8 +79,10 @@ pip install mlprimitives
 
 # Quickstart
 
-Below there is a short example about how to use **MLBlocks** to solve a prediction problem
-using the primitives and pipelines from [MLPrimitives](https://github.com/HDI-Project/MLPrimitives).
+Below there is a short example about how to use **MLBlocks** to solve the [Adult Census
+Dataset](https://archive.ics.uci.edu/ml/datasets/Adult) classification problem using a
+pipeline which combines primitives from [MLPrimitives](https://github.com/HDI-Project/MLPrimitives),
+[scikit-learn](https://scikit-learn.org/) and [xgboost](https://xgboost.readthedocs.io/).
 
 ```python3
 from mlblocks import MLPipeline
