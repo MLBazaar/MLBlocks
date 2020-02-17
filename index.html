@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>MLBlocks &mdash; MLBlocks 0.3.5.dev0 documentation</title>
+  <title>What is MLBlocks? &mdash; MLBlocks 0.3.5.dev0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="MLBlocks" href="readme.html" /> 
+    <link rel="next" title="Primitives" href="advanced_usage/primitives.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,20 +86,9 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="readme.html">MLBlocks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#overview">Overview</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#install">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#install-with-pip">Install with pip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="readme.html#mlprimitives">MLPrimitives</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#quickstart">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#what-s-next">What’s Next?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#citing-mlblocks">Citing MLBlocks</a></li>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is MLBlocks?</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
 <ul>
@@ -255,7 +244,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>MLBlocks</li>
+      <li>What is MLBlocks?</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -276,136 +265,64 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p align="left">
-<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt=“DAI-Lab” />
-<i>An open source project from Data to AI Lab at MIT.</i>
-</p><p align="left">
-<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/mlblocks-icon.png" alt=“MLBlocks” />
-</p><p align="left">
-Pipelines and Primitives for Machine Learning and Data Science.
-</p><a class="reference external image-reference" href="https://pypi.python.org/pypi/mlblocks"><img alt="PyPi" src="https://img.shields.io/pypi/v/mlblocks.svg" /></a>
-<a class="reference external image-reference" href="https://travis-ci.org/HDI-Project/MLBlocks"><img alt="Travis" src="https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/HDI-Project/MLBlocks"><img alt="CodeCov" src="https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg" /></a>
-<a class="reference external image-reference" href="https://pepy.tech/project/mlblocks"><img alt="Downloads" src="https://pepy.tech/badge/mlblocks" /></a>
-<p><span class="raw-html-m2r"><br></span></p>
-<div class="section" id="mlblocks">
-<h1>MLBlocks<a class="headerlink" href="#mlblocks" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="what-is-mlblocks">
+<h1>What is MLBlocks?<a class="headerlink" href="#what-is-mlblocks" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="_images/mlblocks-logo.png"><img alt="MLBlocks" class="align-center" src="_images/mlblocks-logo.png" style="width: 300px;" /></a>
 <ul class="simple">
-<li><p>Free software: MIT license</p></li>
+<li><p>Free software: <a class="reference external" href="https://github.com/HDI-Project/MLBlocks/blob/master/LICENSE">MIT license</a></p></li>
 <li><p>Documentation: <a class="reference external" href="https://HDI-Project.github.io/MLBlocks">https://HDI-Project.github.io/MLBlocks</a></p></li>
 <li><p>Homepage: <a class="reference external" href="https://github.com/HDI-Project/MLBlocks">https://github.com/HDI-Project/MLBlocks</a></p></li>
 </ul>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>MLBlocks is a simple framework for composing end-to-end tunable Machine Learning Pipelines by
-seamlessly combining tools from any python library with a simple, common and uniform interface.</p>
-<p>Features include:</p>
+<p>MLBlocks is a simple framework for seamlessly combining any possible set of Machine Learning
+tools developed in Python, whether they are custom developments or belong to third party
+libraries, and build Pipelines out of them that can be fitted and then used to make predictions.</p>
+<p>This is achieved by providing a simple and intuitive annotation language that allows the
+user to specify how to integrate with each tool, here called primitives, in order to provide
+a common uniform interface to each one of them.</p>
+<p>At a high level:</p>
 <ul class="simple">
-<li><p>Build Machine Learning Pipelines combining <strong>any Machine Learning Library in Python</strong>.</p></li>
-<li><p>Access a repository with hundreds of primitives and pipelines ready to be used with little to
-no python code to write, carefully curated by Machine Learning and Domain experts.</p></li>
-<li><p>Extract machine-readable information about which hyperparameters can be tuned and within
-which ranges, allowing automated integration with Hyperparameter Optimization tools like
-<a class="reference external" href="https://github.com/HDI-Project/BTB">BTB</a>.</p></li>
-<li><p>Complex multi-branch pipelines and DAG configurations, with unlimited number of inputs and
-outputs per primitive.</p></li>
-<li><p>Easy save and load Pipelines using JSON Annotations.</p></li>
+<li><p>Each available primitive has been annotated using a standardized JSON file that specifies its
+native interface, as well as which hyperparameters can be used to tune its behavior.</p></li>
+<li><p>A list of primitives that will be combined into a pipeline is provided by the user, optionally
+passing along the hyperparameters to use for each primitive.</p></li>
+<li><p>An MLBlock instance is build for each primitive, offering a common interface for all of them.</p></li>
+<li><p>The MLBlock instances are then combined into an MLPipeline instance, able to run them all in
+the right order, passing the output from each one as input to the next one.</p></li>
+<li><p>The training data is passed to the <cite>MLPipeline.fit</cite> method, which sequentially fits each
+MLBlock instance following the JSON annotation specification.</p></li>
+<li><p>The data used to make predictions is passed to the <cite>MLPipeline.predict</cite> method, which uses each
+MLBlock sequentially to obtain the desired predictions.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="install">
-<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p><strong>MLBlocks</strong> has been developed and tested on <a class="reference external" href="https://www.python.org/downloads/">Python 3.5 and 3.6</a></p>
-<p>Also, although it is not strictly required, the usage of a
-<a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a> is highly recommended in order to avoid
-interfering with other software installed in the system where <strong>MLBlocks</strong> is run.</p>
-</div>
-<div class="section" id="install-with-pip">
-<h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
-<p>The easiest and recommended way to install <strong>MLBlocks</strong> is using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install mlblocks
-</pre></div>
-</div>
-<p>This will pull and install the latest stable release from <a class="reference external" href="https://pypi.org/">PyPi</a>.</p>
-<p>If you want to install from source or contribute to the project please read the
-<a class="reference external" href="https://hdi-project.github.io/MLBlocks/contributing.html#get-started">Contributing Guide</a>.</p>
-</div>
-<div class="section" id="mlprimitives">
-<h2>MLPrimitives<a class="headerlink" href="#mlprimitives" title="Permalink to this headline">¶</a></h2>
-<p>In order to be usable, MLBlocks requires a compatible primitives library.</p>
-<p>The official library, required in order to follow the following MLBlocks tutorial,
-is <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>, which you can install
-with this command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install mlprimitives
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="quickstart">
-<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
-<p>Below there is a short example about how to use <strong>MLBlocks</strong> to solve a prediction problem
-using the primitives and pipelines from <a class="reference external" href="https://github.com/HDI-Project/MLPrimitives">MLPrimitives</a>.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
-
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;census&#39;</span><span class="p">)</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_splits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">primitives</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;mlprimitives.custom.preprocessing.ClassEncoder&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mlprimitives.custom.feature_extraction.CategoricalEncoder&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;sklearn.impute.SimpleImputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;xgboost.XGBClassifier&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mlprimitives.custom.preprocessing.ClassDecoder&#39;</span>
-<span class="p">]</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">primitives</span><span class="p">)</span>
-
-<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-
-<span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="what-s-next">
-<h1>What’s Next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h1>
-<p>If you want to learn more about how to tune the pipeline hyperparameters, save and load
-the pipelines using JSON annotations or build complex multi-branched pipelines, please
-check our <a class="reference external" href="https://HDI-Project.github.io/MLBlocks">documentation site</a>.</p>
-<p>Also do not forget to have a look at the <a class="reference external" href="https://github.com/HDI-Project/MLBlocks/tree/master/examples/tutorials">notebook tutorials</a>!</p>
-</div>
-<div class="section" id="citing-mlblocks">
-<h1>Citing MLBlocks<a class="headerlink" href="#citing-mlblocks" title="Permalink to this headline">¶</a></h1>
-<p>If you use MLBlocks for your research, please consider citing our related papers.</p>
-<p>For the current design of MLBlocks and its usage within the larger <em>Machine Learning Bazaar</em> project at
-the MIT Data To AI Lab, please see:</p>
-<p>Micah J. Smith, Carles Sala, James Max Kanter, and Kalyan Veeramachaneni. <a class="reference external" href="https://arxiv.org/abs/1905.08942">“The Machine Learning Bazaar:
-Harnessing the ML Ecosystem for Effective System Development.”</a> arXiv
-Preprint 1905.08942. 2019.</p>
-<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@article</span><span class="p">{</span><span class="nl">smith2019mlbazaar</span><span class="p">,</span>
-  <span class="na">author</span> <span class="p">=</span> <span class="s">{Smith, Micah J. and Sala, Carles and Kanter, James Max and Veeramachaneni, Kalyan}</span><span class="p">,</span>
-  <span class="na">title</span> <span class="p">=</span> <span class="s">{The Machine Learning Bazaar: Harnessing the ML Ecosystem for Effective System Development}</span><span class="p">,</span>
-  <span class="na">journal</span> <span class="p">=</span> <span class="s">{arXiv e-prints}</span><span class="p">,</span>
-  <span class="na">year</span> <span class="p">=</span> <span class="s">{2019}</span><span class="p">,</span>
-  <span class="na">eid</span> <span class="p">=</span> <span class="s">{arXiv:1905.08942}</span><span class="p">,</span>
-  <span class="na">pages</span> <span class="p">=</span> <span class="s">{arXiv:1905.08942}</span><span class="p">,</span>
-  <span class="na">archivePrefix</span> <span class="p">=</span> <span class="s">{arXiv}</span><span class="p">,</span>
-  <span class="na">eprint</span> <span class="p">=</span> <span class="s">{1905.08942}</span><span class="p">,</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>For the first MLBlocks version from 2015, designed for only multi table, multi entity temporal data, please
-refer to Bryan Collazo’s thesis:</p>
+<div class="section" id="history">
+<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<p>In its first iteration, in 2015, MLBlocks was designed for only multi table, multi entity temporal
+data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis, written
+under the supervision of Kalyan Veeramachaneni:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Mlblocks_Bryan.pdf">Machine learning blocks</a>.
 Bryan Collazo. Masters thesis, MIT EECS, 2015.</p></li>
 </ul>
-<p>With recent availability of a multitude of libraries and tools, we decided it was time to integrate
-them and expand the library to address other data types: images, text, graph, time series and
-integrate with deep learning libraries.</p>
+<p>In 2018, with recent availability of a multitude of libraries and tools, we decided it was time to
+integrate them and expand the library to address other data types, like images, text, graph or
+time series, as well as introduce the usage of deep learning libraries. A second iteration of our
+work was then started by the hand of William Xue:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://dai.lids.mit.edu/wp-content/uploads/2018/12/William_MEng.pdf">A Flexible Framework for Composing End to End Machine Learning Pipelines</a>.
+William Xue. Masters thesis, MIT EECS, 2018.</p></li>
+</ul>
+<p>Later in 2018, Carles Sala joined the project to make it grow as a reliable open-source library
+that would become part of a bigger software ecosystem designed to facilitate the development of
+robust end-to-end solutions based on Machine Learning tools. This third iteration of our work
+was presented in 2019 as part of the Machine Learning Bazaar:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/1905.08942">The Machine Learning Bazaar: Harnessing the ML Ecosystem for Effective System Development</a>.
+Micah J. Smith, Carles Sala, James Max Kanter, and Kalyan Veeramachaneni. Sigmod 2020.</p></li>
+</ul>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is MLBlocks?</a></li>
+</ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Advanced Usage</span></p>
@@ -443,6 +360,7 @@ integrate with deep learning libraries.</p>
 </ul>
 </div>
 </div>
+</div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
@@ -460,7 +378,7 @@ integrate with deep learning libraries.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="readme.html" class="btn btn-neutral float-right" title="MLBlocks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="advanced_usage/primitives.html" class="btn btn-neutral float-right" title="Primitives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
