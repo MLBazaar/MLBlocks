@@ -20,7 +20,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 
 # MLBlocks
 
-* Free software: MIT license
+* Free software: [MIT license](https://github.com/HDI-Project/MLBlocks/blob/master/LICENSE)
 * Documentation: https://HDI-Project.github.io/MLBlocks
 * Homepage: https://github.com/HDI-Project/MLBlocks
 
