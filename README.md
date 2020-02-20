@@ -11,6 +11,7 @@
 Pipelines and Primitives for Machine Learning and Data Science.
 </p>
 
+[![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 [![PyPi](https://img.shields.io/pypi/v/mlblocks.svg)](https://pypi.python.org/pypi/mlblocks)
 [![Travis](https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master)](https://travis-ci.org/HDI-Project/MLBlocks)
 [![CodeCov](https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/HDI-Project/MLBlocks)
@@ -21,6 +22,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 # MLBlocks
 
 * Free software: [MIT license](https://github.com/HDI-Project/MLBlocks/blob/master/LICENSE)
+* Development Status: [Pre-Alpha](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 * Documentation: https://HDI-Project.github.io/MLBlocks
 * Homepage: https://github.com/HDI-Project/MLBlocks
 
