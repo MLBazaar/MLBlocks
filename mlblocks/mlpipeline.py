@@ -8,6 +8,7 @@ import re
 import warnings
 from collections import Counter, OrderedDict, defaultdict
 from copy import deepcopy
+from graphviz import Digraph
 
 import numpy as np
 
@@ -250,8 +251,7 @@ class MLPipeline():
     def get_inputs(self, fit=True):
         """Get a relation of all the input variables required by this pipeline.
 
-        The result is a dictionary that maps each variable name with their
-        specified information.
+        The result is a list contains all of the input variables.
         Optionally include the fit arguments.
 
         Args:
@@ -259,9 +259,8 @@ class MLPipeline():
                 Optional argument to include fit arguments or not. Defaults to ``True``.
 
         Returns:
-            dictionary:
-                A dictionary mapping every input variable's name to a dictionary
-                specifying the information corresponding to that input variable.
+            list:
+                List of dictionaries specifying all the input variables.
                 Each dictionary contains the entry ``name``, as
                 well as any other metadata that may have been included in the
                 pipeline inputs specification.
@@ -292,7 +291,19 @@ class MLPipeline():
                 )
                 inputs.update(fit_inputs)
 
-        return inputs
+        inputs_list=[]
+        if 'X' in inputs:
+            inputs_list.append(inputs['X'])
+            del inputs['X']
+
+        if 'y' in inputs:
+            inputs_list.append(inputs['y'])
+            del inputs['y']
+
+        for input_value in inputs.values():
+            inputs_list.append(input_value)
+
+        return inputs_list
 
     def get_outputs(self, outputs='default'):
         """Get the list of output variables that correspond to the specified outputs.
@@ -856,6 +867,166 @@ class MLPipeline():
             'tunable_hyperparameters': self._tunable_hyperparameters,
             'outputs': self.outputs,
         }
+
+    def _get_simple_block_name(self, block_name):
+        full_name = block_name.split("#")[0]
+        simple_name = full_name.split(".")[-1]
+        return simple_name
+
+    def _get_context_name_from_variable(self, variable_name):
+        block_name = variable_name.split("#")[0]
+        rest = variable_name[len(block_name)+1:]
+        block_index = rest.split(".")[0]
+        context_name = rest[len(block_index)+1:]
+        if len(context_name) == 0:
+            raise ValueError("Invalid variable name")
+        return context_name
+
+
+    def get_diagram(self, fit=True, outputs='default', image_path=None):
+        """
+        Creates a png diagram for the pipeline, showing Pipeline Steps,
+        Pipeline Inputs and Outputs, and block inputs and outputs.
+
+        If strings are given, they can either be one of the named outputs that have
+        been specified on the pipeline definition or a full variable specification
+        following the format ``{block-name}.{variable-name}``.
+
+        Args:
+            fit (bool):
+                Optional argument to include fit arguments or not. Defaults to `True`.
+
+            outputs (str, int, or list[str or int]):
+                Single or list of output specifications.
+
+            image_path (str):
+                Optional argument for the location at which to save the file.
+                Defaults to `None`, which returns a `graphviz.Digraph` object instead of saving the file.
+
+        Returns:
+            None or `graphviz.Digraph` object:
+                * `graphviz.Digraph` contains the information about the Pipeline Diagram
+        """
+
+        diagram = Digraph(format='png')
+        diagram.attr('graph', splines='ortho')
+        diagram.attr('node', shape='box', penwidth='1')
+
+        # Blocks
+        for block_name in self.blocks.keys():
+            simple_name = self._get_simple_block_name(block_name)
+            diagram.node(block_name, simple_name)
+
+        variables = {}
+
+        # Inputs
+        inputs = self.get_inputs(fit)
+        input_variables = []
+        with diagram.subgraph(name="cluster_inputs") as cluster:
+            cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
+            cluster.attr('node', penwidth='0', fontsize='24')
+            cluster.node('Input', 'Input', fontsize='14')
+            cluster.attr('edge', penwidth='0', arrowhead='none')
+            for input_value in inputs:
+                input_name = input_value['name']
+                variables[input_name] = input_name+'_input'
+                input_variables.append(input_name)
+                cluster.node(variables[input_name], input_name)
+                cluster.edge('Input', variables[input_name])
+
+            with cluster.subgraph() as input_variables_subgraph:
+                input_variables_subgraph.attr(None, rank='same')
+                for index in range(1, len(input_variables)):
+                    input_variables_subgraph.edge(variables[input_variables[index-1]],
+                                                  variables[input_variables[index]])
+                    input_variables_subgraph.attr(None, rankdir='LR')
+
+        # Outputs
+        outputs = self.get_outputs(outputs)
+        output_variables = []
+        with diagram.subgraph(name="cluster_outputs") as cluster:
+            cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
+            cluster.attr('node', penwidth='0', fontsize='24')
+            cluster.node('Output', 'Output', fontsize='14')
+            cluster.attr('edge', penwidth='0', arrowhead='none')
+            for output in outputs:
+                try:
+                    variable_name = self._get_context_name_from_variable(output['variable'])
+                except ValueError:
+                    raise NotImplementedError('Can not deal with this type of output specification')
+                cluster.node(variable_name+'_output', variable_name)
+                output_variables.append(variable_name)
+                cluster.edge(output_variables[-1] + '_output', 'Output')
+            with cluster.subgraph() as output_variables_subgraph:
+                output_variables_subgraph.attr(None, rank='same')
+                for index in range(1, len(output_variables)):
+                    output_variables_subgraph.edge(output_variables[index-1]+'_output', output_variables[index]+'_output')
+                output_variables_subgraph.attr(None, rankdir='LR')
+
+        cluster_edges = set()
+
+        # Variables
+        diagram.attr('node', fontsize='14', penwidth='0')
+        diagram.attr('edge', penwidth='1')
+        for block_name, block in self.blocks.items():
+            # Inputs
+            input_names = self.input_names.get(block_name, dict())
+            input_variables = block.produce_args
+            if fit:
+                for input_variable in block.fit_args:
+                    if input_variable not in input_variables:
+                        input_variables.append(input_variable)
+            for input_variable in input_variables:
+                input_variable_name = input_variable['name']
+                if input_variable_name in input_names:
+                    diagram.node(block_name+' '+input_variable_name, '('+input_variable_name+')', fontcolor='blue')
+                    original_variable_name = input_names[input_variable_name]
+                    diagram.edge(variables[original_variable_name], block_name+' '+input_variable_name)
+                    cluster_edges.add((block_name+' '+input_variable_name, block_name))
+                else:
+                    diagram.edge(variables[input_variable_name], block_name)
+
+            # Outputs
+            output_names = self.output_names.get(block_name, dict())
+            for output_variable in block.produce_output:
+                output_variable_name = output_variable['name']
+                if output_variable_name in output_names:
+                    diagram.node(block_name+' '+output_variable_name, '('+output_variable_name+')', fontcolor='red')
+                    cluster_edges.add((block_name, block_name+' '+output_variable_name))
+                    new_variable_name = output_names[output_variable_name]
+                    diagram.node(block_name+' '+new_variable_name, new_variable_name)
+                    diagram.edge(block_name+' '+output_variable_name, block_name+' '+new_variable_name, arrowhead='none')
+                    variables[new_variable_name] = block_name+' '+new_variable_name
+                else:
+                    diagram.node(block_name+' '+output_variable_name, output_variable_name)
+                    diagram.edge(block_name, block_name+' '+output_variable_name, arrowhead='none')
+                    variables[output_variable_name] = block_name+' '+output_variable_name
+
+        # Connection to output variables
+        for output_variable in output_variables:
+            variable_block = variables[output_variable]
+            diagram.edge(variable_block, output_variable+'_output')
+
+        # Alignment
+        with diagram.subgraph() as alignment:
+            alignment.attr('graph', penwidth='0')
+            alignment.attr('edge', penwidth='0', arrowhead='none')
+            for index in range(1, len(self.blocks)):
+                alignment.edge(self._get_block_name(index-1), self._get_block_name(index))
+
+            # Optional names
+            alignment.attr('edge', len='1', minlen='1', penwidth='1')
+
+            for first_block, second_block in cluster_edges:
+                with alignment.subgraph(name='cluster_'+first_block+second_block) as cluster:
+                    cluster.edge(first_block, second_block)
+
+        if image_path:
+            diagram.render(filename='Diagram', directory=image_path, cleanup=True, format='png')
+        else:
+            return diagram
+
+
 
     def save(self, path):
         """Save the specification of this MLPipeline in a JSON file.
