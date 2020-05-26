@@ -864,6 +864,7 @@ class MLPipeline():
         Args:
             block_name (str):
                 Name of the block whose simple name is being extracted.
+
         Returns:
             str:
                 block name stripped of number and other modifiers.
@@ -879,6 +880,7 @@ class MLPipeline():
         Args:
             variable_name (str):
                 Name of the variable.
+
         Returns:
             str:
                 Name of the context of the variable.
@@ -926,7 +928,7 @@ class MLPipeline():
 
         with diagram.subgraph(name="cluster_inputs") as cluster:
             cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
-            cluster.attr('node', penwidth='0', fontsize='24')
+            cluster.attr('node', penwidth='0', fontsize='20')
             cluster.attr('edge', penwidth='0', arrowhead='none')
             cluster.node('Input', 'Input', fontsize='14')
             for input_name in inputs:
@@ -966,7 +968,7 @@ class MLPipeline():
 
         with diagram.subgraph(name="cluster_outputs") as cluster:
             cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
-            cluster.attr('node', penwidth='0', fontsize='24')
+            cluster.attr('node', penwidth='0', fontsize='20')
             cluster.attr('edge', penwidth='0', arrowhead='none')
             cluster.node('Output', 'Output', fontsize='14')
             for output in outputs_vars:
@@ -1048,23 +1050,23 @@ class MLPipeline():
                 in order
         """
         input_names = self.input_names.get(block_name, dict())
-        input_variables = block.produce_args
+        input_variables = set(variable['name'] for variable in block.produce_args)
 
         if fit:
             for input_variable in block.fit_args:
-                if input_variable not in input_variables:
-                    input_variables.append(input_variable)
+                if input_variable['name'] not in input_variables:
+                    input_variables.add(input_variable['name'])
+
         for input_variable in input_variables:
-            input_variable_name = input_variable['name']
-            if input_variable_name in input_names:
-                diagram.node(block_name + ' ' + input_variable_name,
-                             '(' + input_variable_name + ')', fontcolor='blue')
-                original_variable_name = input_names[input_variable_name]
+            if input_variable in input_names:
+                diagram.node(block_name + ' ' + input_variable,
+                             '(' + input_variable + ')', fontcolor='blue')
+                original_variable_name = input_names[input_variable]
                 diagram.edge(variables[original_variable_name],
-                             block_name + ' ' + input_variable_name)
-                cluster_edges.add((block_name + ' ' + input_variable_name, block_name))
+                             block_name + ' ' + input_variable)
+                cluster_edges.add((block_name + ' ' + input_variable, block_name))
             else:
-                diagram.edge(variables[input_variable_name], block_name)
+                diagram.edge(variables[input_variable], block_name)
 
     def _make_diagram_variables_output_block(self, diagram, variables, cluster_edges, block,
                                              block_name):
@@ -1145,10 +1147,6 @@ class MLPipeline():
         """
         with diagram.subgraph() as alignment:
             alignment.attr('graph', penwidth='0')
-            alignment.attr('edge', penwidth='0', arrowhead='none')
-            for index in range(1, len(self.blocks)):
-                alignment.edge(self._get_block_name(index - 1), self._get_block_name(index))
-
             alignment.attr('edge', len='1', minlen='1', penwidth='1')
             for first_block, second_block in cluster_edges:
                 with alignment.subgraph(name='cluster_' + first_block + second_block) as cluster:
