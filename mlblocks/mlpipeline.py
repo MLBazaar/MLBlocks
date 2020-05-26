@@ -8,9 +8,9 @@ import re
 import warnings
 from collections import Counter, OrderedDict, defaultdict
 from copy import deepcopy
-from graphviz import Digraph
 
 import numpy as np
+from graphviz import Digraph
 
 from mlblocks.discovery import load_pipeline
 from mlblocks.mlblock import MLBlock
