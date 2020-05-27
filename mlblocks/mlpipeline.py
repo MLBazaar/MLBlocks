@@ -1061,12 +1061,13 @@ class MLPipeline():
 
         for input_variable in input_variables:
             if input_variable in input_names:
-                diagram.node(block_name + ' ' + input_variable,
+                input_variable_label = block_name + ' ' + input_variable + ' (input)'
+                diagram.node(input_variable_label,
                              '(' + input_variable + ')', fontcolor='blue')
                 original_variable_name = input_names[input_variable]
                 diagram.edge(variables[original_variable_name],
-                             block_name + ' ' + input_variable)
-                cluster_edges.add((block_name + ' ' + input_variable, block_name))
+                             input_variable_label)
+                cluster_edges.add((input_variable_label, block_name))
             else:
                 diagram.edge(variables[input_variable], block_name)
 
@@ -1104,18 +1105,20 @@ class MLPipeline():
         for output_variable in block.produce_output:
             output_variable_name = output_variable['name']
             if output_variable_name in output_names:
-                diagram.node(block_name + ' ' + output_variable_name,
+                output_variable_label = block_name + ' ' + output_variable_name + ' (output)'
+                diagram.node(output_variable_label,
                              '(' + output_variable_name + ')', fontcolor='red')
-                cluster_edges.add((block_name, block_name + ' ' + output_variable_name))
+                cluster_edges.add((block_name, output_variable_label))
                 new_variable_name = output_names[output_variable_name]
                 diagram.node(block_name + ' ' + new_variable_name, new_variable_name)
-                diagram.edge(block_name + ' ' + output_variable_name,
+                diagram.edge(output_variable_label,
                              block_name + ' ' + new_variable_name, arrowhead='none')
                 variables[new_variable_name] = block_name + ' ' + new_variable_name
             else:
-                diagram.node(block_name + ' ' + output_variable_name, output_variable_name)
-                diagram.edge(block_name, block_name + ' ' + output_variable_name, arrowhead='none')
-                variables[output_variable_name] = block_name + ' ' + output_variable_name
+                output_variable_label = block_name + ' ' + output_variable_name
+                diagram.node(output_variable_label, output_variable_name)
+                diagram.edge(block_name, output_variable_label, arrowhead='none')
+                variables[output_variable_name] = output_variable_label
 
     def _make_diagram_output_connections(self, diagram, variables, output_variables):
         """
