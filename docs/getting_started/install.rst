@@ -18,40 +18,26 @@ you through the process.
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
-From sources
-------------
+Additional dependencies
+-----------------------
 
-The sources for MLBlocks can be downloaded from the `Github repo`_.
+In order to be usable, MLBlocks requires a compatible primitives library.
 
-You can either clone the public repository:
-
-.. code-block:: console
-
-    git clone git://github.com/HDI-Project/MLBlocks
-
-Or download the `tarball`_:
+The official library, required in order to follow the MLBlocks tutorials and documentation examples,
+is `MLPrimitives`_, which you can install with this command:
 
 .. code-block:: console
 
-    curl  -OL https://github.com/HDI-Project/MLBlocks/tarball/master
+    pip install mlprimitives
 
-Once you have a copy of the source, you can install it running the next command inside the
-project folder:
+.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
 
-.. code-block:: console
-
-    $ make install
-
-.. _Github repo: https://github.com/HDI-Project/MLBlocks
-.. _tarball: https://github.com/HDI-Project/MLBlocks/tarball/master
-
-Development
------------
+Install for development
+-----------------------
 
 If you are installing **MLBlocks** in order to modify its code, the installation must be done
 from its sources, in the editable mode, and also including some additional dependencies in
-order to be able to run the tests and build the documentation:
+order to be able to run the tests and build the documentation. Instructions about this process
+can be found in the `Contributing guide`_.
 
-.. code-block:: console
-
-    make install-develop
+.. _Contributing guide: ../contributing.html#get-started

@@ -72,6 +72,10 @@ clean: clean-build clean-pyc clean-test clean-coverage clean-docs ## remove all 
 install: clean-build clean-pyc ## install the package to the active Python's site-packages
 	pip install .
 
+.PHONY: install-examples
+install-examples: clean-build clean-pyc ## install the package and the examples dependencies
+	pip install .[examples]
+
 .PHONY: install-test
 install-test: clean-build clean-pyc ## install the package and test dependencies
 	pip install .[test]
@@ -109,6 +113,10 @@ lint-docs: ## check docs formatting with doc8 and pydocstyle
 .PHONY: test
 test: ## run tests quickly with the default Python
 	python -m pytest --cov=mlblocks
+
+.PHONY: test-readme
+test-readme: ## run the readme snippets
+	rundoc run --single-session python3 -t python3 README.md
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox

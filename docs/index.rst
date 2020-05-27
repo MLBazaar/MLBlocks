@@ -6,6 +6,10 @@ What is MLBlocks?
    :alt: MLBlocks
    :align: center
 
+* Free software: `MIT license <https://github.com/HDI-Project/MLBlocks/blob/master/LICENSE>`_
+* Documentation: https://HDI-Project.github.io/MLBlocks
+* Homepage: https://github.com/HDI-Project/MLBlocks
+
 MLBlocks is a simple framework for seamlessly combining any possible set of Machine Learning
 tools developed in Python, whether they are custom developments or belong to third party
 libraries, and build Pipelines out of them that can be fitted and then used to make predictions.
@@ -31,15 +35,28 @@ At a high level:
 History
 -------
 
-In its first iteration in 2015, MLBlocks was designed for only multi table, multi entity temporal
-data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis:
+In its first iteration, in 2015, MLBlocks was designed for only multi table, multi entity temporal
+data. A good reference to see our design rationale at that time is Bryan Collazo’s thesis, written
+under the supervision of Kalyan Veeramachaneni:
 
 * `Machine learning blocks`_.
   Bryan Collazo. Masters thesis, MIT EECS, 2015.
 
-With recent availability of a multitude of libraries and tools, we decided it was time to integrate
-them and expand the library to address other data types: images, text, graph, time series and
-integrate with deep learning libraries.
+In 2018, with recent availability of a multitude of libraries and tools, we decided it was time to
+integrate them and expand the library to address other data types, like images, text, graph or
+time series, as well as introduce the usage of deep learning libraries. A second iteration of our
+work was then started by the hand of William Xue:
+
+* `A Flexible Framework for Composing End to End Machine Learning Pipelines`_.
+  William Xue. Masters thesis, MIT EECS, 2018.
+
+Later in 2018, Carles Sala joined the project to make it grow as a reliable open-source library
+that would become part of a bigger software ecosystem designed to facilitate the development of
+robust end-to-end solutions based on Machine Learning tools. This third iteration of our work
+was presented in 2019 as part of the Machine Learning Bazaar:
+
+* `The Machine Learning Bazaar: Harnessing the ML Ecosystem for Effective System Development`_.
+  Micah J. Smith, Carles Sala, James Max Kanter, and Kalyan Veeramachaneni. Sigmod 2020.
 
 .. toctree::
    :caption: Getting Started
@@ -90,5 +107,7 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. _Machine learning blocks: https://github.com/HDI-Project/mlblocks
-.. _tarball: https://github.com/HDI-Project/mlblocks/tarball/master
+.. _Machine learning blocks: https://dai.lids.mit.edu/wp-content/uploads/2018/06/Mlblocks_Bryan.pdf
+
+.. _A Flexible Framework for Composing End to End Machine Learning Pipelines: https://dai.lids.mit.edu/wp-content/uploads/2018/12/William_MEng.pdf
+.. _The Machine Learning Bazaar\: Harnessing the ML Ecosystem for Effective System Development: https://arxiv.org/abs/1905.08942
