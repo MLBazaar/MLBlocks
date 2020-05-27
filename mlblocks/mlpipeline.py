@@ -927,10 +927,11 @@ class MLPipeline():
         inputs = self.get_inputs(fit)
 
         with diagram.subgraph(name="cluster_inputs") as cluster:
+            cluster.attr(tooltip='Input variables')
             cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
             cluster.attr('node', penwidth='0', fontsize='20')
             cluster.attr('edge', penwidth='0', arrowhead='none')
-            cluster.node('Input', 'Input', fontsize='14')
+            cluster.node('Input', 'Input', fontsize='14', tooltip='Input variables')
             for input_name in inputs:
                 variables[input_name] = input_name + '_input'
                 input_variables.append(input_name)
@@ -967,10 +968,11 @@ class MLPipeline():
         outputs_vars = self.get_outputs(outputs)
 
         with diagram.subgraph(name="cluster_outputs") as cluster:
+            cluster.attr(tooltip='Output variables')
             cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
             cluster.attr('node', penwidth='0', fontsize='20')
             cluster.attr('edge', penwidth='0', arrowhead='none')
-            cluster.node('Output', 'Output', fontsize='14')
+            cluster.node('Output', 'Output', fontsize='14', tooltip='Output variables')
             for output in outputs_vars:
                 try:
                     variable_name = self._get_context_name_from_variable(output['variable'])
@@ -1180,6 +1182,8 @@ class MLPipeline():
 
         diagram = Digraph(format='png')
         diagram.attr('graph', splines='ortho')
+        diagram.attr(tooltip=' ')  # hack to remove extraneous tooltips on edges
+        diagram.attr('edge', tooltip=' ')
 
         self._make_diagram_blocks(diagram)
         variables = self._make_diagram_inputs(diagram, fit)
