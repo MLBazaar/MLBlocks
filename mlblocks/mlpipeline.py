@@ -900,6 +900,7 @@ class MLPipeline():
         Args:
             block_name (str):
                 The name of the block from which the variables are outputted
+
             block (MLBlock):
                 The block from which the variables are outputted
 
@@ -959,10 +960,12 @@ class MLPipeline():
                 Block whose input variables are to be added to the diagram
 
             cluster_edges (set):
-                Set of edges between alternative variable names and their corresponding block
+                Set of tuples representing edges between alternative variable names and their
+                corresponding block and the type of arrowhead
 
             variable_blocks (dict):
-                Dictionary of variable names and the set of blocks into which the variable connects
+                Dictionary of variable names and the set of tuples of blocks into which the
+                variable connects and the type of arrowhead to use
         """
         input_alt_names = self.input_names.get(block_name, dict())
         input_variables = set(variable['name'] for variable in block.produce_args)
@@ -974,18 +977,20 @@ class MLPipeline():
 
         for input_name in input_variables:
             input_block = block_name
+            arrowhead = 'normal'
             if input_name in input_alt_names:
                 input_variable_label = block_name + ' ' + input_name + ' (input)'
                 diagram.node(input_variable_label,
                              '(' + input_name + ')', fontcolor='blue')
-                cluster_edges.add((input_variable_label, block_name))
+                cluster_edges.add((input_variable_label, block_name, 'normal'))
                 input_name = input_alt_names[input_name]
                 input_block = input_variable_label
+                arrowhead = 'none'
 
             if input_name in variable_blocks.keys():
-                variable_blocks[input_name].add(input_block)
+                variable_blocks[input_name].add((input_block, arrowhead))
             else:
-                variable_blocks[input_name] = {input_block}
+                variable_blocks[input_name] = {(input_block, arrowhead)}
 
     def _make_block_outputs(self, diagram, block_name, output_names, cluster_edges,
                             variable_blocks):
@@ -1006,10 +1011,12 @@ class MLPipeline():
                 Set of output variable names to be added to the diagram
 
             cluster_edges (set):
-                Set of edges between alternative variable names and their corresponding block
+                Set of tuples representing edges between alternative variable names and their
+                corresponding block and the type of arrowhead
 
             variable_blocks (dict):
-                Dictionary of variable names and the set of blocks into which the variable connects
+                Dictionary of variable names and the set of tuples of blocks into which the
+                variable connects and the type of arrowhead to use
         """
         output_alt_names = self.output_names.get(block_name, dict())
         for output_name in output_names:
@@ -1018,7 +1025,7 @@ class MLPipeline():
                 alt_variable_label = block_name + ' ' + output_name + ' (output)'
                 diagram.node(alt_variable_label,
                              '(' + output_name + ')', fontcolor='red')
-                cluster_edges.add((block_name, alt_variable_label))
+                cluster_edges.add((block_name, alt_variable_label, 'none'))
                 output_name = output_alt_names[output_name]
                 output_block = alt_variable_label
 
@@ -1026,8 +1033,8 @@ class MLPipeline():
             diagram.node(output_variable_label, output_name)
             diagram.edge(output_block, output_variable_label, arrowhead='none')
 
-            for block in variable_blocks[output_name]:
-                diagram.edge(output_variable_label, block)
+            for block, arrow in variable_blocks[output_name]:
+                diagram.edge(output_variable_label, block, arrowhead=arrow)
 
             del variable_blocks[output_name]
 
@@ -1040,8 +1047,8 @@ class MLPipeline():
                 Diagram to be modified.
 
             input_variables_blocks (dict):
-                Dictionary of input variables of the pipeline and the set of blocks where the
-                corresponding variable is an input
+                Dictionary of input variables of the pipeline and the set of tuples of blocks into
+                which the variable connects and the type of arrowhead to use
         """
         with diagram.subgraph(name="cluster_inputs") as cluster:
             cluster.attr(tooltip='Input variables')
@@ -1056,8 +1063,8 @@ class MLPipeline():
                 cluster.edge('Input', input_name_label)
                 input_variables.append(input_name_label)
 
-                for block in blocks:
-                    diagram.edge(input_name_label, block, pendwith='1')
+                for block, arrow in blocks:
+                    diagram.edge(input_name_label, block, pendwith='1', arrowhead=arrow)
 
             with cluster.subgraph() as input_variables_subgraph:
                 input_variables_subgraph.attr(None, rank='same')
@@ -1125,9 +1132,9 @@ class MLPipeline():
             alignment.attr('node', penwidth='0')
             alignment.attr('edge', len='1', minlen='1', penwidth='1')
 
-            for first_block, second_block in cluster_edges:
+            for first_block, second_block, arrow in cluster_edges:
                 with alignment.subgraph(name='cluster_' + first_block + second_block) as cluster:
-                    cluster.edge(first_block, second_block)
+                    cluster.edge(first_block, second_block, arrowhead=arrow)
 
     def get_diagram(self, fit=True, outputs='default', image_path=None):
         """
@@ -1158,13 +1165,12 @@ class MLPipeline():
         diagram = Digraph(format='png')
         diagram.attr('graph', splines='ortho')
         diagram.attr(tooltip=' ')  # hack to remove extraneous tooltips on edges
-        diagram.attr('edge', tooltip=' ')
         diagram.attr('node', shape='box', penwidth='0')
 
         output_variables = self._make_diagram_outputs(diagram, outputs)
 
         cluster_edges = set()
-        variable_blocks = dict((name, {name + '_output'}) for name in output_variables)
+        variable_blocks = dict((name, {(name + '_output', 'normal')}) for name in output_variables)
         for block_name, block in reversed(self.blocks.items()):
             relevant_output_names = self._get_relevant_output_variables(block_name, block,
                                                                         variable_blocks.keys())
