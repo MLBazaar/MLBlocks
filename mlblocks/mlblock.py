@@ -13,7 +13,6 @@ LOGGER = logging.getLogger(__name__)
 
 def import_object(object_name):
     """Import an object from its Fully Qualified Name."""
-
     if isinstance(object_name, str):
         parent_name, attribute = object_name.rsplit('.', 1)
         try:
@@ -257,7 +256,6 @@ class MLBlock():
                 A dictionary containing the argument names and values to pass
                 to the primitive method.
         """
-
         method_kwargs = dict()
         for arg in method_args:
             name = arg['name']

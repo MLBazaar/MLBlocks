@@ -6,11 +6,11 @@
 from setuptools import find_packages, setup
 
 
-with open('README.md') as readme_file:
+with open('README.md', encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 
-with open('HISTORY.md') as history_file:
+with open('HISTORY.md', encoding='utf-8') as history_file:
     history = history_file.read()
 
 
@@ -19,19 +19,19 @@ install_requires = [
 
 
 examples_require = [
-    'mlprimitives>=0.2.4.dev0',
-    'jupyter==1.0.0'
+    'mlprimitives>=0.2,<0.3',
+    'baytune>=0.3.0,<0.4',
+    'jupyter==1.0.0',
+    'docutils<0.16,>=0.10',
+    'numpy<1.17,>=1.15.2',
+    'scipy<1.4.0,>=1.0.1'
 ]
 
 
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.2,<0.3',
-    'setuptools>=41.0.0',
-    'numpy<1.17',
-    'rundoc>=0.4.3',
-    'prompt-toolkit>=2.0,<3.0',
+    'rundoc>=0.4.3,<0.5',
 ]
 
 
@@ -42,35 +42,34 @@ setup_requires = [
 
 development_requires = [
     # general
-    'bumpversion>=0.5.3',
+    'bumpversion>=0.5.3,<0.6',
     'pip>=9.0.1',
-    'watchdog>=0.8.3',
+    'watchdog>=0.8.3,<0.11',
 
     # docs
-    'm2r>=0.2.0',
-    'Sphinx>=1.7.1',
-    'sphinx_rtd_theme>=0.2.4',
-    'graphviz>=0.9',
+    'm2r>=0.2.0,<0.3',
+    'Sphinx>=1.7.1,<3',
+    'sphinx_rtd_theme>=0.2.4,<0.5',
+    'autodocsumm>=0.1.10',
     'ipython>=6.5.0',
     'matplotlib>=2.2.3',
-    'autodocsumm>=0.1.10',
-    'docutils<0.15,>=0.10',    # botocore incompatibility with 0.15
+    'graphviz>=0.9',
 
     # style check
-    'flake8>=3.5.0',
-    'isort>=4.3.4',
+    'flake8>=3.7.7,<4',
+    'isort>=4.3.4,<5',
 
     # fix style issues
-    'autoflake>=1.2',  # keep this after flake8 to avoid
-    'autopep8>=1.3.5', # version incompatibilities with flake8
+    'autoflake>=1.1,<2',
+    'autopep8>=1.4.3,<2',
 
     # distribute on PyPI
-    'twine>=1.10.0',
+    'twine>=1.10.0,<4',
     'wheel>=0.30.0',
 
     # Advanced testing
-    'tox>=2.9.1',
-    'coverage>=4.5.1',
+    'coverage>=4.5.1,<6',
+    'tox>=2.9.1,<4',
 
     # Documentation style
     'doc8>=0.8.0',
@@ -89,11 +88,12 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
         'dev': development_requires + tests_require + examples_require,
-        'test': tests_require,
+        'test': tests_require + examples_require,
         'examples': examples_require,
     },
     include_package_data=True,
@@ -104,6 +104,7 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
+    python_requires='>=3.5,<3.8',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,

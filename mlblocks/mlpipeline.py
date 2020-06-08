@@ -156,7 +156,7 @@ class MLPipeline():
         return list(outputs.values())
 
     def _get_block_variables(self, block_name, variables_attr, names):
-        """Get dictionary of variable names to the variable for a given block
+        """Get dictionary of variable names to the variable for a given block.
 
         Args:
             block_name (str):
