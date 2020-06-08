@@ -118,7 +118,7 @@ test-readme: ## run the readme snippets
 
 .PHONY: test-tutorials
 test-tutorials: ## run the tutorial notebooks
-	jupyter nbconvert --execute --ExecutePreprocessor.timeout=1200 examples/tutorials/*.ipynb --stdout > /dev/null
+	jupyter nbconvert --execute --ExecutePreprocessor.timeout=3600 examples/tutorials/*.ipynb --stdout > /dev/null
 
 .PHONY: test
 test: test-unit test-readme test-tutorials ## test everything that needs test dependencies
