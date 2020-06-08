@@ -12,7 +12,7 @@ install:
    - sudo apt-get install graphviz
 
 # Command to run tests
-script: tox
+script: travis_wait tox
 
 after_success: codecov
 
