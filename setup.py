@@ -15,6 +15,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 
 install_requires = [
+    'graphviz>=0.9,<1',
 ]
 
 
@@ -53,7 +54,6 @@ development_requires = [
     'autodocsumm>=0.1.10',
     'ipython>=6.5.0',
     'matplotlib>=2.2.3',
-    'graphviz>=0.9',
 
     # style check
     'flake8>=3.7.7,<4',
