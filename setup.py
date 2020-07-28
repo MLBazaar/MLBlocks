@@ -58,7 +58,7 @@ development_requires = [
 
     # style check
     'flake8>=3.5.0,<3.8',
-    'isort>=4.3.4<5',
+    'isort>=4.3.4,<5',
 
     # fix style issues
     'autoflake>=1.2',  # keep this after flake8 to avoid
