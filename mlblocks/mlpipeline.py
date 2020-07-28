@@ -8,6 +8,7 @@ import re
 import warnings
 from collections import Counter, OrderedDict, defaultdict
 from copy import deepcopy
+from datetime import datetime
 
 import numpy as np
 
@@ -223,6 +224,7 @@ class MLPipeline():
             self.set_hyperparameters(hyperparameters)
 
         self._re_block_name = re.compile(r'(^[^#]+#\d+)(\..*)?')
+        self.time = dict()
 
     def _get_str_output(self, output):
         """Get the outputs that correspond to the str specification."""
@@ -390,6 +392,18 @@ class MLPipeline():
         outputs = self.get_outputs(outputs)
         return [output['variable'] for output in outputs]
 
+    def get_time(self):
+        """Get the execution time of each block.
+
+        If called before fitting the pipeline, it will return an empty dictionary.
+
+        Returns:
+            dict:
+                A dictionary containing the block names as keys and
+                the execution time in seconds as values.
+        """
+        return self.time.copy()
+        
     def _extract_block_name(self, variable_name):
         return self._re_block_name.search(variable_name).group(1)
 
@@ -616,7 +630,10 @@ class MLPipeline():
         LOGGER.debug("Fitting block %s", block_name)
         try:
             fit_args = self._get_block_args(block_name, block.fit_args, context)
+            start = datetime.utcnow()
             block.fit(**fit_args)
+            elapsed = datetime.utcnow() - start
+            self.time[block_name] = elapsed.total_seconds()
         except Exception:
             if self.verbose:
                 LOGGER.exception("Exception caught fitting MLBlock %s", block_name)
