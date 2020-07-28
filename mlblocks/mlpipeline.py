@@ -224,7 +224,6 @@ class MLPipeline():
             self.set_hyperparameters(hyperparameters)
 
         self._re_block_name = re.compile(r'(^[^#]+#\d+)(\..*)?')
-        self.time = dict()
 
     def _get_str_output(self, output):
         """Get the outputs that correspond to the str specification."""
@@ -392,18 +391,6 @@ class MLPipeline():
         outputs = self.get_outputs(outputs)
         return [output['variable'] for output in outputs]
 
-    def get_time(self):
-        """Get the execution time of each block.
-
-        If called before fitting the pipeline, it will return an empty dictionary.
-
-        Returns:
-            dict:
-                A dictionary containing the block names as keys and
-                the execution time in seconds as values.
-        """
-        return self.time.copy()
-        
     def _extract_block_name(self, variable_name):
         return self._re_block_name.search(variable_name).group(1)
 
@@ -625,7 +612,7 @@ class MLPipeline():
             index = output_variables.index(variable_name)
             outputs[index] = deepcopy(value)
 
-    def _fit_block(self, block, block_name, context):
+    def _fit_block(self, block, block_name, context, debug=False):
         """Get the block args from the context and fit the block."""
         LOGGER.debug("Fitting block %s", block_name)
         try:
@@ -633,14 +620,21 @@ class MLPipeline():
             start = datetime.utcnow()
             block.fit(**fit_args)
             elapsed = datetime.utcnow() - start
-            self.time[block_name] = elapsed.total_seconds()
+
+            if debug:
+                debug_info = {
+                    "elapsed": elapsed.total_seconds(),
+                    "input": fit_args
+                }
+                return debug_info
+
         except Exception:
             if self.verbose:
                 LOGGER.exception("Exception caught fitting MLBlock %s", block_name)
 
             raise
 
-    def _produce_block(self, block, block_name, context, output_variables, outputs):
+    def _produce_block(self, block, block_name, context, output_variables, outputs, debug=False):
         """Get the block args from the context and produce the block.
 
         Afterwards, set the block outputs back into the context and update
@@ -649,7 +643,9 @@ class MLPipeline():
         LOGGER.debug("Producing block %s", block_name)
         try:
             produce_args = self._get_block_args(block_name, block.produce_args, context)
+            start = datetime.utcnow()
             block_outputs = block.produce(**produce_args)
+            elapsed = datetime.utcnow() - start
 
             outputs_dict = self._extract_outputs(block_name, block_outputs, block.produce_output)
             context.update(outputs_dict)
@@ -662,13 +658,21 @@ class MLPipeline():
                         variable_name = '{}.{}'.format(block_name, key)
                         self._update_outputs(variable_name, output_variables, outputs, value)
 
+            if debug:
+                debug_info = {
+                    "elapsed": elapsed.total_seconds(),
+                    "input": produce_args,
+                    "output": outputs_dict
+                }
+                return debug_info
+
         except Exception:
             if self.verbose:
                 LOGGER.exception("Exception caught producing MLBlock %s", block_name)
 
             raise
 
-    def fit(self, X=None, y=None, output_=None, start_=None, **kwargs):
+    def fit(self, X=None, y=None, output_=None, start_=None, debug=False, **kwargs):
         """Fit the blocks of this pipeline.
 
         Sequentially call the ``fit`` and the ``produce`` methods of each block,
@@ -698,6 +702,10 @@ class MLPipeline():
                 If given, the execution of the pipeline will start on the specified block,
                 and all the blocks before that one will be skipped.
 
+            debug (boolean):
+                Debug mode, if True a dictionary containing the block names as keys and
+                the execution time in seconds, input, output as values is returned.
+
             **kwargs:
                 Any additional keyword arguments will be directly added
                 to the context dictionary and available for the blocks.
@@ -725,6 +733,10 @@ class MLPipeline():
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)
 
+        debug_info = None
+        if debug:
+            debug_info = defaultdict(dict)
+
         for block_name, block in self.blocks.items():
             if start_:
                 if block_name == start_:
@@ -733,10 +745,15 @@ class MLPipeline():
                     LOGGER.debug("Skipping block %s fit", block_name)
                     continue
 
-            self._fit_block(block, block_name, context)
+            out = self._fit_block(block, block_name, context, debug)
+            if debug:
+                debug_info["fit"][block_name] = out
 
             if (block_name != self._last_block_name) or (block_name in output_blocks):
-                self._produce_block(block, block_name, context, output_variables, outputs)
+                out = self._produce_block(
+                    block, block_name, context, output_variables, outputs, debug)
+                if debug:
+                    debug_info["produce"][block_name] = out
 
                 # We already captured the output from this block
                 if block_name in output_blocks:
@@ -746,15 +763,23 @@ class MLPipeline():
             # outputs we are done.
             if output_variables is not None and not output_blocks:
                 if len(outputs) > 1:
-                    return tuple(outputs)
+                    result = tuple(outputs)
                 else:
-                    return outputs[0]
+                    result = outputs[0]
+
+                if debug:
+                    return result, debug_info
+
+                return result
+
+        if debug:
+            return debug_info
 
         if start_:
             # We skipped all the blocks up to the end
             raise ValueError('Unknown block name: {}'.format(start_))
 
-    def predict(self, X=None, output_='default', start_=None, **kwargs):
+    def predict(self, X=None, output_='default', start_=None, debug=False, **kwargs):
         """Produce predictions using the blocks of this pipeline.
 
         Sequentially call the ``produce`` method of each block, capturing the
@@ -780,6 +805,10 @@ class MLPipeline():
                 If given, the execution of the pipeline will start on the specified block,
                 and all the blocks before that one will be skipped.
 
+            debug (boolean):
+                Debug mode, if True a dictionary containing the block names as keys and
+                the execution time in seconds, input, output as values is returned.
+
             **kwargs:
                 Any additional keyword arguments will be directly added
                 to the context dictionary and available for the blocks.
@@ -798,6 +827,10 @@ class MLPipeline():
         if isinstance(start_, int):
             start_ = self._get_block_name(start_)
 
+        debug_info = None
+        if debug:
+            debug_info = dict()
+
         for block_name, block in self.blocks.items():
             if start_:
                 if block_name == start_:
@@ -806,7 +839,9 @@ class MLPipeline():
                     LOGGER.debug("Skipping block %s produce", block_name)
                     continue
 
-            self._produce_block(block, block_name, context, output_variables, outputs)
+            out = self._produce_block(block, block_name, context, output_variables, outputs, debug)
+            if debug:
+                debug_info[block_name] = out
 
             # We already captured the output from this block
             if block_name in output_blocks:
@@ -816,9 +851,14 @@ class MLPipeline():
             # outputs we are done.
             if not output_blocks:
                 if len(outputs) > 1:
-                    return tuple(outputs)
+                    result = tuple(outputs)
                 else:
-                    return outputs[0]
+                    result = outputs[0]
+
+                if debug:
+                    return result, debug_info
+
+                return result
 
         if start_:
             # We skipped all the blocks up to the end

@@ -15,7 +15,6 @@ with open('HISTORY.md') as history_file:
 
 
 install_requires = [
-    'Keras>=2.1.6,<2.4'
 ]
 
 
