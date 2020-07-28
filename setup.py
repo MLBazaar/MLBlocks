@@ -27,7 +27,7 @@ examples_require = [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.2,<0.3',
+    'mlprimitives>=0.2.4.dev0',
     'setuptools>=41.0.0',
     'numpy<1.17',
     'rundoc>=0.4.3',
