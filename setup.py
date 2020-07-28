@@ -47,8 +47,8 @@ development_requires = [
     'watchdog>=0.8.3',
 
     # docs
-    'm2r>=0.2.0',
-    'Sphinx>=1.7.1',
+    'm2r>=0.2.0,<0.3',
+    'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4',
     'graphviz>=0.9',
     'ipython>=6.5.0',
