@@ -612,7 +612,7 @@ class MLPipeline():
             index = output_variables.index(variable_name)
             outputs[index] = deepcopy(value)
 
-    def _fit_block(self, block, block_name, context, debug=False):
+    def _fit_block(self, block, block_name, context, debug=None):
         """Get the block args from the context and fit the block."""
         LOGGER.debug("Fitting block %s", block_name)
         try:
@@ -621,12 +621,11 @@ class MLPipeline():
             block.fit(**fit_args)
             elapsed = datetime.utcnow() - start
 
-            if debug:
-                debug_info = {
+            if debug is not None:
+                debug["fit"][block_name] = {
                     "elapsed": elapsed.total_seconds(),
                     "input": fit_args
                 }
-                return debug_info
 
         except Exception:
             if self.verbose:
@@ -634,7 +633,7 @@ class MLPipeline():
 
             raise
 
-    def _produce_block(self, block, block_name, context, output_variables, outputs, debug=False):
+    def _produce_block(self, block, block_name, context, output_variables, outputs, debug=None):
         """Get the block args from the context and produce the block.
 
         Afterwards, set the block outputs back into the context and update
@@ -658,13 +657,17 @@ class MLPipeline():
                         variable_name = '{}.{}'.format(block_name, key)
                         self._update_outputs(variable_name, output_variables, outputs, value)
 
-            if debug:
-                debug_info = {
+            if debug is not None:
+                record = {
                     "elapsed": elapsed.total_seconds(),
                     "input": produce_args,
                     "output": outputs_dict
                 }
-                return debug_info
+
+                if "fit" in debug.keys():
+                    debug["produce"][block_name] = record
+                else:
+                    debug[block_name] = record
 
         except Exception:
             if self.verbose:
@@ -745,15 +748,11 @@ class MLPipeline():
                     LOGGER.debug("Skipping block %s fit", block_name)
                     continue
 
-            out = self._fit_block(block, block_name, context, debug)
-            if debug:
-                debug_info["fit"][block_name] = out
+            self._fit_block(block, block_name, context, debug_info)
 
             if (block_name != self._last_block_name) or (block_name in output_blocks):
-                out = self._produce_block(
-                    block, block_name, context, output_variables, outputs, debug)
-                if debug:
-                    debug_info["produce"][block_name] = out
+                self._produce_block(
+                    block, block_name, context, output_variables, outputs, debug_info)
 
                 # We already captured the output from this block
                 if block_name in output_blocks:
@@ -839,9 +838,7 @@ class MLPipeline():
                     LOGGER.debug("Skipping block %s produce", block_name)
                     continue
 
-            out = self._produce_block(block, block_name, context, output_variables, outputs, debug)
-            if debug:
-                debug_info[block_name] = out
+            self._produce_block(block, block_name, context, output_variables, outputs, debug_info)
 
             # We already captured the output from this block
             if block_name in output_blocks:
@@ -859,6 +856,9 @@ class MLPipeline():
                     return result, debug_info
 
                 return result
+
+        if debug:
+            return debug_info
 
         if start_:
             # We skipped all the blocks up to the end
