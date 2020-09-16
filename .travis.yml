@@ -12,7 +12,7 @@ install:
   - pip install -U tox-travis codecov
 
 # Command to run tests
-script: travis_wait tox
+script: travis_wait 60 tox
 
 after_success: codecov
 
