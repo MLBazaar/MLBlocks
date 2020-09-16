@@ -879,6 +879,95 @@ class TestMLPipline(TestCase):
         for block_name, dictionary in expected_return.items():
             assert set(debug_returned[block_name].keys()) == set(dictionary.keys())
 
+    def test_get_diagram_simple(self):
+        f = open('tests/data/diagrams/diagram_simple.txt', 'r')
+        expected = f.read()[:-1]
+        f.close()
+
+        output = [
+            {
+                'name': 'output_variable',
+                'type': 'another_whatever',
+                'variable': 'a_primitive#1.output_variable'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive'], outputs={'default': output})
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].produce_output = output
+
+        assert str(pipeline.get_diagram()) == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_diagram_fit(self):
+        f = open('tests/data/diagrams/diagram_fit.txt', 'r')
+        expected = f.read()[:-1]
+        f.close()
+
+        output = [
+            {
+                'name': 'output_variable',
+                'type': 'another_whatever',
+                'variable': 'a_primitive#1.output_variable'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive'], outputs={'default': output})
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].produce_output = output
+
+        assert str(pipeline.get_diagram()) == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_diagram_multiple_blocks(self):
+        f = open('tests/data/diagrams/diagram_multiple_blocks.txt', 'r')
+        expected = f.read()[:-1]
+        f.close()
+
+        first_output = [
+            {
+                'name': 'output_variable_a',
+                'type': 'another_whatever',
+                'variable': 'a_primitive#1.output_variable_a'
+            }
+        ]
+        second_output = [
+            {
+                'name': 'output_variable_b',
+                'type': 'another_whatever',
+                'variable': 'b_primitive#1.output_variable_b'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive', 'b_primitive'], outputs={'default': second_output})
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].produce_output = first_output
+        pipeline.blocks['b_primitive#1'].produce_args = first_output
+        pipeline.blocks['b_primitive#1'].produce_output = second_output
+
+        assert str(pipeline.get_diagram()) == expected
+
     def test_fit(self):
         pass
 

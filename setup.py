@@ -15,6 +15,7 @@ with open('HISTORY.md') as history_file:
 
 
 install_requires = [
+    'graphviz>=0.9,<1',
 ]
 
 
@@ -50,7 +51,6 @@ development_requires = [
     'm2r>=0.2.0,<0.3',
     'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4',
-    'graphviz>=0.9',
     'ipython>=6.5.0',
     'matplotlib>=2.2.3',
     'autodocsumm>=0.1.10',
