@@ -273,8 +273,10 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
 
 <span class="kn">from</span> <span class="nn">mlblocks.discovery</span> <span class="kn">import</span> <span class="n">load_pipeline</span>
 <span class="kn">from</span> <span class="nn">mlblocks.mlblock</span> <span class="kn">import</span> <span class="n">MLBlock</span>
@@ -515,8 +517,7 @@
 <div class="viewcode-block" id="MLPipeline.get_inputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a relation of all the input variables required by this pipeline.</span>
 
-<span class="sd">        The result is a dictionary that maps each variable name with their</span>
-<span class="sd">        specified information.</span>
+<span class="sd">        The result is a list contains all of the input variables.</span>
 <span class="sd">        Optionally include the fit arguments.</span>
 
 <span class="sd">        Args:</span>
@@ -524,9 +525,8 @@
 <span class="sd">                Optional argument to include fit arguments or not. Defaults to ``True``.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dictionary:</span>
-<span class="sd">                A dictionary mapping every input variable&#39;s name to a dictionary</span>
-<span class="sd">                specifying the information corresponding to that input variable.</span>
+<span class="sd">            list:</span>
+<span class="sd">                Dictionary specifying all the input variables.</span>
 <span class="sd">                Each dictionary contains the entry ``name``, as</span>
 <span class="sd">                well as any other metadata that may have been included in the</span>
 <span class="sd">                pipeline inputs specification.</span>
@@ -876,19 +876,28 @@
             <span class="n">index</span> <span class="o">=</span> <span class="n">output_variables</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
             <span class="n">outputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_fit_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_fit_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the block args from the context and fit the block.&quot;&quot;&quot;</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fitting block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fit_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">fit_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
             <span class="n">block</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">fit_args</span><span class="p">)</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+            <span class="k">if</span> <span class="n">debug</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">debug</span><span class="p">[</span><span class="s2">&quot;fit&quot;</span><span class="p">][</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;elapsed&quot;</span><span class="p">:</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+                    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">fit_args</span>
+                <span class="p">}</span>
+
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught fitting MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
 
             <span class="k">raise</span>
 
-    <span class="k">def</span> <span class="nf">_produce_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_produce_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the block args from the context and produce the block.</span>
 
 <span class="sd">        Afterwards, set the block outputs back into the context and update</span>
@@ -897,7 +906,9 @@
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Producing block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">produce_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
             <span class="n">block_outputs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="o">**</span><span class="n">produce_args</span><span class="p">)</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
 
             <span class="n">outputs_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block_outputs</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
             <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">outputs_dict</span><span class="p">)</span>
@@ -910,13 +921,25 @@
                         <span class="n">variable_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_update_outputs</span><span class="p">(</span><span class="n">variable_name</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="n">debug</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;elapsed&quot;</span><span class="p">:</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
+                    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">produce_args</span><span class="p">,</span>
+                    <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">outputs_dict</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="s2">&quot;fit&quot;</span> <span class="ow">in</span> <span class="n">debug</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">debug</span><span class="p">[</span><span class="s2">&quot;produce&quot;</span><span class="p">][</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">debug</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught producing MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
 
             <span class="k">raise</span>
 
-<div class="viewcode-block" id="MLPipeline.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="MLPipeline.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the blocks of this pipeline.</span>
 
 <span class="sd">        Sequentially call the ``fit`` and the ``produce`` methods of each block,</span>
@@ -946,6 +969,10 @@
 <span class="sd">                If given, the execution of the pipeline will start on the specified block,</span>
 <span class="sd">                and all the blocks before that one will be skipped.</span>
 
+<span class="sd">            debug (boolean):</span>
+<span class="sd">                Debug mode, if True a dictionary containing the block names as keys and</span>
+<span class="sd">                the execution time in seconds, input, output as values is returned.</span>
+
 <span class="sd">            **kwargs:</span>
 <span class="sd">                Any additional keyword arguments will be directly added</span>
 <span class="sd">                to the context dictionary and available for the blocks.</span>
@@ -973,6 +1000,10 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">start_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="n">start_</span><span class="p">)</span>
 
+        <span class="n">debug_info</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">debug_info</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">start_</span><span class="p">:</span>
@@ -981,10 +1012,11 @@
                     <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping block </span><span class="si">%s</span><span class="s2"> fit&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">block_name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_block_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span>
+                    <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
 
                 <span class="c1"># We already captured the output from this block</span>
                 <span class="k">if</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">:</span>
@@ -994,15 +1026,23 @@
             <span class="c1"># outputs we are done.</span>
             <span class="k">if</span> <span class="n">output_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output_blocks</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">debug_info</span>
+
+                <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">debug_info</span>
 
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Produce predictions using the blocks of this pipeline.</span>
 
 <span class="sd">        Sequentially call the ``produce`` method of each block, capturing the</span>
@@ -1028,6 +1068,10 @@
 <span class="sd">                If given, the execution of the pipeline will start on the specified block,</span>
 <span class="sd">                and all the blocks before that one will be skipped.</span>
 
+<span class="sd">            debug (boolean):</span>
+<span class="sd">                Debug mode, if True a dictionary containing the block names as keys and</span>
+<span class="sd">                the execution time in seconds, input, output as values is returned.</span>
+
 <span class="sd">            **kwargs:</span>
 <span class="sd">                Any additional keyword arguments will be directly added</span>
 <span class="sd">                to the context dictionary and available for the blocks.</span>
@@ -1046,6 +1090,10 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">start_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="n">start_</span><span class="p">)</span>
 
+        <span class="n">debug_info</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="n">debug_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">start_</span><span class="p">:</span>
@@ -1054,7 +1102,7 @@
                     <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping block </span><span class="si">%s</span><span class="s2"> produce&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
 
             <span class="c1"># We already captured the output from this block</span>
             <span class="k">if</span> <span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">:</span>
@@ -1064,9 +1112,17 @@
             <span class="c1"># outputs we are done.</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">output_blocks</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">debug_info</span>
+
+                <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">debug_info</span>
 
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>
@@ -1121,6 +1177,341 @@
             <span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tunable_hyperparameters</span><span class="p">,</span>
             <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span>
         <span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_simple_block_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the most readable, simplest version of the block name,</span>
+<span class="sd">        without the number of the block or excess modifiers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            block_name (str):</span>
+<span class="sd">                Name of the block whose simple name is being extracted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str:</span>
+<span class="sd">                block name stripped of number and other modifiers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">block_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">simple_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">simple_name</span>
+
+    <span class="k">def</span> <span class="nf">_get_context_name_from_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the name of the context from the given variable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            variable_name (str):</span>
+<span class="sd">                Name of the variable.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str:</span>
+<span class="sd">                Name of the context of the variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">block_name</span> <span class="o">=</span> <span class="n">variable_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rest</span> <span class="o">=</span> <span class="n">variable_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">block_name</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="n">block_index</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">context_name</span> <span class="o">=</span> <span class="n">rest</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">block_index</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid variable name&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">context_name</span>
+
+    <span class="k">def</span> <span class="nf">_get_relevant_output_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">current_output_variables</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the output variables of the given block that are in a given set of output variables</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            block_name (str):</span>
+<span class="sd">                The name of the block from which the variables are outputted</span>
+
+<span class="sd">            block (MLBlock):</span>
+<span class="sd">                The block from which the variables are outputted</span>
+
+<span class="sd">            current_output_variables (list):</span>
+<span class="sd">                A list of possible output variables to return</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set:</span>
+<span class="sd">                A set of strings containing the output variable name if and only if it is an</span>
+<span class="sd">                output variable of the given block and its name is in the list of possible</span>
+<span class="sd">                output variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output_alt_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">relevant_output</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">block_output</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">:</span>
+            <span class="n">output_variable_name</span> <span class="o">=</span> <span class="n">block_output</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">output_variable_name</span> <span class="ow">in</span> <span class="n">output_alt_names</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">output_variable_name</span> <span class="o">=</span> <span class="n">output_alt_names</span><span class="p">[</span><span class="n">output_variable_name</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">output_variable_name</span> <span class="ow">in</span> <span class="n">current_output_variables</span><span class="p">:</span>
+                <span class="n">relevant_output</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">block_output</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">relevant_output</span>
+
+    <span class="k">def</span> <span class="nf">_make_diagram_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the diagram to add the corresponding block of the pipeline as a visible node in</span>
+<span class="sd">        the diagram.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram (Digraph):</span>
+<span class="sd">                Diagram to be modified.</span>
+
+<span class="sd">            block_name (str):</span>
+<span class="sd">                Name of block to be added to the diagram</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">simple_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_simple_block_name</span><span class="p">(</span><span class="n">block_name</span><span class="p">)</span>
+        <span class="n">diagram</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">simple_name</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_block_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">,</span> <span class="n">variable_blocks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the diagram to add the corresponding input variables to the corresponding block</span>
+<span class="sd">        and their edges as outputs to other blocks by modifying `variable_blocks`. Additionally</span>
+<span class="sd">        modifies a set of edges to add any edges between an alternative input name and this block.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram (Digraph):</span>
+<span class="sd">                Diagram to be modified.</span>
+
+<span class="sd">            fit (bool):</span>
+<span class="sd">                `True` if including fitted arguments, `False` otherwise.</span>
+
+<span class="sd">            block_name (str):</span>
+<span class="sd">                Name of block whose input variables are to be added to the diagram</span>
+
+<span class="sd">            block (MLBlock):</span>
+<span class="sd">                Block whose input variables are to be added to the diagram</span>
+
+<span class="sd">            cluster_edges (set):</span>
+<span class="sd">                Set of tuples representing edges between alternative variable names and their</span>
+<span class="sd">                corresponding block and the type of arrowhead</span>
+
+<span class="sd">            variable_blocks (dict):</span>
+<span class="sd">                Dictionary of variable names and the set of tuples of blocks into which the</span>
+<span class="sd">                variable connects and the type of arrowhead to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_alt_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">input_variables</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">variable</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fit</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">input_variable</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">fit_args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">input_variable</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_variables</span><span class="p">:</span>
+                    <span class="n">input_variables</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">input_variable</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">input_name</span> <span class="ow">in</span> <span class="n">input_variables</span><span class="p">:</span>
+            <span class="n">input_block</span> <span class="o">=</span> <span class="n">block_name</span>
+            <span class="n">arrowhead</span> <span class="o">=</span> <span class="s1">&#39;normal&#39;</span>
+            <span class="k">if</span> <span class="n">input_name</span> <span class="ow">in</span> <span class="n">input_alt_names</span><span class="p">:</span>
+                <span class="n">input_variable_label</span> <span class="o">=</span> <span class="n">block_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">input_name</span> <span class="o">+</span> <span class="s1">&#39; (input)&#39;</span>
+                <span class="n">diagram</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">input_variable_label</span><span class="p">,</span>
+                             <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">input_name</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+                <span class="n">cluster_edges</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">input_variable_label</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">))</span>
+                <span class="n">input_name</span> <span class="o">=</span> <span class="n">input_alt_names</span><span class="p">[</span><span class="n">input_name</span><span class="p">]</span>
+                <span class="n">input_block</span> <span class="o">=</span> <span class="n">input_variable_label</span>
+                <span class="n">arrowhead</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+            <span class="k">if</span> <span class="n">input_name</span> <span class="ow">in</span> <span class="n">variable_blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">variable_blocks</span><span class="p">[</span><span class="n">input_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">input_block</span><span class="p">,</span> <span class="n">arrowhead</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">variable_blocks</span><span class="p">[</span><span class="n">input_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{(</span><span class="n">input_block</span><span class="p">,</span> <span class="n">arrowhead</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">_make_block_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">output_names</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">,</span>
+                            <span class="n">variable_blocks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the diagram to add the corresponding output variables to the corresponding block</span>
+<span class="sd">        and their edges as inputs to other blocks, as well as updating `variable_blocks`.</span>
+<span class="sd">        Additionally modifies a set of edges to add any edges between an alternative output name</span>
+<span class="sd">        and this block.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram (Digraph):</span>
+<span class="sd">                Diagram to be modified.</span>
+
+<span class="sd">            block_name (str):</span>
+<span class="sd">                Name of block whose output variables are to be added to the diagram</span>
+
+<span class="sd">            output_names (set):</span>
+<span class="sd">                Set of output variable names to be added to the diagram</span>
+
+<span class="sd">            cluster_edges (set):</span>
+<span class="sd">                Set of tuples representing edges between alternative variable names and their</span>
+<span class="sd">                corresponding block and the type of arrowhead</span>
+
+<span class="sd">            variable_blocks (dict):</span>
+<span class="sd">                Dictionary of variable names and the set of tuples of blocks into which the</span>
+<span class="sd">                variable connects and the type of arrowhead to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output_alt_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">output_name</span> <span class="ow">in</span> <span class="n">output_names</span><span class="p">:</span>
+            <span class="n">output_block</span> <span class="o">=</span> <span class="n">block_name</span>
+            <span class="k">if</span> <span class="n">output_name</span> <span class="ow">in</span> <span class="n">output_alt_names</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">alt_variable_label</span> <span class="o">=</span> <span class="n">block_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">output_name</span> <span class="o">+</span> <span class="s1">&#39; (output)&#39;</span>
+                <span class="n">diagram</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">alt_variable_label</span><span class="p">,</span>
+                             <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">output_name</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+                <span class="n">cluster_edges</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">block_name</span><span class="p">,</span> <span class="n">alt_variable_label</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">))</span>
+                <span class="n">output_name</span> <span class="o">=</span> <span class="n">output_alt_names</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span>
+                <span class="n">output_block</span> <span class="o">=</span> <span class="n">alt_variable_label</span>
+
+            <span class="n">output_variable_label</span> <span class="o">=</span> <span class="n">block_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">output_name</span>
+            <span class="n">diagram</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">output_variable_label</span><span class="p">,</span> <span class="n">output_name</span><span class="p">)</span>
+            <span class="n">diagram</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">output_block</span><span class="p">,</span> <span class="n">output_variable_label</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">block</span><span class="p">,</span> <span class="n">arrow</span> <span class="ow">in</span> <span class="n">variable_blocks</span><span class="p">[</span><span class="n">output_name</span><span class="p">]:</span>
+                <span class="n">diagram</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">output_variable_label</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="n">arrow</span><span class="p">)</span>
+
+            <span class="k">del</span> <span class="n">variable_blocks</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_make_diagram_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">input_variables_blocks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the diagram to add the inputs of the pipeline</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram (Digraph):</span>
+<span class="sd">                Diagram to be modified.</span>
+
+<span class="sd">            input_variables_blocks (dict):</span>
+<span class="sd">                Dictionary of input variables of the pipeline and the set of tuples of blocks into</span>
+<span class="sd">                which the variable connects and the type of arrowhead to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster_inputs&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;Input variables&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s1">&#39;azure3&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;edge&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;Input variables&#39;</span><span class="p">)</span>
+            <span class="n">input_variables</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">input_name</span><span class="p">,</span> <span class="n">blocks</span> <span class="ow">in</span> <span class="n">input_variables_blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">input_name_label</span> <span class="o">=</span> <span class="n">input_name</span> <span class="o">+</span> <span class="s1">&#39;_input&#39;</span>
+                <span class="n">cluster</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">input_name_label</span><span class="p">,</span> <span class="n">input_name</span><span class="p">)</span>
+                <span class="n">cluster</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="n">input_name_label</span><span class="p">)</span>
+                <span class="n">input_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_name_label</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">block</span><span class="p">,</span> <span class="n">arrow</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+                    <span class="n">diagram</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">input_name_label</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">pendwith</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="n">arrow</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">cluster</span><span class="o">.</span><span class="n">subgraph</span><span class="p">()</span> <span class="k">as</span> <span class="n">input_variables_subgraph</span><span class="p">:</span>
+                <span class="n">input_variables_subgraph</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_variables</span><span class="p">)):</span>
+                    <span class="n">input_variables_subgraph</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">input_variables</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+                                                  <span class="n">input_variables</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                    <span class="n">input_variables_subgraph</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;LR&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_diagram_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the diagram to add outputs of the pipeline in order from left to right.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram (Digraph):</span>
+<span class="sd">                Diagram to be modified.</span>
+
+<span class="sd">            outputs (str, int, or list[str or int]):</span>
+<span class="sd">                Single or list of output specifications.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]:</span>
+<span class="sd">                List of the human-readable names of the output variables in order</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output_variables</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">outputs_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster_outputs&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;Output variables&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s1">&#39;azure3&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;edge&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s1">&#39;Output&#39;</span><span class="p">,</span> <span class="s1">&#39;Output&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;Output variables&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs_vars</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">variable_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_context_name_from_variable</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">])</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                        <span class="s1">&#39;Can not deal with this type of output specification&#39;</span><span class="p">)</span>
+                <span class="n">cluster</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">variable_name</span> <span class="o">+</span> <span class="s1">&#39;_output&#39;</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">)</span>
+                <span class="n">output_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
+                <span class="n">cluster</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">output_variables</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_output&#39;</span><span class="p">,</span> <span class="s1">&#39;Output&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">cluster</span><span class="o">.</span><span class="n">subgraph</span><span class="p">()</span> <span class="k">as</span> <span class="n">output_variables_subgraph</span><span class="p">:</span>
+                <span class="n">output_variables_subgraph</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_variables</span><span class="p">)):</span>
+                    <span class="n">output_variables_subgraph</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">output_variables</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_output&#39;</span><span class="p">,</span>
+                                                   <span class="n">output_variables</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_output&#39;</span><span class="p">)</span>
+                <span class="n">output_variables_subgraph</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;LR&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output_variables</span>
+
+    <span class="k">def</span> <span class="nf">_make_diagram_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the diagram to add alignment edges and connect alternative names to the blocks.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram (Digraph):</span>
+<span class="sd">                Diagram to be modified</span>
+
+<span class="sd">            cluster_edges (set):</span>
+<span class="sd">                Set of tuples that contain alternative variable names and its</span>
+<span class="sd">                corresponding block in order</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">()</span> <span class="k">as</span> <span class="n">alignment</span><span class="p">:</span>
+            <span class="n">alignment</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+            <span class="n">alignment</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+            <span class="n">alignment</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;edge&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">minlen</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">first_block</span><span class="p">,</span> <span class="n">second_block</span><span class="p">,</span> <span class="n">arrow</span> <span class="ow">in</span> <span class="n">cluster_edges</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">alignment</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;cluster_&#39;</span> <span class="o">+</span> <span class="n">first_block</span> <span class="o">+</span> <span class="n">second_block</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
+                    <span class="n">cluster</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">first_block</span><span class="p">,</span> <span class="n">second_block</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="n">arrow</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MLPipeline.get_diagram"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">get_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">image_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a png diagram for the pipeline, showing Pipeline Steps,</span>
+<span class="sd">        Pipeline Inputs and Outputs, and block inputs and outputs.</span>
+
+<span class="sd">        If strings are given, they can either be one of the named outputs that have</span>
+<span class="sd">        been specified on the pipeline definition or a full variable specification</span>
+<span class="sd">        following the format ``{block-name}.{variable-name}``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fit (bool):</span>
+<span class="sd">                Optional argument to include fit arguments or not. Defaults to `True`.</span>
+
+<span class="sd">            outputs (str, int, or list[str or int]):</span>
+<span class="sd">                Single or list of output specifications.</span>
+
+<span class="sd">            image_path (str):</span>
+<span class="sd">                Optional argument for the location at which to save the file.</span>
+<span class="sd">                Defaults to `None`, which returns a `graphviz.Digraph` object instead of</span>
+<span class="sd">                saving the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None or `graphviz.Digraph` object:</span>
+<span class="sd">                * `graphviz.Digraph` contains the information about the Pipeline Diagram</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">diagram</span> <span class="o">=</span> <span class="n">Digraph</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
+        <span class="n">diagram</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">splines</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+        <span class="n">diagram</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>  <span class="c1"># hack to remove extraneous tooltips on edges</span>
+        <span class="n">diagram</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+
+        <span class="n">output_variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_diagram_outputs</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+        <span class="n">cluster_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">variable_blocks</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="p">{(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output&#39;</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">)})</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">output_variables</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">relevant_output_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_relevant_output_variables</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span>
+                                                                        <span class="n">variable_blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">relevant_output_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>  <span class="c1"># skip this block</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_make_diagram_block</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_make_block_outputs</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">relevant_output_names</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">,</span>
+                                     <span class="n">variable_blocks</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_make_block_inputs</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">,</span>
+                                    <span class="n">variable_blocks</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_make_diagram_inputs</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">variable_blocks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_make_diagram_alignment</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">image_path</span><span class="p">:</span>
+            <span class="n">diagram</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;Diagram&#39;</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">image_path</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">diagram</span></div>
 
 <div class="viewcode-block" id="MLPipeline.save"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save the specification of this MLPipeline in a JSON file.</span>

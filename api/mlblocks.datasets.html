@@ -338,7 +338,7 @@ and task types.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Classes</strong></p>
+<p><strong>Classes:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -348,15 +348,27 @@ and task types.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset" title="mlblocks.datasets.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dataset</span></code></a>(description, data, target, score[, …])</p></td>
 <td><p>Dataset class.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">KFold</span></code>([n_splits, shuffle, random_state])</p></td>
+<td><p>K-Folds cross-validator</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">StratifiedKFold</span></code>([n_splits, shuffle, …])</p></td>
+<td><p>Stratified K-Folds cross-validator</p></td>
+</tr>
 </tbody>
 </table>
-<p><strong>Functions</strong></p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">accuracy_score</span></code>(y_true, y_pred[, normalize, …])</p></td>
+<td><p>Accuracy classification score.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">img_to_array</span></code>(img[, data_format, dtype])</p></td>
+<td><p>Converts a PIL Image instance to a Numpy array.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_amazon" title="mlblocks.datasets.load_amazon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_amazon</span></code></a>()</p></td>
 <td><p>Amazon product co-purchasing network and ground-truth communities.</p></td>
 </tr>
@@ -369,29 +381,41 @@ and task types.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_handgeometry" title="mlblocks.datasets.load_handgeometry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_handgeometry</span></code></a>()</p></td>
 <td><p>Hand Geometry Dataset.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_iris" title="mlblocks.datasets.load_iris"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iris</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code>(path[, grayscale, color_mode, …])</p></td>
+<td><p>Loads an image into PIL format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_iris" title="mlblocks.datasets.load_iris"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_iris</span></code></a>()</p></td>
 <td><p>Iris Dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_jester" title="mlblocks.datasets.load_jester"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_jester</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_jester" title="mlblocks.datasets.load_jester"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_jester</span></code></a>()</p></td>
 <td><p>Ratings from the Jester Online Joke Recommender System.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_newsgroups" title="mlblocks.datasets.load_newsgroups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_newsgroups</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_newsgroups" title="mlblocks.datasets.load_newsgroups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_newsgroups</span></code></a>()</p></td>
 <td><p>20 News Groups Dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_nomination" title="mlblocks.datasets.load_nomination"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_nomination</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_nomination" title="mlblocks.datasets.load_nomination"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_nomination</span></code></a>()</p></td>
 <td><p>Sample 1 of graph vertex nomination data from MII Lincoln Lab.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_personae" title="mlblocks.datasets.load_personae"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_personae</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_personae" title="mlblocks.datasets.load_personae"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_personae</span></code></a>()</p></td>
 <td><p>Personae Dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_umls" title="mlblocks.datasets.load_umls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_umls</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_umls" title="mlblocks.datasets.load_umls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_umls</span></code></a>()</p></td>
 <td><p>UMLs Dataset.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_usps" title="mlblocks.datasets.load_usps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_usps</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_usps" title="mlblocks.datasets.load_usps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_usps</span></code></a>()</p></td>
 <td><p>USPs Digits Dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.load_wikiqa" title="mlblocks.datasets.load_wikiqa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_wikiqa</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.load_wikiqa" title="mlblocks.datasets.load_wikiqa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_wikiqa</span></code></a>()</p></td>
 <td><p>Challenge Dataset for Open-Domain Question Answering.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalized_mutual_info_score</span></code>(labels_true, …)</p></td>
+<td><p>Normalized Mutual Information between two clusterings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">r2_score</span></code>(y_true, y_pred[, sample_weight, …])</p></td>
+<td><p>R^2 (coefficient of determination) regression score function.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_test_split</span></code>(*arrays, **options)</p></td>
+<td><p>Split arrays or matrices into random train and test subsets</p></td>
 </tr>
 </tbody>
 </table>
@@ -406,24 +430,6 @@ for testing.</p>
 about its origin, a score function that works for this dataset,
 and a method to split the data in multiple ways for goodnes-of-fit
 evaluation.</p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset.describe" title="mlblocks.datasets.Dataset.describe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">describe</span></code></a>()</p></td>
-<td><p>Print the description of this Dataset on stdout.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset.get_splits" title="mlblocks.datasets.Dataset.get_splits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_splits</span></code></a>([n_splits, random_state])</p></td>
-<td><p>Return splits of this dataset ready for Cross Validation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset.score" title="mlblocks.datasets.Dataset.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(*args, **kwargs)</p></td>
-<td><p>Scoring function for this dataset.</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="attribute">
 <dt id="mlblocks.datasets.Dataset.name">
 <code class="sig-name descname">name</code><a class="headerlink" href="#mlblocks.datasets.Dataset.name" title="Permalink to this definition">¶</a></dt>
@@ -495,6 +501,24 @@ available as instance attributes.</p></li>
 </ul>
 </dd>
 </dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset.describe" title="mlblocks.datasets.Dataset.describe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">describe</span></code></a>()</p></td>
+<td><p>Print the description of this Dataset on stdout.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset.get_splits" title="mlblocks.datasets.Dataset.get_splits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_splits</span></code></a>([n_splits, random_state])</p></td>
+<td><p>Return splits of this dataset ready for Cross Validation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.datasets.Dataset.score" title="mlblocks.datasets.Dataset.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Scoring function for this dataset.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="mlblocks.datasets.Dataset.describe">
 <code class="sig-name descname">describe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/datasets.html#Dataset.describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.datasets.Dataset.describe" title="Permalink to this definition">¶</a></dt>
