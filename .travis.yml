@@ -1,4 +1,5 @@
 # Config file for automatic testing at travis-ci.org
+dist: bionic
 language: python
 python:
   - 3.6
@@ -6,8 +7,9 @@ python:
 
 # Command to install dependencies
 install:
-   - pip install -U tox-travis codecov
-   - sudo apt-get install graphviz
+  - sudo apt-get update
+  - sudo apt-get install graphviz pandoc
+  - pip install -U tox-travis codecov
 
 # Command to run tests
 script: tox

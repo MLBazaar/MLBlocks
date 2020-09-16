@@ -879,6 +879,7 @@ class TestMLPipline(TestCase):
         for block_name, dictionary in expected_return.items():
             assert set(debug_returned[block_name].keys()) == set(dictionary.keys())
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_get_diagram_simple(self):
         f = open('tests/data/diagrams/diagram_simple.txt', 'r')
         expected = f.read()[:-1]
