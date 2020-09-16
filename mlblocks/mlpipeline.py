@@ -10,6 +10,7 @@ from collections import Counter, OrderedDict, defaultdict
 from copy import deepcopy
 
 import numpy as np
+from graphviz import Digraph
 
 from mlblocks.discovery import load_pipeline
 from mlblocks.mlblock import MLBlock
@@ -250,8 +251,7 @@ class MLPipeline():
     def get_inputs(self, fit=True):
         """Get a relation of all the input variables required by this pipeline.
 
-        The result is a dictionary that maps each variable name with their
-        specified information.
+        The result is a list contains all of the input variables.
         Optionally include the fit arguments.
 
         Args:
@@ -259,9 +259,8 @@ class MLPipeline():
                 Optional argument to include fit arguments or not. Defaults to ``True``.
 
         Returns:
-            dictionary:
-                A dictionary mapping every input variable's name to a dictionary
-                specifying the information corresponding to that input variable.
+            list:
+                Dictionary specifying all the input variables.
                 Each dictionary contains the entry ``name``, as
                 well as any other metadata that may have been included in the
                 pipeline inputs specification.
@@ -856,6 +855,341 @@ class MLPipeline():
             'tunable_hyperparameters': self._tunable_hyperparameters,
             'outputs': self.outputs,
         }
+
+    def _get_simple_block_name(self, block_name):
+        """
+        Gets the most readable, simplest version of the block name,
+        without the number of the block or excess modifiers.
+
+        Args:
+            block_name (str):
+                Name of the block whose simple name is being extracted.
+
+        Returns:
+            str:
+                block name stripped of number and other modifiers.
+        """
+        full_name = block_name.split("#")[0]
+        simple_name = full_name.split(".")[-1]
+        return simple_name
+
+    def _get_context_name_from_variable(self, variable_name):
+        """
+        Gets the name of the context from the given variable.
+
+        Args:
+            variable_name (str):
+                Name of the variable.
+
+        Returns:
+            str:
+                Name of the context of the variable.
+        """
+        block_name = variable_name.split("#")[0]
+        rest = variable_name[len(block_name) + 1:]
+        block_index = rest.split(".")[0]
+        context_name = rest[len(block_index) + 1:]
+        if len(context_name) == 0:
+            raise ValueError("Invalid variable name")
+        return context_name
+
+    def _get_relevant_output_variables(self, block_name, block, current_output_variables):
+        """
+        Gets the output variables of the given block that are in a given set of output variables
+
+        Args:
+            block_name (str):
+                The name of the block from which the variables are outputted
+
+            block (MLBlock):
+                The block from which the variables are outputted
+
+            current_output_variables (list):
+                A list of possible output variables to return
+
+        Returns:
+            set:
+                A set of strings containing the output variable name if and only if it is an
+                output variable of the given block and its name is in the list of possible
+                output variables
+        """
+        output_alt_names = self.output_names.get(block_name, dict())
+        relevant_output = set()
+        for block_output in block.produce_output:
+            output_variable_name = block_output['name']
+            if output_variable_name in output_alt_names.keys():
+                output_variable_name = output_alt_names[output_variable_name]
+
+            if output_variable_name in current_output_variables:
+                relevant_output.add(block_output['name'])
+
+        return relevant_output
+
+    def _make_diagram_block(self, diagram, block_name):
+        """
+        Modifies the diagram to add the corresponding block of the pipeline as a visible node in
+        the diagram.
+
+        Args:
+            diagram (Digraph):
+                Diagram to be modified.
+
+            block_name (str):
+                Name of block to be added to the diagram
+        """
+        simple_name = self._get_simple_block_name(block_name)
+        diagram.node(block_name, simple_name, penwidth='1')
+
+    def _make_block_inputs(self, diagram, fit, block_name, block, cluster_edges, variable_blocks):
+        """
+        Modifies the diagram to add the corresponding input variables to the corresponding block
+        and their edges as outputs to other blocks by modifying `variable_blocks`. Additionally
+        modifies a set of edges to add any edges between an alternative input name and this block.
+
+        Args:
+            diagram (Digraph):
+                Diagram to be modified.
+
+            fit (bool):
+                `True` if including fitted arguments, `False` otherwise.
+
+            block_name (str):
+                Name of block whose input variables are to be added to the diagram
+
+            block (MLBlock):
+                Block whose input variables are to be added to the diagram
+
+            cluster_edges (set):
+                Set of tuples representing edges between alternative variable names and their
+                corresponding block and the type of arrowhead
+
+            variable_blocks (dict):
+                Dictionary of variable names and the set of tuples of blocks into which the
+                variable connects and the type of arrowhead to use
+        """
+        input_alt_names = self.input_names.get(block_name, dict())
+        input_variables = set(variable['name'] for variable in block.produce_args)
+
+        if fit:
+            for input_variable in block.fit_args:
+                if input_variable['name'] not in input_variables:
+                    input_variables.add(input_variable['name'])
+
+        for input_name in input_variables:
+            input_block = block_name
+            arrowhead = 'normal'
+            if input_name in input_alt_names:
+                input_variable_label = block_name + ' ' + input_name + ' (input)'
+                diagram.node(input_variable_label,
+                             '(' + input_name + ')', fontcolor='blue')
+                cluster_edges.add((input_variable_label, block_name, 'normal'))
+                input_name = input_alt_names[input_name]
+                input_block = input_variable_label
+                arrowhead = 'none'
+
+            if input_name in variable_blocks.keys():
+                variable_blocks[input_name].add((input_block, arrowhead))
+            else:
+                variable_blocks[input_name] = {(input_block, arrowhead)}
+
+    def _make_block_outputs(self, diagram, block_name, output_names, cluster_edges,
+                            variable_blocks):
+        """
+        Modifies the diagram to add the corresponding output variables to the corresponding block
+        and their edges as inputs to other blocks, as well as updating `variable_blocks`.
+        Additionally modifies a set of edges to add any edges between an alternative output name
+        and this block.
+
+        Args:
+            diagram (Digraph):
+                Diagram to be modified.
+
+            block_name (str):
+                Name of block whose output variables are to be added to the diagram
+
+            output_names (set):
+                Set of output variable names to be added to the diagram
+
+            cluster_edges (set):
+                Set of tuples representing edges between alternative variable names and their
+                corresponding block and the type of arrowhead
+
+            variable_blocks (dict):
+                Dictionary of variable names and the set of tuples of blocks into which the
+                variable connects and the type of arrowhead to use
+        """
+        output_alt_names = self.output_names.get(block_name, dict())
+        for output_name in output_names:
+            output_block = block_name
+            if output_name in output_alt_names.keys():
+                alt_variable_label = block_name + ' ' + output_name + ' (output)'
+                diagram.node(alt_variable_label,
+                             '(' + output_name + ')', fontcolor='red')
+                cluster_edges.add((block_name, alt_variable_label, 'none'))
+                output_name = output_alt_names[output_name]
+                output_block = alt_variable_label
+
+            output_variable_label = block_name + ' ' + output_name
+            diagram.node(output_variable_label, output_name)
+            diagram.edge(output_block, output_variable_label, arrowhead='none')
+
+            for block, arrow in variable_blocks[output_name]:
+                diagram.edge(output_variable_label, block, arrowhead=arrow)
+
+            del variable_blocks[output_name]
+
+    def _make_diagram_inputs(self, diagram, input_variables_blocks):
+        """
+        Modifies the diagram to add the inputs of the pipeline
+
+        Args:
+            diagram (Digraph):
+                Diagram to be modified.
+
+            input_variables_blocks (dict):
+                Dictionary of input variables of the pipeline and the set of tuples of blocks into
+                which the variable connects and the type of arrowhead to use
+        """
+        with diagram.subgraph(name="cluster_inputs") as cluster:
+            cluster.attr(tooltip='Input variables')
+            cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
+            cluster.attr('node', penwidth='0', fontsize='20')
+            cluster.attr('edge', penwidth='0', arrowhead='none')
+            cluster.node('Input', 'Input', fontsize='14', tooltip='Input variables')
+            input_variables = []
+            for input_name, blocks in input_variables_blocks.items():
+                input_name_label = input_name + '_input'
+                cluster.node(input_name_label, input_name)
+                cluster.edge('Input', input_name_label)
+                input_variables.append(input_name_label)
+
+                for block, arrow in blocks:
+                    diagram.edge(input_name_label, block, pendwith='1', arrowhead=arrow)
+
+            with cluster.subgraph() as input_variables_subgraph:
+                input_variables_subgraph.attr(None, rank='same')
+                for index in range(1, len(input_variables)):
+                    input_variables_subgraph.edge(input_variables[index - 1],
+                                                  input_variables[index])
+                    input_variables_subgraph.attr(None, rankdir='LR')
+
+    def _make_diagram_outputs(self, diagram, outputs):
+        """
+        Modifies the diagram to add outputs of the pipeline in order from left to right.
+
+        Args:
+            diagram (Digraph):
+                Diagram to be modified.
+
+            outputs (str, int, or list[str or int]):
+                Single or list of output specifications.
+
+        Returns:
+            list[str]:
+                List of the human-readable names of the output variables in order
+        """
+        output_variables = []
+        outputs_vars = self.get_outputs(outputs)
+
+        with diagram.subgraph(name="cluster_outputs") as cluster:
+            cluster.attr(tooltip='Output variables')
+            cluster.attr('graph', rank='source', bgcolor='azure3', penwidth='0')
+            cluster.attr('node', penwidth='0', fontsize='20')
+            cluster.attr('edge', penwidth='0', arrowhead='none')
+            cluster.node('Output', 'Output', fontsize='14', tooltip='Output variables')
+            for output in outputs_vars:
+                try:
+                    variable_name = self._get_context_name_from_variable(output['variable'])
+                except ValueError:
+                    raise NotImplementedError(
+                        'Can not deal with this type of output specification')
+                cluster.node(variable_name + '_output', variable_name)
+                output_variables.append(variable_name)
+                cluster.edge(output_variables[-1] + '_output', 'Output')
+            with cluster.subgraph() as output_variables_subgraph:
+                output_variables_subgraph.attr(None, rank='same')
+                for index in range(1, len(output_variables)):
+                    output_variables_subgraph.edge(output_variables[index - 1] + '_output',
+                                                   output_variables[index] + '_output')
+                output_variables_subgraph.attr(None, rankdir='LR')
+
+        return output_variables
+
+    def _make_diagram_alignment(self, diagram, cluster_edges):
+        """
+        Modifies the diagram to add alignment edges and connect alternative names to the blocks.
+
+        Args:
+            diagram (Digraph):
+                Diagram to be modified
+
+            cluster_edges (set):
+                Set of tuples that contain alternative variable names and its
+                corresponding block in order
+        """
+        with diagram.subgraph() as alignment:
+            alignment.attr('graph', penwidth='0')
+            alignment.attr('node', penwidth='0')
+            alignment.attr('edge', len='1', minlen='1', penwidth='1')
+
+            for first_block, second_block, arrow in cluster_edges:
+                with alignment.subgraph(name='cluster_' + first_block + second_block) as cluster:
+                    cluster.edge(first_block, second_block, arrowhead=arrow)
+
+    def get_diagram(self, fit=True, outputs='default', image_path=None):
+        """
+        Creates a png diagram for the pipeline, showing Pipeline Steps,
+        Pipeline Inputs and Outputs, and block inputs and outputs.
+
+        If strings are given, they can either be one of the named outputs that have
+        been specified on the pipeline definition or a full variable specification
+        following the format ``{block-name}.{variable-name}``.
+
+        Args:
+            fit (bool):
+                Optional argument to include fit arguments or not. Defaults to `True`.
+
+            outputs (str, int, or list[str or int]):
+                Single or list of output specifications.
+
+            image_path (str):
+                Optional argument for the location at which to save the file.
+                Defaults to `None`, which returns a `graphviz.Digraph` object instead of
+                saving the file.
+
+        Returns:
+            None or `graphviz.Digraph` object:
+                * `graphviz.Digraph` contains the information about the Pipeline Diagram
+        """
+
+        diagram = Digraph(format='png')
+        diagram.attr('graph', splines='ortho')
+        diagram.attr(tooltip=' ')  # hack to remove extraneous tooltips on edges
+        diagram.attr('node', shape='box', penwidth='0')
+
+        output_variables = self._make_diagram_outputs(diagram, outputs)
+
+        cluster_edges = set()
+        variable_blocks = dict((name, {(name + '_output', 'normal')}) for name in output_variables)
+        for block_name, block in reversed(self.blocks.items()):
+            relevant_output_names = self._get_relevant_output_variables(block_name, block,
+                                                                        variable_blocks.keys())
+            if len(relevant_output_names) == 0:
+                continue  # skip this block
+
+            self._make_diagram_block(diagram, block_name)
+            self._make_block_outputs(diagram, block_name, relevant_output_names, cluster_edges,
+                                     variable_blocks)
+            self._make_block_inputs(diagram, fit, block_name, block, cluster_edges,
+                                    variable_blocks)
+
+        self._make_diagram_inputs(diagram, variable_blocks)
+        self._make_diagram_alignment(diagram, cluster_edges)
+
+        if image_path:
+            diagram.render(filename='Diagram', directory=image_path, cleanup=True, format='png')
+        else:
+            return diagram
 
     def save(self, path):
         """Save the specification of this MLPipeline in a JSON file.
