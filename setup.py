@@ -16,12 +16,13 @@ with open('HISTORY.md') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
+    'numpy>=1.17.1,<1.19',
 ]
 
 
 examples_require = [
     'matplotlib>=2.2.2,<3.2.2',
-    'mlprimitives>=0.2.5,<0.3',
+    'mlprimitives>=0.2.6.dev0,<0.3',
     'boto3>=1.14,<1.14.45',
     'botocore<1.17.45,>=1.17.44',
     'jupyter==1.0.0',
@@ -33,9 +34,8 @@ examples_require = [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.2,<0.3',
+    'mlprimitives>=0.2.6.dev0,<0.3',
     'setuptools>=41.0.0',
-    'numpy<1.17',
     'rundoc>=0.4.3',
     'prompt-toolkit>=2.0,<3.0',
 ]
@@ -90,8 +90,9 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
@@ -107,6 +108,7 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
+    python_requires='>=3.6,<3.9',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
