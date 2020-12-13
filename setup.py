@@ -27,7 +27,7 @@ examples_require = [
     'botocore<1.17.45,>=1.17.44',
     'jupyter==1.0.0',
     'docutils<0.16,>=0.10',
-    'baytune>=0.3.0,<0.4',
+    'baytune>=0.3.13.dev0,<0.4',
 ]
 
 
