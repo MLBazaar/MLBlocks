@@ -77,7 +77,10 @@ development_requires = [
 
     # Documentation style
     'doc8>=0.8.0',
-    'pydocstyle>=3.0.0'
+    'pydocstyle>=3.0.0',
+
+    # Prevent travis-ci conflict
+    'chardet<4',
 ]
 
 
