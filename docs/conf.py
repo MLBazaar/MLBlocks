@@ -63,7 +63,7 @@ title = project + ' Documentation',
 copyright = '2018, MIT Data To AI Lab'
 author = 'MIT Data To AI Lab'
 description = 'Pipelines and Primitives for Machine Learning and Data Science.'
-user = 'HDI-Project'
+user = 'MLBazaar'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

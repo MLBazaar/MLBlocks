@@ -6,9 +6,9 @@ What is MLBlocks?
    :alt: MLBlocks
    :align: center
 
-* Free software: `MIT license <https://github.com/HDI-Project/MLBlocks/blob/master/LICENSE>`_
-* Documentation: https://HDI-Project.github.io/MLBlocks
-* Homepage: https://github.com/HDI-Project/MLBlocks
+* Free software: `MIT license <https://github.com/MLBazaar/MLBlocks/blob/master/LICENSE>`_
+* Documentation: https://mlbazaar.github.io/MLBlocks
+* Homepage: https://github.com/MLBazaar/MLBlocks
 
 MLBlocks is a simple framework for seamlessly combining any possible set of Machine Learning
 tools developed in Python, whether they are custom developments or belong to third party
