@@ -13,7 +13,7 @@ Pipelines and Primitives for Machine Learning and Data Science.
 
 [![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 [![PyPi](https://img.shields.io/pypi/v/mlblocks.svg)](https://pypi.python.org/pypi/mlblocks)
-[![Travis](https://travis-ci.org/MLBazaar/MLBlocks.svg?branch=master)](https://travis-ci.org/MLBazaar/MLBlocks)
+[![Travis](https://travis-ci.com/MLBazaar/MLBlocks.svg?branch=master)](https://travis-ci.com/MLBazaar/MLBlocks)
 [![CodeCov](https://codecov.io/gh/MLBazaar/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/MLBazaar/MLBlocks)
 [![Downloads](https://pepy.tech/badge/mlblocks)](https://pepy.tech/project/mlblocks)
 
