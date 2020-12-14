@@ -30,7 +30,7 @@ is `MLPrimitives`_, which you can install with this command:
 
     pip install mlprimitives
 
-.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
+.. _MLPrimitives: https://github.com/MLBazaar/MLPrimitives
 
 Install for development
 -----------------------

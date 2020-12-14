@@ -13,18 +13,18 @@ Pipelines and Primitives for Machine Learning and Data Science.
 
 [![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 [![PyPi](https://img.shields.io/pypi/v/mlblocks.svg)](https://pypi.python.org/pypi/mlblocks)
-[![Travis](https://travis-ci.org/HDI-Project/MLBlocks.svg?branch=master)](https://travis-ci.org/HDI-Project/MLBlocks)
-[![CodeCov](https://codecov.io/gh/HDI-Project/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/HDI-Project/MLBlocks)
+[![Travis](https://travis-ci.org/MLBazaar/MLBlocks.svg?branch=master)](https://travis-ci.org/MLBazaar/MLBlocks)
+[![CodeCov](https://codecov.io/gh/MLBazaar/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/MLBazaar/MLBlocks)
 [![Downloads](https://pepy.tech/badge/mlblocks)](https://pepy.tech/project/mlblocks)
 
 <br>
 
 # MLBlocks
 
-* Free software: [MIT license](https://github.com/HDI-Project/MLBlocks/blob/master/LICENSE)
+* Free software: [MIT license](https://github.com/MLBazaar/MLBlocks/blob/master/LICENSE)
 * Development Status: [Pre-Alpha](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
-* Documentation: https://HDI-Project.github.io/MLBlocks
-* Homepage: https://github.com/HDI-Project/MLBlocks
+* Documentation: https://mlbazaar.github.io/MLBlocks
+* Homepage: https://github.com/MLBazaar/MLBlocks
 
 ## Overview
 
@@ -38,7 +38,7 @@ Features include:
   no python code to write, carefully curated by Machine Learning and Domain experts.
 * Extract machine-readable information about which hyperparameters can be tuned and within
   which ranges, allowing automated integration with Hyperparameter Optimization tools like
-  [BTB](https://github.com/HDI-Project/BTB).
+  [BTB](https://github.com/MLBazaar/BTB).
 * Complex multi-branch pipelines and DAG configurations, with unlimited number of inputs and
   outputs per primitive.
 * Easy save and load Pipelines using JSON Annotations.
@@ -47,7 +47,7 @@ Features include:
 
 ## Requirements
 
-**MLBlocks** has been developed and tested on [Python 3.5 and 3.6](https://www.python.org/downloads/)
+**MLBlocks** has been developed and tested on [Python 3.6, 3.7 and 3.8](https://www.python.org/downloads/)
 
 Also, although it is not strictly required, the usage of a
 [virtualenv](https://virtualenv.pypa.io/en/latest/) is highly recommended in order to avoid
@@ -65,14 +65,14 @@ pip install mlblocks
 This will pull and install the latest stable release from [PyPi](https://pypi.org/).
 
 If you want to install from source or contribute to the project please read the
-[Contributing Guide](https://hdi-project.github.io/MLBlocks/contributing.html#get-started).
+[Contributing Guide](https://mlbazaar.github.io/MLBlocks/contributing.html#get-started).
 
 ## MLPrimitives
 
 In order to be usable, MLBlocks requires a compatible primitives library.
 
 The official library, required in order to follow the following MLBlocks tutorial,
-is [MLPrimitives](https://github.com/HDI-Project/MLPrimitives), which you can install
+is [MLPrimitives](https://github.com/MLBazaar/MLPrimitives), which you can install
 with this command:
 
 ```bash
@@ -83,7 +83,7 @@ pip install mlprimitives
 
 Below there is a short example about how to use **MLBlocks** to solve the [Adult Census
 Dataset](https://archive.ics.uci.edu/ml/datasets/Adult) classification problem using a
-pipeline which combines primitives from [MLPrimitives](https://github.com/HDI-Project/MLPrimitives),
+pipeline which combines primitives from [MLPrimitives](https://github.com/MLBazaar/MLPrimitives),
 [scikit-learn](https://scikit-learn.org/) and [xgboost](https://xgboost.readthedocs.io/).
 
 ```python3
@@ -112,10 +112,10 @@ dataset.score(y_test, predictions)
 
 If you want to learn more about how to tune the pipeline hyperparameters, save and load
 the pipelines using JSON annotations or build complex multi-branched pipelines, please
-check our [documentation site](https://HDI-Project.github.io/MLBlocks).
+check our [documentation site](https://mlbazaar.github.io/MLBlocks).
 
 Also do not forget to have a look at the [notebook tutorials](
-https://github.com/HDI-Project/MLBlocks/tree/master/examples/tutorials)!
+https://github.com/MLBazaar/MLBlocks/tree/master/examples/tutorials)!
 
 # Citing MLBlocks
 
