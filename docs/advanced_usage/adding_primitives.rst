@@ -17,8 +17,8 @@ This can be achieved by running the commands::
 
 For further details, please refer to the `MLPrimitives Documentation`_.
 
-.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
-.. _MLPrimitives Documentation: https://hdi-project.github.io/MLPrimitives/
+.. _MLPrimitives: https://github.com/MLBazaar/MLPrimitives
+.. _MLPrimitives Documentation: https://mlbazaar.github.io/MLPrimitives/
 
 Writing Primitives
 ------------------
@@ -27,7 +27,7 @@ Sometimes you will find that you want to use a primitive that is not in the list
 `MLPrimitives integrated primitives`_, so you will have to integrate the primitive yourself
 by writing the corresponding `JSON annotation <primitives.html#json-annotations>`_.
 
-.. _MLPrimitives integrated primitives: https://github.com/HDI-Project/MLPrimitives/tree/master/mlblocks_primitives
+.. _MLPrimitives integrated primitives: https://github.com/MLBazaar/MLPrimitives/tree/master/mlblocks_primitives
 
 .. note:: If you create new primitives for MLBlocks, please consider contributing them to the
           **MLPrimitives** project!

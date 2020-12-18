@@ -311,11 +311,11 @@ For a more detailed description of this class, please check the corresponding
 section in the `API Reference`_ documentation.
 
 .. _API Reference: ../api_reference.html
-.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
-.. _keras.preprocessing.text.Tokenizer: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.preprocessing.text.Tokenizer.json
+.. _MLPrimitives: https://github.com/MLBazaar/MLPrimitives
+.. _keras.preprocessing.text.Tokenizer: https://github.com/MLBazaar/MLPrimitives/blob/master/mlblocks_primitives/keras.preprocessing.text.Tokenizer.json
 .. _hyperparameters: hyperparameters.html
 .. _mlblocks.MLBlock: ../api_reference.html#mlblocks.MLBlock
 .. _pipelines: pipelines.html
-.. _examples folder: https://github.com/HDI-Project/MLBlocks/tree/master/examples
+.. _examples folder: https://github.com/MLBazaar/MLBlocks/tree/master/examples
 .. _fit: ../api_reference.html#mlblocks.MLBlock.fit
 .. _produce: ../api_reference.html#mlblocks.MLBlock.produce

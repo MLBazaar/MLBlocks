@@ -78,7 +78,10 @@ development_requires = [
 
     # Documentation style
     'doc8>=0.8.0',
-    'pydocstyle>=3.0.0'
+    'pydocstyle>=3.0.0',
+
+    # Prevent travis-ci conflict
+    'chardet<4',
 ]
 
 
@@ -113,7 +116,7 @@ setup(
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
-    url='https://github.com/HDI-Project/MLBlocks',
+    url='https://github.com/MLBazaar/MLBlocks',
     version='0.3.5.dev0',
     zip_safe=False,
 )

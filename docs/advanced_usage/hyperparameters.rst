@@ -221,8 +221,8 @@ In this case, the hyperparameters would be annotated like this::
           of type, range and default value as a nested dictionary to be used by default.
 
 .. _JSON Annotations: primitives.html#json-annotations
-.. _MLPrimitives: https://github.com/HDI-Project/MLPrimitives
-.. _BTB: https://github.com/HDI-Project/BTB
+.. _MLPrimitives: https://github.com/MLBazaar/MLPrimitives
+.. _BTB: https://github.com/MLBazaar/BTB
 .. _MLPipeline: ../api_reference.html#mlblocks.MLPipeline
 .. _multitype: #multitype-hyperparameters
 .. _conditional: #conditional-hyperparameters
