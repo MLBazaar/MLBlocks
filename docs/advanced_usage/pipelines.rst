@@ -423,6 +423,32 @@ An example of this situation, where we want to reuse the output of the first blo
     predictions = pipeline.predict(X_test)
     score = compute_score(y_test, predictions)
 
+Pipeline debugging
+------------------
+
+Sometimes we might be interested in debugging a pipeline execution and obtain information
+about the time, the memory usage, the inputs and outputs that each step takes. This is possible
+by using the argument ``debug`` with the method ``fit`` and ``predict``. This argument allows us
+to retrieve critical information from the pipeline execution with the following possibilities:
+
+* ``Time``: Elapsed time for the primitive and the given stage (fit or predict).
+* ``Memory``: Amount of memory increase or decrease for the given primitive for that pipeline.
+* ``Input``: The input values that the primitive takes for that specific step.
+* ``Output``: The output produced by the primitive.
+
+If the ``debug`` argument is set to ``True`` then a dictionary will be returned containing all the
+elements listed previously. On the other hand, if the ``debug`` argument is given a ``string``
+value with the combination of the first letter of each option, it will return a dictionary with
+the selected elements.
+
+.. note:: Bear in mind that if we use ``debug=True`` or saving the ``Input`` and ``Output``,
+          this will consume extra memory ram as it will create copies of the input data and
+          the output data for each primitive. For profiling it is recommended using the option
+          ``tm``.
+
+An example of profiling a pipeline could be::
+
+    debug_info = pipeline.fit(X_train, y_train, debug='tm')
 
 .. _API Reference: ../api_reference.html
 .. _primitives: ../primitives.html
