@@ -706,7 +706,7 @@ class TestMLPipline(TestCase):
         ]
 
         expected_return = dict()
-        expected_return['debug'] =  'tmio'
+        expected_return['debug'] = 'tmio'
         expected_return['fit'] = {
             'a_primitive#1': {
                 'time': 0,
