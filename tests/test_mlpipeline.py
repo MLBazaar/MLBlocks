@@ -696,7 +696,7 @@ class TestMLPipline(TestCase):
         assert returned is None
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
-    def test_fit_debug(self):
+    def test_fit_debug_bool(self):
         mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks['a_primitive#1'].fit_args = [
             {
@@ -718,6 +718,34 @@ class TestMLPipline(TestCase):
         }
 
         returned = mlpipeline.fit(debug=True)
+
+        assert isinstance(returned, dict)
+        assert set(returned.keys()) == set(expected_return.keys())  # fit / produce
+        assert set(returned['fit'].keys()) == set(expected_return['fit'].keys())  # block name
+
+        for block_name, dictionary in expected_return['fit'].items():
+            assert set(returned['fit'][block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_debug_str(self):
+        mlpipeline = MLPipeline(['a_primitive'])
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return['debug'] = 'tm'
+        expected_return['fit'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'memory': 0,
+            }
+        }
+
+        returned = mlpipeline.fit(debug='tm')
 
         assert isinstance(returned, dict)
         assert set(returned.keys()) == set(expected_return.keys())  # fit / produce
@@ -784,6 +812,68 @@ class TestMLPipline(TestCase):
         }
 
         returned, debug_returned = mlpipeline.fit(output_='default', debug=True)
+
+        assert len([returned]) == len(outputs['default'])
+        assert isinstance(debug_returned, dict)
+        assert set(debug_returned.keys()) == set(expected_return.keys())  # fit / produce
+        assert set(debug_returned['fit'].keys()) == set(expected_return['fit'].keys())
+        assert set(debug_returned['produce'].keys()) == set(expected_return['produce'].keys())
+
+        for block_name, dictionary in expected_return['fit'].items():
+            assert set(debug_returned['fit'][block_name].keys()) == set(dictionary.keys())
+
+        for block_name, dictionary in expected_return['produce'].items():
+            assert set(debug_returned['produce'][block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_produce_debug_str(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_primitive#1.a_variable',
+                    'type': 'a_type',
+                }
+            ]
+        }
+        mlpipeline = MLPipeline(['a_primitive'], outputs=outputs)
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'a_name',
+                'type': 'a_type'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return['debug'] = 'tm'
+        expected_return['fit'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'memory': 0,
+            }
+        }
+        expected_return['produce'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'memory': 0,
+            }
+        }
+
+        returned, debug_returned = mlpipeline.fit(output_='default', debug='tm')
 
         assert len([returned]) == len(outputs['default'])
         assert isinstance(debug_returned, dict)
