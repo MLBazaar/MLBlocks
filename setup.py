@@ -23,7 +23,7 @@ install_requires = [
 
 examples_require = [
     'matplotlib>=2.2.2,<3.2.2',
-    'mlprimitives>=0.2.6.dev0,<0.3',
+    'mlprimitives>=0.3.0.dev0,<0.4',
     'boto3>=1.14,<1.14.45',
     'botocore<1.17.45,>=1.17.44',
     'jupyter==1.0.0',
@@ -35,7 +35,7 @@ examples_require = [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.2.6.dev0,<0.3',
+    'mlprimitives>=0.3.0.dev0,<0.4',
     'setuptools>=41.0.0',
     'rundoc>=0.4.3',
     'prompt-toolkit>=2.0,<3.0',
