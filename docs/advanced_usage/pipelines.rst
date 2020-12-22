@@ -429,26 +429,36 @@ Pipeline debugging
 Sometimes we might be interested in debugging a pipeline execution and obtain information
 about the time, the memory usage, the inputs and outputs that each step takes. This is possible
 by using the argument ``debug`` with the method ``fit`` and ``predict``. This argument allows us
-to retrieve critical information from the pipeline execution with the following possibilities:
+to retrieve critical information from the pipeline execution:
 
 * ``Time``: Elapsed time for the primitive and the given stage (fit or predict).
 * ``Memory``: Amount of memory increase or decrease for the given primitive for that pipeline.
 * ``Input``: The input values that the primitive takes for that specific step.
 * ``Output``: The output produced by the primitive.
 
+
 If the ``debug`` argument is set to ``True`` then a dictionary will be returned containing all the
-elements listed previously. On the other hand, if the ``debug`` argument is given a ``string``
-value with the combination of the first letter of each option, it will return a dictionary with
-the selected elements.
+elements listed previously::
 
-.. note:: Bear in mind that if we use ``debug=True`` or saving the ``Input`` and ``Output``,
-          this will consume extra memory ram as it will create copies of the input data and
-          the output data for each primitive. For profiling it is recommended using the option
-          ``tm``.
+    result, debug_info = pipeline.fit(X_train, y_train, debug=True)
 
-An example of profiling a pipeline could be::
+In case you want to retrieve only some of the elements listed above and skip the rest, you can
+pass an ``str`` to the ``debug`` argument with any combination of the following characters:
 
-    debug_info = pipeline.fit(X_train, y_train, debug='tm')
+* ``i``: To include inputs.
+* ``o``: To include outputs.
+* ``m``: To include used memory.
+* ``t``: To include elapsed time.
+
+For example, if we are only interested on capturing the elapsed time and used memory during the
+``fit`` process, we can call the method as follows::
+
+    result, debug_info = pipeline.fit(X_train, y_train, debug='tm')
+
+.. warning:: Bear in mind that if we use ``debug=True`` or saving the ``Input`` and ``Output``,
+             this will consume extra memory ram as it will create copies of the input data and
+             the output data for each primitive. For profiling it is recommended using the option
+             ``tm`` as shown in the previous example.
 
 .. _API Reference: ../api_reference.html
 .. _primitives: ../primitives.html
