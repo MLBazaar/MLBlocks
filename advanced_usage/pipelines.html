@@ -138,6 +138,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#start">start_</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#pipeline-debugging">Pipeline debugging</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="adding_primitives.html">Adding Primitives</a><ul>
@@ -321,8 +322,8 @@ separated by a hash symbol <code class="docutils literal notranslate"><span clas
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
 <span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7f7c7ef69eb0&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7f7c7eef0ee0&gt;}</span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fb63279fbb0&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7fb627b7bfd0&gt;}</span>
 </pre></div>
 </div>
 </div>
@@ -719,6 +720,44 @@ reusing intermediate states of the pipeline to accelerate tuning processes.</p>
 <span class="n">score</span> <span class="o">=</span> <span class="n">compute_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="pipeline-debugging">
+<h2>Pipeline debugging<a class="headerlink" href="#pipeline-debugging" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes we might be interested in debugging a pipeline execution and obtain information
+about the time, the memory usage, the inputs and outputs that each step takes. This is possible
+by using the argument <code class="docutils literal notranslate"><span class="pre">debug</span></code> with the method <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code>. This argument allows us
+to retrieve critical information from the pipeline execution:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Time</span></code>: Elapsed time for the primitive and the given stage (fit or predict).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Memory</span></code>: Amount of memory increase or decrease for the given primitive for that pipeline.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Input</span></code>: The input values that the primitive takes for that specific step.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Output</span></code>: The output produced by the primitive.</p></li>
+</ul>
+<p>If the <code class="docutils literal notranslate"><span class="pre">debug</span></code> argument is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> then a dictionary will be returned containing all the
+elements listed previously:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="p">,</span> <span class="n">debug_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In case you want to retrieve only some of the elements listed above and skip the rest, you can
+pass an <code class="docutils literal notranslate"><span class="pre">str</span></code> to the <code class="docutils literal notranslate"><span class="pre">debug</span></code> argument with any combination of the following characters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">i</span></code>: To include inputs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">o</span></code>: To include outputs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">m</span></code>: To include used memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t</span></code>: To include elapsed time.</p></li>
+</ul>
+<p>For example, if we are only interested on capturing the elapsed time and used memory during the
+<code class="docutils literal notranslate"><span class="pre">fit</span></code> process, we can call the method as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="p">,</span> <span class="n">debug_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="s1">&#39;tm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Bear in mind that if we use <code class="docutils literal notranslate"><span class="pre">debug=True</span></code> or saving the <code class="docutils literal notranslate"><span class="pre">Input</span></code> and <code class="docutils literal notranslate"><span class="pre">Output</span></code>,
+this will consume extra memory ram as it will create copies of the input data and
+the output data for each primitive. For profiling it is recommended using the option
+<code class="docutils literal notranslate"><span class="pre">tm</span></code> as shown in the previous example.</p>
 </div>
 </div>
 </div>

@@ -138,6 +138,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../advanced_usage/pipelines.html#start">start_</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_usage/pipelines.html#pipeline-debugging">Pipeline debugging</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
@@ -723,8 +724,36 @@ value can either be an integer, which will be interpreted as a block index,
 or the name of a block, including the conter number at the end.
 If given, the execution of the pipeline will start on the specified block,
 and all the blocks before that one will be skipped.</p></li>
-<li><p><strong>debug</strong> (<em>boolean</em>) – Debug mode, if True a dictionary containing the block names as keys and
-the execution time in seconds, input, output as values is returned.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em> or </em><em>str</em>) – <p>Debug a pipeline with the following options:</p>
+<blockquote>
+<div><ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">t</span></code>:</dt><dd><p>Elapsed time for the primitive and the given stage (fit or predict).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">m</span></code>:</dt><dd><p>Amount of memory incrase (or decrease) for the primitive. This amount
+is represented in bytes.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">i</span></code>:</dt><dd><p>The input values that the primitive takes for that step.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">o</span></code>:</dt><dd><p>The output values that the primitive generates.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>If provided, return a dictionary with the <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code> performance.
+This argument can be a string containing a combination of the letters listed above,
+or <code class="docutils literal notranslate"><span class="pre">True</span></code> which will return a complete debug.</p>
+</p></li>
 <li><p><strong>**kwargs</strong> – Any additional keyword arguments will be directly added
 to the context dictionary and available for the blocks.</p></li>
 </ul>
@@ -987,8 +1016,36 @@ value can either be an integer, which will be interpreted as a block index,
 or the name of a block, including the conter number at the end.
 If given, the execution of the pipeline will start on the specified block,
 and all the blocks before that one will be skipped.</p></li>
-<li><p><strong>debug</strong> (<em>boolean</em>) – Debug mode, if True a dictionary containing the block names as keys and
-the execution time in seconds, input, output as values is returned.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em> or </em><em>str</em>) – <p>Debug a pipeline with the following options:</p>
+<blockquote>
+<div><ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">t</span></code>:</dt><dd><p>Elapsed time for the primitive and the given stage (fit or predict).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">m</span></code>:</dt><dd><p>Amount of memory incrase (or decrease) for the primitive. This amount
+is represented in bytes.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">i</span></code>:</dt><dd><p>The input values that the primitive takes for that step.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">o</span></code>:</dt><dd><p>The output values that the primitive generates.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>If <code class="docutils literal notranslate"><span class="pre">True</span></code> then a dictionary will be returned containing all the elements listed
+previously. If a <code class="docutils literal notranslate"><span class="pre">string</span></code> value with the combination of letters is given for
+each option, it will return a dictionary with the selected elements.</p>
+</p></li>
 <li><p><strong>**kwargs</strong> – Any additional keyword arguments will be directly added
 to the context dictionary and available for the blocks.</p></li>
 </ul>
@@ -997,6 +1054,9 @@ to the context dictionary and available for the blocks.</p></li>
 <dd class="field-even"><p><ul class="simple">
 <li><p>If a single output is requested, it is returned alone.</p></li>
 <li><p>If multiple outputs have been requested, a tuple is returned.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">debug</span></code> is given, a tupple will be returned where the first element
+returned are the predictions and the second a dictionary containing the debug
+information.</p></li>
 </ul>
 </p>
 </dd>
@@ -1038,32 +1098,32 @@ dictionary as values.</p>
 MLPipeline, as well as the current hyperparameter values and the
 specification of the tunable_hyperparameters:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;primitives&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;a_primitive&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;another_primitive&quot;</span>
+    <span class="s1">&#39;primitives&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;a_primitive&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;another_primitive&#39;</span>
     <span class="p">],</span>
-    <span class="s2">&quot;init_params&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;a_primitive&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;an_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;a_value&quot;</span>
+    <span class="s1">&#39;init_params&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;a_primitive&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;an_argument&#39;</span><span class="p">:</span> <span class="s1">&#39;a_value&#39;</span>
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;a_primitive#1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;an_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;a_value&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;another_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;another_value&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;hyperparameters&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;a_primitive#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;an_argument&#39;</span><span class="p">:</span> <span class="s1">&#39;a_value&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;another_argument&#39;</span><span class="p">:</span> <span class="s1">&#39;another_value&#39;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">&quot;another_primitive#1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;yet_another_argument&quot;</span><span class="p">:</span> <span class="s2">&quot;yet_another_value&quot;</span>
+        <span class="s1">&#39;another_primitive#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;yet_another_argument&#39;</span><span class="p">:</span> <span class="s1">&#39;yet_another_value&#39;</span>
          <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s2">&quot;tunable_hyperparameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;another_primitive#1&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;yet_another_argument&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;a_default_value&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="s2">&quot;a_default_value&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;yet_another_value&quot;</span>
+    <span class="s1">&#39;tunable_hyperparameters&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;another_primitive#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;yet_another_argument&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;a_default_value&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;values&#39;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s1">&#39;a_default_value&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;yet_another_value&#39;</span>
                 <span class="p">]</span>
             <span class="p">}</span>
         <span class="p">}</span>

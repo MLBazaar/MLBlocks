@@ -136,6 +136,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../advanced_usage/pipelines.html#start">start_</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/pipelines.html#pipeline-debugging">Pipeline debugging</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/adding_primitives.html">Adding Primitives</a><ul>
@@ -269,6 +270,7 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
@@ -276,6 +278,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
 <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
 
 <span class="kn">from</span> <span class="nn">mlblocks.discovery</span> <span class="kn">import</span> <span class="n">load_pipeline</span>
@@ -375,14 +378,14 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">block_params</span><span class="p">:</span>
                     <span class="n">block_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">primitive_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
                     <span class="k">if</span> <span class="n">block_params</span> <span class="ow">and</span> <span class="n">block_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">((</span><span class="s2">&quot;Non-numbered init_params are being used &quot;</span>
-                                        <span class="s2">&quot;for more than one block </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">),</span> <span class="n">primitive_name</span><span class="p">)</span>
+                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">((</span><span class="s1">&#39;Non-numbered init_params are being used &#39;</span>
+                                        <span class="s1">&#39;for more than one block </span><span class="si">%s</span><span class="s1">.&#39;</span><span class="p">),</span> <span class="n">primitive_name</span><span class="p">)</span>
 
                 <span class="n">block</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
                 <span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span>
 
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught building MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">primitive</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception caught building MLBlock </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">primitive</span><span class="p">)</span>
                 <span class="k">raise</span>
 
         <span class="k">return</span> <span class="n">blocks</span>
@@ -740,8 +743,8 @@
 <span class="sd">        is a dict containing a complete hyperparameter specification for that block::</span>
 
 <span class="sd">            {</span>
-<span class="sd">                &quot;block_name&quot;: {</span>
-<span class="sd">                    &quot;hyperparameter_name&quot;: &quot;hyperparameter_value&quot;,</span>
+<span class="sd">                &#39;block_name&#39;: {</span>
+<span class="sd">                    &#39;hyperparameter_name&#39;: &#39;hyperparameter_value&#39;,</span>
 <span class="sd">                    ...</span>
 <span class="sd">                },</span>
 <span class="sd">                ...</span>
@@ -752,7 +755,7 @@
 <span class="sd">        second one::</span>
 
 <span class="sd">            {</span>
-<span class="sd">                (&quot;block_name&quot;, &quot;hyperparameter_name&quot;): &quot;hyperparameter_value&quot;,</span>
+<span class="sd">                (&#39;block_name&#39;, &#39;hyperparameter_name&#39;): &#39;hyperparameter_value&#39;,</span>
 <span class="sd">                ...</span>
 <span class="sd">            }</span>
 
@@ -876,39 +879,52 @@
             <span class="n">index</span> <span class="o">=</span> <span class="n">output_variables</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
             <span class="n">outputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_fit_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_fit_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the block args from the context and fit the block.&quot;&quot;&quot;</span>
-        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fitting block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Fitting block </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fit_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">fit_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
+            <span class="n">memory_before</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span>
             <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
             <span class="n">block</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">fit_args</span><span class="p">)</span>
             <span class="n">elapsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="n">memory_after</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span>
 
-            <span class="k">if</span> <span class="n">debug</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">debug</span><span class="p">[</span><span class="s2">&quot;fit&quot;</span><span class="p">][</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;elapsed&quot;</span><span class="p">:</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
-                    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">fit_args</span>
-                <span class="p">}</span>
+            <span class="k">if</span> <span class="n">debug_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">debug</span> <span class="o">=</span> <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="s1">&#39;t&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;m&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">memory_after</span> <span class="o">-</span> <span class="n">memory_before</span>
+                <span class="k">if</span> <span class="s1">&#39;i&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">fit_args</span><span class="p">)</span>
+
+                <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;fit&#39;</span><span class="p">][</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
 
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught fitting MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception caught fitting MLBlock </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
 
             <span class="k">raise</span>
 
-    <span class="k">def</span> <span class="nf">_produce_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_produce_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span>
+                       <span class="n">outputs</span><span class="p">,</span> <span class="n">debug_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the block args from the context and produce the block.</span>
 
 <span class="sd">        Afterwards, set the block outputs back into the context and update</span>
 <span class="sd">        the outputs list if necessary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Producing block </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Producing block </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">produce_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
+            <span class="n">memory_before</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span>
             <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
             <span class="n">block_outputs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="o">**</span><span class="n">produce_args</span><span class="p">)</span>
             <span class="n">elapsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="n">memory_after</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span>
 
             <span class="n">outputs_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_outputs</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block_outputs</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">produce_output</span><span class="p">)</span>
             <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">outputs_dict</span><span class="p">)</span>
@@ -921,21 +937,23 @@
                         <span class="n">variable_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_update_outputs</span><span class="p">(</span><span class="n">variable_name</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">debug</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;elapsed&quot;</span><span class="p">:</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span>
-                    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">produce_args</span><span class="p">,</span>
-                    <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">outputs_dict</span>
-                <span class="p">}</span>
+            <span class="k">if</span> <span class="n">debug_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">debug</span> <span class="o">=</span> <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="s1">&#39;t&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;m&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">memory_after</span> <span class="o">-</span> <span class="n">memory_before</span>
+                <span class="k">if</span> <span class="s1">&#39;i&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">produce_args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;o&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">outputs_dict</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="s2">&quot;fit&quot;</span> <span class="ow">in</span> <span class="n">debug</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="n">debug</span><span class="p">[</span><span class="s2">&quot;produce&quot;</span><span class="p">][</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">debug</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+                <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;produce&#39;</span><span class="p">][</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
 
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Exception caught producing MLBlock </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception caught producing MLBlock </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
 
             <span class="k">raise</span>
 
@@ -957,21 +975,31 @@
 <span class="sd">            y:</span>
 <span class="sd">                Fit Data labels, which the pipeline will use to learn how to</span>
 <span class="sd">                behave.</span>
-
 <span class="sd">            output_ (str or int or list or None):</span>
 <span class="sd">                Output specification, as required by ``get_outputs``. If ``None`` is given,</span>
 <span class="sd">                nothing will be returned.</span>
-
 <span class="sd">            start_ (str or int or None):</span>
 <span class="sd">                Block index or block name to start processing from. The</span>
 <span class="sd">                value can either be an integer, which will be interpreted as a block index,</span>
 <span class="sd">                or the name of a block, including the conter number at the end.</span>
 <span class="sd">                If given, the execution of the pipeline will start on the specified block,</span>
 <span class="sd">                and all the blocks before that one will be skipped.</span>
+<span class="sd">            debug (bool or str):</span>
+<span class="sd">                Debug a pipeline with the following options:</span>
 
-<span class="sd">            debug (boolean):</span>
-<span class="sd">                Debug mode, if True a dictionary containing the block names as keys and</span>
-<span class="sd">                the execution time in seconds, input, output as values is returned.</span>
+<span class="sd">                    * ``t``:</span>
+<span class="sd">                        Elapsed time for the primitive and the given stage (fit or predict).</span>
+<span class="sd">                    * ``m``:</span>
+<span class="sd">                        Amount of memory incrase (or decrease) for the primitive. This amount</span>
+<span class="sd">                        is represented in bytes.</span>
+<span class="sd">                    * ``i``:</span>
+<span class="sd">                        The input values that the primitive takes for that step.</span>
+<span class="sd">                    * ``o``:</span>
+<span class="sd">                        The output values that the primitive generates.</span>
+
+<span class="sd">                If provided, return a dictionary with the ``fit`` and ``predict`` performance.</span>
+<span class="sd">                This argument can be a string containing a combination of the letters listed above,</span>
+<span class="sd">                or ``True`` which will return a complete debug.</span>
 
 <span class="sd">            **kwargs:</span>
 <span class="sd">                Any additional keyword arguments will be directly added</span>
@@ -1003,13 +1031,14 @@
         <span class="n">debug_info</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
             <span class="n">debug_info</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+            <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">debug</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">debug</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;tmio&#39;</span>
 
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">start_</span><span class="p">:</span>
                     <span class="n">start_</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping block </span><span class="si">%s</span><span class="s2"> fit&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Skipping block </span><span class="si">%s</span><span class="s1"> fit&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_fit_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
@@ -1035,12 +1064,12 @@
 
                 <span class="k">return</span> <span class="n">result</span>
 
-        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">debug_info</span>
-
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">debug_info</span></div>
 
 <div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Produce predictions using the blocks of this pipeline.</span>
@@ -1056,21 +1085,31 @@
 <span class="sd">        Args:</span>
 <span class="sd">            X:</span>
 <span class="sd">                Data which the pipeline will use to make predictions.</span>
-
 <span class="sd">            output_ (str or int or list or None):</span>
 <span class="sd">                Output specification, as required by ``get_outputs``. If not specified</span>
 <span class="sd">                the ``default`` output will be returned.</span>
-
 <span class="sd">            start_ (str or int or None):</span>
 <span class="sd">                Block index or block name to start processing from. The</span>
 <span class="sd">                value can either be an integer, which will be interpreted as a block index,</span>
 <span class="sd">                or the name of a block, including the conter number at the end.</span>
 <span class="sd">                If given, the execution of the pipeline will start on the specified block,</span>
 <span class="sd">                and all the blocks before that one will be skipped.</span>
+<span class="sd">            debug (bool or str):</span>
+<span class="sd">                Debug a pipeline with the following options:</span>
 
-<span class="sd">            debug (boolean):</span>
-<span class="sd">                Debug mode, if True a dictionary containing the block names as keys and</span>
-<span class="sd">                the execution time in seconds, input, output as values is returned.</span>
+<span class="sd">                    * ``t``:</span>
+<span class="sd">                        Elapsed time for the primitive and the given stage (fit or predict).</span>
+<span class="sd">                    * ``m``:</span>
+<span class="sd">                        Amount of memory incrase (or decrease) for the primitive. This amount</span>
+<span class="sd">                        is represented in bytes.</span>
+<span class="sd">                    * ``i``:</span>
+<span class="sd">                        The input values that the primitive takes for that step.</span>
+<span class="sd">                    * ``o``:</span>
+<span class="sd">                        The output values that the primitive generates.</span>
+
+<span class="sd">                If ``True`` then a dictionary will be returned containing all the elements listed</span>
+<span class="sd">                previously. If a ``string`` value with the combination of letters is given for</span>
+<span class="sd">                each option, it will return a dictionary with the selected elements.</span>
 
 <span class="sd">            **kwargs:</span>
 <span class="sd">                Any additional keyword arguments will be directly added</span>
@@ -1080,6 +1119,9 @@
 <span class="sd">            object or tuple:</span>
 <span class="sd">                * If a single output is requested, it is returned alone.</span>
 <span class="sd">                * If multiple outputs have been requested, a tuple is returned.</span>
+<span class="sd">                * If ``debug`` is given, a tupple will be returned where the first element</span>
+<span class="sd">                  returned are the predictions and the second a dictionary containing the debug</span>
+<span class="sd">                  information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1092,14 +1134,15 @@
 
         <span class="n">debug_info</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="n">debug_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="n">debug_info</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+            <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">debug</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">debug</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;tmio&#39;</span>
 
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">start_</span><span class="p">:</span>
                     <span class="n">start_</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping block </span><span class="si">%s</span><span class="s2"> produce&quot;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Skipping block </span><span class="si">%s</span><span class="s1"> produce&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
@@ -1121,9 +1164,6 @@
 
                 <span class="k">return</span> <span class="n">result</span>
 
-        <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">debug_info</span>
-
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span></div>
@@ -1136,32 +1176,32 @@
 <span class="sd">        specification of the tunable_hyperparameters::</span>
 
 <span class="sd">            {</span>
-<span class="sd">                &quot;primitives&quot;: [</span>
-<span class="sd">                    &quot;a_primitive&quot;,</span>
-<span class="sd">                    &quot;another_primitive&quot;</span>
+<span class="sd">                &#39;primitives&#39;: [</span>
+<span class="sd">                    &#39;a_primitive&#39;,</span>
+<span class="sd">                    &#39;another_primitive&#39;</span>
 <span class="sd">                ],</span>
-<span class="sd">                &quot;init_params&quot;: {</span>
-<span class="sd">                    &quot;a_primitive&quot;: {</span>
-<span class="sd">                        &quot;an_argument&quot;: &quot;a_value&quot;</span>
+<span class="sd">                &#39;init_params&#39;: {</span>
+<span class="sd">                    &#39;a_primitive&#39;: {</span>
+<span class="sd">                        &#39;an_argument&#39;: &#39;a_value&#39;</span>
 <span class="sd">                    }</span>
 <span class="sd">                },</span>
-<span class="sd">                &quot;hyperparameters&quot;: {</span>
-<span class="sd">                    &quot;a_primitive#1&quot;: {</span>
-<span class="sd">                        &quot;an_argument&quot;: &quot;a_value&quot;,</span>
-<span class="sd">                        &quot;another_argument&quot;: &quot;another_value&quot;,</span>
+<span class="sd">                &#39;hyperparameters&#39;: {</span>
+<span class="sd">                    &#39;a_primitive#1&#39;: {</span>
+<span class="sd">                        &#39;an_argument&#39;: &#39;a_value&#39;,</span>
+<span class="sd">                        &#39;another_argument&#39;: &#39;another_value&#39;,</span>
 <span class="sd">                    },</span>
-<span class="sd">                    &quot;another_primitive#1&quot;: {</span>
-<span class="sd">                        &quot;yet_another_argument&quot;: &quot;yet_another_value&quot;</span>
+<span class="sd">                    &#39;another_primitive#1&#39;: {</span>
+<span class="sd">                        &#39;yet_another_argument&#39;: &#39;yet_another_value&#39;</span>
 <span class="sd">                     }</span>
 <span class="sd">                },</span>
-<span class="sd">                &quot;tunable_hyperparameters&quot;: {</span>
-<span class="sd">                    &quot;another_primitive#1&quot;: {</span>
-<span class="sd">                        &quot;yet_another_argument&quot;: {</span>
-<span class="sd">                            &quot;type&quot;: &quot;str&quot;,</span>
-<span class="sd">                            &quot;default&quot;: &quot;a_default_value&quot;,</span>
-<span class="sd">                            &quot;values&quot;: [</span>
-<span class="sd">                                &quot;a_default_value&quot;,</span>
-<span class="sd">                                &quot;yet_another_value&quot;</span>
+<span class="sd">                &#39;tunable_hyperparameters&#39;: {</span>
+<span class="sd">                    &#39;another_primitive#1&#39;: {</span>
+<span class="sd">                        &#39;yet_another_argument&#39;: {</span>
+<span class="sd">                            &#39;type&#39;: &#39;str&#39;,</span>
+<span class="sd">                            &#39;default&#39;: &#39;a_default_value&#39;,</span>
+<span class="sd">                            &#39;values&#39;: [</span>
+<span class="sd">                                &#39;a_default_value&#39;,</span>
+<span class="sd">                                &#39;yet_another_value&#39;</span>
 <span class="sd">                            ]</span>
 <span class="sd">                        }</span>
 <span class="sd">                    }</span>
@@ -1191,8 +1231,8 @@
 <span class="sd">            str:</span>
 <span class="sd">                block name stripped of number and other modifiers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">full_name</span> <span class="o">=</span> <span class="n">block_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">simple_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">block_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">simple_name</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">simple_name</span>
 
     <span class="k">def</span> <span class="nf">_get_context_name_from_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">):</span>
@@ -1207,12 +1247,12 @@
 <span class="sd">            str:</span>
 <span class="sd">                Name of the context of the variable.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">block_name</span> <span class="o">=</span> <span class="n">variable_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block_name</span> <span class="o">=</span> <span class="n">variable_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">rest</span> <span class="o">=</span> <span class="n">variable_name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">block_name</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
-        <span class="n">block_index</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block_index</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">context_name</span> <span class="o">=</span> <span class="n">rest</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">block_index</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid variable name&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid variable name&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">context_name</span>
 
     <span class="k">def</span> <span class="nf">_get_relevant_output_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">current_output_variables</span><span class="p">):</span>
@@ -1372,7 +1412,7 @@
 <span class="sd">                Dictionary of input variables of the pipeline and the set of tuples of blocks into</span>
 <span class="sd">                which the variable connects and the type of arrowhead to use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster_inputs&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;cluster_inputs&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
             <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;Input variables&#39;</span><span class="p">)</span>
             <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s1">&#39;azure3&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
             <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">)</span>
@@ -1413,7 +1453,7 @@
         <span class="n">output_variables</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">outputs_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster_outputs&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">diagram</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;cluster_outputs&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cluster</span><span class="p">:</span>
             <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;Output variables&#39;</span><span class="p">)</span>
             <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s1">&#39;azure3&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
             <span class="n">cluster</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">)</span>
