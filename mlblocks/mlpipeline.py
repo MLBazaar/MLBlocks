@@ -93,6 +93,7 @@ class MLPipeline():
 
     def _build_blocks(self):
         blocks = OrderedDict()
+        last_fit_block = None
 
         block_names_count = Counter()
         for primitive in self.primitives:
@@ -115,11 +116,14 @@ class MLPipeline():
                 block = MLBlock(primitive, **block_params)
                 blocks[block_name] = block
 
+                if bool(block._fit):
+                    last_fit_block = primitive
+
             except Exception:
                 LOGGER.exception("Exception caught building MLBlock %s", primitive)
                 raise
 
-        return blocks
+        return blocks, last_fit_block
 
     @staticmethod
     def _get_pipeline_dict(pipeline, primitives):
@@ -204,7 +208,7 @@ class MLPipeline():
 
         self.primitives = primitives or pipeline['primitives']
         self.init_params = init_params or pipeline.get('init_params', dict())
-        self.blocks = self._build_blocks()
+        self.blocks, self._last_fit_block = self._build_blocks()
         self._last_block_name = self._get_block_name(-1)
 
         self.input_names = input_names or pipeline.get('input_names', dict())
@@ -750,7 +754,7 @@ class MLPipeline():
 
             self._fit_block(block, block_name, context, debug_info)
 
-            if (block_name != self._last_block_name) or (block_name in output_blocks):
+            if (block_name != self._last_fit_block) or (block_name in output_blocks):
                 self._produce_block(
                     block, block_name, context, output_variables, outputs, debug_info)
 
