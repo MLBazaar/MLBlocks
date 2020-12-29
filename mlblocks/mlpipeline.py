@@ -120,7 +120,7 @@ class MLPipeline():
                 blocks[block_name] = block
 
                 if bool(block._fit):
-                    last_fit_block = primitive
+                    last_fit_block = block_name
 
             except Exception:
                 LOGGER.exception('Exception caught building MLBlock %s', primitive)
@@ -771,6 +771,7 @@ class MLPipeline():
             debug_info = defaultdict(dict)
             debug_info['debug'] = debug.lower() if isinstance(debug, str) else 'tmio'
 
+        early_stop = False
         for block_name, block in self.blocks.items():
             if start_:
                 if block_name == start_:
@@ -781,7 +782,10 @@ class MLPipeline():
 
             self._fit_block(block, block_name, context, debug_info)
 
-            if (block_name != self._last_fit_block) or (block_name in output_blocks):
+            if block_name == self._last_fit_block:
+                early_stop = True
+
+            if (not early_stop) or (block_name in output_blocks):
                 self._produce_block(
                     block, block_name, context, output_variables, outputs, debug_info)
 
