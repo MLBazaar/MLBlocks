@@ -136,7 +136,7 @@ to an `XGBRegressor`_ primitive.
 
 .. _USPS Dataset: https://ieeexplore.ieee.org/document/291440/
 .. _OpenCV GaussianBlur function: https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur
-.. _MLPrimitives primitive: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.SingleLayerCNNImageClassifier.json
+.. _MLPrimitives primitive: https://github.com/MLBazaar/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.SingleLayerCNNImageClassifier.json
 .. _scikit-image function: http://scikit-image.org/docs/dev/api/skimage.feature.html#skimage.feature.hog
 .. _RandomForestClassifier from scikit-learn: http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
 .. _Pretrained Networks from Keras: https://keras.io/applications/

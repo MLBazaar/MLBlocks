@@ -26,7 +26,7 @@ In order to run these tutorials on your computer, please follow these steps:
 1. Clone this github repository:
 
 ```bash
-git clone git@github.com:HDI-Project/MLBlocks.git
+git clone git@github.com:MLBazaar/MLBlocks.git
 ```
 
 2. (Optional) Create a virtualenv to execute the examples in an environment isolated from the
@@ -45,8 +45,8 @@ cd MLBlocks
 make install-examples
 ```
 
-This will install [MLBLocks](https://github.com/HDI-Project/MLBlocks.git) as well as [MLPrimitives](
-https://github.com/HDI-Project/MLPrimitives.git) and [Jupyter](https://jupyter.org/).
+This will install [MLBLocks](https://github.com/MLBazaar/MLBlocks.git) as well as [MLPrimitives](
+https://github.com/MLBazaar/MLPrimitives.git) and [Jupyter](https://jupyter.org/).
 
 4. Enter the `examples` folder and start a Jupyter Notebook:
 

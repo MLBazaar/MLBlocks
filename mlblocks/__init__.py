@@ -7,7 +7,7 @@ MLBlocks is a simple framework for composing end-to-end tunable Machine Learning
 seamlessly combining tools from any python library with a simple, common and uniform interface.
 
 * Free software: MIT license
-* Documentation: https://HDI-Project.github.io/MLBlocks
+* Documentation: https://MLBazaar.github.io/MLBlocks
 """
 
 from mlblocks.discovery import (
@@ -20,7 +20,7 @@ __author__ = 'MIT Data To AI Lab'
 __copyright__ = 'Copyright (c) 2018, MIT Data To AI Lab'
 __email__ = 'dailabmit@gmail.com'
 __license__ = 'MIT'
-__version__ = '0.3.5.dev0'
+__version__ = '0.4.0.dev1'
 
 __all__ = [
     'MLBlock', 'MLPipeline', 'add_pipelines_path', 'add_primitives_path',

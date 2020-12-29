@@ -123,5 +123,5 @@ to obtain predictions from the pipeline.
 .. _hyperparameters: ../advanced_usage/hyperparameters.html
 .. _MLBlocks JSON Annotations: ../advanced_usage/primitives.html#json-annotations
 .. _get_tunable_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_tunable_hyperparameters
-.. _BTB: https://github.com/HDI-Project/BTB
+.. _BTB: https://github.com/MLBazaar/BTB
 .. _set_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.set_hyperparameters
