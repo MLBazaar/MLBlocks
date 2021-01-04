@@ -682,6 +682,69 @@ class TestMLPipline(TestCase):
         assert inputs == expected
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_no_early_stop(self):
+        block_1 = get_mlblock_mock()
+        block_2 = get_mlblock_mock()
+        blocks = OrderedDict((
+            ('a.primitive.Name#1', block_1),
+            ('a.primitive.Name#2', block_2),
+        ))
+
+        self_ = MagicMock(autospec=MLPipeline)
+        self_.blocks = blocks
+        self_._last_fit_block = 'a.primitive.Name#2'
+
+        MLPipeline.fit(self_)
+
+        expected = [
+            call('a.primitive.Name#1'),
+            call('a.primitive.Name#2')
+        ]
+        self_._fit_block.call_args_list = expected
+
+        expected = [
+            call('a.primitive.Name#1'),
+        ]
+        self_._produce_block.call_args_list = expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_early_stop(self):
+        block_1 = get_mlblock_mock()
+        block_2 = get_mlblock_mock()
+        blocks = OrderedDict((
+            ('a.primitive.Name#1', block_1),
+            ('a.primitive.Name#2', block_2),
+        ))
+
+        self_ = MagicMock(autospec=MLPipeline)
+        self_.blocks = blocks
+        self_._last_fit_block = 'a.primitive.Name#1'
+
+        MLPipeline.fit(self_)
+
+        expected = [
+            call('a.primitive.Name#1'),
+        ]
+        self_._fit_block.call_args_list = expected
+
+        assert not self_._produce_block.called
+
+    # @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    # # @patch('mlpipeline._produce_block')
+    # def test_fit_early_stop(self):
+    #     pipeline = MLPipeline(['a_primitive', 'another_primitive'])
+    #     pipeline._last_fit_block = 'a_primitive#1'
+
+    #     pipeline.fit()
+
+    #     expected_calls = [
+    #         call(get_mlblock_mock(), 'a_primitive#1'),
+    #         call(get_mlblock_mock(), 'another_primitive#1')
+    #     ]
+
+    #     assert pipeline.call_args_list == expected_calls
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_fit_no_debug(self):
         mlpipeline = MLPipeline(['a_primitive'])
         mlpipeline.blocks['a_primitive#1'].fit_args = [
