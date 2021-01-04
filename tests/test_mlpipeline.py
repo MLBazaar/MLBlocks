@@ -729,21 +729,6 @@ class TestMLPipline(TestCase):
 
         assert not self_._produce_block.called
 
-    # @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
-    # # @patch('mlpipeline._produce_block')
-    # def test_fit_early_stop(self):
-    #     pipeline = MLPipeline(['a_primitive', 'another_primitive'])
-    #     pipeline._last_fit_block = 'a_primitive#1'
-
-    #     pipeline.fit()
-
-    #     expected_calls = [
-    #         call(get_mlblock_mock(), 'a_primitive#1'),
-    #         call(get_mlblock_mock(), 'another_primitive#1')
-    #     ]
-
-    #     assert pipeline.call_args_list == expected_calls
-
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_fit_no_debug(self):
         mlpipeline = MLPipeline(['a_primitive'])
