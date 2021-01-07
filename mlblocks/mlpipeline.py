@@ -771,8 +771,11 @@ class MLPipeline():
             debug_info = defaultdict(dict)
             debug_info['debug'] = debug.lower() if isinstance(debug, str) else 'tmio'
 
-        early_stop = False
+        fit_pending = True
         for block_name, block in self.blocks.items():
+            if block_name == self._last_fit_block:
+                fit_pending = False
+
             if start_:
                 if block_name == start_:
                     start_ = False
@@ -782,10 +785,7 @@ class MLPipeline():
 
             self._fit_block(block, block_name, context, debug_info)
 
-            if block_name == self._last_fit_block:
-                early_stop = True
-
-            if (not early_stop) or (block_name in output_blocks):
+            if fit_pending or output_blocks:
                 self._produce_block(
                     block, block_name, context, output_variables, outputs, debug_info)
 
@@ -795,16 +795,23 @@ class MLPipeline():
 
             # If there was an output_ but there are no pending
             # outputs we are done.
-            if output_variables is not None and not output_blocks:
-                if len(outputs) > 1:
-                    result = tuple(outputs)
-                else:
-                    result = outputs[0]
+            if output_variables:
+                if not output_blocks:
+                    if len(outputs) > 1:
+                        result = tuple(outputs)
+                    else:
+                        result = outputs[0]
 
+                    if debug:
+                        return result, debug_info
+
+                    return result
+
+            elif not fit_pending:
                 if debug:
-                    return result, debug_info
+                    return debug_info
 
-                return result
+                return
 
         if start_:
             # We skipped all the blocks up to the end

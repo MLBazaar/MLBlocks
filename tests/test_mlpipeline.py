@@ -682,7 +682,7 @@ class TestMLPipline(TestCase):
         assert inputs == expected
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
-    def test_fit_no_early_stop(self):
+    def test_fit_pending_all_primitives(self):
         block_1 = get_mlblock_mock()
         block_2 = get_mlblock_mock()
         blocks = OrderedDict((
@@ -708,7 +708,7 @@ class TestMLPipline(TestCase):
         self_._produce_block.call_args_list = expected
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
-    def test_fit_early_stop(self):
+    def test_fit_pending_one_primitive(self):
         block_1 = get_mlblock_mock()
         block_2 = get_mlblock_mock()
         blocks = OrderedDict((
