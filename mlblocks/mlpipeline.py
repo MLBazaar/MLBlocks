@@ -96,6 +96,7 @@ class MLPipeline():
 
     def _build_blocks(self):
         blocks = OrderedDict()
+        last_fit_block = None
 
         block_names_count = Counter()
         for primitive in self.primitives:
@@ -118,11 +119,14 @@ class MLPipeline():
                 block = MLBlock(primitive, **block_params)
                 blocks[block_name] = block
 
+                if bool(block._fit):
+                    last_fit_block = block_name
+
             except Exception:
                 LOGGER.exception('Exception caught building MLBlock %s', primitive)
                 raise
 
-        return blocks
+        return blocks, last_fit_block
 
     @staticmethod
     def _get_pipeline_dict(pipeline, primitives):
@@ -207,7 +211,7 @@ class MLPipeline():
 
         self.primitives = primitives or pipeline['primitives']
         self.init_params = init_params or pipeline.get('init_params', dict())
-        self.blocks = self._build_blocks()
+        self.blocks, self._last_fit_block = self._build_blocks()
         self._last_block_name = self._get_block_name(-1)
 
         self.input_names = input_names or pipeline.get('input_names', dict())
@@ -767,7 +771,11 @@ class MLPipeline():
             debug_info = defaultdict(dict)
             debug_info['debug'] = debug.lower() if isinstance(debug, str) else 'tmio'
 
+        fit_pending = True
         for block_name, block in self.blocks.items():
+            if block_name == self._last_fit_block:
+                fit_pending = False
+
             if start_:
                 if block_name == start_:
                     start_ = False
@@ -777,7 +785,7 @@ class MLPipeline():
 
             self._fit_block(block, block_name, context, debug_info)
 
-            if (block_name != self._last_block_name) or (block_name in output_blocks):
+            if fit_pending or output_blocks:
                 self._produce_block(
                     block, block_name, context, output_variables, outputs, debug_info)
 
@@ -787,16 +795,23 @@ class MLPipeline():
 
             # If there was an output_ but there are no pending
             # outputs we are done.
-            if output_variables is not None and not output_blocks:
-                if len(outputs) > 1:
-                    result = tuple(outputs)
-                else:
-                    result = outputs[0]
+            if output_variables:
+                if not output_blocks:
+                    if len(outputs) > 1:
+                        result = tuple(outputs)
+                    else:
+                        result = outputs[0]
 
+                    if debug:
+                        return result, debug_info
+
+                    return result
+
+            elif not fit_pending:
                 if debug:
-                    return result, debug_info
+                    return debug_info
 
-                return result
+                return
 
         if start_:
             # We skipped all the blocks up to the end
