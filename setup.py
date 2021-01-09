@@ -20,12 +20,14 @@ install_requires = [
 
 
 mlprimitives_requires = [
-    'mlprimitives>=0.3.0.dev0,<0.4',
+    'mlprimitives>=0.3.0,<0.4',
+    'h5py<2.11.0,>=2.10.0',  # <- tensorflow 2.3.2 conflict
+    'matplotlib<3.2.2,>=2.2.2',  # <- copulas 0.3.3
 ]
 
 examples_require = mlprimitives_requires + [
     'jupyter==1.0.0',
-    'baytune>=0.3.13.dev0,<0.4',
+    'baytune>=0.4.0,<0.5',
 ]
 
 
