@@ -1,6 +1,8 @@
 <p align="left">
-<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt=“DAI-Lab” />
-<i>An open source project from Data to AI Lab at MIT.</i>
+  <a href="https://dai.lids.mit.edu">
+    <img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="DAI-Lab" />
+  </a>
+  <i>An Open Source Project from the <a href="https://dai.lids.mit.edu">Data to AI Lab, at MIT</a></i>
 </p>
 
 <p align="left">
@@ -13,18 +15,19 @@ Pipelines and Primitives for Machine Learning and Data Science.
 
 [![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 [![PyPi](https://img.shields.io/pypi/v/mlblocks.svg)](https://pypi.python.org/pypi/mlblocks)
-[![Travis](https://travis-ci.com/MLBazaar/MLBlocks.svg?branch=master)](https://travis-ci.com/MLBazaar/MLBlocks)
+[![Tests](https://github.com/MLBazaar/MLBlocks/workflows/Run%20Tests/badge.svg)](https://github.com/MLBazaar/MLBlocks/actions?query=workflow%3A%22Run+Tests%22+branch%3Amaster)
 [![CodeCov](https://codecov.io/gh/MLBazaar/MLBlocks/branch/master/graph/badge.svg)](https://codecov.io/gh/MLBazaar/MLBlocks)
 [![Downloads](https://pepy.tech/badge/mlblocks)](https://pepy.tech/project/mlblocks)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/MLBazaar/MLBlocks/master?filepath=examples/tutorials)
 
 <br>
 
 # MLBlocks
 
-* Free software: [MIT license](https://github.com/MLBazaar/MLBlocks/blob/master/LICENSE)
-* Development Status: [Pre-Alpha](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 * Documentation: https://mlbazaar.github.io/MLBlocks
-* Homepage: https://github.com/MLBazaar/MLBlocks
+* Github: https://github.com/MLBazaar/MLBlocks
+* License: [MIT](https://github.com/MLBazaar/MLBlocks/blob/master/LICENSE)
+* Development Status: [Pre-Alpha](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 
 ## Overview
 
@@ -49,11 +52,7 @@ Features include:
 
 **MLBlocks** has been developed and tested on [Python 3.6, 3.7 and 3.8](https://www.python.org/downloads/)
 
-Also, although it is not strictly required, the usage of a
-[virtualenv](https://virtualenv.pypa.io/en/latest/) is highly recommended in order to avoid
-interfering with other software installed in the system where **MLBlocks** is run.
-
-## Install with pip
+## Install with `pip`
 
 The easiest and recommended way to install **MLBlocks** is using [pip](
 https://pip.pypa.io/en/stable/):

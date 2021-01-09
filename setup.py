@@ -5,12 +5,10 @@
 
 from setuptools import find_packages, setup
 
-
-with open('README.md') as readme_file:
+with open('README.md', encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
-
-with open('HISTORY.md') as history_file:
+with open('HISTORY.md', encoding='utf-8') as history_file:
     history = history_file.read()
 
 
@@ -22,12 +20,8 @@ install_requires = [
 
 
 examples_require = [
-    'matplotlib>=2.2.2,<3.2.2',
     'mlprimitives>=0.3.0.dev0,<0.4',
-    'boto3>=1.14,<1.14.45',
-    'botocore<1.17.45,>=1.17.44',
     'jupyter==1.0.0',
-    'docutils<0.16,>=0.10',
     'baytune>=0.3.13.dev0,<0.4',
 ]
 
@@ -79,9 +73,6 @@ development_requires = [
     # Documentation style
     'doc8>=0.8.0',
     'pydocstyle>=3.0.0',
-
-    # Prevent travis-ci conflict
-    'chardet<4',
 ]
 
 
@@ -98,7 +89,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="Pipelines and primitives for machine learning and data science.",
+    description='Pipelines and primitives for machine learning and data science.',
     extras_require={
         'dev': development_requires + tests_require + examples_require,
         'test': tests_require + examples_require,
@@ -107,7 +98,7 @@ setup(
     include_package_data=True,
     install_requires=install_requires,
     keywords='auto machine learning classification regression data science pipeline',
-    license="MIT license",
+    license='MIT license',
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
     name='mlblocks',
