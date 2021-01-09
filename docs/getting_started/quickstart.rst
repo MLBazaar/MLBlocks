@@ -24,9 +24,11 @@ them to the `MLPipeline class`_:
 
     from mlblocks import MLPipeline
     primitives = [
+        'mlprimitives.custom.preprocessing.ClassEncoder',
         'mlprimitives.custom.feature_extraction.CategoricalEncoder',
-        'mlprimitives.custom.feature_extraction.StringVectorizer',
-        'sklearn.ensemble.RandomForestClassifier',
+        'sklearn.impute.SimpleImputer',
+        'xgboost.XGBClassifier',
+        'mlprimitives.custom.preprocessing.ClassDecoder'
     ]
     pipeline = MLPipeline(primitives)
 
@@ -36,8 +38,8 @@ passing them as the ``init_params`` argument:
 .. ipython:: python
 
     init_params = {
-        'sklearn.ensemble.RandomForestClassifier': {
-            'n_estimators': 100
+        'sklearn.impute.SimpleImputer': {
+            'strategy': 'median'
         }
     }
     pipeline = MLPipeline(primitives, init_params=init_params)
@@ -82,13 +84,13 @@ other ones will remain unmodified.
 .. ipython:: python
 
     new_hyperparameters = {
-        'sklearn.ensemble.RandomForestClassifier#1': {
+        'xgboost.XGBClassifier#1': {
             'max_depth': 15
         }
     }
     pipeline.set_hyperparameters(new_hyperparameters)
     hyperparameters = pipeline.get_hyperparameters()
-    hyperparameters['sklearn.ensemble.RandomForestClassifier#1']['max_depth']
+    hyperparameters['xgboost.XGBClassifier#1']['max_depth']
 
 Making predictions
 ------------------
@@ -101,8 +103,8 @@ labels.
 
 .. ipython:: python
 
-    from mlblocks.datasets import load_personae
-    dataset = load_personae()
+    from mlprimitives.datasets import load_census
+    dataset = load_census()
     X_train, X_test, y_train, y_test = dataset.get_splits(1)
     pipeline.fit(X_train, y_train)
 
@@ -121,5 +123,5 @@ to obtain predictions from the pipeline.
 .. _hyperparameters: ../advanced_usage/hyperparameters.html
 .. _MLBlocks JSON Annotations: ../advanced_usage/primitives.html#json-annotations
 .. _get_tunable_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.get_tunable_hyperparameters
-.. _BTB: https://github.com/HDI-Project/BTB
+.. _BTB: https://github.com/MLBazaar/BTB
 .. _set_hyperparameters method: ../api_reference.html#mlblocks.MLPipeline.set_hyperparameters

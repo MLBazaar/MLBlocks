@@ -4,31 +4,31 @@ Changelog
 0.3.4 - 2019-11-01
 ------------------
 
-* Ability to return intermediate context - [Issue #110](https://github.com/HDI-Project/MLBlocks/issues/110) by @csala
-* Support for static or class methods - [Issue #107](https://github.com/HDI-Project/MLBlocks/issues/107) by @csala
+* Ability to return intermediate context - [Issue #110](https://github.com/MLBazaar/MLBlocks/issues/110) by @csala
+* Support for static or class methods - [Issue #107](https://github.com/MLBazaar/MLBlocks/issues/107) by @csala
 
 0.3.3 - 2019-09-09
 ------------------
 
-* Improved intermediate outputs management - [Issue #105](https://github.com/HDI-Project/MLBlocks/issues/105) by @csala
+* Improved intermediate outputs management - [Issue #105](https://github.com/MLBazaar/MLBlocks/issues/105) by @csala
 
 0.3.2 - 2019-08-12
 ------------------
 
-* Allow passing fit and produce arguments as `init_params` - [Issue #96](https://github.com/HDI-Project/MLBlocks/issues/96) by @csala
-* Support optional fit and produce args and arg defaults - [Issue #95](https://github.com/HDI-Project/MLBlocks/issues/95) by @csala
-* Isolate primitives from their hyperparameters dictionary - [Issue #94](https://github.com/HDI-Project/MLBlocks/issues/94) by @csala
-* Add functions to explore the available primitives and pipelines - [Issue #90](https://github.com/HDI-Project/MLBlocks/issues/90) by @csala
-* Add primitive caching - [Issue #22](https://github.com/HDI-Project/MLBlocks/issues/22) by @csala
+* Allow passing fit and produce arguments as `init_params` - [Issue #96](https://github.com/MLBazaar/MLBlocks/issues/96) by @csala
+* Support optional fit and produce args and arg defaults - [Issue #95](https://github.com/MLBazaar/MLBlocks/issues/95) by @csala
+* Isolate primitives from their hyperparameters dictionary - [Issue #94](https://github.com/MLBazaar/MLBlocks/issues/94) by @csala
+* Add functions to explore the available primitives and pipelines - [Issue #90](https://github.com/MLBazaar/MLBlocks/issues/90) by @csala
+* Add primitive caching - [Issue #22](https://github.com/MLBazaar/MLBlocks/issues/22) by @csala
 
 0.3.1 - Pipelines Discovery
 ---------------------------
 
-* Support flat hyperparameter dictionaries - [Issue #92](https://github.com/HDI-Project/MLBlocks/issues/92) by @csala
-* Load pipelines by name and register them as `entry_points` - [Issue #88](https://github.com/HDI-Project/MLBlocks/issues/88) by @csala
-* Implement partial re-fit -[Issue #61](https://github.com/HDI-Project/MLBlocks/issues/61) by @csala
-* Move argument parsing to MLBlock - [Issue #86](https://github.com/HDI-Project/MLBlocks/issues/86) by @csala
-* Allow getting intermediate outputs - [Issue #58](https://github.com/HDI-Project/MLBlocks/issues/58) by @csala
+* Support flat hyperparameter dictionaries - [Issue #92](https://github.com/MLBazaar/MLBlocks/issues/92) by @csala
+* Load pipelines by name and register them as `entry_points` - [Issue #88](https://github.com/MLBazaar/MLBlocks/issues/88) by @csala
+* Implement partial re-fit -[Issue #61](https://github.com/MLBazaar/MLBlocks/issues/61) by @csala
+* Move argument parsing to MLBlock - [Issue #86](https://github.com/MLBazaar/MLBlocks/issues/86) by @csala
+* Allow getting intermediate outputs - [Issue #58](https://github.com/MLBazaar/MLBlocks/issues/58) by @csala
 
 0.3.0 - New Primitives Discovery
 --------------------------------

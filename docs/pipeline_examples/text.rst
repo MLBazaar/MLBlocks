@@ -140,9 +140,9 @@ to encode all the string features, and go directly into the
 
 
 .. _Twenty Newsgroups Dataset: http://scikit-learn.org/stable/datasets/twenty_newsgroups.html
-.. _TextCleaner primitive: https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/text.py
-.. _StringVectorizer primitive: https://github.com/HDI-Project/MLPrimitives/blob/master/mlprimitives/feature_extraction.py
+.. _TextCleaner primitive: https://github.com/MLBazaar/MLPrimitives/blob/master/mlprimitives/text.py
+.. _StringVectorizer primitive: https://github.com/MLBazaar/MLPrimitives/blob/master/mlprimitives/feature_extraction.py
 .. _keras text preprocessing: https://keras.io/preprocessing/text/
-.. _Keras LSTM Classifier from MLPrimitives: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.LSTMTextClassifier.json
+.. _Keras LSTM Classifier from MLPrimitives: https://github.com/MLBazaar/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.LSTMTextClassifier.json
 .. _Personae Dataset: https://www.clips.uantwerpen.be/datasets/personae-corpus
 .. _RandomForestClassifier from scikit-learn: http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html

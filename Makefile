@@ -72,6 +72,10 @@ clean: clean-build clean-pyc clean-test clean-coverage clean-docs ## remove all 
 install: clean-build clean-pyc ## install the package to the active Python's site-packages
 	pip install .
 
+.PHONY: install-examples
+install-examples: clean-build clean-pyc ## install the package and the examples dependencies
+	pip install .[examples]
+
 .PHONY: install-test
 install-test: clean-build clean-pyc ## install the package and test dependencies
 	pip install .[test]
@@ -106,9 +110,30 @@ lint-docs: ## check docs formatting with doc8 and pydocstyle
 
 # TEST TARGETS
 
-.PHONY: test
-test: ## run tests quickly with the default Python
+.PHONY: test-unit
+test-unit: ## run tests quickly with the default Python
 	python -m pytest --cov=mlblocks
+
+.PHONY: test-readme
+test-readme: ## run the readme snippets
+	rm -rf tests/readme_test && mkdir tests/readme_test
+	cd tests/readme_test && rundoc run --single-session python3 -t python3 ../../README.md
+	rm -rf tests/readme_test
+
+.PHONY: test-tutorials
+test-tutorials: ## run the tutorial notebooks
+	find examples/tutorials -path "*/.ipynb_checkpoints" -prune -false -o -name "*.ipynb" -exec \
+		jupyter nbconvert --execute --ExecutePreprocessor.timeout=3600 --stdout --to html {} > /dev/null \;
+
+.PHONY: test
+test: test-unit test-readme ## test everything that needs test dependencies
+
+.PHONY: check-dependencies
+check-dependencies: ## test if there are any broken dependencies
+	pip check
+
+.PHONY: test-devel
+test-devel: check-dependencies lint docs ## test everything that needs development dependencies
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox

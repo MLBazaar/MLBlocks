@@ -15,17 +15,30 @@ with open('HISTORY.md') as history_file:
 
 
 install_requires = [
+    'graphviz>=0.9,<1',
+    'numpy>=1.17.1,<1.19',
+    'psutil>=5,<6',
+]
+
+
+examples_require = [
+    'matplotlib>=2.2.2,<3.2.2',
+    'mlprimitives>=0.3.0.dev0,<0.4',
+    'boto3>=1.14,<1.14.45',
+    'botocore<1.17.45,>=1.17.44',
+    'jupyter==1.0.0',
+    'docutils<0.16,>=0.10',
+    'baytune>=0.3.13.dev0,<0.4',
 ]
 
 
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.2,<0.3',
-    'urllib3>=1.20,<1.25',
+    'mlprimitives>=0.3.0.dev0,<0.4',
     'setuptools>=41.0.0',
-    'numpy<1.17',
-    'python-dateutil<2.8.1,>=2.1',
+    'rundoc>=0.4.3',
+    'prompt-toolkit>=2.0,<3.0',
 ]
 
 
@@ -36,39 +49,39 @@ setup_requires = [
 
 development_requires = [
     # general
-    'bumpversion>=0.5.3',
+    'bumpversion>=0.5.3,<0.6',
     'pip>=9.0.1',
-    'watchdog>=0.8.3',
+    'watchdog>=0.8.3,<0.11',
 
     # docs
-    'm2r>=0.2.0',
-    'Sphinx>=1.7.1',
-    'sphinx_rtd_theme>=0.2.4',
-    'graphviz>=0.9',
+    'm2r>=0.2.0,<0.3',
+    'Sphinx>=1.7.1,<3',
+    'sphinx_rtd_theme>=0.2.4,<0.5',
     'ipython>=6.5.0',
-    'matplotlib>=2.2.3',
     'autodocsumm>=0.1.10',
-    'docutils<0.15,>=0.10',    # botocore incompatibility with 0.15
 
     # style check
-    'flake8>=3.5.0',
-    'isort>=4.3.4',
+    'flake8>=3.7.7,<4',
+    'isort>=4.3.4,<5',
 
     # fix style issues
-    'autoflake>=1.2',  # keep this after flake8 to avoid
-    'autopep8>=1.3.5', # version incompatibilities with flake8
+    'autoflake>=1.1,<2',
+    'autopep8>=1.4.3,<2',
 
     # distribute on PyPI
-    'twine>=1.10.0',
+    'twine>=1.10.0,<4',
     'wheel>=0.30.0',
 
     # Advanced testing
-    'tox>=2.9.1',
-    'coverage>=4.5.1',
+    'coverage>=4.5.1,<6',
+    'tox>=2.9.1,<4',
 
     # Documentation style
     'doc8>=0.8.0',
-    'pydocstyle>=3.0.0'
+    'pydocstyle>=3.0.0',
+
+    # Prevent travis-ci conflict
+    'chardet<4',
 ]
 
 
@@ -81,13 +94,15 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     description="Pipelines and primitives for machine learning and data science.",
     extras_require={
-        'dev': development_requires + tests_require,
-        'test': tests_require,
+        'dev': development_requires + tests_require + examples_require,
+        'test': tests_require + examples_require,
+        'examples': examples_require,
     },
     include_package_data=True,
     install_requires=install_requires,
@@ -97,10 +112,11 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
+    python_requires='>=3.6,<3.9',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
-    url='https://github.com/HDI-Project/MLBlocks',
-    version='0.3.5.dev0',
+    url='https://github.com/MLBazaar/MLBlocks',
+    version='0.4.0.dev1',
     zip_safe=False,
 )

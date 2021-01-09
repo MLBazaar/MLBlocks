@@ -10,3 +10,4 @@ Contributors
 * William Xue <wgxue@mit.edu>
 * Akshay Ravikumar <akshayr@mit.edu>
 * Laura Gustafson <lgustaf@mit.edu>
+* Erica Chiu <ejchiu@mit.edu>

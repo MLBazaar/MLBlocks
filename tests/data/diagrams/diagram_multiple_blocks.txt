@@ -1,0 +1,44 @@
+digraph {
+	graph [splines=ortho]
+	tooltip=" "
+	node [penwidth=0 shape=box]
+	subgraph cluster_outputs {
+		tooltip="Output variables"
+		graph [bgcolor=azure3 penwidth=0 rank=source]
+		node [fontsize=20 penwidth=0]
+		edge [arrowhead=none penwidth=0]
+		Output [label=Output fontsize=14 tooltip="Output variables"]
+		output_variable_b_output [label=output_variable_b]
+		output_variable_b_output -> Output
+		{
+			rank=same
+			rankdir=LR
+		}
+	}
+	"b_primitive#1" [label=b_primitive penwidth=1]
+	"b_primitive#1 output_variable_b" [label=output_variable_b]
+	"b_primitive#1" -> "b_primitive#1 output_variable_b" [arrowhead=none]
+	"b_primitive#1 output_variable_b" -> output_variable_b_output [arrowhead=normal]
+	"a_primitive#1" [label=a_primitive penwidth=1]
+	"a_primitive#1 output_variable_a" [label=output_variable_a]
+	"a_primitive#1" -> "a_primitive#1 output_variable_a" [arrowhead=none]
+	"a_primitive#1 output_variable_a" -> "b_primitive#1" [arrowhead=normal]
+	input_variable_input -> "a_primitive#1" [arrowhead=normal pendwith=1]
+	subgraph cluster_inputs {
+		tooltip="Input variables"
+		graph [bgcolor=azure3 penwidth=0 rank=source]
+		node [fontsize=20 penwidth=0]
+		edge [arrowhead=none penwidth=0]
+		Input [label=Input fontsize=14 tooltip="Input variables"]
+		input_variable_input [label=input_variable]
+		Input -> input_variable_input
+		{
+			rank=same
+		}
+	}
+	{
+		graph [penwidth=0]
+		node [penwidth=0]
+		edge [len=1 minlen=1 penwidth=1]
+	}
+}
