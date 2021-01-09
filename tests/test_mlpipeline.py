@@ -549,6 +549,572 @@ class TestMLPipline(TestCase):
 
         assert names == ['a_variable']
 
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test__get_block_variables(self):
+        expected = {
+            'name_output': {
+                'name': 'output',
+                'type': 'whatever',
+            }
+        }
+
+        pipeline = MLPipeline(['a_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_outputs = [
+            {
+                'name': 'output',
+                'type': 'whatever'
+            }
+        ]
+
+        outputs = pipeline._get_block_variables(
+            'a_primitive#1',
+            'produce_outputs',
+            {'output': 'name_output'}
+        )
+        assert outputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_inputs_fit(self):
+        expected = {
+            'input': {
+                'name': 'input',
+                'type': 'whatever',
+            },
+            'fit_input': {
+                'name': 'fit_input',
+                'type': 'whatever',
+            },
+            'another_input': {
+                'name': 'another_input',
+                'type': 'another_whatever',
+            }
+
+        }
+
+        pipeline = MLPipeline(['a_primitive', 'another_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'output',
+                'type': 'another_whatever'
+            }
+        ]
+
+        pipeline.blocks['another_primitive#1'].produce_args = [
+            {
+                'name': 'output',
+                'type': 'another_whatever'
+            },
+            {
+                'name': 'another_input',
+                'type': 'another_whatever'
+            }
+        ]
+
+        inputs = pipeline.get_inputs()
+        assert inputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_inputs_no_fit(self):
+        expected = {
+            'input': {
+                'name': 'input',
+                'type': 'whatever',
+            },
+            'another_input': {
+                'name': 'another_input',
+                'type': 'another_whatever',
+            }
+
+        }
+
+        pipeline = MLPipeline(['a_primitive', 'another_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'output',
+                'type': 'another_whatever'
+            }
+        ]
+
+        pipeline.blocks['another_primitive#1'].produce_args = [
+            {
+                'name': 'output',
+                'type': 'another_whatever'
+            },
+            {
+                'name': 'another_input',
+                'type': 'another_whatever'
+            }
+        ]
+
+        inputs = pipeline.get_inputs(fit=False)
+
+        assert inputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_pending_all_primitives(self):
+        block_1 = get_mlblock_mock()
+        block_2 = get_mlblock_mock()
+        blocks = OrderedDict((
+            ('a.primitive.Name#1', block_1),
+            ('a.primitive.Name#2', block_2),
+        ))
+
+        self_ = MagicMock(autospec=MLPipeline)
+        self_.blocks = blocks
+        self_._last_fit_block = 'a.primitive.Name#2'
+
+        MLPipeline.fit(self_)
+
+        expected = [
+            call('a.primitive.Name#1'),
+            call('a.primitive.Name#2')
+        ]
+        self_._fit_block.call_args_list = expected
+
+        expected = [
+            call('a.primitive.Name#1'),
+        ]
+        self_._produce_block.call_args_list = expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_pending_one_primitive(self):
+        block_1 = get_mlblock_mock()
+        block_2 = get_mlblock_mock()
+        blocks = OrderedDict((
+            ('a.primitive.Name#1', block_1),
+            ('a.primitive.Name#2', block_2),
+        ))
+
+        self_ = MagicMock(autospec=MLPipeline)
+        self_.blocks = blocks
+        self_._last_fit_block = 'a.primitive.Name#1'
+
+        MLPipeline.fit(self_)
+
+        expected = [
+            call('a.primitive.Name#1'),
+        ]
+        self_._fit_block.call_args_list = expected
+
+        assert not self_._produce_block.called
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_no_debug(self):
+        mlpipeline = MLPipeline(['a_primitive'])
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        returned = mlpipeline.fit(debug=False)
+
+        assert returned is None
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_debug_bool(self):
+        mlpipeline = MLPipeline(['a_primitive'])
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return['debug'] = 'tmio'
+        expected_return['fit'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'input': {
+                    'whatever'
+                },
+                'memory': 0,
+            }
+        }
+
+        returned = mlpipeline.fit(debug=True)
+
+        assert isinstance(returned, dict)
+        assert set(returned.keys()) == set(expected_return.keys())  # fit / produce
+        assert set(returned['fit'].keys()) == set(expected_return['fit'].keys())  # block name
+
+        for block_name, dictionary in expected_return['fit'].items():
+            assert set(returned['fit'][block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_debug_str(self):
+        mlpipeline = MLPipeline(['a_primitive'])
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return['debug'] = 'tm'
+        expected_return['fit'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'memory': 0,
+            }
+        }
+
+        returned = mlpipeline.fit(debug='tm')
+
+        assert isinstance(returned, dict)
+        assert set(returned.keys()) == set(expected_return.keys())  # fit / produce
+        assert set(returned['fit'].keys()) == set(expected_return['fit'].keys())  # block name
+
+        for block_name, dictionary in expected_return['fit'].items():
+            assert set(returned['fit'][block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_produce_debug(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_primitive#1.a_variable',
+                    'type': 'a_type',
+                }
+            ]
+        }
+        mlpipeline = MLPipeline(['a_primitive'], outputs=outputs)
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'a_name',
+                'type': 'a_type'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return['debug'] = 'tmio'
+        expected_return['fit'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'input': {
+                    'whatever'
+                },
+                'memory': 0,
+            }
+        }
+        expected_return['produce'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'input': {
+                    'whatever'
+                },
+                'output': {
+                    'whatever'
+                },
+                'memory': 0,
+            }
+        }
+
+        returned, debug_returned = mlpipeline.fit(output_='default', debug=True)
+
+        assert len([returned]) == len(outputs['default'])
+        assert isinstance(debug_returned, dict)
+        assert set(debug_returned.keys()) == set(expected_return.keys())  # fit / produce
+        assert set(debug_returned['fit'].keys()) == set(expected_return['fit'].keys())
+        assert set(debug_returned['produce'].keys()) == set(expected_return['produce'].keys())
+
+        for block_name, dictionary in expected_return['fit'].items():
+            assert set(debug_returned['fit'][block_name].keys()) == set(dictionary.keys())
+
+        for block_name, dictionary in expected_return['produce'].items():
+            assert set(debug_returned['produce'][block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_fit_produce_debug_str(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_primitive#1.a_variable',
+                    'type': 'a_type',
+                }
+            ]
+        }
+        mlpipeline = MLPipeline(['a_primitive'], outputs=outputs)
+        mlpipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'a_name',
+                'type': 'a_type'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return['debug'] = 'tm'
+        expected_return['fit'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'memory': 0,
+            }
+        }
+        expected_return['produce'] = {
+            'a_primitive#1': {
+                'time': 0,
+                'memory': 0,
+            }
+        }
+
+        returned, debug_returned = mlpipeline.fit(output_='default', debug='tm')
+
+        assert len([returned]) == len(outputs['default'])
+        assert isinstance(debug_returned, dict)
+        assert set(debug_returned.keys()) == set(expected_return.keys())  # fit / produce
+        assert set(debug_returned['fit'].keys()) == set(expected_return['fit'].keys())
+        assert set(debug_returned['produce'].keys()) == set(expected_return['produce'].keys())
+
+        for block_name, dictionary in expected_return['fit'].items():
+            assert set(debug_returned['fit'][block_name].keys()) == set(dictionary.keys())
+
+        for block_name, dictionary in expected_return['produce'].items():
+            assert set(debug_returned['produce'][block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_predict_no_debug(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_primitive#1.a_variable',
+                    'type': 'a_type',
+                },
+                {
+                    'name': 'b_name',
+                    'variable': 'a_primitive#1.b_variable',
+                    'type': 'b_type',
+                },
+            ]
+        }
+        mlpipeline = MLPipeline(['a_primitive'], outputs=outputs)
+        mlpipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'a_name',
+                'type': 'a_type'
+            },
+            {
+                'name': 'b_name',
+                'type': 'b_type'
+            }
+        ]
+
+        returned = mlpipeline.predict(debug=False)
+        assert len(returned) == len(outputs['default'])
+        for returned_output, expected_output in zip(returned, outputs['default']):
+            assert returned_output == expected_output['variable']
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_predict_debug(self):
+        outputs = {
+            'default': [
+                {
+                    'name': 'a_name',
+                    'variable': 'a_primitive#1.a_variable',
+                    'type': 'a_type',
+                }
+            ]
+        }
+        mlpipeline = MLPipeline(['a_primitive'], outputs=outputs)
+        mlpipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        mlpipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'a_name',
+                'type': 'a_type'
+            }
+        ]
+
+        expected_return = dict()
+        expected_return = {
+            'a_primitive#1': {
+                'time': 0,
+                'input': {
+                    'whatever'
+                },
+                'output': {
+                    'whatever'
+                },
+                'memory': 0
+            }
+        }
+
+        returned, debug_returned = mlpipeline.predict(debug=True)
+        debug_returned = debug_returned['produce']
+
+        assert len([returned]) == len(outputs['default'])
+        assert isinstance(debug_returned, dict)
+        assert set(debug_returned.keys()) == set(expected_return.keys())
+
+        for block_name, dictionary in expected_return.items():
+            assert set(debug_returned[block_name].keys()) == set(dictionary.keys())
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_diagram_simple(self):
+        f = open('tests/data/diagrams/diagram_simple.txt', 'r')
+        expected = f.read()[:-1]
+        f.close()
+
+        output = [
+            {
+                'name': 'output_variable',
+                'type': 'another_whatever',
+                'variable': 'a_primitive#1.output_variable'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive'], outputs={'default': output})
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].produce_output = output
+
+        assert str(pipeline.get_diagram()) == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_diagram_fit(self):
+        f = open('tests/data/diagrams/diagram_fit.txt', 'r')
+        expected = f.read()[:-1]
+        f.close()
+
+        output = [
+            {
+                'name': 'output_variable',
+                'type': 'another_whatever',
+                'variable': 'a_primitive#1.output_variable'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive'], outputs={'default': output})
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].produce_output = output
+
+        assert str(pipeline.get_diagram()) == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_diagram_multiple_blocks(self):
+        f = open('tests/data/diagrams/diagram_multiple_blocks.txt', 'r')
+        expected = f.read()[:-1]
+        f.close()
+
+        first_output = [
+            {
+                'name': 'output_variable_a',
+                'type': 'another_whatever',
+                'variable': 'a_primitive#1.output_variable_a'
+            }
+        ]
+        second_output = [
+            {
+                'name': 'output_variable_b',
+                'type': 'another_whatever',
+                'variable': 'b_primitive#1.output_variable_b'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive', 'b_primitive'], outputs={'default': second_output})
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input_variable',
+                'type': 'whatever'
+            }
+        ]
+        pipeline.blocks['a_primitive#1'].produce_output = first_output
+        pipeline.blocks['b_primitive#1'].produce_args = first_output
+        pipeline.blocks['b_primitive#1'].produce_output = second_output
+
+        assert str(pipeline.get_diagram()) == expected
+
     def test_fit(self):
         pass
 

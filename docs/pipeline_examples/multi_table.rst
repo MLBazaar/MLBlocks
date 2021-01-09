@@ -25,7 +25,7 @@ tables are.
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_wikiqa
+    from mlprimitives.datasets import load_wikiqa
 
     dataset = load_wikiqa()
     dataset.describe()
@@ -49,5 +49,5 @@ tables are.
 
 .. _WikiQA dataset: https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/
 .. _XGBClassifier: https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn
-.. _DeepFeatureSynthesis: https://github.com/HDI-Project/MLPrimitives/blob/master/mlblocks_primitives/featuretools.dfs.json
+.. _DeepFeatureSynthesis: https://github.com/MLBazaar/MLPrimitives/blob/master/mlblocks_primitives/featuretools.dfs.json
 .. _featuretools: https://www.featuretools.com/
