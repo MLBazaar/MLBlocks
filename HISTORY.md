@@ -1,6 +1,17 @@
 Changelog
 =========
 
+0.4.0 - 2021-01-09
+------------------
+
+* Stop pipeline fitting after the last block - [Issue #131](https://github.com/MLBazaar/MLBlocks/issues/131) by @sarahmish
+* Add memory debug and profiling - [Issue #130](https://github.com/MLBazaar/MLBlocks/issues/130) by @pvk-developer
+* Update Python support - [Issue #129](https://github.com/MLBazaar/MLBlocks/issues/129) by @csala
+* Get execution time for each block - [Issue #127](https://github.com/MLBazaar/MLBlocks/issues/127) by @sarahmish
+* Allow loading a primitive or pipeline directly from the JSON path - [Issue #114](https://github.com/MLBazaar/MLBlocks/issues/114) by @csala
+* Pipeline Diagrams - [Issue #113](https://github.com/MLBazaar/MLBlocks/issues/113) by @erica-chiu
+* Get Pipeline Inputs - [Issue #112](https://github.com/MLBazaar/MLBlocks/issues/112) by @erica-chiu
+
 0.3.4 - 2019-11-01
 ------------------
 
