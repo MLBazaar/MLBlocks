@@ -37,7 +37,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install package and dependencies
-      run: pip install rundoc .
+      run: pip install rundoc .[mlprimitives]
     - name: make test-readme
       run: make test-readme
 
@@ -74,6 +74,6 @@ jobs:
       name: Install dependencies - Ubuntu
       run: sudo apt-get install graphviz
     - name: Install package and dependencies
-      run: pip install jupyter .
+      run: pip install .[examples]
     - name: make test-tutorials
       run: make test-tutorials

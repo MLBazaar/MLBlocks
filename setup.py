@@ -19,8 +19,11 @@ install_requires = [
 ]
 
 
-examples_require = [
+mlprimitives_requires = [
     'mlprimitives>=0.3.0.dev0,<0.4',
+]
+
+examples_require = mlprimitives_requires + [
     'jupyter==1.0.0',
     'baytune>=0.3.13.dev0,<0.4',
 ]
@@ -94,6 +97,7 @@ setup(
         'dev': development_requires + tests_require + examples_require,
         'test': tests_require + examples_require,
         'examples': examples_require,
+        'mlprimitives': mlprimitives_requires,
     },
     include_package_data=True,
     install_requires=install_requires,
