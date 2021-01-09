@@ -24,7 +24,7 @@ Gradients using the corresponding `scikit-image function`_ to later on use a sim
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_usps
+    from mlprimitives.datasets import load_usps
 
     dataset = load_usps()
     dataset.describe()
@@ -61,7 +61,7 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_usps
+    from mlprimitives.datasets import load_usps
 
     dataset = load_usps()
     dataset.describe()
@@ -107,7 +107,7 @@ to an `XGBRegressor`_ primitive.
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_handgeometry
+    from mlprimitives.datasets import load_handgeometry
 
     dataset = load_handgeometry()
     dataset.describe()

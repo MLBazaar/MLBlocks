@@ -5,7 +5,7 @@ In this section we will go over a few pipeline examples to show **MLBlocks** wor
 in different scenarios and with different types of data.
 
 For each example, we will be using example datasets which can be downloaded using the
-various functions found in the ``mlblocks.datasets`` module.
+various functions found in the ``mlprimitives.datasets`` module.
 
 .. note:: Even though the datasets are not especially big, some of the examples might
           use a considerable amount of resources, especially memory, and might take
@@ -21,7 +21,7 @@ the numeric data from `The Boston Dataset`_, which we will load using the
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_boston
+    from mlprimitives.datasets import load_boston
 
     dataset = load_boston()
     dataset.describe()
@@ -52,7 +52,7 @@ In this case, we will also be passing some initialization parameters for the XGB
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_iris
+    from mlprimitives.datasets import load_iris
 
     dataset = load_iris()
     dataset.describe()

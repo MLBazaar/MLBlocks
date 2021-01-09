@@ -25,7 +25,7 @@ tables are.
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_wikiqa
+    from mlprimitives.datasets import load_wikiqa
 
     dataset = load_wikiqa()
     dataset.describe()

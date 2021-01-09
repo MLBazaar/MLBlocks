@@ -30,7 +30,7 @@ additional information not found inside `X`.
 .. code-block:: python
 
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_umls
+    from mlprimitives.datasets import load_umls
 
     dataset = load_umls()
     dataset.describe()
