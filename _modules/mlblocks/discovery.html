@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.discovery &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>mlblocks.discovery &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -193,8 +193,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -328,7 +326,7 @@
     <span class="k">return</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="add_primitives_path"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.add_primitives_path">[docs]</a><span class="k">def</span> <span class="nf">add_primitives_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="add_primitives_path"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.add_primitives_path">[docs]</a><span class="k">def</span> <span class="nf">add_primitives_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a new path to look for primitives.</span>
 
 <span class="sd">    The new path will be inserted in the first place of the list,</span>
@@ -349,7 +347,7 @@
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;New primitives path added: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_pipelines_path"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.add_pipelines_path">[docs]</a><span class="k">def</span> <span class="nf">add_pipelines_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="add_pipelines_path"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.add_pipelines_path">[docs]</a><span class="k">def</span> <span class="nf">add_pipelines_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a new path to look for pipelines.</span>
 
 <span class="sd">    The new path will be inserted in the first place of the list,</span>
@@ -409,7 +407,7 @@
     <span class="k">return</span> <span class="n">lookup_paths</span>
 
 
-<div class="viewcode-block" id="get_primitives_paths"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.get_primitives_paths">[docs]</a><span class="k">def</span> <span class="nf">get_primitives_paths</span><span class="p">():</span>
+<div class="viewcode-block" id="get_primitives_paths"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.get_primitives_paths">[docs]</a><span class="k">def</span> <span class="nf">get_primitives_paths</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get the list of folders where primitives will be looked for.</span>
 
 <span class="sd">    This list will include the values of all the entry points named ``primitives``</span>
@@ -439,7 +437,7 @@
     <span class="k">return</span> <span class="n">_PRIMITIVES_PATHS</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">paths</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="get_pipelines_paths"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.get_pipelines_paths">[docs]</a><span class="k">def</span> <span class="nf">get_pipelines_paths</span><span class="p">():</span>
+<div class="viewcode-block" id="get_pipelines_paths"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.get_pipelines_paths">[docs]</a><span class="k">def</span> <span class="nf">get_pipelines_paths</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get the list of folders where pipelines will be looked for.</span>
 
 <span class="sd">    This list will include the values of all the entry points named ``pipelines``</span>
@@ -502,7 +500,7 @@
                 <span class="k">return</span> <span class="n">_load_json</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="load_primitive"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.load_primitive">[docs]</a><span class="k">def</span> <span class="nf">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="load_primitive"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.load_primitive">[docs]</a><span class="k">def</span> <span class="nf">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Locate and load the primitive JSON annotation.</span>
 
 <span class="sd">    All the primitive paths will be scanned to find a JSON file with the given name,</span>
@@ -527,7 +525,7 @@
     <span class="k">return</span> <span class="n">primitive</span></div>
 
 
-<div class="viewcode-block" id="load_pipeline"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.load_pipeline">[docs]</a><span class="k">def</span> <span class="nf">load_pipeline</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="load_pipeline"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.load_pipeline">[docs]</a><span class="k">def</span> <span class="nf">load_pipeline</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Locate and load the pipeline JSON annotation.</span>
 
 <span class="sd">    All the pipeline paths will be scanned to find a JSON file with the given name,</span>
@@ -672,7 +670,7 @@
     <span class="k">return</span> <span class="n">matching</span>
 
 
-<div class="viewcode-block" id="find_primitives"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.find_primitives">[docs]</a><span class="k">def</span> <span class="nf">find_primitives</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="find_primitives"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.find_primitives">[docs]</a><span class="k">def</span> <span class="nf">find_primitives</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find primitives by name and filters.</span>
 
 <span class="sd">    If a patter is given, only the primitives whose name matches</span>
@@ -704,7 +702,7 @@
     <span class="k">return</span> <span class="n">_find_annotations</span><span class="p">(</span><span class="n">get_primitives_paths</span><span class="p">(),</span> <span class="n">load_primitive</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="find_pipelines"><a class="viewcode-back" href="../../api/mlblocks.discovery.html#mlblocks.find_pipelines">[docs]</a><span class="k">def</span> <span class="nf">find_pipelines</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="find_pipelines"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.find_pipelines">[docs]</a><span class="k">def</span> <span class="nf">find_pipelines</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find pipelines by name and filters.</span>
 
 <span class="sd">    If a patter is given, only the pipelines whose name matches</span>

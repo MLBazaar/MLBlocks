@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Changelog &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>Changelog &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -194,8 +194,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/mlblocks.html">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
@@ -271,20 +269,32 @@
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.3.4 - 2019-11-01<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.0 - 2021-01-09<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Stop pipeline fitting after the last block - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/131">Issue #131</a> by &#64;sarahmish</p></li>
+<li><p>Add memory debug and profiling - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/130">Issue #130</a> by &#64;pvk-developer</p></li>
+<li><p>Update Python support - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/129">Issue #129</a> by &#64;csala</p></li>
+<li><p>Get execution time for each block - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/127">Issue #127</a> by &#64;sarahmish</p></li>
+<li><p>Allow loading a primitive or pipeline directly from the JSON path - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/114">Issue #114</a> by &#64;csala</p></li>
+<li><p>Pipeline Diagrams - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/113">Issue #113</a> by &#64;erica-chiu</p></li>
+<li><p>Get Pipeline Inputs - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/112">Issue #112</a> by &#64;erica-chiu</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.3.4 - 2019-11-01<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Ability to return intermediate context - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/110">Issue #110</a> by &#64;csala</p></li>
 <li><p>Support for static or class methods - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/107">Issue #107</a> by &#64;csala</p></li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h2>0.3.3 - 2019-09-09<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>0.3.3 - 2019-09-09<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Improved intermediate outputs management - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/105">Issue #105</a> by &#64;csala</p></li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h2>0.3.2 - 2019-08-12<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.3.2 - 2019-08-12<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Allow passing fit and produce arguments as <code class="docutils literal notranslate"><span class="pre">init_params</span></code> - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/96">Issue #96</a> by &#64;csala</p></li>
 <li><p>Support optional fit and produce args and arg defaults - <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/issues/95">Issue #95</a> by &#64;csala</p></li>
@@ -422,8 +432,8 @@ JSON primitive.</p></li>
 <li><p>Improved documentation</p></li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>0.1.2 - Bugfix release<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.1.2 - Bugfix release<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fix bug in TrivialMedianPredictor</p></li>
 <li><p>Fix bug in OneHotLabelEncoder</p></li>
@@ -436,8 +446,8 @@ JSON primitive.</p></li>
 <li><p>MIT-TA2 default pipelines and single table pipelines fully working.</p></li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h2>0.1.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>0.1.0<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>First release on PyPI.</p></li>
 </ul>

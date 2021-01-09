@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>mlblocks &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="mlblocks.datasets" href="mlblocks.datasets.html" />
+    <link rel="next" title="Contributing" href="../contributing.html" />
     <link rel="prev" title="Graph Pipelines" href="../pipeline_examples/graph.html" /> 
 </head>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -195,8 +195,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -305,6 +303,12 @@ seamlessly combining tools from any python library with a simple, common and uni
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.add_primitives_path" title="mlblocks.add_primitives_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_primitives_path</span></code></a>(path)</p></td>
 <td><p>Add a new path to look for primitives.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.find_pipelines" title="mlblocks.find_pipelines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_pipelines</span></code></a>([pattern, filters])</p></td>
+<td><p>Find pipelines by name and filters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mlblocks.find_primitives" title="mlblocks.find_primitives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_primitives</span></code></a>([pattern, filters])</p></td>
+<td><p>Find primitives by name and filters.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mlblocks.get_pipelines_paths" title="mlblocks.get_pipelines_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipelines_paths</span></code></a>()</p></td>
 <td><p>Get the list of folders where pipelines will be looked for.</p></td>
@@ -1172,6 +1176,68 @@ system before.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="mlblocks.find_pipelines">
+<code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">find_pipelines</code><span class="sig-paren">(</span><em class="sig-param">pattern=''</em>, <em class="sig-param">filters=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#find_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.find_pipelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find pipelines by name and filters.</p>
+<p>If a patter is given, only the pipelines whose name matches
+the pattern will be returned.</p>
+<p>If filters are given, they should be a dictionary containing key/value
+filters that will have to be matched within the pipeline annotation
+for it to be included in the results.</p>
+<p>If the given key is not found but it contains dots, split by the dots
+and consider each part a sublevel in the annotation.</p>
+<p>If the key value within the annotation is a list or a dict, check
+whether any of the given values is contained within it instead of
+checking for equality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Regular expression to match agains the pipeline names.</p></li>
+<li><p><strong>filters</strong> (<em>dict</em>) – Dictionary containing the filters to apply over the matchin
+pipelines.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Names of the matching pipelines.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mlblocks.find_primitives">
+<code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">find_primitives</code><span class="sig-paren">(</span><em class="sig-param">pattern=''</em>, <em class="sig-param">filters=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#find_primitives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.find_primitives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find primitives by name and filters.</p>
+<p>If a patter is given, only the primitives whose name matches
+the pattern will be returned.</p>
+<p>If filters are given, they should be a dictionary containing key/value
+filters that will have to be matched within the primitive annotation
+for it to be included in the results.</p>
+<p>If the given key is not found but it contains dots, split by the dots
+and consider each part a sublevel in the annotation.</p>
+<p>If the key value within the annotation is a list or a dict, check
+whether any of the given values is contained within it instead of
+checking for equality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>str</em>) – Regular expression to match agains the primitive names.</p></li>
+<li><p><strong>filters</strong> (<em>dict</em>) – Dictionary containing the filters to apply over the matchin
+primitives.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Names of the matching primitives.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="mlblocks.get_pipelines_paths">
 <code class="sig-prename descclassname">mlblocks.</code><code class="sig-name descname">get_pipelines_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mlblocks/discovery.html#get_pipelines_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mlblocks.get_pipelines_paths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of folders where pipelines will be looked for.</p>
@@ -1284,7 +1350,7 @@ and as soon as a JSON with the given name is found it is returned.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="mlblocks.datasets.html" class="btn btn-neutral float-right" title="mlblocks.datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../pipeline_examples/graph.html" class="btn btn-neutral float-left" title="Graph Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

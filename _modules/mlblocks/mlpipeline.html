@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.mlpipeline &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>mlblocks.mlpipeline &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -193,8 +193,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -362,6 +360,7 @@
 
     <span class="k">def</span> <span class="nf">_build_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">last_fit_block</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">block_names_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">primitives</span><span class="p">:</span>
@@ -384,11 +383,14 @@
                 <span class="n">block</span> <span class="o">=</span> <span class="n">MLBlock</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="o">**</span><span class="n">block_params</span><span class="p">)</span>
                 <span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span>
 
+                <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">_fit</span><span class="p">):</span>
+                    <span class="n">last_fit_block</span> <span class="o">=</span> <span class="n">block_name</span>
+
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Exception caught building MLBlock </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">primitive</span><span class="p">)</span>
                 <span class="k">raise</span>
 
-        <span class="k">return</span> <span class="n">blocks</span>
+        <span class="k">return</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">last_fit_block</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_pipeline_dict</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">primitives</span><span class="p">):</span>
@@ -473,7 +475,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">primitives</span> <span class="o">=</span> <span class="n">primitives</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="p">[</span><span class="s1">&#39;primitives&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_params</span> <span class="o">=</span> <span class="n">init_params</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;init_params&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_blocks</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_fit_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_blocks</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_block_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_name</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span> <span class="o">=</span> <span class="n">input_names</span> <span class="ow">or</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_names&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
@@ -1033,7 +1035,11 @@
             <span class="n">debug_info</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
             <span class="n">debug_info</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">debug</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">debug</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;tmio&#39;</span>
 
+        <span class="n">fit_pending</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_fit_block</span><span class="p">:</span>
+                <span class="n">fit_pending</span> <span class="o">=</span> <span class="kc">False</span>
+
             <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">block_name</span> <span class="o">==</span> <span class="n">start_</span><span class="p">:</span>
                     <span class="n">start_</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1043,7 +1049,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_fit_block</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="n">block_name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_block_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">block_name</span> <span class="ow">in</span> <span class="n">output_blocks</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">fit_pending</span> <span class="ow">or</span> <span class="n">output_blocks</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_produce_block</span><span class="p">(</span>
                     <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">debug_info</span><span class="p">)</span>
 
@@ -1053,16 +1059,23 @@
 
             <span class="c1"># If there was an output_ but there are no pending</span>
             <span class="c1"># outputs we are done.</span>
-            <span class="k">if</span> <span class="n">output_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output_blocks</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">output_variables</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">output_blocks</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">debug_info</span>
+
+                    <span class="k">return</span> <span class="n">result</span>
+
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">fit_pending</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">debug_info</span>
+                    <span class="k">return</span> <span class="n">debug_info</span>
 
-                <span class="k">return</span> <span class="n">result</span>
+                <span class="k">return</span>
 
         <span class="k">if</span> <span class="n">start_</span><span class="p">:</span>
             <span class="c1"># We skipped all the blocks up to the end</span>

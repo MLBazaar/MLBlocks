@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Multi Table Pipelines &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>Multi Table Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -195,8 +195,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -287,7 +285,7 @@ for feature extraction over the various tables that we have and later on apply a
 for the DFS primitive for it to know what the relationships between the multiple
 tables are.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_wikiqa</span>
+<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_wikiqa</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_wikiqa</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>

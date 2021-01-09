@@ -28,7 +28,7 @@ for later ones.
 
     import nltk
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_newsgroups
+    from mlprimitives.datasets import load_newsgroups
 
     dataset = load_newsgroups()
     dataset.describe()
@@ -105,7 +105,7 @@ to encode all the string features, and go directly into the
 
     import nltk
     from mlblocks import MLPipeline
-    from mlblocks.datasets import load_personae
+    from mlprimitives.datasets import load_personae
 
     dataset = load_personae()
     dataset.describe()

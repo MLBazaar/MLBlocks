@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Single Table Pipelines &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>Single Table Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -195,8 +195,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -274,7 +272,7 @@
 <p>In this section we will go over a few pipeline examples to show <strong>MLBlocks</strong> working
 in different scenarios and with different types of data.</p>
 <p>For each example, we will be using example datasets which can be downloaded using the
-various functions found in the <code class="docutils literal notranslate"><span class="pre">mlblocks.datasets</span></code> module.</p>
+various functions found in the <code class="docutils literal notranslate"><span class="pre">mlprimitives.datasets</span></code> module.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Even though the datasets are not especially big, some of the examples might
@@ -287,7 +285,7 @@ several minutes to run.</p>
 the numeric data from <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html">The Boston Dataset</a>, which we will load using the
 <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_boston</span></code> function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
+<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -314,7 +312,7 @@ the numeric data from <a class="reference external" href="http://scikit-learn.or
 <p>Here we will combine the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html">StandardScaler from scikit-learn</a> with an <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn">XGBClassifier primitive</a>.</p>
 <p>In this case, we will also be passing some initialization parameters for the XGBClassifier.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Image Pipelines &mdash; MLBlocks 0.4.0.dev1 documentation</title>
+  <title>Image Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.4.0.dev1
+                0.4.0
               </div>
             
           
@@ -195,8 +195,6 @@
 <p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.datasets.html">mlblocks.datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.discovery.html">mlblocks.discovery</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -286,7 +284,7 @@ with the <a class="reference external" href="https://docs.opencv.org/2.4/modules
 Gradients using the corresponding <a class="reference external" href="http://scikit-image.org/docs/dev/api/skimage.feature.html#skimage.feature.hog">scikit-image function</a> to later on use a simple
 <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier from scikit-learn</a> on the generated features.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
+<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_usps</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -321,7 +319,7 @@ Gradients using the corresponding <a class="reference external" href="http://sci
 and directly after go into a Single Layer CNN Classifier built on Keras using the corresponding
 <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives/blob/master/mlblocks_primitives/keras.Sequential.SingleLayerCNNImageClassifier.json">MLPrimitives primitive</a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
+<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_usps</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_usps</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -361,7 +359,7 @@ the wrist in centimeters.</p>
 In particular, we will be using the <a class="reference external" href="https://keras.io/applications/#mobilenet">MobileNet</a> for feature extraction, and pass its features
 to an <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#module-xgboost.sklearn">XGBRegressor</a> primitive.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
-<span class="kn">from</span> <span class="nn">mlblocks.datasets</span> <span class="kn">import</span> <span class="n">load_handgeometry</span>
+<span class="kn">from</span> <span class="nn">mlprimitives.datasets</span> <span class="kn">import</span> <span class="n">load_handgeometry</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_handgeometry</span><span class="p">()</span>
 <span class="n">dataset</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
