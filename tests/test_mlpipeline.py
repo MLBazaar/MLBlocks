@@ -550,7 +550,7 @@ class TestMLPipline(TestCase):
         assert names == ['a_variable']
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
-    def test__get_block_variables(self):
+    def test__get_block_variables_is_dict(self):
         expected = {
             'name_output': {
                 'name': 'output',
@@ -573,6 +573,34 @@ class TestMLPipline(TestCase):
             {'output': 'name_output'}
         )
         assert outputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test__get_block_variables_is_str(self):
+        expected = {
+            'output_from_function': {
+                'name': 'output_from_function',
+                'type': 'test',
+            }
+        }
+
+        pipeline = MLPipeline(['a_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_outputs = 'get_produce_outputs'
+        pipeline.blocks['a_primitive#1'].instance.get_produce_outputs.return_value = [
+            {
+                'name': 'output_from_function',
+                'type': 'test'
+            }
+
+        ]
+
+        outputs = pipeline._get_block_variables(
+            'a_primitive#1',
+            'produce_outputs',
+            {'output': 'name_output'}
+        )
+        assert outputs == expected
+        pipeline.blocks['a_primitive#1'].instance.get_produce_outputs.assert_called_once_with()
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_get_inputs_fit(self):
@@ -680,6 +708,80 @@ class TestMLPipline(TestCase):
         inputs = pipeline.get_inputs(fit=False)
 
         assert inputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_fit_args(self):
+        expected = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            },
+            {
+                'name': 'fit_input',
+                'type': 'whatever',
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'output',
+                'type': 'another_whatever'
+            }
+        ]
+
+        outputs = pipeline.get_fit_args()
+        assert outputs == expected
+
+    @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
+    def test_get_predict_args(self):
+        expected = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline = MLPipeline(['a_primitive'])
+
+        pipeline.blocks['a_primitive#1'].produce_args = [
+            {
+                'name': 'input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].fit_args = [
+            {
+                'name': 'fit_input',
+                'type': 'whatever'
+            }
+        ]
+
+        pipeline.blocks['a_primitive#1'].produce_output = [
+            {
+                'name': 'output',
+                'type': 'another_whatever'
+            }
+        ]
+
+        outputs = pipeline.get_predict_args()
+        assert outputs == expected
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_fit_pending_all_primitives(self):

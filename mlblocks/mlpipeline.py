@@ -177,6 +177,9 @@ class MLPipeline():
         """
         block = self.blocks[block_name]
         variables = deepcopy(getattr(block, variables_attr))
+        if isinstance(variables, str):
+            variables = getattr(block.instance, variables)()
+
         variable_dict = {}
         for variable in variables:
             name = variable['name']
@@ -299,6 +302,12 @@ class MLPipeline():
                 inputs.update(fit_inputs)
 
         return inputs
+
+    def get_fit_args(self):
+        return list(self.get_inputs(fit=True).values())
+
+    def get_predict_args(self):
+        return list(self.get_inputs(fit=False).values())
 
     def get_outputs(self, outputs='default'):
         """Get the list of output variables that correspond to the specified outputs.
