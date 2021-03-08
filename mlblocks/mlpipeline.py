@@ -587,6 +587,10 @@ class MLPipeline():
 
         input_names = self.input_names.get(block_name, dict())
 
+        if isinstance(block_args, str):
+            block = self.blocks[block_name]
+            block_args = getattr(block.instance, block_args)()
+
         kwargs = dict()
         for arg in block_args:
             name = arg['name']
@@ -600,6 +604,9 @@ class MLPipeline():
     def _extract_outputs(self, block_name, outputs, block_outputs):
         """Extract the outputs of the method as a dict to be set into the context."""
         # TODO: type validation and/or transformation should be done here
+        if isinstance(block_outputs, str):
+            block = self.blocks[block_name]
+            block_outputs = getattr(block.instance, block_outputs)()
 
         if not isinstance(outputs, tuple):
             outputs = (outputs, )
