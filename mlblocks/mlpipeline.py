@@ -177,6 +177,9 @@ class MLPipeline():
         """
         block = self.blocks[block_name]
         variables = deepcopy(getattr(block, variables_attr))
+        if isinstance(variables, str):
+            variables = getattr(block.instance, variables)()
+
         variable_dict = {}
         for variable in variables:
             name = variable['name']
@@ -299,6 +302,12 @@ class MLPipeline():
                 inputs.update(fit_inputs)
 
         return inputs
+
+    def get_fit_args(self):
+        return list(self.get_inputs(fit=True).values())
+
+    def get_predict_args(self):
+        return list(self.get_inputs(fit=False).values())
 
     def get_outputs(self, outputs='default'):
         """Get the list of output variables that correspond to the specified outputs.
@@ -578,6 +587,10 @@ class MLPipeline():
 
         input_names = self.input_names.get(block_name, dict())
 
+        if isinstance(block_args, str):
+            block = self.blocks[block_name]
+            block_args = getattr(block.instance, block_args)()
+
         kwargs = dict()
         for arg in block_args:
             name = arg['name']
@@ -591,6 +604,9 @@ class MLPipeline():
     def _extract_outputs(self, block_name, outputs, block_outputs):
         """Extract the outputs of the method as a dict to be set into the context."""
         # TODO: type validation and/or transformation should be done here
+        if isinstance(block_outputs, str):
+            block = self.blocks[block_name]
+            block_outputs = getattr(block.instance, block_outputs)()
 
         if not isinstance(outputs, tuple):
             outputs = (outputs, )

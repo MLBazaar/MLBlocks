@@ -111,8 +111,15 @@ class MLBlock():
             if name in kwargs:
                 init_params[name] = kwargs.pop(name)
 
-        fit_args = [arg['name'] for arg in self.fit_args]
-        produce_args = [arg['name'] for arg in self.produce_args]
+        if not isinstance(self.fit_args, str):
+            fit_args = [arg['name'] for arg in self.fit_args]
+        else:
+            fit_args = []
+
+        if not isinstance(self.produce_args, str):
+            produce_args = [arg['name'] for arg in self.produce_args]
+        else:
+            produce_args = []
 
         for name in list(kwargs.keys()):
             if name in fit_args:
@@ -257,6 +264,8 @@ class MLBlock():
                 A dictionary containing the argument names and values to pass
                 to the primitive method.
         """
+        if isinstance(method_args, str):
+            method_args = getattr(self.instance, method_args)()
 
         method_kwargs = dict()
         for arg in method_args:
