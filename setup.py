@@ -14,7 +14,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
-    'numpy>=1.17.1,<1.19',
+    'numpy>=1.17.1,<1.21',
     'psutil>=5,<6',
 ]
 
