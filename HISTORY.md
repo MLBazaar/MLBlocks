@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.4.1 - 2021-10-08
+------------------
+
+* Update NumPy dependency - [Issue #136](https://github.com/MLBazaar/MLBlocks/issues/136) by @sarahmish
+* Support dynamic inputs and outputs - [Issue #134](https://github.com/MLBazaar/MLBlocks/issues/134) by @pvk-developer
+
 0.4.0 - 2021-01-09
 ------------------
 
