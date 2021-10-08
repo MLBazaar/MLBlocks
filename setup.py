@@ -14,7 +14,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
-    'numpy>=1.17.1,<1.19',
+    'numpy>=1.17.1,<1.21',
     'psutil>=5,<6',
 ]
 
@@ -114,6 +114,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/MLBazaar/MLBlocks',
-    version='0.4.0',
+    version='0.4.1.dev2',
     zip_safe=False,
 )
