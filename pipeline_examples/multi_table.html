@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Multi Table Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Multi Table Pipelines &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,13 +268,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="multi-table-pipelines">
+  <section id="multi-table-pipelines">
 <h1>Multi Table Pipelines<a class="headerlink" href="#multi-table-pipelines" title="Permalink to this headline">¶</a></h1>
 <p>In the previous section we explored the most simple use cases, where the datasets
 consisted in a single table.</p>
 <p>In this section we will cover cases where the dataset consist on multiple tables
 related by foreign keys.</p>
-<div class="section" id="multi-table-classification-pipeline">
+<section id="multi-table-classification-pipeline">
 <h2>Multi Table Classification Pipeline<a class="headerlink" href="#multi-table-classification-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>In this example, we will be using the <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/wikiqa-a-challenge-dataset-for-open-domain-question-answering/">WikiQA dataset</a>, which contains 4 different tables
 with simple parent/child relationships, and which we will load using the
@@ -307,8 +308,8 @@ tables are.</p>
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Primitives &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Primitives &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,13 +268,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="primitives">
+  <section id="primitives">
 <h1>Primitives<a class="headerlink" href="#primitives" title="Permalink to this headline">¶</a></h1>
 <p>MLBlocks goal is to seamlessly combine any possible set of Machine Learning tools developed
 in Python, whether they are custom developments or belong to third party libraries, and
 build <a class="reference external" href="pipelines.html">pipelines</a> out of them that can be fitted and then used to make predictions.</p>
 <p>We call each one of these Machine Learning tools a <strong>primitive</strong>.</p>
-<div class="section" id="what-is-a-primitive">
+<section id="what-is-a-primitive">
 <h2>What is a Primitive?<a class="headerlink" href="#what-is-a-primitive" title="Permalink to this headline">¶</a></h2>
 <p>A valid MLBlocks primitive is an importable Python object that:</p>
 <ul class="simple">
@@ -351,8 +352,8 @@ the class constructor in order to alter or control the way the fitting and produ
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="json-annotations">
+</section>
+<section id="json-annotations">
 <h2>JSON Annotations<a class="headerlink" href="#json-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Each integrated primitive has an associated JSON file that specifies its methods, their arguments,
 their types and, most importantly, any possible <a class="reference external" href="hyperparameters.html">hyperparameters</a> that the primitive has, as well
@@ -369,7 +370,7 @@ as their types, ranges and conditions, if any.</p>
 </ul>
 <p>Here are some simplified examples of these JSONs, but for more detailed examples, please refer to
 the <a class="reference external" href="https://github.com/MLBazaar/MLBlocks/tree/master/examples">examples folder</a> of the project.</p>
-<div class="section" id="function-primitives">
+<section id="function-primitives">
 <h3>Function Primitives<a class="headerlink" href="#function-primitives" title="Permalink to this headline">¶</a></h3>
 <p>The most simple type of primitives are simple functions that can be called directly, without
 the need to created any class instance before.</p>
@@ -450,8 +451,8 @@ cycle:</p>
 </div>
 </li>
 </ul>
-</div>
-<div class="section" id="class-primitives">
+</section>
+<section id="class-primitives">
 <h3>Class Primitives<a class="headerlink" href="#class-primitives" title="Permalink to this headline">¶</a></h3>
 <p>A more complex type of primitives are classes which need to be instantiated before they can
 be used.</p>
@@ -571,9 +572,9 @@ range of valid values would also be specified:</p>
 </div>
 </li>
 </ul>
-</div>
-</div>
-<div class="section" id="the-mlblock-class">
+</section>
+</section>
+<section id="the-mlblock-class">
 <h2>The MLBlock Class<a class="headerlink" href="#the-mlblock-class" title="Permalink to this headline">¶</a></h2>
 <p>Within the <strong>MLBlocks</strong> library, a primitive is represented through the <a class="reference external" href="../api_reference.html#mlblocks.MLBlock">mlblocks.MLBlock</a> class.</p>
 <p>This is used to wrap around the annotated primitives, offering a common and uniform interface to
@@ -606,8 +607,8 @@ which are directly linked to the methods specified in the JSON Annotation:</p>
 }" class="graphviz" /></div>
 <p>For a more detailed description of this class, please check the corresponding
 section in the <a class="reference external" href="../api_reference.html">API Reference</a> documentation.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

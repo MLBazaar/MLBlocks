@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quickstart &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Quickstart &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,7 +268,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="quickstart">
+  <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
 <p>Below is a short tutorial that will show you how to get started using <strong>MLBlocks</strong>.</p>
 <p>In this tutorial we will learn how to:</p>
@@ -283,7 +284,7 @@
 <p>Some additional dependencies are required in order to run this Quickstart.
 Make sure that <a class="reference external" href="install.html#additional-dependencies">you have already installed them</a>.</p>
 </div>
-<div class="section" id="creating-a-pipeline">
+<section id="creating-a-pipeline">
 <h2>Creating a pipeline<a class="headerlink" href="#creating-a-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>With MLBlocks, creating a pipeline is as simple as specifying a list of primitives and passing
 them to the <a class="reference external" href="../api_reference.html#mlblocks.MLPipeline">MLPipeline class</a>:</p>
@@ -339,8 +340,8 @@ a dictionary with the <a class="reference external" href="../advanced_usage/hype
 <span class="go"> &#39;mlprimitives.custom.preprocessing.ClassDecoder#1&#39;: {}}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tunable-hyperparameters">
+</section>
+<section id="tunable-hyperparameters">
 <h2>Tunable Hyperparameters<a class="headerlink" href="#tunable-hyperparameters" title="Permalink to this headline">¶</a></h2>
 <p>One of the main features of <a class="reference external" href="../advanced_usage/primitives.html#json-annotations">MLBlocks JSON Annotations</a> is the possibility to indicate
 the type and possible values that each primitive hyperparameter accepts.</p>
@@ -366,8 +367,8 @@ as <a class="reference external" href="https://github.com/MLBazaar/BTB">BTB</a>.
 <span class="go"> &#39;mlprimitives.custom.preprocessing.ClassDecoder#1&#39;: {}}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="setting-hyperparameters">
+</section>
+<section id="setting-hyperparameters">
 <h2>Setting Hyperparameters<a class="headerlink" href="#setting-hyperparameters" title="Permalink to this headline">¶</a></h2>
 <p>Modifying the hyperparameters of an already instantiated pipeline can be done using the
 <a class="reference external" href="../api_reference.html#mlblocks.MLPipeline.set_hyperparameters">set_hyperparameters method</a>, which expects a dictionary with the same format as the returned
@@ -389,8 +390,8 @@ other ones will remain unmodified.</p>
 <span class="gh">Out[11]: </span><span class="go">15</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="making-predictions">
+</section>
+<section id="making-predictions">
 <h2>Making predictions<a class="headerlink" href="#making-predictions" title="Permalink to this headline">¶</a></h2>
 <p>Once we have created the pipeline with the desired hyperparameters we can fit it
 and then use it to make predictions on new data.</p>
@@ -418,8 +419,8 @@ to obtain predictions from the pipeline.</p>
 <span class="gh">Out[18]: </span><span class="go">0.8637759489006265</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

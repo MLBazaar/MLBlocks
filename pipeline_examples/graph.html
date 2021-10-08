@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Graph Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Graph Pipelines &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,10 +268,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="graph-pipelines">
+  <section id="graph-pipelines">
 <h1>Graph Pipelines<a class="headerlink" href="#graph-pipelines" title="Permalink to this headline">¶</a></h1>
 <p>Here we will be showing some examples using <strong>MLBlocks</strong> to resolve graph problems.</p>
-<div class="section" id="link-prediction">
+<section id="link-prediction">
 <h2>Link Prediction<a class="headerlink" href="#link-prediction" title="Permalink to this headline">¶</a></h2>
 <p>For the Graph Link Prediction  examples we will be using the UMLS biomedical ontology dataset,
 which we will load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_umls</span></code> function.</p>
@@ -278,7 +279,7 @@ which we will load using the <code class="docutils literal notranslate"><span cl
 as a DataFrame with three columns, <cite>source</cite>, <cite>target</cite> and <cite>type</cite>, indicating which nodes are
 related and with which type of link.
 The target is a 1d numpy binary integer array indicating whether the indicated link exists or not.</p>
-<div class="section" id="networkx-mlprimitives-scikit-learn-xgboost">
+<section id="networkx-mlprimitives-scikit-learn-xgboost">
 <h3>NetworkX + MLPrimitives + Scikit-learn + XGBoost<a class="headerlink" href="#networkx-mlprimitives-scikit-learn-xgboost" title="Permalink to this headline">¶</a></h3>
 <p>In this example, we will go use some <cite>NetworkX Link Prediction</cite> functions to extract attributes
 from the Graph, to later on encode the categorical features with the <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives/blob/master/mlblocks_primitives/mlprimitives.custom.feature_extraction.CategoricalEncoder.json">CategoricalEncoder from
@@ -326,9 +327,9 @@ additional information not found inside <cite>X</cite>.</p>
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

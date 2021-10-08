@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hyperparameters &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Hyperparameters &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,7 +268,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="hyperparameters">
+  <section id="hyperparameters">
 <h1>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permalink to this headline">¶</a></h1>
 <p>A very important element of both Function and Class primitives are the hyperparameters.</p>
 <p>The hyperparameters are arguments that modify the behavior of the primitive and its learning
@@ -312,7 +313,7 @@ on their <a class="reference external" href="primitives.html#json-annotations">J
 </pre></div>
 </div>
 <p>As can be seen, two types of hyperparameters exist: <strong>fixed</strong> and <strong>tunable</strong>.</p>
-<div class="section" id="fixed-hyperparameters">
+<section id="fixed-hyperparameters">
 <h2>Fixed Hyperparameters<a class="headerlink" href="#fixed-hyperparameters" title="Permalink to this headline">¶</a></h2>
 <p>These hyperparameters do not alter the learning process, and their values modify
 the behavior of the primitive but not its prediction performance. In some cases these
@@ -344,8 +345,8 @@ if it is not specified, the user expected to always provide a value.</p></li>
 <li><p><strong>type</strong>: The type of the argument. This is only informative and is not used by MLBlocks, but
 it is always included in all the <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives">MLPrimitives</a> annotations.</p></li>
 </ul>
-</div>
-<div class="section" id="tunable-hyperparameters">
+</section>
+<section id="tunable-hyperparameters">
 <h2>Tunable Hyperparameters<a class="headerlink" href="#tunable-hyperparameters" title="Permalink to this headline">¶</a></h2>
 <p>These hyperparameters do not modify the primitive behaviour, but they have a direct
 impact on the learning process and on how well the primitive learns from the data.
@@ -380,11 +381,11 @@ the minimum and maximum values that this primitive will work well with.</p></li>
 <li><p><strong>values</strong>: Optional - this is expected to be found in categorical hyperparameters, and
 indicates the list of possible values that it can work with.</p></li>
 </ul>
-<div class="section" id="special-hyperparameter-types">
+<section id="special-hyperparameter-types">
 <h3>Special Hyperparameter Types<a class="headerlink" href="#special-hyperparameter-types" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes, hyperparameters do not accept only one type of value, or their possible values may
 depend on the value of other hyperparameters.</p>
-<div class="section" id="multitype-hyperparameters">
+<section id="multitype-hyperparameters">
 <h4>Multitype Hyperparameters<a class="headerlink" href="#multitype-hyperparameters" title="Permalink to this headline">¶</a></h4>
 <p>Some hyperparameters accept more than one type of value.</p>
 <p>For example, suppose a primitive expects a hyperparameter called <cite>max_features</cite> that can take
@@ -416,8 +417,8 @@ be as follows:</p>
 </div>
 <p>Note how a new keyword <code class="docutils literal notranslate"><span class="pre">types</span></code> exist, that holds the possible values for each one of the
 possible types that this hyperparameter can have.</p>
-</div>
-<div class="section" id="conditional-hyperparameters">
+</section>
+<section id="conditional-hyperparameters">
 <h4>Conditional Hyperparameters<a class="headerlink" href="#conditional-hyperparameters" title="Permalink to this headline">¶</a></h4>
 <p>In some other cases, the values that a hyperparameter can take depend on the value of another
 one.
@@ -476,10 +477,10 @@ In this example, the <code class="docutils literal notranslate"><span class="pre
 disabled if there is no match, but instead of it we could add there a full specification
 of type, range and default value as a nested dictionary to be used by default.</p>
 </div>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>

@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Text Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Text Pipelines &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,17 +268,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="text-pipelines">
+  <section id="text-pipelines">
 <h1>Text Pipelines<a class="headerlink" href="#text-pipelines" title="Permalink to this headline">¶</a></h1>
 <p>Here we will be showing some examples using <strong>MLBlocks</strong> to resolve text problems.</p>
-<div class="section" id="text-classification">
+<section id="text-classification">
 <h2>Text Classification<a class="headerlink" href="#text-classification" title="Permalink to this headline">¶</a></h2>
 <p>For the text classification examples we will be using the <a class="reference external" href="http://scikit-learn.org/stable/datasets/twenty_newsgroups.html">Twenty Newsgroups Dataset</a>,
 which we will load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_newsgroups</span></code> function.</p>
 <p>The data of this dataset is a 1d numpy array vector containing the texts from 11314 newsgroups
 posts, and the target is a 1d numpy integer array containing the label of one of the 20 topics
 that they are about.</p>
-<div class="section" id="mlprimitives-keras-preprocessing-keras-lstm">
+<section id="mlprimitives-keras-preprocessing-keras-lstm">
 <h3>MLPrimitives + Keras Preprocessing + Keras LSTM<a class="headerlink" href="#mlprimitives-keras-preprocessing-keras-lstm" title="Permalink to this headline">¶</a></h3>
 <p>In this example we will start by applying some text cleanup using the <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives/blob/master/mlprimitives/text.py">TextCleaner primitive</a>
 from MLPrimitives, to then go into some <cite>keras preprocessing</cite> primitives and end
@@ -342,9 +343,9 @@ for later ones.</p>
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="tabular-data-with-text">
+</section>
+</section>
+<section id="tabular-data-with-text">
 <h2>Tabular Data with Text<a class="headerlink" href="#tabular-data-with-text" title="Permalink to this headline">¶</a></h2>
 <p>For these examples examples we will be using the <a class="reference external" href="https://www.clips.uantwerpen.be/datasets/personae-corpus">Personae Dataset</a>, which we will load
 using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_personae</span></code> function.</p>
@@ -352,7 +353,7 @@ using the <code class="docutils literal notranslate"><span class="pre">mlblocks.
 texts written by Dutch users in Twitter, with some additional information about the author,
 and the target is a 1d numpy binary integer array indicating whether the author was extrovert
 or not.</p>
-<div class="section" id="mlprimitives-scikit-learn-randomforestclassifier">
+<section id="mlprimitives-scikit-learn-randomforestclassifier">
 <h3>MLPrimitives + Scikit-learn RandomForestClassifier<a class="headerlink" href="#mlprimitives-scikit-learn-randomforestclassifier" title="Permalink to this headline">¶</a></h3>
 <p>In this example use again the <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives/blob/master/mlprimitives/text.py">TextCleaner primitive</a>, then use a <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives/blob/master/mlprimitives/feature_extraction.py">StringVectorizer primitive</a>,
 to encode all the string features, and go directly into the
@@ -393,9 +394,9 @@ to encode all the string features, and go directly into the
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

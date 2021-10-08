@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Image Pipelines &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Image Pipelines &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../advanced_usage/primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,17 +268,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="image-pipelines">
+  <section id="image-pipelines">
 <h1>Image Pipelines<a class="headerlink" href="#image-pipelines" title="Permalink to this headline">¶</a></h1>
 <p>Here we will be showing some examples using <strong>MLBlocks</strong> to resolve image problems.</p>
-<div class="section" id="image-classification">
+<section id="image-classification">
 <h2>Image Classification<a class="headerlink" href="#image-classification" title="Permalink to this headline">¶</a></h2>
 <p>For the image classification examples we will be using the <a class="reference external" href="https://ieeexplore.ieee.org/document/291440/">USPS Dataset</a>, which we will
 load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_usps</span></code> function.</p>
 <p>The data of this dataset is a 3d numpy array vector with shape <code class="docutils literal notranslate"><span class="pre">(224,</span> <span class="pre">224,</span> <span class="pre">3)</span></code> containing 9298
 224x224 RGB photos of handwritten digits, and the target is a 1d numpy integer array containing
 the label of the digit represented in the image.</p>
-<div class="section" id="opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">
+<section id="opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier">
 <h3>OpenCV GaussianBlur + Scikit-image HOG + Scikit-Learn RandomForestClassifier<a class="headerlink" href="#opencv-gaussianblur-scikit-image-hog-scikit-learn-randomforestclassifier" title="Permalink to this headline">¶</a></h3>
 <p>In this first example, we will attempt to resolve the problem using some basic preprocessing
 with the <a class="reference external" href="https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">OpenCV GaussianBlur function</a>, to later on calculate the Histogram of Oriented
@@ -311,9 +312,9 @@ Gradients using the corresponding <a class="reference external" href="http://sci
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="opencv-gaussianblur-keras-single-layer-cnn">
+</section>
+</section>
+<section id="opencv-gaussianblur-keras-single-layer-cnn">
 <h2>OpenCV GaussianBlur + Keras Single Layer CNN<a class="headerlink" href="#opencv-gaussianblur-keras-single-layer-cnn" title="Permalink to this headline">¶</a></h2>
 <p>In this example, we will preprocess the images using the <a class="reference external" href="https://docs.opencv.org/2.4/modules/imgproc/doc/filtering.html?highlight=gaussianblur#gaussianblur">OpenCV GaussianBlur function</a>
 and directly after go into a Single Layer CNN Classifier built on Keras using the corresponding
@@ -345,15 +346,15 @@ and directly after go into a Single Layer CNN Classifier built on Keras using th
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="image-regression">
+</section>
+<section id="image-regression">
 <h2>Image Regression<a class="headerlink" href="#image-regression" title="Permalink to this headline">¶</a></h2>
 <p>For the image regression examples we will be using the Handgeometry Dataset, which we will
 load using the <code class="docutils literal notranslate"><span class="pre">mlblocks.dataset.load_handgeometry</span></code> function.</p>
 <p>The data of this dataset is a 3d numpy array vector with shape <code class="docutils literal notranslate"><span class="pre">(224,</span> <span class="pre">224,</span> <span class="pre">3)</span></code> containing 112
 224x224 RGB photos of hands, and the target is a 1d numpy float array containing the width of
 the wrist in centimeters.</p>
-<div class="section" id="keras-mobilenet-xgbregressor">
+<section id="keras-mobilenet-xgbregressor">
 <h3>Keras MobileNet + XGBRegressor<a class="headerlink" href="#keras-mobilenet-xgbregressor" title="Permalink to this headline">¶</a></h3>
 <p>Here we will introduce the usage of the <a class="reference external" href="https://keras.io/applications/">Pretrained Networks from Keras</a>.
 In particular, we will be using the <a class="reference external" href="https://keras.io/applications/#mobilenet">MobileNet</a> for feature extraction, and pass its features
@@ -386,9 +387,9 @@ to an <a class="reference external" href="https://xgboost.readthedocs.io/en/late
 <span class="n">dataset</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.mlpipeline &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>mlblocks.mlpipeline &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -85,13 +85,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -148,7 +148,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -190,11 +190,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
@@ -441,6 +441,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
         <span class="n">variables</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">variables_attr</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">variables</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">variables</span><span class="p">)()</span>
+
         <span class="n">variable_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">variable</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
@@ -563,6 +566,12 @@
                 <span class="n">inputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fit_inputs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">inputs</span></div>
+
+    <span class="k">def</span> <span class="nf">get_fit_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">get_predict_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="MLPipeline.get_outputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the list of output variables that correspond to the specified outputs.</span>
@@ -842,6 +851,10 @@
 
         <span class="n">input_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
 
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_args</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
+            <span class="n">block_args</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">block_args</span><span class="p">)()</span>
+
         <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">block_args</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
@@ -855,6 +868,9 @@
     <span class="k">def</span> <span class="nf">_extract_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">block_outputs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract the outputs of the method as a dict to be set into the context.&quot;&quot;&quot;</span>
         <span class="c1"># TODO: type validation and/or transformation should be done here</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_outputs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
+            <span class="n">block_outputs</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">block_outputs</span><span class="p">)()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="p">)</span>

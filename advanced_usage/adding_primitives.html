@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Adding Primitives &mdash; MLBlocks 0.4.0 documentation</title>
+  <title>Adding Primitives &mdash; MLBlocks 0.4.1 documentation</title>
   
 
   
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.4.1
               </div>
             
           
@@ -87,13 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">What is MLBlocks?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Usage</span></p>
+<p><span class="caption-text">Advanced Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="primitives.html">Primitives</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="primitives.html#what-is-a-primitive">What is a Primitive?</a></li>
@@ -150,7 +151,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Pipeline Examples</span></p>
+<p><span class="caption-text">Pipeline Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline_examples/single_table.html">Single Table Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../pipeline_examples/single_table.html#regression-pipeline">Regression Pipeline</a></li>
@@ -192,11 +193,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<p><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/mlblocks.html">mlblocks</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Resources</span></p>
+<p><span class="caption-text">Resources</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -267,11 +268,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adding-primitives">
+  <section id="adding-primitives">
 <h1>Adding Primitives<a class="headerlink" href="#adding-primitives" title="Permalink to this headline">¶</a></h1>
 <p>The <strong>MLBlocks</strong> library is only the engine and it has no use without primitives, so here we
 explain how to add new primitives for <strong>MLBlocks</strong>.</p>
-<div class="section" id="mlprimitives">
+<section id="mlprimitives">
 <h2>MLPrimitives<a class="headerlink" href="#mlprimitives" title="Permalink to this headline">¶</a></h2>
 <p><strong>MLBlocks</strong> has a related project, <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives">MLPrimitives</a>, which already includes a huge list of
 integrated primitives, so the easiest and recommended way to add primitives for <strong>MLBlocks</strong>
@@ -281,8 +282,8 @@ is to install <strong>MLPrimitives</strong>.</p>
 </pre></div>
 </div>
 <p>For further details, please refer to the <a class="reference external" href="https://mlbazaar.github.io/MLPrimitives/">MLPrimitives Documentation</a>.</p>
-</div>
-<div class="section" id="writing-primitives">
+</section>
+<section id="writing-primitives">
 <h2>Writing Primitives<a class="headerlink" href="#writing-primitives" title="Permalink to this headline">¶</a></h2>
 <p>Sometimes you will find that you want to use a primitive that is not in the list of
 <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives/tree/master/mlblocks_primitives">MLPrimitives integrated primitives</a>, so you will have to integrate the primitive yourself
@@ -302,8 +303,8 @@ must consist of a single method each. Calling multiple methods sequentially with
 primitive is not supported either.</p>
 <p><a class="reference external" href="primitives.html#class-primitives">Class Primitives</a> also need to be able to be instantiated at once. Running setup or compiling
 calls after the instance creation is not possible.</p>
-</div>
-<div class="section" id="primitives-lookup">
+</section>
+<section id="primitives-lookup">
 <h2>Primitives Lookup<a class="headerlink" href="#primitives-lookup" title="Permalink to this headline">¶</a></h2>
 <p>Once you have written the JSON annotation for your primitive, you will need to put in it in a
 place known to <strong>MLBlocks</strong>.</p>
@@ -315,16 +316,16 @@ place known to <strong>MLBlocks</strong>.</p>
 </ol>
 <p>The list of folders where <strong>MLBlocks</strong> will search for primitives can be seen at any time
 by calling the method <a class="reference external" href="../api_reference.html#mlblocks.get_primitives_paths">mlblocks.get_primitives_paths</a>.</p>
-</div>
-<div class="section" id="adding-a-primitives-folder">
+</section>
+<section id="adding-a-primitives-folder">
 <h2>Adding a Primitives Folder<a class="headerlink" href="#adding-a-primitives-folder" title="Permalink to this headline">¶</a></h2>
 <p>The simplest option in order to quickly add new primitives is to put their JSON annotations
 in a folder called <cite>mlblocks_primitives</cite> in the root of your project, or in your current
 working directory.</p>
 <p>However, sometimes you will want to add a custom directory.</p>
 <p>This can be easily done by using the <a class="reference external" href="../api_reference.html#mlblocks.add_primitives_path">mlblocks.add_primitives_path</a> method.</p>
-</div>
-<div class="section" id="developing-a-primitives-library">
+</section>
+<section id="developing-a-primitives-library">
 <h2>Developing a Primitives Library<a class="headerlink" href="#developing-a-primitives-library" title="Permalink to this headline">¶</a></h2>
 <p>Another option to add multiple libraries is creating a primitives library, such as
 <a class="reference external" href="https://github.com/MLBazaar/MLPrimitives">MLPrimitives</a>.</p>
@@ -355,8 +356,8 @@ following specification:</p>
 <span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
