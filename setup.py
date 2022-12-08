@@ -59,6 +59,7 @@ development_requires = [
     'ipython>=6.5.0',
     'autodocsumm>=0.1.10',
     'Jinja2>=2,<3', # >=3 makes sphinx theme fail
+    'markupsafe<2.1.0',
 
     # style check
     'flake8>=3.7.7,<4',
