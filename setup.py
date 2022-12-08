@@ -23,6 +23,7 @@ mlprimitives_requires = [
     'mlprimitives>=0.3.0,<0.4',
     'h5py<2.11.0,>=2.10.0',  # <- tensorflow 2.3.2 conflict
     'matplotlib<3.2.2,>=2.2.2',  # <- copulas 0.3.3
+    'protobuf<4', # <- importlib
 ]
 
 examples_require = mlprimitives_requires + [
@@ -57,6 +58,7 @@ development_requires = [
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'ipython>=6.5.0',
     'autodocsumm>=0.1.10',
+    'Jinja2>=2,<3', # >=3 makes sphinx theme fail
 
     # style check
     'flake8>=3.7.7,<4',
@@ -96,7 +98,7 @@ setup(
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
         'dev': development_requires + tests_require + examples_require,
-        'unit': development_requires + tests_require,
+        'unit': tests_require,
         'test': tests_require + examples_require,
         'examples': examples_require,
         'mlprimitives': mlprimitives_requires,
