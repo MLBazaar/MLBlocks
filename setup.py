@@ -14,7 +14,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
-    'numpy>=1.17.1,<1.21',
+    'numpy>=1.17.1,<2',
     'psutil>=5,<6',
 ]
 
@@ -34,7 +34,6 @@ examples_require = mlprimitives_requires + [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.3.0.dev0,<0.4',
     'setuptools>=41.0.0',
     'rundoc>=0.4.3',
     'prompt-toolkit>=2.0,<3.0',
@@ -96,7 +95,7 @@ setup(
     ],
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
-        'dev': development_requires + tests_require + examples_require,
+        'dev': development_requires + tests_require,
         'test': tests_require + examples_require,
         'examples': examples_require,
         'mlprimitives': mlprimitives_requires,

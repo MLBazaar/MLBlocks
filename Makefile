@@ -118,6 +118,10 @@ lint-docs: ## check docs formatting with doc8 and pydocstyle
 
 .PHONY: test-unit
 test-unit: ## run tests quickly with the default Python
+	python -m pytest --cov=mlblocks --ignore=tests/features/
+
+.PHONY: test-mlprimitives
+test-mlprimitives: ## run tests quickly with the default Python
 	python -m pytest --cov=mlblocks
 
 .PHONY: test-readme
@@ -132,7 +136,7 @@ test-tutorials: ## run the tutorial notebooks
 		jupyter nbconvert --execute --ExecutePreprocessor.timeout=3600 --stdout --to html {} > /dev/null +
 
 .PHONY: test
-test: test-unit test-readme ## test everything that needs test dependencies
+test: test-unit test-features test-readme ## test everything that needs test dependencies
 
 .PHONY: check-dependencies
 check-dependencies: ## test if there are any broken dependencies
