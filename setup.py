@@ -95,7 +95,8 @@ setup(
     ],
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
-        'dev': development_requires + tests_require,
+        'dev': development_requires + tests_require + examples_require,
+        'unit': development_requires + tests_require,
         'test': tests_require + examples_require,
         'examples': examples_require,
         'mlprimitives': mlprimitives_requires,
