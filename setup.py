@@ -14,7 +14,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
-    'numpy>=1.17.1,<1.21',
+    'numpy>=1.17.1,<2',
     'psutil>=5,<6',
 ]
 
@@ -23,6 +23,7 @@ mlprimitives_requires = [
     'mlprimitives>=0.3.0,<0.4',
     'h5py<2.11.0,>=2.10.0',  # <- tensorflow 2.3.2 conflict
     'matplotlib<3.2.2,>=2.2.2',  # <- copulas 0.3.3
+    'protobuf<4', # <- importlib
 ]
 
 examples_require = mlprimitives_requires + [
@@ -34,7 +35,6 @@ examples_require = mlprimitives_requires + [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'mlprimitives>=0.3.0.dev0,<0.4',
     'setuptools>=41.0.0',
     'rundoc>=0.4.3',
     'prompt-toolkit>=2.0,<3.0',
@@ -56,8 +56,11 @@ development_requires = [
     'm2r>=0.2.0,<0.3',
     'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4,<0.5',
+    'docutils>=0.12,<0.18',
     'ipython>=6.5.0',
     'autodocsumm>=0.1.10',
+    'Jinja2>=2,<3', # >=3 makes sphinx theme fail
+    'markupsafe<2.1.0',
 
     # style check
     'flake8>=3.7.7,<4',
@@ -97,6 +100,7 @@ setup(
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
         'dev': development_requires + tests_require + examples_require,
+        'unit': tests_require,
         'test': tests_require + examples_require,
         'examples': examples_require,
         'mlprimitives': mlprimitives_requires,
@@ -114,6 +118,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/MLBazaar/MLBlocks',
-    version='0.4.1',
+    version='0.5.0.dev0',
     zip_safe=False,
 )

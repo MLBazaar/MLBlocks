@@ -1124,7 +1124,7 @@ class TestMLPipline(TestCase):
         ]
         pipeline.blocks['a_primitive#1'].produce_output = output
 
-        assert str(pipeline.get_diagram()) == expected
+        assert str(pipeline.get_diagram()).strip() == expected.strip()
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_get_diagram_fit(self):
@@ -1155,7 +1155,7 @@ class TestMLPipline(TestCase):
         ]
         pipeline.blocks['a_primitive#1'].produce_output = output
 
-        assert str(pipeline.get_diagram()) == expected
+        assert str(pipeline.get_diagram()).strip() == expected.strip()
 
     @patch('mlblocks.mlpipeline.MLBlock', new=get_mlblock_mock)
     def test_get_diagram_multiple_blocks(self):
@@ -1189,7 +1189,7 @@ class TestMLPipline(TestCase):
         pipeline.blocks['b_primitive#1'].produce_args = first_output
         pipeline.blocks['b_primitive#1'].produce_output = second_output
 
-        assert str(pipeline.get_diagram()) == expected
+        assert str(pipeline.get_diagram()).strip() == expected.strip()
 
     def test_fit(self):
         pass

@@ -102,6 +102,7 @@ To do this, we first call the ``fit`` method passing the training data and the c
 labels.
 
 .. ipython:: python
+    :okwarning:
 
     from mlprimitives.datasets import load_census
     dataset = load_census()
@@ -112,6 +113,7 @@ Once we have fitted our model to our data, we can call the ``predict`` method pa
 to obtain predictions from the pipeline.
 
 .. ipython:: python
+    :okwarning:
 
     predictions = pipeline.predict(X_test)
     predictions

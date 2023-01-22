@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.5.0 - 2023-01-22
+------------------
+
+* Update `numpy` dependency and isolate tests - [Issue #139](https://github.com/MLBazaar/MLBlocks/issues/139) by @sarahmish
+
 0.4.1 - 2021-10-08
 ------------------
 
