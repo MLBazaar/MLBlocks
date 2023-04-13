@@ -50,7 +50,7 @@ Features include:
 
 ## Requirements
 
-**MLBlocks** has been developed and tested on [Python 3.6, 3.7 and 3.8](https://www.python.org/downloads/)
+**MLBlocks** has been developed and tested on [Python 3.6, 3.7, 3.8, 3.9, and 3.10](https://www.python.org/downloads/)
 
 ## Install with `pip`
 
