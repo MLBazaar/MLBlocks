@@ -76,6 +76,10 @@ install: clean-build clean-pyc ## install the package to the active Python's sit
 install-examples: clean-build clean-pyc ## install the package and the examples dependencies
 	pip install .[examples]
 
+.PHONY: install-unit
+install-unit: clean-build clean-pyc ## install the package and dependencies for unit tests
+	pip install .[unit]
+
 .PHONY: install-test
 install-test: clean-build clean-pyc ## install the package and test dependencies
 	pip install .[test]
