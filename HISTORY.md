@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.6.0 - 2023-04-14
+------------------
+
+* Support python 3.9 and 3.10 - [Issue #141](https://github.com/MLBazaar/MLBlocks/issues/141) by @sarahmish
+
 0.5.0 - 2023-01-22
 ------------------
 
