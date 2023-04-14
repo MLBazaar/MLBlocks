@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.discovery &mdash; MLBlocks 0.4.1 documentation</title>
+  <title>mlblocks.discovery &mdash; MLBlocks 0.6.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.6.0
               </div>
             
           
@@ -295,7 +295,7 @@
 
 
 <span class="k">def</span> <span class="nf">_add_lookup_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a new path to lookup.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a new path to lookup.</span>
 
 <span class="sd">    The new path will be inserted in the first place of the list,</span>
 <span class="sd">    so any element found in this new folder will take precedence</span>
@@ -327,7 +327,7 @@
 
 
 <div class="viewcode-block" id="add_primitives_path"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.add_primitives_path">[docs]</a><span class="k">def</span> <span class="nf">add_primitives_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a new path to look for primitives.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a new path to look for primitives.</span>
 
 <span class="sd">    The new path will be inserted in the first place of the list,</span>
 <span class="sd">    so any primitive found in this new folder will take precedence</span>
@@ -348,7 +348,7 @@
 
 
 <div class="viewcode-block" id="add_pipelines_path"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.add_pipelines_path">[docs]</a><span class="k">def</span> <span class="nf">add_pipelines_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a new path to look for pipelines.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a new path to look for pipelines.</span>
 
 <span class="sd">    The new path will be inserted in the first place of the list,</span>
 <span class="sd">    so any primitive found in this new folder will take precedence</span>
@@ -369,7 +369,7 @@
 
 
 <span class="k">def</span> <span class="nf">_load_entry_points</span><span class="p">(</span><span class="n">entry_point_name</span><span class="p">,</span> <span class="n">entry_point_group</span><span class="o">=</span><span class="s1">&#39;mlblocks&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get a list of folders from entry points.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a list of folders from entry points.</span>
 
 <span class="sd">    This list will include the value of any entry point named after the given</span>
 <span class="sd">    ``entry_point_name`` published under the given ``entry_point_group``.</span>
@@ -408,7 +408,7 @@
 
 
 <div class="viewcode-block" id="get_primitives_paths"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.get_primitives_paths">[docs]</a><span class="k">def</span> <span class="nf">get_primitives_paths</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Get the list of folders where primitives will be looked for.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the list of folders where primitives will be looked for.</span>
 
 <span class="sd">    This list will include the values of all the entry points named ``primitives``</span>
 <span class="sd">    published under the entry point group ``mlblocks``.</span>
@@ -438,7 +438,7 @@
 
 
 <div class="viewcode-block" id="get_pipelines_paths"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.get_pipelines_paths">[docs]</a><span class="k">def</span> <span class="nf">get_pipelines_paths</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Get the list of folders where pipelines will be looked for.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the list of folders where pipelines will be looked for.</span>
 
 <span class="sd">    This list will include the values of all the entry points named ``pipelines``</span>
 <span class="sd">    published under the entry point group ``mlblocks``.</span>
@@ -469,7 +469,7 @@
 
 
 <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Locate and load the JSON annotation in any of the given paths.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate and load the JSON annotation in any of the given paths.</span>
 
 <span class="sd">    All the given paths will be scanned to find a JSON file with the given name,</span>
 <span class="sd">    and as soon as a JSON with the given name is found it is returned.</span>
@@ -501,7 +501,7 @@
 
 
 <div class="viewcode-block" id="load_primitive"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.load_primitive">[docs]</a><span class="k">def</span> <span class="nf">load_primitive</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Locate and load the primitive JSON annotation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate and load the primitive JSON annotation.</span>
 
 <span class="sd">    All the primitive paths will be scanned to find a JSON file with the given name,</span>
 <span class="sd">    and as soon as a JSON with the given name is found it is returned.</span>
@@ -526,7 +526,7 @@
 
 
 <div class="viewcode-block" id="load_pipeline"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.load_pipeline">[docs]</a><span class="k">def</span> <span class="nf">load_pipeline</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Locate and load the pipeline JSON annotation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate and load the pipeline JSON annotation.</span>
 
 <span class="sd">    All the pipeline paths will be scanned to find a JSON file with the given name,</span>
 <span class="sd">    and as soon as a JSON with the given name is found it is returned.</span>
@@ -551,7 +551,7 @@
 
 
 <span class="k">def</span> <span class="nf">_search_annotations</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">parts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Search for annotations within the given path.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for annotations within the given path.</span>
 
 <span class="sd">    If the indicated path has subfolders, search recursively within them.</span>
 
@@ -590,7 +590,7 @@
 
 
 <span class="k">def</span> <span class="nf">_match</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Check if the anotation has the key and it matches any of the values.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the anotation has the key and it matches any of the values.</span>
 
 <span class="sd">    If the given key is not found but it contains dots, split by the dots</span>
 <span class="sd">    and consider each part a sublevel in the annotation.</span>
@@ -635,7 +635,7 @@
 
 
 <span class="k">def</span> <span class="nf">_find_annotations</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">loader</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">filters</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find matching annotations within the given paths.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find matching annotations within the given paths.</span>
 
 <span class="sd">    Math annotations by both name pattern and filters.</span>
 
@@ -671,7 +671,7 @@
 
 
 <div class="viewcode-block" id="find_primitives"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.find_primitives">[docs]</a><span class="k">def</span> <span class="nf">find_primitives</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find primitives by name and filters.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find primitives by name and filters.</span>
 
 <span class="sd">    If a patter is given, only the primitives whose name matches</span>
 <span class="sd">    the pattern will be returned.</span>
@@ -703,7 +703,7 @@
 
 
 <div class="viewcode-block" id="find_pipelines"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.find_pipelines">[docs]</a><span class="k">def</span> <span class="nf">find_pipelines</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find pipelines by name and filters.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find pipelines by name and filters.</span>
 
 <span class="sd">    If a patter is given, only the pipelines whose name matches</span>
 <span class="sd">    the pattern will be returned.</span>

@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contributing &mdash; MLBlocks 0.4.1 documentation</title>
+  <title>Contributing &mdash; MLBlocks 0.6.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.6.0
               </div>
             
           
@@ -319,20 +319,20 @@ are welcome :)</p></li>
 <ol class="arabic">
 <li><p>Fork the <cite>MLBlocks</cite> repo on GitHub.</p></li>
 <li><p>Clone your fork locally:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/MLBlocks.git
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:your_name_here/MLBlocks.git
 </pre></div>
 </div>
 </li>
 <li><p>Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed,
 this is how you set up your fork for local development:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkvirtualenv MLBlocks
-$ <span class="nb">cd</span> MLBlocks/
-$ make install-develop
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkvirtualenv<span class="w"> </span>MLBlocks
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>MLBlocks/
+$<span class="w"> </span>make<span class="w"> </span>install-develop
 </pre></div>
 </div>
 </li>
 <li><p>Create a branch for local development:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git checkout -b name-of-your-bugfix-or-feature
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>name-of-your-bugfix-or-feature
 </pre></div>
 </div>
 <p>Now you can make your changes locally.</p>
@@ -340,15 +340,15 @@ $ make install-develop
 <li><p>While hacking your changes, make sure to cover all your developments with the required
 unit tests, and that none of the old tests fail as a consequence of your changes.
 For this, make sure to run the tests suite and check the code coverage:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make <span class="nb">test</span>       <span class="c1"># Run the tests</span>
-$ make coverage   <span class="c1"># Get the coverage report</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nb">test</span><span class="w">       </span><span class="c1"># Run the tests</span>
+$<span class="w"> </span>make<span class="w"> </span>coverage<span class="w">   </span><span class="c1"># Get the coverage report</span>
 </pre></div>
 </div>
 </li>
 <li><p>When you’re done making changes, check that your changes pass flake8 and the
 tests, including testing other Python versions with tox:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make lint       <span class="c1"># Check code styling</span>
-$ make test-all   <span class="c1"># Execute tests on all python versions</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>lint<span class="w">       </span><span class="c1"># Check code styling</span>
+$<span class="w"> </span>make<span class="w"> </span>test-all<span class="w">   </span><span class="c1"># Execute tests on all python versions</span>
 </pre></div>
 </div>
 </li>
@@ -356,14 +356,14 @@ $ make test-all   <span class="c1"># Execute tests on all python versions</span>
 the <a class="reference external" href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">google docstring</a> style.
 If you want to view how your documentation will look like when it is published, you can
 generate and view the docs with this command:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make viewdocs
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>viewdocs
 </pre></div>
 </div>
 </li>
 <li><p>Commit your changes and push your branch to GitHub:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git add .
-$ git commit -m <span class="s2">&quot;Your detailed description of your changes.&quot;</span>
-$ git push origin name-of-your-bugfix-or-feature
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>.
+$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Your detailed description of your changes.&quot;</span>
+$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>name-of-your-bugfix-or-feature
 </pre></div>
 </div>
 </li>
@@ -417,7 +417,7 @@ mocked.</p></li>
 <section id="tips">
 <h2>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h2>
 <p>To run a subset of tests:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pytest tests.test_mlblocks
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>tests.test_mlblocks
 </pre></div>
 </div>
 </section>
@@ -443,17 +443,17 @@ since the last release.</p>
 <p>Once this is done, run of the following commands:</p>
 <ol class="arabic">
 <li><p>If you are releasing a patch version:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make release
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>release
 </pre></div>
 </div>
 </li>
 <li><p>If you are releasing a minor version:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make release-minor
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>release-minor
 </pre></div>
 </div>
 </li>
 <li><p>If you are releasing a major version:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make release-major
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>release-major
 </pre></div>
 </div>
 </li>
@@ -464,7 +464,7 @@ since the last release.</p>
 in order to make some of the new features available for testing on other projects before they
 are included in an actual full-blown release.</p>
 <p>In order to perform such an action, you can execute:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make release-candidate
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>release-candidate
 </pre></div>
 </div>
 <p>This will perform the following actions:</p>
@@ -474,15 +474,15 @@ are included in an actual full-blown release.</p>
 </ol>
 <p>After this is done, the new pre-release can be installed by including the <code class="docutils literal notranslate"><span class="pre">dev</span></code> section in the
 dependency specification, either in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">install_requires</span> <span class="o">=</span> <span class="o">[</span>
-    ...
-    <span class="s1">&#39;mlblocks&gt;=X.Y.Z.dev&#39;</span>,
-    ...
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">install_requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">    </span>...
+<span class="w">    </span><span class="s1">&#39;mlblocks&gt;=X.Y.Z.dev&#39;</span>,
+<span class="w">    </span>...
 <span class="o">]</span>
 </pre></div>
 </div>
 <p>or in command line:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install <span class="s1">&#39;mlblocks&gt;=X.Y.Z.dev&#39;</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;mlblocks&gt;=X.Y.Z.dev&#39;</span>
 </pre></div>
 </div>
 </section>

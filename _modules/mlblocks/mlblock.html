@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.mlblock &mdash; MLBlocks 0.4.1 documentation</title>
+  <title>mlblocks.mlblock &mdash; MLBlocks 0.6.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.6.0
               </div>
             
           
@@ -276,7 +276,7 @@
 
 
 <span class="k">def</span> <span class="nf">import_object</span><span class="p">(</span><span class="n">object_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Import an object from its Fully Qualified Name.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import an object from its Fully Qualified Name.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">parent_name</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">object_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -293,7 +293,7 @@
 
 
 <div class="viewcode-block" id="MLBlock"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock">[docs]</a><span class="k">class</span> <span class="nc">MLBlock</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;MLBlock Class.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MLBlock Class.</span>
 
 <span class="sd">    The MLBlock class represents a single step within an MLPipeline.</span>
 
@@ -334,7 +334,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
 
     <span class="k">def</span> <span class="nf">_extract_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extract init, fit and produce params from kwargs.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract init, fit and produce params from kwargs.</span>
 
 <span class="sd">        The ``init_params``, ``fit_params`` and ``produce_params`` are extracted</span>
 <span class="sd">        from the passed ``kwargs`` taking the metadata hyperparameters as a</span>
@@ -463,11 +463,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a string that represents this block.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a string that represents this block.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;MLBlock - </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MLBlock.get_tunable_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock.get_tunable_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the hyperparameters that can be tuned for this MLBlock.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the hyperparameters that can be tuned for this MLBlock.</span>
 
 <span class="sd">        The list of hyperparameters is taken from the JSON annotation,</span>
 <span class="sd">        filtering out any hyperparameter for which a value has been given</span>
@@ -482,7 +482,7 @@
         <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tunable</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MLBlock.get_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get hyperparameters values that the current MLBlock is using.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get hyperparameters values that the current MLBlock is using.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict:</span>
@@ -492,7 +492,7 @@
         <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MLBlock.set_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock.set_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set new hyperparameters.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set new hyperparameters.</span>
 
 <span class="sd">        Only the specified hyperparameters are modified, so any other</span>
 <span class="sd">        hyperparameter keeps the value that had been previously given.</span>
@@ -511,7 +511,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primitive</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span></div>
 
     <span class="k">def</span> <span class="nf">_get_method_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">method_args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Prepare the kwargs for the method.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the kwargs for the method.</span>
 
 <span class="sd">        The kwargs dict will be altered according to the method_kwargs</span>
 <span class="sd">        specification to make them ready for the primitive method to</span>
@@ -548,7 +548,7 @@
         <span class="k">return</span> <span class="n">method_kwargs</span>
 
 <div class="viewcode-block" id="MLBlock.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Call the fit method of the primitive.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the fit method of the primitive.</span>
 
 <span class="sd">        The given keyword arguments will be passed directly to the ``fit``</span>
 <span class="sd">        method of the primitive instance specified in the JSON annotation.</span>
@@ -575,7 +575,7 @@
             <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_method</span><span class="p">)(</span><span class="o">**</span><span class="n">fit_kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MLBlock.produce"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLBlock.produce">[docs]</a>    <span class="k">def</span> <span class="nf">produce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Call the primitive function, or the predict method of the primitive.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the primitive function, or the predict method of the primitive.</span>
 
 <span class="sd">        The given keyword arguments will be passed directly to the primitive,</span>
 <span class="sd">        if it is a simple function, or to the ``produce`` method of the</span>

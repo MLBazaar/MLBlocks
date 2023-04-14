@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quickstart &mdash; MLBlocks 0.4.1 documentation</title>
+  <title>Quickstart &mdash; MLBlocks 0.6.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.6.0
               </div>
             
           
@@ -319,7 +319,7 @@ for each block, by calling the <a class="reference external" href="../api_refere
 <p>The output of this method is a dictionary which has the name of each block as keys and
 a dictionary with the <a class="reference external" href="../advanced_usage/hyperparameters.html">hyperparameters</a> of the corresponding block as values.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
-<span class="gh">Out[6]: </span><span class="go"></span>
+<span class="gh">Out[6]: </span>
 <span class="go">{&#39;mlprimitives.custom.preprocessing.ClassEncoder#1&#39;: {},</span>
 <span class="go"> &#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;: {&#39;keep&#39;: False,</span>
 <span class="go">  &#39;copy&#39;: True,</span>
@@ -351,7 +351,7 @@ instance by calling its <a class="reference external" href="../api_reference.htm
 for each block in the pipeline, ready to be passed to any hyperparameter tuning library such
 as <a class="reference external" href="https://github.com/MLBazaar/BTB">BTB</a>.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
-<span class="gh">Out[7]: </span><span class="go"></span>
+<span class="gh">Out[7]: </span>
 <span class="go">{&#39;mlprimitives.custom.preprocessing.ClassEncoder#1&#39;: {},</span>
 <span class="go"> &#39;mlprimitives.custom.feature_extraction.CategoricalEncoder#1&#39;: {&#39;max_labels&#39;: {&#39;type&#39;: &#39;int&#39;,</span>
 <span class="go">   &#39;default&#39;: 0,</span>
@@ -411,7 +411,7 @@ to obtain predictions from the pipeline.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
 <span class="gp">In [17]: </span><span class="n">predictions</span>
-<span class="gh">Out[17]: </span><span class="go"></span>
+<span class="gh">Out[17]: </span>
 <span class="go">array([&#39; &gt;50K&#39;, &#39; &lt;=50K&#39;, &#39; &gt;50K&#39;, ..., &#39; &gt;50K&#39;, &#39; &lt;=50K&#39;, &#39; &lt;=50K&#39;],</span>
 <span class="go">      dtype=object)</span>
 

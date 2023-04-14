@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pipelines &mdash; MLBlocks 0.4.1 documentation</title>
+  <title>Pipelines &mdash; MLBlocks 0.6.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.6.0
               </div>
             
           
@@ -320,9 +320,9 @@ passing it the list of primitives that will compose it:</p>
 separated by a hash symbol <code class="docutils literal notranslate"><span class="pre">#</span></code>, allowing multiple blocks for the same primitive to exist
 within a single MLPipeline:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="nb">dict</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span>
-<span class="gh">Out[4]: </span><span class="go"></span>
-<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7f503d51ed60&gt;,</span>
-<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7f503d401d30&gt;}</span>
+<span class="gh">Out[4]: </span>
+<span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7f01e0a81160&gt;,</span>
+<span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: &lt;mlblocks.mlblock.MLBlock at 0x7f01e08c3f40&gt;}</span>
 </pre></div>
 </div>
 </section>
@@ -512,7 +512,7 @@ and tunable hyperparameters.</p>
 <p>The dict representation of an Pipeline can be obtained directly from an <code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code> instance,
 by calling its <code class="docutils literal notranslate"><span class="pre">to_dict</span></code> method.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-<span class="gh">Out[7]: </span><span class="go"></span>
+<span class="gh">Out[7]: </span>
 <span class="go">{&#39;primitives&#39;: [&#39;sklearn.preprocessing.StandardScaler&#39;,</span>
 <span class="go">  &#39;sklearn.ensemble.RandomForestClassifier&#39;],</span>
 <span class="go"> &#39;init_params&#39;: {&#39;sklearn.preprocessing.StandardScaler&#39;: {&#39;with_mean&#39;: False},</span>
@@ -607,7 +607,7 @@ problem or dataset, we can do that directly on our dict representation.</p>
 <span class="gp">In [10]: </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">pipeline_dict</span><span class="p">)</span>
 
 <span class="gp">In [11]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
-<span class="gh">Out[11]: </span><span class="go"></span>
+<span class="gh">Out[11]: </span>
 <span class="go">{&#39;sklearn.preprocessing.StandardScaler#1&#39;: {&#39;with_mean&#39;: True,</span>
 <span class="go">  &#39;with_std&#39;: True},</span>
 <span class="go"> &#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;n_jobs&#39;: -1,</span>
@@ -627,7 +627,7 @@ problem or dataset, we can do that directly on our dict representation.</p>
 <span class="go">  &#39;oob_score&#39;: False}}</span>
 
 <span class="gp">In [12]: </span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
-<span class="gh">Out[12]: </span><span class="go"></span>
+<span class="gh">Out[12]: </span>
 <span class="go">{&#39;sklearn.ensemble.RandomForestClassifier#1&#39;: {&#39;max_depth&#39;: {&#39;type&#39;: &#39;int&#39;,</span>
 <span class="go">   &#39;default&#39;: 10,</span>
 <span class="go">   &#39;range&#39;: [1, 30]}}}</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mlblocks.mlpipeline &mdash; MLBlocks 0.4.1 documentation</title>
+  <title>mlblocks.mlpipeline &mdash; MLBlocks 0.6.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.6.0
               </div>
             
           
@@ -286,7 +286,7 @@
 
 
 <div class="viewcode-block" id="MLPipeline"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline">[docs]</a><span class="k">class</span> <span class="nc">MLPipeline</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;MLPipeline Class.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MLPipeline Class.</span>
 
 <span class="sd">    The **MLPipeline** class represents a Machine Learning Pipeline, which</span>
 <span class="sd">    is an ordered collection of Machine Learning tools or Primitives,</span>
@@ -351,7 +351,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the tunable hyperperparameters from all the blocks in this pipeline.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the tunable hyperperparameters from all the blocks in this pipeline.&quot;&quot;&quot;</span>
         <span class="n">tunable</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">tunable</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">get_tunable_hyperparameters</span><span class="p">()</span>
@@ -416,7 +416,7 @@
             <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_block_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the list of output variables for the given block.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the list of output variables for the given block.&quot;&quot;&quot;</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_variables</span><span class="p">(</span>
             <span class="n">block_name</span><span class="p">,</span>
             <span class="s1">&#39;produce_output&#39;</span><span class="p">,</span>
@@ -428,7 +428,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">_get_block_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">variables_attr</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get dictionary of variable names to the variable for a given block</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get dictionary of variable names to the variable for a given block</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            block_name (str):</span>
@@ -453,7 +453,7 @@
         <span class="k">return</span> <span class="n">variable_dict</span>
 
     <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the output definitions from the pipeline dictionary.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the output definitions from the pipeline dictionary.</span>
 
 <span class="sd">        If the ``&quot;default&quot;`` entry does not exist, it is built using the</span>
 <span class="sd">        outputs from the last block in the pipeline.</span>
@@ -468,7 +468,7 @@
         <span class="k">return</span> <span class="n">outputs</span>
 
     <span class="k">def</span> <span class="nf">_get_block_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the name of the block in the ``index`` position.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the name of the block in the ``index`` position.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">index</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">primitives</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -500,7 +500,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_re_block_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(^[^#]+#\d+)(\..*)?&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_str_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the outputs that correspond to the str specification.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the outputs that correspond to the str specification.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
@@ -523,7 +523,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid Output Specification: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
 
 <div class="viewcode-block" id="MLPipeline.get_inputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a relation of all the input variables required by this pipeline.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a relation of all the input variables required by this pipeline.</span>
 
 <span class="sd">        The result is a list contains all of the input variables.</span>
 <span class="sd">        Optionally include the fit arguments.</span>
@@ -574,7 +574,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="MLPipeline.get_outputs"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the list of output variables that correspond to the specified outputs.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the list of output variables that correspond to the specified outputs.</span>
 
 <span class="sd">        Outputs specification can either be a single string, a single integer, or a</span>
 <span class="sd">        list of strings and integers.</span>
@@ -624,7 +624,7 @@
         <span class="k">return</span> <span class="n">computed</span></div>
 
 <div class="viewcode-block" id="MLPipeline.get_output_names"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_output_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_output_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the names of the outputs that correspond to the given specification.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the names of the outputs that correspond to the given specification.</span>
 
 <span class="sd">        The indicated outputs will be resolved and the names of the output variables</span>
 <span class="sd">        will be returned as a single list.</span>
@@ -647,7 +647,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="MLPipeline.get_output_variables"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_output_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_output_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the list of variable specifications of the given outputs.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the list of variable specifications of the given outputs.</span>
 
 <span class="sd">        The indicated outputs will be resolved and their variables specifications</span>
 <span class="sd">        will be returned as a single list.</span>
@@ -690,7 +690,7 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="MLPipeline.get_tunable_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_tunable_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_tunable_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the tunable hyperparamters of each block.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the tunable hyperparamters of each block.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            flat (bool): If True, return a flattened dictionary where each key</span>
@@ -713,7 +713,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_sanitize_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert numpy values to their python primitive type equivalent.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert numpy values to their python primitive type equivalent.</span>
 
 <span class="sd">        If a value is a dict, recursively sanitize its values.</span>
 
@@ -744,7 +744,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_sanitize</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert tuple hyperparameter keys to nested dicts.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert tuple hyperparameter keys to nested dicts.</span>
 
 <span class="sd">        Also convert numpy types to primary python types.</span>
 
@@ -791,7 +791,7 @@
         <span class="k">return</span> <span class="n">params_tree</span>
 
 <div class="viewcode-block" id="MLPipeline.get_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the current hyperparamters of each block.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current hyperparamters of each block.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            flat (bool): If True, return a flattened dictionary where each key</span>
@@ -816,7 +816,7 @@
         <span class="k">return</span> <span class="n">hyperparameters</span></div>
 
 <div class="viewcode-block" id="MLPipeline.set_hyperparameters"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.set_hyperparameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set new hyperparameter values for some blocks.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set new hyperparameter values for some blocks.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            hyperparameters (dict):</span>
@@ -828,7 +828,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">block_hyperparams</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_block_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block_args</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the arguments expected by the block method from the context.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the arguments expected by the block method from the context.</span>
 
 <span class="sd">        The arguments will be taken from the context using both the method</span>
 <span class="sd">        arguments specification and the ``input_names`` given when the pipeline</span>
@@ -866,7 +866,7 @@
         <span class="k">return</span> <span class="n">kwargs</span>
 
     <span class="k">def</span> <span class="nf">_extract_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">block_outputs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extract the outputs of the method as a dict to be set into the context.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract the outputs of the method as a dict to be set into the context.&quot;&quot;&quot;</span>
         <span class="c1"># TODO: type validation and/or transformation should be done here</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_outputs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span>
@@ -892,13 +892,13 @@
         <span class="k">return</span> <span class="n">output_dict</span>
 
     <span class="k">def</span> <span class="nf">_update_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the requested block outputs into the outputs list in the right place.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the requested block outputs into the outputs list in the right place.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">variable_name</span> <span class="ow">in</span> <span class="n">output_variables</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">output_variables</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
             <span class="n">outputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_fit_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">debug_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the block args from the context and fit the block.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the block args from the context and fit the block.&quot;&quot;&quot;</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Fitting block </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">block_name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fit_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_args</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">fit_args</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
@@ -929,7 +929,7 @@
 
     <span class="k">def</span> <span class="nf">_produce_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">output_variables</span><span class="p">,</span>
                        <span class="n">outputs</span><span class="p">,</span> <span class="n">debug_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the block args from the context and produce the block.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the block args from the context and produce the block.</span>
 
 <span class="sd">        Afterwards, set the block outputs back into the context and update</span>
 <span class="sd">        the outputs list if necessary.</span>
@@ -976,7 +976,7 @@
             <span class="k">raise</span>
 
 <div class="viewcode-block" id="MLPipeline.fit"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fit the blocks of this pipeline.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit the blocks of this pipeline.</span>
 
 <span class="sd">        Sequentially call the ``fit`` and the ``produce`` methods of each block,</span>
 <span class="sd">        capturing the outputs each ``produce`` method before calling the ``fit``</span>
@@ -1101,7 +1101,7 @@
             <span class="k">return</span> <span class="n">debug_info</span></div>
 
 <div class="viewcode-block" id="MLPipeline.predict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Produce predictions using the blocks of this pipeline.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produce predictions using the blocks of this pipeline.</span>
 
 <span class="sd">        Sequentially call the ``produce`` method of each block, capturing the</span>
 <span class="sd">        outputs before calling the next one.</span>
@@ -1198,7 +1198,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown block name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="MLPipeline.to_dict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return all the details of this MLPipeline in a dict.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return all the details of this MLPipeline in a dict.</span>
 
 <span class="sd">        The dict structure contains all the ``__init__`` arguments of the</span>
 <span class="sd">        MLPipeline, as well as the current hyperparameter values and the</span>
@@ -1248,7 +1248,7 @@
         <span class="p">}</span></div>
 
     <span class="k">def</span> <span class="nf">_get_simple_block_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the most readable, simplest version of the block name,</span>
 <span class="sd">        without the number of the block or excess modifiers.</span>
 
@@ -1265,7 +1265,7 @@
         <span class="k">return</span> <span class="n">simple_name</span>
 
     <span class="k">def</span> <span class="nf">_get_context_name_from_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the name of the context from the given variable.</span>
 
 <span class="sd">        Args:</span>
@@ -1285,7 +1285,7 @@
         <span class="k">return</span> <span class="n">context_name</span>
 
     <span class="k">def</span> <span class="nf">_get_relevant_output_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">current_output_variables</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the output variables of the given block that are in a given set of output variables</span>
 
 <span class="sd">        Args:</span>
@@ -1317,7 +1317,7 @@
         <span class="k">return</span> <span class="n">relevant_output</span>
 
     <span class="k">def</span> <span class="nf">_make_diagram_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modifies the diagram to add the corresponding block of the pipeline as a visible node in</span>
 <span class="sd">        the diagram.</span>
 
@@ -1332,7 +1332,7 @@
         <span class="n">diagram</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="n">simple_name</span><span class="p">,</span> <span class="n">penwidth</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_block_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">fit</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">,</span> <span class="n">variable_blocks</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modifies the diagram to add the corresponding input variables to the corresponding block</span>
 <span class="sd">        and their edges as outputs to other blocks by modifying `variable_blocks`. Additionally</span>
 <span class="sd">        modifies a set of edges to add any edges between an alternative input name and this block.</span>
@@ -1385,7 +1385,7 @@
 
     <span class="k">def</span> <span class="nf">_make_block_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">output_names</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">,</span>
                             <span class="n">variable_blocks</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modifies the diagram to add the corresponding output variables to the corresponding block</span>
 <span class="sd">        and their edges as inputs to other blocks, as well as updating `variable_blocks`.</span>
 <span class="sd">        Additionally modifies a set of edges to add any edges between an alternative output name</span>
@@ -1430,7 +1430,7 @@
             <span class="k">del</span> <span class="n">variable_blocks</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_make_diagram_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">input_variables_blocks</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modifies the diagram to add the inputs of the pipeline</span>
 
 <span class="sd">        Args:</span>
@@ -1465,7 +1465,7 @@
                     <span class="n">input_variables_subgraph</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;LR&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_diagram_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modifies the diagram to add outputs of the pipeline in order from left to right.</span>
 
 <span class="sd">        Args:</span>
@@ -1507,7 +1507,7 @@
         <span class="k">return</span> <span class="n">output_variables</span>
 
     <span class="k">def</span> <span class="nf">_make_diagram_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">cluster_edges</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modifies the diagram to add alignment edges and connect alternative names to the blocks.</span>
 
 <span class="sd">        Args:</span>
@@ -1528,7 +1528,7 @@
                     <span class="n">cluster</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">first_block</span><span class="p">,</span> <span class="n">second_block</span><span class="p">,</span> <span class="n">arrowhead</span><span class="o">=</span><span class="n">arrow</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MLPipeline.get_diagram"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.get_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">get_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">image_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a png diagram for the pipeline, showing Pipeline Steps,</span>
 <span class="sd">        Pipeline Inputs and Outputs, and block inputs and outputs.</span>
 
@@ -1583,7 +1583,7 @@
             <span class="k">return</span> <span class="n">diagram</span></div>
 
 <div class="viewcode-block" id="MLPipeline.save"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Save the specification of this MLPipeline in a JSON file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the specification of this MLPipeline in a JSON file.</span>
 
 <span class="sd">        The content of the JSON file is the dict returned by the ``to_dict`` method.</span>
 
@@ -1596,7 +1596,7 @@
 
 <div class="viewcode-block" id="MLPipeline.from_dict"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.from_dict">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new MLPipeline from a dict specification.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new MLPipeline from a dict specification.</span>
 
 <span class="sd">        The dict structure is the same as the one created by the ``to_dict`` method.</span>
 
@@ -1618,7 +1618,7 @@
 
 <div class="viewcode-block" id="MLPipeline.load"><a class="viewcode-back" href="../../api/mlblocks.html#mlblocks.MLPipeline.load">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new MLPipeline from a JSON specification.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new MLPipeline from a JSON specification.</span>
 
 <span class="sd">        The JSON file format is the same as the one created by the ``to_dict`` method.</span>
 
