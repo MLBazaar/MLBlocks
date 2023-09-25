@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Update pip
+      run: pip install -U pip setuptools
     - name: Install package
       run: pip install .[dev]
     - name: make test-devel
@@ -36,6 +38,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Update pip
+      run: pip install -U pip setuptools
     - name: Install package and dependencies
       run: pip install rundoc .[mlprimitives]
     - name: make test-readme
@@ -70,6 +74,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Update pip
+      run: pip install -U pip setuptools
     - name: Install package and dependencies
       run: pip install .[test]
     - name: make test-mlprimitives
@@ -90,6 +96,8 @@ jobs:
     - if: matrix.os == 'ubuntu-20.04'
       name: Install dependencies - Ubuntu
       run: sudo apt-get install graphviz
+    - name: Update pip
+      run: pip install -U pip setuptools
     - name: Install package and dependencies
       run: pip install .[examples]
     - name: make test-tutorials
