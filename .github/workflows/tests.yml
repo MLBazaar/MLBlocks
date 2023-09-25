@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Upgrade pip
-      run: pip install -U pip setuptools
+      run: pip install -U pip setuptools wheel
     - name: Install lightfm
       run: python -m pip install --no-use-pep517 'lightfm<2'
     - name: Install package
@@ -41,7 +41,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Upgrade pip
-      run: pip install -U pip setuptools
+      run: pip install -U pip setuptools wheel
     - name: Install lightfm
       run: python -m pip install --no-use-pep517 'lightfm<2'
     - name: Install package and dependencies
@@ -79,7 +79,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Upgrade pip
-      run: pip install -U pip setuptools
+      run: pip install -U pip setuptools wheel
     - name: Install lightfm
       run: python -m pip install --no-use-pep517 'lightfm<2'
     - name: Install package and dependencies
@@ -103,7 +103,7 @@ jobs:
       name: Install dependencies - Ubuntu
       run: sudo apt-get install graphviz
     - name: Upgrade pip
-      run: pip install -U pip setuptools
+      run: pip install -U pip setuptools wheel
     - name: Install lightfm
       run: python -m pip install --no-use-pep517 'lightfm<2'
     - name: Install package and dependencies
