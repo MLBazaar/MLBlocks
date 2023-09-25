@@ -21,6 +21,7 @@ install_requires = [
 
 mlprimitives_requires = [
     'mlprimitives>=0.3.0,<0.4',
+    'lightfm>=1.15,<1.17', # <- breaks
     'h5py<2.11.0,>=2.10.0',  # <- tensorflow 2.3.2 conflict
     'matplotlib<3.2.2,>=2.2.2',  # <- copulas 0.3.3
     'protobuf<4', # <- importlib
