@@ -86,11 +86,10 @@ pipeline which combines primitives from [MLPrimitives](https://github.com/MLBaza
 [scikit-learn](https://scikit-learn.org/) and [xgboost](https://xgboost.readthedocs.io/).
 
 ```python3
+import pandas as pd
 from mlblocks import MLPipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-
-import pandas as pd
 
 dataset = pd.read_csv('http://mlblocks.s3.amazonaws.com/census.csv')
 label = dataset.pop('label')

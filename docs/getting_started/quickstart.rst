@@ -104,9 +104,13 @@ labels.
 .. ipython:: python
     :okwarning:
 
-    from mlprimitives.datasets import load_census
-    dataset = load_census()
-    X_train, X_test, y_train, y_test = dataset.get_splits(1)
+    import pandas as pd
+    from sklearn.model_selection import train_test_split
+
+    dataset = pd.read_csv('http://mlblocks.s3.amazonaws.com/census.csv')
+    label = dataset.pop('label')
+
+    X_train, X_test, y_train, y_test = train_test_split(dataset, label, stratify=label)
     pipeline.fit(X_train, y_train)
 
 Once we have fitted our model to our data, we can call the ``predict`` method passing new data
@@ -115,9 +119,11 @@ to obtain predictions from the pipeline.
 .. ipython:: python
     :okwarning:
 
+    from sklearn.metrics import accuracy_score
+
     predictions = pipeline.predict(X_test)
     predictions
-    dataset.score(y_test, predictions)
+    accuracy_score(y_test, predictions)
 
 .. _you have already installed them: install.html#additional-dependencies
 .. _MLPipeline class: ../api_reference.html#mlblocks.MLPipeline
