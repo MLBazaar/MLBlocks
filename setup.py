@@ -98,6 +98,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+	'Programming Language :: Python :: 3.11',
     ],
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
@@ -115,11 +116,11 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
-    python_requires='>=3.6,<3.11',
+    python_requires='>=3.6,<3.12',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/MLBazaar/MLBlocks',
-    version='0.6.0',
+    version='0.6.1.dev1',
     zip_safe=False,
 )

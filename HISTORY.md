@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.6.1 - 2023-09-26
+------------------
+
+* Add python 3.11 to MLBlocks - [Issue #143](https://github.com/MLBazaar/MLBlocks/issues/143) by @sarahmish
+
 0.6.0 - 2023-04-14
 ------------------
 
