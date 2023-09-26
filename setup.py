@@ -121,6 +121,6 @@ setup(
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/MLBazaar/MLBlocks',
-    version='0.6.1',
+    version='0.6.2.dev0',
     zip_safe=False,
 )
