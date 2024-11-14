@@ -53,7 +53,7 @@ development_requires = [
     'watchdog>=0.8.3,<5',
 
     # docs
-    'm2r2>=0.2.5,<0.3',
+    'm2r>=0.2.0,<0.3',
     'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'docutils>=0.12,<0.18',
@@ -93,8 +93,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
@@ -119,7 +117,7 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
-    python_requires='>=3.6,<3.14',
+    python_requires='>=3.8,<3.14',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
