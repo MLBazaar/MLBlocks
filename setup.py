@@ -14,8 +14,8 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
-    'numpy>=1.17.1,<2',
-    'psutil>=5,<6',
+    'numpy>=1.17.1,<3',
+    'psutil>=5,<7',
 ]
 
 
@@ -99,6 +99,9 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
 	'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+
     ],
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
@@ -116,7 +119,7 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
-    python_requires='>=3.6,<3.12',
+    python_requires='>=3.6,<3.14',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
