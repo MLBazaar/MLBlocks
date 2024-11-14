@@ -57,6 +57,7 @@ development_requires = [
     'Sphinx>=1.7.1,<3',
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'docutils>=0.12,<0.18',
+    'lxml_html_clean>=0.2.2',
     'ipython>=6.5.0',
     'autodocsumm>=0.1.10',
     'Jinja2>=2,<3', # >=3 makes sphinx theme fail
