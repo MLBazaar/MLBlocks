@@ -28,7 +28,8 @@ mlprimitives_requires = [
 
 examples_require = mlprimitives_requires + [
     'jupyter==1.0.0',
-    'baytune>=0.4.0,<0.6',
+    'baytune>=0.5.0,<0.6',
+    'copulas<0.12',
 ]
 
 
@@ -105,10 +106,9 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
-	'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: 3.13',
-
     ],
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
