@@ -99,7 +99,7 @@ X_train, X_test, y_train, y_test = train_test_split(dataset, label, stratify=lab
 primitives = [
     'mlprimitives.custom.preprocessing.ClassEncoder',
     'mlprimitives.custom.feature_extraction.CategoricalEncoder',
-    # 'sklearn.impute.SimpleImputer',
+    'sklearn.impute.SimpleImputer',
     'xgboost.XGBClassifier',
     'mlprimitives.custom.preprocessing.ClassDecoder'
 ]
