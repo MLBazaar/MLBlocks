@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.6.2 - 2024-11-18
+------------------
+
+* Upgrade python version to include 3.12 and 3.13 - [Issue #144](https://github.com/MLBazaar/MLBlocks/issues/144) by @sarahmish
+
 0.6.1 - 2023-09-26
 ------------------
 

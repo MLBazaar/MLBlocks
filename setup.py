@@ -14,21 +14,22 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
 
 install_requires = [
     'graphviz>=0.9,<1',
-    'numpy>=1.17.1,<2',
-    'psutil>=5,<6',
+    'numpy>=1.17.1,<3',
+    'psutil>=5,<7',
 ]
 
 
 mlprimitives_requires = [
-    'mlprimitives>=0.3.0,<0.4',
-    'h5py<2.11.0,>=2.10.0',  # <- tensorflow 2.3.2 conflict
-    'matplotlib<3.2.2,>=2.2.2',  # <- copulas 0.3.3
+    'mlprimitives>=0.4.0,<0.5',
+    'h5py<4,>=2.10.0',  # <- tensorflow 2.3.2 conflict
+    'matplotlib<4,>=2.2.2',  # <- copulas 0.3.3
     'protobuf<4', # <- importlib
 ]
 
 examples_require = mlprimitives_requires + [
     'jupyter==1.0.0',
-    'baytune>=0.4.0,<0.5',
+    'baytune>=0.5.0,<0.6',
+    'copulas<0.12',
 ]
 
 
@@ -50,7 +51,7 @@ development_requires = [
     # general
     'bumpversion>=0.5.3,<0.6',
     'pip>=9.0.1',
-    'watchdog>=0.8.3,<0.11',
+    'watchdog>=0.8.3,<5',
 
     # docs
     'm2r>=0.2.0,<0.3',
@@ -61,6 +62,15 @@ development_requires = [
     'autodocsumm>=0.1.10',
     'Jinja2>=2,<3', # >=3 makes sphinx theme fail
     'markupsafe<2.1.0',
+
+    # fails on Sphinx < v3.4
+    'alabaster<=0.7.12',
+    # fails on Sphins < v5.0
+    'sphinxcontrib-applehelp<1.0.8',
+    'sphinxcontrib-devhelp<1.0.6',
+    'sphinxcontrib-htmlhelp<2.0.5',
+    'sphinxcontrib-serializinghtml<1.1.10',
+    'sphinxcontrib-qthelp<1.0.7',
 
     # style check
     'flake8>=3.7.7,<4',
@@ -93,12 +103,12 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
-	'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ],
     description='Pipelines and primitives for machine learning and data science.',
     extras_require={
@@ -116,11 +126,11 @@ setup(
     long_description_content_type='text/markdown',
     name='mlblocks',
     packages=find_packages(include=['mlblocks', 'mlblocks.*']),
-    python_requires='>=3.6,<3.12',
+    python_requires='>=3.8,<3.14',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/MLBazaar/MLBlocks',
-    version='0.6.1',
+    version='0.6.2.dev1',
     zip_safe=False,
 )
