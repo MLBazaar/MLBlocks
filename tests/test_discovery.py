@@ -7,7 +7,7 @@ import uuid
 from unittest.mock import Mock, call, patch
 
 import pytest
-from pkg_resources import Distribution, EntryPoint
+from importlib.metadata import Distribution, EntryPoint
 
 from mlblocks import discovery
 
@@ -59,7 +59,7 @@ def test_add_pipelines_path():
 
 
 @patch('mlblocks.discovery._PRIMITIVES_PATHS', new=['a', 'b'])
-@patch('mlblocks.discovery.pkg_resources.iter_entry_points')
+@patch('mlblocks.discovery.importlib.metadata.entry_points')
 def test__load_entry_points_no_entry_points(iep_mock):
     # setup
     iep_mock.return_value == []
@@ -70,26 +70,28 @@ def test__load_entry_points_no_entry_points(iep_mock):
     # assert
     assert paths == []
     expected_calls = [
-        call('mlprimitives'),
+        call(group='mlprimitives'),
     ]
     assert iep_mock.call_args_list == expected_calls
 
 
-@patch('mlblocks.discovery.pkg_resources.iter_entry_points')
+@patch('mlblocks.discovery.importlib.metadata.entry_points')
 def test__load_entry_points_entry_points(iep_mock):
     # setup
-    something_else_ep = EntryPoint('something_else', 'mlblocks.__version__')
+    something_else_ep = EntryPoint(
+        name='something_else', 
+        value='mlblocks.__version__',
+        group='mlblocks'
+    )
     primitives_ep = EntryPoint(
-        'primitives',
-        'tests.test_discovery',
-        attrs=['FAKE_PRIMITIVES_PATH'],
-        dist=Distribution()
+        name='primitives',
+        value='tests.test_discovery:FAKE_PRIMITIVES_PATH',
+        group='mlblocks'
     )
     another_primitives_ep = EntryPoint(
-        'primitives',
-        'tests.test_discovery',
-        attrs=['FAKE_PRIMITIVES_PATHS'],
-        dist=Distribution()
+        name='primitives',
+        value='tests.test_discovery:FAKE_PRIMITIVES_PATHS',
+        group='mlblocks'
     )
     iep_mock.return_value = [
         something_else_ep,
@@ -109,7 +111,7 @@ def test__load_entry_points_entry_points(iep_mock):
     assert paths == expected
 
     expected_calls = [
-        call('mlblocks'),
+        call(group='mlblocks'),
     ]
     assert iep_mock.call_args_list == expected_calls
 

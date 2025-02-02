@@ -14,7 +14,7 @@ import os
 import re
 import sys
 
-import pkg_resources
+import importlib.metadata
 
 LOGGER = logging.getLogger(__name__)
 
@@ -131,7 +131,7 @@ def _load_entry_points(entry_point_name, entry_point_group='mlblocks'):
             The list of folders.
     """
     lookup_paths = list()
-    entry_points = pkg_resources.iter_entry_points(entry_point_group)
+    entry_points = importlib.metadata.entry_points(group=entry_point_group)
     for entry_point in entry_points:
         if entry_point.name == entry_point_name:
             paths = entry_point.load()
